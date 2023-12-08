@@ -4,10 +4,10 @@ export default function Card() {
   return (
     <Link href={`/address`}>
       <div className="card w-64 bg-black shadow-xl">
-        <h2 className="card-title p-4">
-          NOV 012
-          <div className="badge badge-secondary">MODEL A</div>
-        </h2>
+        <div className="flex justify-between items-center">
+          <h2 className="card-title p-4">NOV 012</h2>
+          <div className="badge badge-secondary m-4">MODEL A</div>
+        </div>
         <figure>
           <img
             src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"

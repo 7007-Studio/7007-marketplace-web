@@ -16,5 +16,16 @@ const config: Config = {
     },
   },
   plugins: [require("daisyui")],
+  daisyui: {
+    themes: [
+      {
+        dark: {
+          ...require("daisyui/src/theming/themes")["dark"],
+          "--fallback-b1": "#3B3B3B",
+          "--rounded-box": "2px",
+        },
+      },
+    ],
+  },
 };
 export default config;
