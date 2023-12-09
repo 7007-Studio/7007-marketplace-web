@@ -35,7 +35,7 @@ const NFTCard: React.FC<NFTCardProps> = ({nftName, modelName, title, description
               <path d="M8 5v14l11-7z"/>
             </svg>}
           </button>
-          <audio src="">sdsdfsdfs</audio>
+          {/* <audio src="">sdsdfsdfs</audio> */}
         </div>
         <div className="card-body">
           <h2 className="text-2xl mb-4 font-bold">{title}</h2>
@@ -48,7 +48,7 @@ const NFTCard: React.FC<NFTCardProps> = ({nftName, modelName, title, description
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth="2"
+              strokeWidth="4"
               viewBox="0 0 24 24"
               stroke="currentColor"
               style={{ transform: isCollapsed ?  'rotate(0)':'rotate(-90deg)', color: 'rgb(0, 188, 212)', transition: 'all 0.25s ease-in-out '}}
