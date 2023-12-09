@@ -1,4 +1,5 @@
 import { MODEL_TOKEN_CONTRACT_ADDRESS } from "@/constants";
+import { useAigtMint } from "@/generated";
 import { useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { erc20ABI, useContractWrite } from "wagmi";
@@ -8,11 +9,9 @@ export default function MintModelToken() {
   const [numberOfToken, setNumberOfToken] = useState("1");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // const { write, isLoading, isSuccess } = useContractWrite({
-  //   address: MODEL_TOKEN_CONTRACT_ADDRESS,
-  //   abi: erc20ABI,
-  //   functionName: "mint",
-  // });
+  const { data, write, isLoading, isSuccess } = useAigtMint({
+    address: MODEL_TOKEN_CONTRACT_ADDRESS,
+  });
 
   const totalPrice = () => {
     return formatEther(ethPerToken * BigInt(numberOfToken));
@@ -20,7 +19,7 @@ export default function MintModelToken() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    // await write()
+    write();
   };
 
   return (
@@ -44,13 +43,17 @@ export default function MintModelToken() {
           onChange={(e) => setNumberOfToken(e.target.value)}
         />
       </label>
-      <input
-        type="submit"
-        value={`Mint for ${totalPrice()} ETH`}
-        className="btn"
-        disabled={isSubmitting || BigInt(numberOfToken) <= 0}
+      <button
+        className="btn btn-primary"
+        disabled={isLoading || isSubmitting || BigInt(numberOfToken) <= 0}
         onClick={handleSubmit}
-      />
+      >
+        Mint for {totalPrice()} ETH
+      </button>
+
+      <div>
+        <span>20/10000</span> tokens have been minted under this model.
+      </div>
     </main>
   );
 }

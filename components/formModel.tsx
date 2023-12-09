@@ -51,7 +51,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
 
       {/* <label>Upload your model file to 7007</label>
         <input {...register("modelFile")} /> */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-4">
         <TextInput
           label="Token Symbol"
           name="tokenSymbol"

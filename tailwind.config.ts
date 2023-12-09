@@ -23,6 +23,7 @@ const config: Config = {
           ...require("daisyui/src/theming/themes")["dark"],
           "--fallback-b1": "#3B3B3B",
           "--rounded-box": "2px",
+          primary: "#00D5FF",
         },
       },
     ],
