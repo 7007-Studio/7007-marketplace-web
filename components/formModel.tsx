@@ -6,11 +6,8 @@ import {
   usePrepareAigcFactoryCreateAigc,
 } from "@/generated";
 import { useState } from "react";
-import {
-  TransactionExecutionError,
-  UserRejectedRequestError,
-  zeroAddress,
-} from "viem";
+import { TransactionExecutionError, zeroAddress } from "viem";
+import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 
 export interface IFormModelInput {
   name: string;
@@ -35,7 +32,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
     error: prepareError,
     isError: isPrepareError,
   } = usePrepareAigcFactoryCreateAigc({
-    address: "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+    address: AIGC_FACTORY_CONTRACT_ADDRESS,
     // uint256 _modelIndex, string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, address _opmlLib
     args: [
       BigInt(1),
@@ -63,7 +60,11 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
     }
 
     try {
-      await writeAsync();
+      const data = await writeAsync();
+      console.log(data);
+      // await writeAsync({
+      //   args: []
+      // });
     } catch (e) {
       if (e instanceof TransactionExecutionError) {
         console.error(e.shortMessage);
@@ -72,13 +73,19 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
       setIsSubmitting(false);
       setIsGenerating(false);
     }
+
     // TODO: replace with call to mint model
-    // setTimeout(() => {
-    //   router.push("/");
-    // }, 5000);
+    // Ideally we listen to event, and get the AIGC
+    setTimeout(() => {
+      router.push("/model/1/detail");
+    }, 5000);
   };
 
   console.log("isError", isError, error);
+
+  if (isSuccess) {
+    router.push("/");
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
