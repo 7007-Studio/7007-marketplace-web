@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
 import { useRouter } from "next/router";
 
-export interface IFormModelGenerateInput {
+export interface IFormModelInput {
   name: string;
   description: string;
   tokenSymbol: string;
@@ -12,16 +12,14 @@ export interface IFormModelGenerateInput {
   tokenOwnerReservePercentage: number;
 }
 
-interface FormModelGenerateProps {
+interface FormModelProps {
   setIsGenerating: (isGenerating: boolean) => void;
 }
 
-export default function FormModelGenerate({
-  setIsGenerating,
-}: FormModelGenerateProps) {
+export default function FormModel({ setIsGenerating }: FormModelProps) {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<IFormModelGenerateInput>();
-  const onSubmit: SubmitHandler<IFormModelGenerateInput> = (data) => {
+  const { register, handleSubmit } = useForm<IFormModelInput>();
+  const onSubmit: SubmitHandler<IFormModelInput> = (data) => {
     setIsGenerating(true);
     console.log(data);
 

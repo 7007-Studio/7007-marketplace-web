@@ -1,7 +1,7 @@
-import FormModelGenerate from "@/components/formModelGenerate";
+import FormModel from "@/components/formModel";
 import { useState } from "react";
 
-export default function Generate() {
+export default function GenerateModel() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   return (
@@ -15,10 +15,10 @@ export default function Generate() {
         </div>
       ) : (
         <>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold mb-4">
             Publish your model with 7007Lab
           </h1>
-          <FormModelGenerate setIsGenerating={setIsGenerating} />
+          <FormModel setIsGenerating={setIsGenerating} />
         </>
       )}
     </main>

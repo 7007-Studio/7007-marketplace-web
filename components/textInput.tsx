@@ -1,24 +1,25 @@
-import { UseFormRegister } from "react-hook-form";
-import { IFormModelGenerateInput } from "./formModelGenerate";
+import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
-interface TextInputProps {
-  label: string;
+interface TextInputProps<T extends FieldValues> {
+  label?: string;
   placeholder?: string;
-  register: UseFormRegister<IFormModelGenerateInput>;
-  name: keyof IFormModelGenerateInput;
+  register: UseFormRegister<T>;
+  name: Path<T>;
 }
 
-export default function TextInput({
+export default function TextInput<T extends FieldValues>({
   label,
   placeholder,
   register,
   name,
-}: TextInputProps) {
+}: TextInputProps<T>) {
   return (
     <label className="form-control w-full">
-      <div className="label">
-        <span className="label-text">{label}</span>
-      </div>
+      {label && (
+        <div className="label">
+          <span className="label-text">{label}</span>
+        </div>
+      )}
       <input
         type="text"
         placeholder={placeholder}
