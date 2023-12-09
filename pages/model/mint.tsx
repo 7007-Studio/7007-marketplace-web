@@ -23,7 +23,7 @@ export default function MintModelToken() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col p-48">
+    <main className="flex min-h-screen flex-col p-4 md:p-48">
       <h1 className="text-2xl font-bold mb-4">Mint Your Model Token</h1>
       <h2>Model Name</h2>
       <p>

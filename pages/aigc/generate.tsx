@@ -5,7 +5,7 @@ export default function GenerateAIGC() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   return (
-    <main className="flex min-h-screen flex-col p-48">
+    <main className="flex min-h-screen flex-col p-4 md:p-48">
       {isGenerating ? (
         <div className="flex flex-col items-center justify-center gap-2 text-center">
           <h3 className="text-xl">Generating in progress...</h3>
