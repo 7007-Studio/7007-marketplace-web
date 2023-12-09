@@ -1,6 +1,4 @@
 import { Inter } from "next/font/google";
-import Tabs from "@/components/tabs";
-import Card from "@/components/card";
 import Link from "next/link";
 import ModelDetail from "@/components/modelDetail";
 

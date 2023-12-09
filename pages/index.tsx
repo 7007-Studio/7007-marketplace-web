@@ -1,11 +1,8 @@
-import { Inter } from "next/font/google";
 import Tabs from "@/components/tabs";
 import Card from "@/components/card";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export default function Home() {
-  const items = [1, 2, 3];
+  const items = [1, 2, 3]; // get from contract
 
   return (
     <main className="flex min-h-screen flex-col p-24">
