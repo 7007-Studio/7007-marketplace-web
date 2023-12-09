@@ -1,14 +1,14 @@
 export default function Tabs() {
   return (
-    <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box">
-      <li>
-        <a>ALL</a>
+    <ul className="menu menu-vertical lg:menu-horizontal rounded-box ">
+      <li className="mr-2">
+        <a className="hover:bg-white hover:text-black ">ALL</a>
+      </li>
+      <li className="mr-2">
+        <a className="hover:bg-white hover:text-black">MODEL</a>
       </li>
       <li>
-        <a>MODEL</a>
-      </li>
-      <li>
-        <a>NFT</a>
+        <a className="hover:bg-white hover:text-black">NFT</a>
       </li>
     </ul>
   );

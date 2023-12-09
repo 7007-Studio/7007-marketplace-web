@@ -15,9 +15,8 @@ export default function Navbar() {
         />
       </div>
       <div className="flex-none gap-2">
-        <button className="btn" onClick={() => router.push("/generate")}>
-          Generate
-        </button>
+        <button className="btn">Market Place</button>
+        <button className="btn">Governance</button>
         <ConnectButton />
       </div>
     </div>
