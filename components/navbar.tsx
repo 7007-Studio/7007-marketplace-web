@@ -1,6 +1,8 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import Link from "next/link";
+
 export default function Navbar() {
   const router = useRouter();
 
@@ -15,8 +17,10 @@ export default function Navbar() {
         />
       </div>
       <div className="flex-none gap-2">
-        <button className="btn">Market Place</button>
-        <button className="btn">Governance</button>
+        {/* <button className="btn">Market Place</button>
+        <button className="btn">Governance</button> */}
+        <Link href="/marketPlace" className="btn">Market Place</Link>
+        <Link href="/governance" className="btn">Governance</Link>
         <ConnectButton />
       </div>
     </div>
