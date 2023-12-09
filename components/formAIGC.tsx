@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
+import { useAigcMint, usePrepareAigcMint } from "@/generated";
+import { useState } from "react";
 
 export interface IFormAIGCInput {
   name: string;
@@ -15,15 +17,25 @@ interface FormAIGCProps {
 
 export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
   const router = useRouter();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { config, error, isError } = usePrepareAigcMint();
+  const { data, write, isLoading, isSuccess } = useAigcMint(config);
+
   const { register, handleSubmit } = useForm<IFormAIGCInput>();
   const onSubmit: SubmitHandler<IFormAIGCInput> = (data) => {
+    setIsSubmitting(true);
     setIsGenerating(true);
     console.log(data);
 
+    if (write) {
+      write();
+    }
+
     // TODO: replace with call to mint model
-    setTimeout(() => {
-      router.push("/");
-    }, 5000);
+    // setTimeout(() => {
+    //   router.push("/");
+    // }, 5000);
   };
 
   return (
@@ -66,7 +78,21 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
             </select>
           </label>
         </div>
-        <input type="submit" value="Generate" className="btn" />
+
+        <button
+          disabled={isLoading || isSubmitting || !write}
+          className="btn btn-primary"
+        >
+          {isSubmitting ? (
+            <>
+              <span className="loading loading-spinner"></span>
+              loading
+            </>
+          ) : (
+            "Generate"
+          )}
+        </button>
+        {isError && <div>Error: {error?.message}</div>}
       </div>
     </form>
   );

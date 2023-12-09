@@ -15,7 +15,7 @@ export default function GenerateAIGC() {
         </div>
       ) : (
         <>
-          <h1 className="text-2xl font-bold mb-4">
+          <h1 className="text-3xl font-bold mb-4">
             Generate your AIGC music and art with 7007 Studio
           </h1>
           <FormAIGC setIsGenerating={setIsGenerating} />

@@ -1,7 +1,7 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Navbar() {
   const router = useRouter();
@@ -9,18 +9,22 @@ export default function Navbar() {
   return (
     <div className="navbar bg-[#272727] px-8 py-4">
       <div className="flex-1">
-        <Image
-          src="/7007-marketplace.svg"
-          alt="7007 Marketplace"
-          width={106}
-          height={36}
-        />
+        <Link href="/">
+          <Image
+            src="/7007-marketplace.svg"
+            alt="7007 Marketplace"
+            width={106}
+            height={36}
+          />
+        </Link>
       </div>
       <div className="flex-none gap-2">
-        {/* <button className="btn">Market Place</button>
-        <button className="btn">Governance</button> */}
-        <Link href="/marketPlace" className="btn">Market Place</Link>
-        <Link href="/governance" className="btn">Governance</Link>
+        <Link href="/marketPlace" className="btn">
+          Marketplace
+        </Link>
+        <Link href="/governance" className="btn">
+          Governance
+        </Link>
         <ConnectButton />
       </div>
     </div>

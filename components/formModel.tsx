@@ -1,6 +1,16 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
 import { useRouter } from "next/router";
+import {
+  useAigcFactoryCreateAigc,
+  usePrepareAigcFactoryCreateAigc,
+} from "@/generated";
+import { useState } from "react";
+import {
+  TransactionExecutionError,
+  UserRejectedRequestError,
+  zeroAddress,
+} from "viem";
 
 export interface IFormModelInput {
   name: string;
@@ -18,16 +28,57 @@ interface FormModelProps {
 
 export default function FormModel({ setIsGenerating }: FormModelProps) {
   const router = useRouter();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    config,
+    error: prepareError,
+    isError: isPrepareError,
+  } = usePrepareAigcFactoryCreateAigc({
+    address: "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+    // uint256 _modelIndex, string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, address _opmlLib
+    args: [
+      BigInt(1),
+      "Modal A",
+      "MODA",
+      BigInt(1),
+      BigInt(1),
+      `0x0000000000000000000000000000000000000000000000000000000000000000`,
+      zeroAddress,
+    ],
+  });
+  const { data, writeAsync, isLoading, isSuccess, isError, error } =
+    useAigcFactoryCreateAigc(config);
+
   const { register, handleSubmit } = useForm<IFormModelInput>();
-  const onSubmit: SubmitHandler<IFormModelInput> = (data) => {
+  const onSubmit: SubmitHandler<IFormModelInput> = async (data) => {
+    setIsSubmitting(true);
     setIsGenerating(true);
     console.log(data);
 
+    if (!writeAsync) {
+      setIsSubmitting(false);
+      setIsGenerating(false);
+      return;
+    }
+
+    try {
+      await writeAsync();
+    } catch (e) {
+      if (e instanceof TransactionExecutionError) {
+        console.error(e.shortMessage);
+      }
+
+      setIsSubmitting(false);
+      setIsGenerating(false);
+    }
     // TODO: replace with call to mint model
-    setTimeout(() => {
-      router.push("/");
-    }, 5000);
+    // setTimeout(() => {
+    //   router.push("/");
+    // }, 5000);
   };
+
+  console.log("isError", isError, error);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -80,7 +131,21 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
       </div>
 
       <div>
-        <input type="submit" value="Publish" className="btn" />
+        <button
+          disabled={isLoading || isSubmitting || !writeAsync}
+          className="btn btn-primary"
+        >
+          {isSubmitting ? (
+            <>
+              <span className="loading loading-spinner"></span>
+              loading
+            </>
+          ) : (
+            "Publish"
+          )}
+        </button>
+        {isPrepareError && <div>Error: {prepareError?.message}</div>}
+        {isError && <div>Error: {error?.message}</div>}
       </div>
     </form>
   );
