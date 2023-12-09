@@ -1,5 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
+import { useRouter } from "next/router";
 
 export interface IFormModelGenerateInput {
   name: string;
@@ -18,10 +19,16 @@ interface FormModelGenerateProps {
 export default function FormModelGenerate({
   setIsGenerating,
 }: FormModelGenerateProps) {
+  const router = useRouter();
   const { register, handleSubmit } = useForm<IFormModelGenerateInput>();
   const onSubmit: SubmitHandler<IFormModelGenerateInput> = (data) => {
     setIsGenerating(true);
     console.log(data);
+
+    // TODO: replace with call to mint model
+    setTimeout(() => {
+      router.push("/");
+    }, 5000);
   };
 
   return (
