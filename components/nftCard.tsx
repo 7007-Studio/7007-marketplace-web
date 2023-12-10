@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useAudio from "@/customHook/useAudio";
+import useAudio from "@/hooks/useAudio";
 export interface NFTCardProps {
   nftName: string;
   modelName: string;
