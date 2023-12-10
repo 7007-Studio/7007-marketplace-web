@@ -1,4 +1,5 @@
 import { useAigtMint, usePrepareAigtMint } from "@/generated";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Address, formatEther, parseEther } from "viem";
@@ -10,6 +11,8 @@ export default function MintModelToken() {
   const [ethPerToken, setEthPerToken] = useState(parseEther("0.1"));
   const [numberOfToken, setNumberOfToken] = useState("1");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { isConnected } = useAccount();
 
   const { config, error, isError } = usePrepareAigtMint({
     address: modelContractAddress as Address,
@@ -26,6 +29,15 @@ export default function MintModelToken() {
       write();
     }
   };
+
+  if (!isConnected) {
+    return (
+      <div className="container mx-auto flex flex-col items-center justify-center pt-12 gap-4">
+        <div>Please connect your wallet first</div>
+        <ConnectButton />
+      </div>
+    );
+  }
 
   if (isSuccess) {
     return (

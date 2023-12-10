@@ -1,11 +1,23 @@
 import { useState } from "react";
 import FormModel from "@/components/formModel";
+import { useAccount, useWalletClient } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function GenerateModel() {
   const [isGenerating, setIsGenerating] = useState(false);
+  const { isConnected } = useAccount();
+
+  if (!isConnected) {
+    return (
+      <div className="container mx-auto flex flex-col items-center justify-center pt-12 gap-4">
+        <div>Please connect your wallet first</div>
+        <ConnectButton />
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto md:max-w-2xl flex min-h-screen flex-col p-4">
+    <div className="container mx-auto md:max-w-2xl flex flex-col p-4">
       {isGenerating ? (
         <div className="flex flex-col items-center justify-center gap-2 text-center">
           <h3 className="text-xl">Generating in progress...</h3>
