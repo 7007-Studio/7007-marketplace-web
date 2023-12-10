@@ -1,11 +1,15 @@
 import FormAIGC from "@/components/formAIGC";
+import { useIsMounted } from "@/hooks/useIsMounted";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 
 export default function GenerateAIGC() {
   const [isGenerating, setIsGenerating] = useState(false);
+  const isMounted = useIsMounted();
   const { isConnected } = useAccount();
+
+  if (!isMounted) return null;
 
   if (!isConnected) {
     return (

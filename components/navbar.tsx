@@ -22,30 +22,30 @@ export default function Navbar() {
         <div className="flex-none gap-4">
           <Link
             href="/marketPlace"
-            className="hidden md:block hover:text-primary"
+            className="hidden md:block hover:text-primary cursor-pointer"
           >
             Marketplace
           </Link>
           <Link
             href="/governance"
-            className="hidden md:block hover:text-primary"
+            className="hidden md:block hover:text-primary cursor-pointer"
           >
             Governance
           </Link>
-          <ConnectButton />
+          <ConnectButton chainStatus="none" showBalance={false} />
         </div>
       </div>
 
       <div className="flex flex-col md:hidden bg-[#272727]">
         <Link
           href="/marketPlace"
-          className="pl-4 py-4 text-xl hover:text-primary"
+          className="pl-4 py-4 text-xl hover:text-primary cursor-pointer"
         >
           Marketplace
         </Link>
         <Link
           href="/governance"
-          className="pl-4 py-4 text-xl hover:text-primary"
+          className="pl-4 py-4 text-xl hover:text-primary cursor-pointer"
         >
           Governance
         </Link>

@@ -10,8 +10,8 @@ export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
     <ul className="menu menu-horizontal">
       <li className="mr-2">
         <a
-          className={`text-white hover:bg-white hover:text-black text-lg ${
-            currentTab === TabState.All && "focus"
+          className={`hover:bg-white hover:text-black text-lg ${
+            currentTab === TabState.All ? "focus" : ""
           }`}
           onClick={() => setCurrentTab(TabState.All)}
         >
@@ -20,8 +20,8 @@ export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
       </li>
       <li className="mr-2">
         <a
-          className={`text-white hover:bg-white hover:text-black text-lg ${
-            currentTab === TabState.Model && "focus"
+          className={`hover:bg-white hover:text-black text-lg ${
+            currentTab === TabState.Model ? "focus" : ""
           }`}
           onClick={() => setCurrentTab(TabState.Model)}
         >
@@ -30,8 +30,8 @@ export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
       </li>
       <li>
         <a
-          className={`text-white hover:bg-white hover:text-black text-lg ${
-            currentTab === TabState.NFT && "focus"
+          className={`hover:bg-white hover:text-black text-lg ${
+            currentTab === TabState.NFT ? "focus" : ""
           }`}
           onClick={() => setCurrentTab(TabState.NFT)}
         >

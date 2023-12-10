@@ -4,6 +4,7 @@ import { useAccount } from "wagmi";
 import { Address, formatEther, parseEther } from "viem";
 import { useAigtMint, usePrepareAigtMint } from "@/generated";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function MintModelToken() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function MintModelToken() {
   const [numberOfToken, setNumberOfToken] = useState("1");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const isMounted = useIsMounted();
   const { isConnected } = useAccount();
 
   const { config, error, isError } = usePrepareAigtMint({
@@ -30,6 +32,8 @@ export default function MintModelToken() {
       write();
     }
   };
+
+  if (!isMounted) return null;
 
   if (!isConnected) {
     return (

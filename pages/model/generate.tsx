@@ -1,11 +1,15 @@
 import { useState } from "react";
-import FormModel from "@/components/formModel";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import FormModel from "@/components/formModel";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function GenerateModel() {
   const [isGenerating, setIsGenerating] = useState(false);
+  const isMounted = useIsMounted();
   const { isConnected } = useAccount();
+
+  if (!isMounted) return null;
 
   if (!isConnected) {
     return (
