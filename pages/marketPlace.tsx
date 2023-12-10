@@ -90,6 +90,7 @@ export default function MarketPlace() {
                   title={item.title}
                   description={item.description}
                   imageUrl={item.imageUrl}
+                  modelIndex={item.modelIndex}
                 />
               );
             } else {

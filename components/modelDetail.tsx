@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { Model, NFT } from "@/types";
+
 
 export interface ModelDetailProps {
+  imageUrl: string;
   // modelName : string;
   // modelAddress: string;
   // totalSupply: number;
@@ -8,12 +11,14 @@ export interface ModelDetailProps {
   // title: string;
   // description: string;
 }
-
-export default function ModelDetail() {
+const ModelDetail: React.FC<ModelDetailProps> = ({
+  imageUrl,
+}) =>  {
+  
   return (
     <div className="flex flex-col rounded-lg shadow md:flex-row md:max-w-sm xl:max-w-xl self-center dark:bg-gray-800 md:-translate-x-1/2 xl:-translate-x-1/4">
       <img
-        src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+        src={imageUrl}
         className="object-contain sm:object-cover w-full rounded-t-lg  "
         alt=""
       />
@@ -52,3 +57,4 @@ export default function ModelDetail() {
     </div>
   );
 }
+export default ModelDetail;

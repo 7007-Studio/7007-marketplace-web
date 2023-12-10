@@ -7,7 +7,8 @@ export interface ModelCardProps {
   nftMint: number;
   title: string;
   description: string;
-  imageUrl?: string;
+  imageUrl: string;
+  modelIndex: number;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
@@ -18,12 +19,13 @@ const ModelCard: React.FC<ModelCardProps> = ({
   title,
   description,
   imageUrl,
+  modelIndex,
 }) => {
   const router = useRouter();
-
+  
   return (
     <div
-      onClick={() => router.push("/model/1/detail")}
+      onClick={() => router.push(`/model/${modelIndex}/detail`)}
       className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-cyan-500 outline-2 transition hover:cursor-pointer"
     >
       <div className="flex justify-between items-center">
