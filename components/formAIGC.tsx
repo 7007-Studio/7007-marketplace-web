@@ -1,27 +1,27 @@
 import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
-import { useAigcFactoryGetAigc, useAigcMint, useAigtApprove, useAigtMint, usePrepareAigcMint } from "@/generated";
+import { useAigcMint, useAigtApprove } from "@/generated";
 import { useState } from "react";
 import axios from "axios";
-import { create } from 'ipfs-http-client';
+import { create } from "ipfs-http-client";
 import { Log, ethers } from "ethers";
 import { log } from "console";
 import { write } from "fs";
 import { Address } from "viem";
 
-const projectId = '2V1B4bBqSCyncDB2jeHd7uy5oLN'
-const projectSecret = '2b18de3a067e0a35d8700ef362c816dc'
+const projectId = "2V1B4bBqSCyncDB2jeHd7uy5oLN";
+const projectSecret = "2b18de3a067e0a35d8700ef362c816dc";
 const auth =
-    'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+  "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
 const client = create({
-  host: 'ipfs.infura.io',
+  host: "ipfs.infura.io",
   port: 5001,
-  protocol: 'https',
+  protocol: "https",
   headers: {
     authorization: auth,
   },
-})
+});
 
 export interface IFormAIGCInput {
   name: string;
@@ -36,15 +36,19 @@ interface FormAIGCProps {
   aigcAddress: string;
 }
 
-export default function FormAIGC({ setIsGenerating, aigtAddress, aigcAddress }: FormAIGCProps) {
+export default function FormAIGC({
+  setIsGenerating,
+  aigtAddress,
+  aigcAddress,
+}: FormAIGCProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const {  writeAsync: writeAsyncAigtApprove } = useAigtApprove({
-    address: aigtAddress as Address
+  const { writeAsync: writeAsyncAigtApprove } = useAigtApprove({
+    address: aigtAddress as Address,
   });
-  const {  writeAsync: writeAsyncAigcMint } = useAigcMint({
-    address: aigcAddress as Address
+  const { writeAsync: writeAsyncAigcMint } = useAigcMint({
+    address: aigcAddress as Address,
   });
 
   const { register, handleSubmit, formState } = useForm<IFormAIGCInput>();
@@ -157,30 +161,36 @@ export default function FormAIGC({ setIsGenerating, aigtAddress, aigcAddress }: 
     }
   };
 
-  const getTokenURI = async (imageUrl:string, audio:string, prompt:string) => {
-    console.log("mintNft")
+  const getTokenURI = async (
+    imageUrl: string,
+    audio: string,
+    prompt: string
+  ) => {
+    console.log("mintNft");
     console.log("imageUrl: ", imageUrl);
     console.log("audio: ", audio);
-    
+
     // mint an nft with the photo and audio
     // make an mp4 with the photo and audio
     let response = await fetch(imageUrl);
     let blob = await response.blob();
     let file = new File([blob], "file.png", { type: "image/png" });
     let result = await client.add(file);
-    const ipfsLinkImg = "https://gateway.pinata.cloud/ipfs/" + result.path
+    const ipfsLinkImg = "https://gateway.pinata.cloud/ipfs/" + result.path;
     // console.log("ipfs hash: ", result.path)
-  
+
     response = await fetch(audio);
     blob = await response.blob();
     file = new File([blob], "file.mp3", { type: "audio/mp3" });
     result = await client.add(file);
-    const ipfsLinkAudio = "https://gateway.pinata.cloud/ipfs/" + result.path
-  
+    const ipfsLinkAudio = "https://gateway.pinata.cloud/ipfs/" + result.path;
+
     // upload the mp4 to ipfs
     const metadata = {
       name: "7007 AIGC NFT",
-      description: "This NFT is generated and verified with OPML on https://demo.7007.studio/. The model used is Stable Diffusion and MusicGen. The original prompt is: " + prompt,
+      description:
+        "This NFT is generated and verified with OPML on https://demo.7007.studio/. The model used is Stable Diffusion and MusicGen. The original prompt is: " +
+        prompt,
       image: ipfsLinkImg,
       external_url: "https://demo.7007.studio/",
       attributes: [
@@ -195,17 +205,17 @@ export default function FormAIGC({ setIsGenerating, aigtAddress, aigcAddress }: 
         {
           trait_type: "model",
           value: "Stable Diffusion, MusicGen",
-        }
+        },
       ],
-    }
-  
+    };
+
     let buffer = Buffer.from(JSON.stringify(metadata));
     result = await client.add(buffer);
-    
-    const ipfsLinkMetadata = "https://gateway.pinata.cloud/ipfs/" + result.path
-    console.log("ipfs metadata: ", ipfsLinkMetadata)
-    return ipfsLinkMetadata
-  
+
+    const ipfsLinkMetadata = "https://gateway.pinata.cloud/ipfs/" + result.path;
+    console.log("ipfs metadata: ", ipfsLinkMetadata);
+    return ipfsLinkMetadata;
+
     // mint the nft
     // const provider = new ethers.BrowserProvider(window.ethereum);
     // await provider.send("eth_requestAccounts", []);
@@ -216,7 +226,7 @@ export default function FormAIGC({ setIsGenerating, aigtAddress, aigcAddress }: 
     // let tx = await contract.mint(ipfsLinkMetadata)
     // await tx.wait()
     // console.log("tx: ", tx)
-  }
+  };
 
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
     setIsSubmitting(true);
@@ -231,15 +241,23 @@ export default function FormAIGC({ setIsGenerating, aigtAddress, aigcAddress }: 
     await generateMusic(contractAddr, data.prompt);
 
     await writeAsyncAigtApprove({
-      args: [aigcAddress as Address, BigInt(1000)]
+      args: [aigcAddress as Address, BigInt(1000)],
     });
 
-    const tokenUri = await getTokenURI(imageUrl, audio, data.prompt)
-    const hashedPrompt = ethers.encodeBytes32String(data.prompt) as `0x${string}`;
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const tokenUri = await getTokenURI(imageUrl, audio, data.prompt);
+    const hashedPrompt = ethers.encodeBytes32String(
+      data.prompt
+    ) as `0x${string}`;
     await writeAsyncAigcMint({
-      args: [tokenUri, hashedPrompt , "0x7465787400000000000000000000000000000000000000000000000000000000"]
+      args: [
+        tokenUri,
+        hashedPrompt,
+        "0x7465787400000000000000000000000000000000000000000000000000000000",
+      ],
     });
-    router.push("/marketPlace")
+    router.push("/marketPlace");
 
     // TODO: replace with call to mint model
     // setTimeout(() => {
