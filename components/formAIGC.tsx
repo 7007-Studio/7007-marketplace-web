@@ -5,9 +5,7 @@ import { useAigcMint, useAigtApprove } from "@/generated";
 import { useState } from "react";
 import axios from "axios";
 import { create } from "ipfs-http-client";
-import { Log, ethers } from "ethers";
-import { log } from "console";
-import { write } from "fs";
+import { ethers } from "ethers";
 import { Address } from "viem";
 
 const projectId = "2V1B4bBqSCyncDB2jeHd7uy5oLN";
@@ -120,42 +118,18 @@ export default function FormAIGC({
   const generateMusic = async (contractAddr: string, prompt: string) => {
     try {
       console.log("generate Music");
-      axios
-        .post(
-          "https://demo.7007.studio/api/v1/dalle/txt2music",
-          { contractAddress: contractAddr, prompt: prompt },
-          { timeout: 300000 }
-        )
-        .then((response) => {
-          console.log("/api/v1/dalle/txt2music");
-          const audioUrl = "data:audio/mpeg;base64," + response.data;
+      const response = await axios.post(
+        "https://demo.7007.studio/api/v1/dalle/txt2music",
+        { contractAddress: contractAddr, prompt: prompt },
+        { timeout: 300000 }
+      );
+      console.log("/api/v1/dalle/txt2music");
+      const audioUrl = "data:audio/mpeg;base64," + response.data;
 
-          console.log(audioUrl);
-          setAudio(audioUrl);
-        });
+      console.log(audioUrl);
+      setAudio(audioUrl);
 
-      // setCorrect
-      axios
-        .post(
-          "https://demo.7007.studio/api/v1/dalle/setIsCorrect",
-          { contractAddress: contractAddr, isCorrect: true },
-          { timeout: 300000 }
-        )
-        .then((response) => {
-          console.log("/api/v1/dalle/setIsCorrect: ", response.data);
-        });
-
-      // submitterUploadResult
-      axios
-        .post(
-          "https://demo.7007.studio/api/v1/dalle/submitterUploadResult",
-          { contractAddress: contractAddr },
-          { timeout: 300000 }
-        )
-        .then((response) => {
-          console.log("submitterUploadResult");
-          console.log(response.data);
-        });
+      return [audioUrl, null];
     } catch (error) {
       return [null, "Something went wrong! \n\n ERROR: " + error];
     }
@@ -172,18 +146,19 @@ export default function FormAIGC({
 
     // mint an nft with the photo and audio
     // make an mp4 with the photo and audio
+    debugger;
     let response = await fetch(imageUrl);
     let blob = await response.blob();
     let file = new File([blob], "file.png", { type: "image/png" });
     let result = await client.add(file);
-    const ipfsLinkImg = "https://gateway.pinata.cloud/ipfs/" + result.path;
+    const ipfsLinkImg = "https://ipfs.io/ipfs/" + result.path;
     // console.log("ipfs hash: ", result.path)
 
     response = await fetch(audio);
     blob = await response.blob();
     file = new File([blob], "file.mp3", { type: "audio/mp3" });
     result = await client.add(file);
-    const ipfsLinkAudio = "https://gateway.pinata.cloud/ipfs/" + result.path;
+    const ipfsLinkAudio = "https://ipfs.io/ipfs/" + result.path;
 
     // upload the mp4 to ipfs
     const metadata = {
@@ -212,7 +187,7 @@ export default function FormAIGC({
     let buffer = Buffer.from(JSON.stringify(metadata));
     result = await client.add(buffer);
 
-    const ipfsLinkMetadata = "https://gateway.pinata.cloud/ipfs/" + result.path;
+    const ipfsLinkMetadata = "https://ipfs.io/ipfs/" + result.path;
     console.log("ipfs metadata: ", ipfsLinkMetadata);
     return ipfsLinkMetadata;
 
@@ -238,13 +213,13 @@ export default function FormAIGC({
     const [img] = await generateImage(contractAddr, data.prompt);
 
     [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
-    await generateMusic(contractAddr, data.prompt);
+    const [audio] = await generateMusic(contractAddr, data.prompt);
 
     await writeAsyncAigtApprove({
       args: [aigcAddress as Address, BigInt(1000)],
     });
 
-    const tokenUri = await getTokenURI(imageUrl, audio, data.prompt);
+    const tokenUri = await getTokenURI(img!, audio!, data.prompt);
     const hashedPrompt = ethers.encodeBytes32String(
       data.prompt
     ) as `0x${string}`;

@@ -403,6 +403,14 @@ export const aigcABI = [
 
 export const aigcFactoryABI = [
   {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: '_aigcContractImpl', internalType: 'address', type: 'address' },
+    ],
+  },
+  { type: 'error', inputs: [], name: 'ERC1167FailedCreateClone' },
+  {
     type: 'event',
     anonymous: false,
     inputs: [
@@ -422,6 +430,13 @@ export const aigcFactoryABI = [
     name: 'AIGC_Created',
   },
   {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'aigcContractImpl',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
@@ -430,8 +445,6 @@ export const aigcFactoryABI = [
       { name: '_tokenPrice', internalType: 'uint256', type: 'uint256' },
       { name: '_costToken', internalType: 'uint256', type: 'uint256' },
       { name: '_aiModelVm', internalType: 'bytes32', type: 'bytes32' },
-      { name: '_opmlLib', internalType: 'address', type: 'address' },
-      { name: '_tokenMaxSupply', internalType: 'uint256', type: 'uint256' },
       {
         name: '_ownerReservePercent',
         internalType: 'uint256',
@@ -476,6 +489,13 @@ export const aigcFactoryABI = [
     inputs: [],
     name: 'modelIndexCurrent',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'modelIndexToIpOrgAddr',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
 ] as const
 
@@ -1478,6 +1498,25 @@ export function useAigcFactoryRead<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"aigcContractImpl"`.
+ */
+export function useAigcFactoryAigcContractImpl<
+  TFunctionName extends 'aigcContractImpl',
+  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigcFactoryABI,
+    functionName: 'aigcContractImpl',
+    ...config,
+  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"deployedAIGCs"`.
  */
 export function useAigcFactoryDeployedAigCs<
@@ -1568,6 +1607,25 @@ export function useAigcFactoryModelIndexCurrent<
   return useContractRead({
     abi: aigcFactoryABI,
     functionName: 'modelIndexCurrent',
+    ...config,
+  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"modelIndexToIpOrgAddr"`.
+ */
+export function useAigcFactoryModelIndexToIpOrgAddr<
+  TFunctionName extends 'modelIndexToIpOrgAddr',
+  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigcFactoryABI,
+    functionName: 'modelIndexToIpOrgAddr',
     ...config,
   } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
 }

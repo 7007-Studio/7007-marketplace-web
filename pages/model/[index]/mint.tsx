@@ -151,7 +151,7 @@ export default function MintModelToken() {
 
         <div>
           <span className="text-primary">
-            {remainSupply().toString()}/{maxSupply?.toString()}
+            {totalSupply?.toString()}/{maxSupply?.toString()}
           </span>{" "}
           tokens have been minted under this model.
         </div>

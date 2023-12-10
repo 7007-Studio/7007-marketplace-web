@@ -2,10 +2,12 @@ import { Model, NFT } from "./types";
 
 export const AIGC_FACTORY_CONTRACT_ADDRESS =
   // "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // hardhat
-  "0x193c9be4d9bb1d5dd7c79606015c2746a4cda235"; // sepolia
+  "0xee536864561171617955c4F6C6893B9Cd2399683"; // sepolia
 
-export const AIGC_CONTRACT_ADDRESS = "0xc7bcb472e29668f5d02fd68d15ba17f01498c6c0";
-export const AIGT_CONTRACT_ADDRESS = "0x18c3054389d370da05ba00bba589ddce3e8cf8c2";
+export const AIGC_CONTRACT_ADDRESS =
+  "0xc7bcb472e29668f5d02fd68d15ba17f01498c6c0";
+export const AIGT_CONTRACT_ADDRESS =
+  "0x18c3054389d370da05ba00bba589ddce3e8cf8c2";
 
 export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [
   {

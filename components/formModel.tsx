@@ -54,14 +54,13 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
     setIsGenerating(true);
 
     write({
+      // string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, uint256 _ownerReservePercent, uint96 _royalty
       args: [
         data.name,
         data.tokenSymbol,
         parseEther(data.tokenInitialPrice),
-        BigInt(1),
+        BigInt(0),
         "0x7465787400000000000000000000000000000000000000000000000000000000",
-        "0xfEBfdE43561Bc74e4F982cdEB40A29966708E035",
-        BigInt(data.tokenTotalSupply),
         BigInt(data.tokenOwnerReservePercentage),
         BigInt(data.tokenRoyaltyShare),
         // "Stable Diffusion",
