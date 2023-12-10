@@ -7,7 +7,7 @@ export interface ModelCardProps {
   nftMint: number;
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
