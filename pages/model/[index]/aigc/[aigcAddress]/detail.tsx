@@ -41,6 +41,7 @@ export default function Detail() {
         <ModelDetail
           imageUrl={targModel?.imageUrl as string}
           modelAddress={index as string}
+          aigcAddress={aigcAddress as string}
           modelName={modelName}
           totalSupply={Number(totalSupply)}
           maxSupply={Number(maxSupply)}

@@ -4,6 +4,7 @@ export interface ModelDetailProps {
   imageUrl: string;
   modelName?: string;
   modelAddress: string;
+  aigcAddress: string;
   totalSupply?: number;
   maxSupply?: number;
   totalNFTMinted?: number;
@@ -13,6 +14,7 @@ export interface ModelDetailProps {
 const ModelDetail: React.FC<ModelDetailProps> = ({
   modelName,
   modelAddress,
+  aigcAddress,
   imageUrl,
   totalSupply,
   maxSupply,
@@ -40,7 +42,7 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
         </div>
         <div className="flex md:w-80 justify-around">
           <Link
-            href={`/model/${modelAddress}/aigc/generate`}
+            href={`/model/${modelAddress}/aigc/${aigcAddress}/generate`}
             className="bg-white text-black rounded py-2 px-4 w-fit mr-4"
           >
             Generate NFT
