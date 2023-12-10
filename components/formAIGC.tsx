@@ -246,7 +246,6 @@ export default function FormAIGC({
         tokenUri,
         hashedPrompt,
         "0x7465787400000000000000000000000000000000000000000000000000000000",
-        imageUrl,
       ],
     });
   };
