@@ -1,11 +1,11 @@
+"use client";
+
 import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { TransactionExecutionError } from "viem";
 import {
   useAigcFactoryAigcCreatedEvent,
   useAigcFactoryCreateAigc,
-  usePrepareAigcFactoryCreateAigc,
 } from "@/generated";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import TextInput from "./textInput";
@@ -29,28 +29,11 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
   const router = useRouter();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const {
-    config,
-    error: prepareError,
-    isError: isPrepareError,
-  } = usePrepareAigcFactoryCreateAigc({
+
+  const { write, isLoading, isError, error } = useAigcFactoryCreateAigc({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
-    // uint256 _modelIndex, string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, address _opmlLib
-    // string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, address _opmlLib, uint256 _tokenMaxSupply, uint256 _ownerReservePercent, uint96 _royalty
-    args: [
-      "Stable Diffusion",
-      "SD",
-      BigInt(0),
-      BigInt(1),
-      "0x7465787400000000000000000000000000000000000000000000000000000000",
-      "0xfEBfdE43561Bc74e4F982cdEB40A29966708E035",
-      BigInt(1000),
-      BigInt(10),
-      BigInt(10),
-    ],
   });
-  const { data, writeAsync, isLoading, isSuccess, isError, error } =
-    useAigcFactoryCreateAigc(config);
+
   useAigcFactoryAigcCreatedEvent({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     listener: (log) => {
@@ -68,42 +51,30 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
   const onSubmit: SubmitHandler<IFormModelInput> = async (data) => {
     setIsSubmitting(true);
     setIsGenerating(true);
-    console.log(data);
 
-    if (!writeAsync) {
-      setIsSubmitting(false);
-      setIsGenerating(false);
-      return;
-    }
-
-    try {
-      const data = await writeAsync();
-      console.log(data);
-      // await writeAsync({
-      //   args: []
-      // });
-    } catch (e) {
-      if (e instanceof TransactionExecutionError) {
-        console.error(e.shortMessage);
-      }
-
-      setIsSubmitting(false);
-      setIsGenerating(false);
-    }
-
-    // TODO: replace with call to mint model
-    // Ideally we listen to event, and get the AIGC
-    // setTimeout(() => {
-    //   router.push("/model/1/detail");
-    // }, 5000);
+    write({
+      args: [
+        data.name,
+        data.tokenSymbol,
+        BigInt(data.tokenInitialPrice),
+        BigInt(1),
+        "0x7465787400000000000000000000000000000000000000000000000000000000",
+        "0xfEBfdE43561Bc74e4F982cdEB40A29966708E035",
+        BigInt(data.tokenTotalSupply),
+        BigInt(data.tokenOwnerReservePercentage),
+        BigInt(data.tokenRoyaltyShare),
+        // "Stable Diffusion",
+        // "SD",
+        // BigInt(0),
+        // BigInt(1),
+        // "0x7465787400000000000000000000000000000000000000000000000000000000",
+        // "0xfEBfdE43561Bc74e4F982cdEB40A29966708E035",
+        // BigInt(1000),
+        // BigInt(10),
+        // BigInt(10),
+      ],
+    });
   };
-
-  // console.log("isError", isError, error);
-
-  // if (isSuccess) {
-  //   debugger;
-  //   router.push("/model/1/detail");
-  // }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -197,7 +168,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
 
       <div>
         <button
-          disabled={isLoading || isSubmitting || !writeAsync}
+          disabled={isLoading || isSubmitting}
           className="btn btn-primary"
         >
           {isSubmitting ? (
@@ -209,7 +180,6 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
             "Publish"
           )}
         </button>
-        {isPrepareError && <div>Error: {prepareError?.message}</div>}
         {isError && <div>Error: {error?.message}</div>}
       </div>
     </form>

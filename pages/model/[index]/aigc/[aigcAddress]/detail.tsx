@@ -32,7 +32,7 @@ export default function Detail() {
 
   const mockItems = MOCK_MARKETPLACE_DATA;
   const targModel = mockItems.find((item) => {
-    return isModel(item) && item.modelIndex === index;
+    return isModel(item);
   });
 
   return (

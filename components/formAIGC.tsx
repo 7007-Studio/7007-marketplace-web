@@ -42,10 +42,11 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
       let response, data;
       if (type === GenerateType.Image) {
         data = {
-          modelName: "MusicGen",
+          modelName: "StableDiffusion",
           prompt: prompt,
         };
         console.log(data);
+
         response = await axios.post(
           "https://demo.7007.studio/api/v1/dalle/opMLRequest",
           data,
@@ -55,11 +56,10 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
         );
       } else if (type === GenerateType.Music) {
         data = {
-          modelName: "StableDiffusion",
+          modelName: "MusicGen",
           prompt: prompt,
         };
         console.log(data);
-
         response = await axios.post(
           "https://demo.7007.studio/api/v1/dalle/opMLRequest",
           data,
@@ -106,6 +106,8 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
         .then((response) => {
           console.log("/api/v1/dalle/txt2music");
           const audioUrl = "data:audio/mpeg;base64," + response.data;
+
+          console.log(audioUrl);
           setAudio(audioUrl);
         });
 

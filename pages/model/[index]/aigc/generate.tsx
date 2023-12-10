@@ -3,11 +3,14 @@ import { useIsMounted } from "@/hooks/useIsMounted";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { keccak256, toHex } from "viem";
 import { useAccount } from "wagmi";
 
 export default function GenerateAIGC() {
   const router = useRouter();
   const { index } = router.query;
+
+  console.log(keccak256(toHex("hello world")));
 
   const [isGenerating, setIsGenerating] = useState(false);
   const isMounted = useIsMounted();
