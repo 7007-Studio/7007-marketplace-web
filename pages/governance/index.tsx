@@ -23,7 +23,7 @@ export default function MarketPlace() {
             {items.map((item) => (
               <tr
                 key={item}
-                className="hover:cursor-pointer"
+                className="hover:cursor-pointer hover:text-primary"
                 onClick={() => router.push(`/governance/${item}`)}
               >
                 <td>AI MODEL NAME</td>

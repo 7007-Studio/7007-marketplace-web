@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { Model, NFT } from "@/types";
-
 
 export interface ModelDetailProps {
   imageUrl: string;
@@ -11,22 +9,15 @@ export interface ModelDetailProps {
   // title: string;
   // description: string;
 }
-const ModelDetail: React.FC<ModelDetailProps> = ({
-  imageUrl,
-}) =>  {
-  
+const ModelDetail: React.FC<ModelDetailProps> = ({ imageUrl }) => {
   return (
-    <div className="flex flex-col rounded-lg shadow md:flex-row md:max-w-sm xl:max-w-xl self-center dark:bg-gray-800 md:-translate-x-1/2 xl:-translate-x-1/4">
-      <img
-        src={imageUrl}
-        className="object-contain sm:object-cover w-full rounded-t-lg  "
-        alt=""
-      />
-      <div className="flex flex-col justify-between p-8 dark:bg-gray-800 rounded-lg ">
-        <h5 className="mb-2 md:text-2xl font-bold  text-gray-900 dark:text-white">
+    <div className="flex flex-col shadow md:flex-row max-w-md md:max-w-xl mx-auto self-center bg-[#191717]">
+      <img src={imageUrl} className="object-cover w-full" alt="" />
+      <div className="flex flex-col justify-between p-8">
+        <h5 className="mb-2 md:text-2xl font-bold">
           Noteworthy technology acquisitions 2021
         </h5>
-        <p className="mb-5 font-normal text-gray-700 dark:text-gray-400">
+        <p className="mb-5 font-normal">
           Here are the biggest enterprise technology acquisitions of 2021 so
           far, in reverse chronological order.
         </p>
@@ -56,5 +47,5 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
       </div>
     </div>
   );
-}
+};
 export default ModelDetail;
