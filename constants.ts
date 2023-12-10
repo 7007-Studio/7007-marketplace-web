@@ -2,7 +2,7 @@ import { Model, NFT } from "./types";
 
 export const AIGC_FACTORY_CONTRACT_ADDRESS =
   // "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // hardhat
-  "0xee536864561171617955c4F6C6893B9Cd2399683"; // sepolia
+  "0x191Ad675CA576c8b8dE269548A87Cd3D60696B9e"; // sepolia
 
 export const AIGC_CONTRACT_ADDRESS =
   "0xc7bcb472e29668f5d02fd68d15ba17f01498c6c0";

@@ -7,6 +7,7 @@ import axios from "axios";
 import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
 import { Address } from "viem";
+import { useWaitForTransaction } from "wagmi";
 
 const projectId = "2V1B4bBqSCyncDB2jeHd7uy5oLN";
 const projectSecret = "2b18de3a067e0a35d8700ef362c816dc";
@@ -42,18 +43,23 @@ export default function FormAIGC({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { writeAsync: writeAsyncAigtApprove } = useAigtApprove({
+  const { data: aigtApprove, write: writeAigtApprove } = useAigtApprove({
     address: aigtAddress as Address,
   });
-  const { writeAsync: writeAsyncAigcMint } = useAigcMint({
+  const { isSuccess: approveIsSuccess } = useWaitForTransaction({
+    hash: aigtApprove?.hash,
+  });
+  const { isSuccess: mintIsSuccess, write: writeAigcMint } = useAigcMint({
     address: aigcAddress as Address,
   });
 
-  const { register, handleSubmit, formState } = useForm<IFormAIGCInput>();
+  const { register, handleSubmit, formState, getValues } =
+    useForm<IFormAIGCInput>();
   const { errors } = formState;
 
   const [imageUrl, setImageUrl] = useState("");
   const [audio, setAudio] = useState("");
+  const [hashedPrompt, setHashedPrompt] = useState<`0x${string}` | undefined>();
   const [contractAddress, setContractAddress] = useState("");
 
   const initOPML = async (type: GenerateType, prompt: string) => {
@@ -146,7 +152,6 @@ export default function FormAIGC({
 
     // mint an nft with the photo and audio
     // make an mp4 with the photo and audio
-    debugger;
     let response = await fetch(imageUrl);
     let blob = await response.blob();
     let file = new File([blob], "file.png", { type: "image/png" });
@@ -215,28 +220,37 @@ export default function FormAIGC({
     [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
     const [audio] = await generateMusic(contractAddr, data.prompt);
 
-    await writeAsyncAigtApprove({
+    writeAigtApprove({
       args: [aigcAddress as Address, BigInt(1000)],
     });
 
-    const tokenUri = await getTokenURI(img!, audio!, data.prompt);
     const hashedPrompt = ethers.encodeBytes32String(
       data.prompt
     ) as `0x${string}`;
-    await writeAsyncAigcMint({
-      args: [
-        tokenUri,
-        hashedPrompt,
-        "0x7465787400000000000000000000000000000000000000000000000000000000",
-      ],
-    });
-    router.push("/marketPlace");
+    setHashedPrompt(hashedPrompt);
 
     // TODO: replace with call to mint model
     // setTimeout(() => {
     //   router.push("/");
     // }, 5000);
   };
+
+  const onMint = async () => {
+    const prompt = getValues("prompt");
+    const tokenUri = await getTokenURI(imageUrl, audio, prompt);
+
+    writeAigcMint({
+      args: [
+        tokenUri,
+        hashedPrompt!,
+        "0x7465787400000000000000000000000000000000000000000000000000000000",
+      ],
+    });
+  };
+
+  if (mintIsSuccess) {
+    router.push("/marketPlace");
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -281,19 +295,27 @@ export default function FormAIGC({
           </label>
         </div>
 
-        <button
-          // disabled={isLoading || isSubmitting || !writeAsync}
-          className="btn btn-primary"
-        >
-          {isSubmitting ? (
-            <>
-              <span className="loading loading-spinner"></span>
-              loading
-            </>
-          ) : (
-            "Generate"
-          )}
-        </button>
+        {!approveIsSuccess && (
+          <button
+            // disabled={isLoading || isSubmitting || !writeAsync}
+            className="btn btn-primary"
+          >
+            {isSubmitting ? (
+              <>
+                <span className="loading loading-spinner"></span>
+                loading
+              </>
+            ) : (
+              "Generate"
+            )}
+          </button>
+        )}
+
+        {approveIsSuccess && (
+          <button className="btn btn-primary" onClick={() => onMint()}>
+            Mint
+          </button>
+        )}
         {/* {isError && <div>Error: {error?.message}</div>} */}
       </div>
       {imageUrl && <img src={imageUrl} />}
