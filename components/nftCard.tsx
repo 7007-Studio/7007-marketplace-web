@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { useState } from "react";
-
+import useAudio from "@/customHook/useAudio";
 export interface NFTCardProps {
   nftName: string;
   modelName: string;
@@ -23,8 +22,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
   imageUrl,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
-
+  const [isPlaying, setIsPlaying] = useAudio('/sound.mp3');
   return (
     <div className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition">
       <div className="flex justify-between items-center">
@@ -39,7 +37,10 @@ const NFTCard: React.FC<NFTCardProps> = ({
           className="w-full object-cover"
         />
       </figure>
-      <button onClick={() => setIsPlaying(!isPlaying)} className="ml-5 -mt-5">
+      <button onClick={() => {
+          setIsPlaying(!isPlaying)
+        }} 
+        className="ml-5 -mt-5">
         {isPlaying ? (
           <svg
             className="ml-1 bg-black outline  outline-1 outline-primary h-12 w-12 p-3 "
@@ -129,3 +130,5 @@ const NFTCard: React.FC<NFTCardProps> = ({
 };
 
 export default NFTCard;
+
+
