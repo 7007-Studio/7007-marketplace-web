@@ -5,20 +5,46 @@ import NFTCard from "@/components/nftCard";
 import { useRouter } from "next/router";
 import { MOCK_MARKETPLACE_DATA } from "@/constants";
 import { isModel, isNFT } from "@/helpers";
+import {
+  useAigcTokenId,
+  useAigtMaxSupply,
+  useAigtName,
+  useAigtTotalSupply,
+} from "@/generated";
+import { Address } from "viem";
 
 export default function Detail() {
   const router = useRouter();
-  const { index } = router.query;
+  const { index, aigcAddress } = router.query;
+
+  const { data: modelName } = useAigtName({
+    address: index as Address,
+  });
+  const { data: totalSupply } = useAigtTotalSupply({
+    address: index as Address,
+  });
+  const { data: maxSupply } = useAigtMaxSupply({
+    address: index as Address,
+  });
+  const { data: totalNFTMinted } = useAigcTokenId({
+    address: aigcAddress as Address,
+  });
 
   const mockItems = MOCK_MARKETPLACE_DATA;
   const targModel = mockItems.find((item) => {
-    return isModel(item) && item.modelIndex === Number(index);
+    return isModel(item) && item.modelIndex === index;
   });
 
   return (
     <div className=" mx-auto w-[85vw]">
       <div className="flex items-center justify-center flex-col my-10">
-        <ModelDetail imageUrl={targModel?.imageUrl as string} />
+        <ModelDetail
+          imageUrl={targModel?.imageUrl as string}
+          modelName={modelName}
+          totalSupply={Number(totalSupply)}
+          maxSupply={Number(maxSupply)}
+          totalNFTMinted={Number(totalNFTMinted)}
+        />
       </div>
       <h2 className="text-white font-bold text-2xl mb-10">More</h2>
       <div className="flex items-start flex-wrap justify-center gap-6 mb-10">

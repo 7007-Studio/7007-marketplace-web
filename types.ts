@@ -10,7 +10,7 @@ export interface NFT {
 }
 
 export interface Model {
-  modelIndex: number;
+  modelIndex: string;
   modelName: string;
   modelAddress: string;
   totalSupply: number;

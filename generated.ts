@@ -30,7 +30,38 @@ export const aigcABI = [
       { name: '_costToken', internalType: 'uint256', type: 'uint256' },
       { name: '_aiModelVm', internalType: 'bytes32', type: 'bytes32' },
       { name: '_opmlLib', internalType: 'address', type: 'address' },
+      { name: '_royalty', internalType: 'uint96', type: 'uint96' },
     ],
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'numerator', internalType: 'uint256', type: 'uint256' },
+      { name: 'denominator', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ERC2981InvalidDefaultRoyalty',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
+    name: 'ERC2981InvalidDefaultRoyaltyReceiver',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'numerator', internalType: 'uint256', type: 'uint256' },
+      { name: 'denominator', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ERC2981InvalidTokenRoyalty',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'receiver', internalType: 'address', type: 'address' },
+    ],
+    name: 'ERC2981InvalidTokenRoyaltyReceiver',
   },
   {
     type: 'error',
@@ -256,7 +287,7 @@ export const aigcABI = [
     type: 'function',
     inputs: [],
     name: 'opmlLib',
-    outputs: [{ name: '', internalType: 'contract OpmlLib', type: 'address' }],
+    outputs: [{ name: '', internalType: 'contract IOpmlLib', type: 'address' }],
   },
   {
     stateMutability: 'view',
@@ -264,6 +295,19 @@ export const aigcABI = [
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'ownerOf',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'salePrice', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'royaltyInfo',
+    outputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
   },
   {
     stateMutability: 'nonpayable',
@@ -329,7 +373,7 @@ export const aigcABI = [
   {
     stateMutability: 'view',
     type: 'function',
-    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
+    inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'tokenURI',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
   },
@@ -359,19 +403,44 @@ export const aigcABI = [
 
 export const aigcFactoryABI = [
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'aigcAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'aigtAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AIGC_Created',
+  },
+  {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: '_modelIndex', internalType: 'uint256', type: 'uint256' },
       { name: '_modelName', internalType: 'string', type: 'string' },
       { name: '_modelSymbol', internalType: 'string', type: 'string' },
       { name: '_tokenPrice', internalType: 'uint256', type: 'uint256' },
       { name: '_costToken', internalType: 'uint256', type: 'uint256' },
       { name: '_aiModelVm', internalType: 'bytes32', type: 'bytes32' },
       { name: '_opmlLib', internalType: 'address', type: 'address' },
+      { name: '_tokenMaxSupply', internalType: 'uint256', type: 'uint256' },
+      {
+        name: '_ownerReservePercent',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+      { name: '_royalty', internalType: 'uint96', type: 'uint96' },
     ],
     name: 'createAIGC',
-    outputs: [],
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
     stateMutability: 'view',
@@ -390,9 +459,23 @@ export const aigcFactoryABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [{ name: '_modelIndex', internalType: 'uint256', type: 'uint256' }],
+    name: 'getAIGC',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '_modelIndex', internalType: 'uint256', type: 'uint256' }],
+    name: 'getAIGT',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [],
-    name: 'getDeployedAIGCs',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    name: 'modelIndexCurrent',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
 ] as const
 
@@ -410,6 +493,12 @@ export const aigtABI = [
       { name: '_modelSymbol', internalType: 'string', type: 'string' },
       { name: '_tokenPrice', internalType: 'uint256', type: 'uint256' },
       { name: '_owner', internalType: 'address', type: 'address' },
+      { name: '_maxSupply', internalType: 'uint256', type: 'uint256' },
+      {
+        name: '_ownerReservePercent',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
     ],
   },
   {
@@ -558,6 +647,20 @@ export const aigtABI = [
     type: 'function',
     inputs: [],
     name: 'getModelIndex',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getShare',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'maxSupply',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
@@ -862,6 +965,25 @@ export function useAigcOwnerOf<
   return useContractRead({
     abi: aigcABI,
     functionName: 'ownerOf',
+    ...config,
+  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"royaltyInfo"`.
+ */
+export function useAigcRoyaltyInfo<
+  TFunctionName extends 'royaltyInfo',
+  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigcABI,
+    functionName: 'royaltyInfo',
     ...config,
   } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
 }
@@ -1394,10 +1516,10 @@ export function useAigcFactoryDeployedAigTs<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"getDeployedAIGCs"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"getAIGC"`.
  */
-export function useAigcFactoryGetDeployedAigCs<
-  TFunctionName extends 'getDeployedAIGCs',
+export function useAigcFactoryGetAigc<
+  TFunctionName extends 'getAIGC',
   TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
 >(
   config: Omit<
@@ -1407,7 +1529,45 @@ export function useAigcFactoryGetDeployedAigCs<
 ) {
   return useContractRead({
     abi: aigcFactoryABI,
-    functionName: 'getDeployedAIGCs',
+    functionName: 'getAIGC',
+    ...config,
+  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"getAIGT"`.
+ */
+export function useAigcFactoryGetAigt<
+  TFunctionName extends 'getAIGT',
+  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigcFactoryABI,
+    functionName: 'getAIGT',
+    ...config,
+  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"modelIndexCurrent"`.
+ */
+export function useAigcFactoryModelIndexCurrent<
+  TFunctionName extends 'modelIndexCurrent',
+  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigcFactoryABI,
+    functionName: 'modelIndexCurrent',
     ...config,
   } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
 }
@@ -1494,6 +1654,37 @@ export function usePrepareAigcFactoryCreateAigc(
     functionName: 'createAIGC',
     ...config,
   } as UsePrepareContractWriteConfig<typeof aigcFactoryABI, 'createAIGC'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcFactoryABI}__.
+ */
+export function useAigcFactoryEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof aigcFactoryABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: aigcFactoryABI,
+    ...config,
+  } as UseContractEventConfig<typeof aigcFactoryABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcFactoryABI}__ and `eventName` set to `"AIGC_Created"`.
+ */
+export function useAigcFactoryAigcCreatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof aigcFactoryABI, 'AIGC_Created'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: aigcFactoryABI,
+    eventName: 'AIGC_Created',
+    ...config,
+  } as UseContractEventConfig<typeof aigcFactoryABI, 'AIGC_Created'>)
 }
 
 /**
@@ -1587,6 +1778,44 @@ export function useAigtGetModelIndex<
   return useContractRead({
     abi: aigtABI,
     functionName: 'getModelIndex',
+    ...config,
+  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"getShare"`.
+ */
+export function useAigtGetShare<
+  TFunctionName extends 'getShare',
+  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigtABI,
+    functionName: 'getShare',
+    ...config,
+  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"maxSupply"`.
+ */
+export function useAigtMaxSupply<
+  TFunctionName extends 'maxSupply',
+  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigtABI,
+    functionName: 'maxSupply',
     ...config,
   } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
 }

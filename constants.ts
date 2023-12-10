@@ -1,7 +1,7 @@
 import { Model, NFT } from "./types";
 
 export const AIGC_FACTORY_CONTRACT_ADDRESS =
-  "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512";
+  "0x193c9be4d9bb1d5dd7c79606015c2746a4cda235"; // sepolia
 
 export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [
   {
@@ -16,7 +16,7 @@ export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [
     imageUrl: "/nft1.png",
   },
   {
-    modelIndex: 1,
+    modelIndex: "0xe0290A759D12266f43a91b1BDa79E47F5065c42A",
     modelName: "NOV 012",
     modelAddress: "0x123...abc",
     totalSupply: 1000,
@@ -27,7 +27,7 @@ export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [
     imageUrl: "/nft1.png",
   },
   {
-    modelIndex: 2,
+    modelIndex: "0xe0290A759D12266f43a91b1BDa79E47F5065c42A",
     modelName: "NOV 012",
     modelAddress: "0x123...abc",
     totalSupply: 1000,

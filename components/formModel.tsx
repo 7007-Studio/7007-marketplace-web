@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { TransactionExecutionError, zeroAddress } from "viem";
+import { TransactionExecutionError } from "viem";
 import {
+  useAigcFactoryAigcCreatedEvent,
   useAigcFactoryCreateAigc,
   usePrepareAigcFactoryCreateAigc,
 } from "@/generated";
@@ -35,18 +36,30 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
   } = usePrepareAigcFactoryCreateAigc({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     // uint256 _modelIndex, string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, address _opmlLib
+    // string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, address _opmlLib, uint256 _tokenMaxSupply, uint256 _ownerReservePercent, uint96 _royalty
     args: [
+      "Stable Diffusion",
+      "SD",
+      BigInt(0),
       BigInt(1),
-      "Modal A",
-      "MODA",
-      BigInt(1),
-      BigInt(1),
-      `0x0000000000000000000000000000000000000000000000000000000000000000`,
-      zeroAddress,
+      "0x7465787400000000000000000000000000000000000000000000000000000000",
+      "0xfEBfdE43561Bc74e4F982cdEB40A29966708E035",
+      BigInt(1000),
+      BigInt(10),
+      BigInt(10),
     ],
   });
   const { data, writeAsync, isLoading, isSuccess, isError, error } =
     useAigcFactoryCreateAigc(config);
+  useAigcFactoryAigcCreatedEvent({
+    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    listener: (log) => {
+      // aigcAddress, aigtAddress
+      router.push(
+        `/model/${log[0].args.aigtAddress}/aigc/${log[0].args.aigcAddress}/detail`
+      );
+    },
+  });
 
   const { control, register, handleSubmit, watch } = useForm<IFormModelInput>();
   const fileInputRef = React.useRef<HTMLInputElement>();
@@ -79,9 +92,9 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
 
     // TODO: replace with call to mint model
     // Ideally we listen to event, and get the AIGC
-    setTimeout(() => {
-      router.push("/model/1/detail");
-    }, 5000);
+    // setTimeout(() => {
+    //   router.push("/model/1/detail");
+    // }, 5000);
   };
 
   // console.log("isError", isError, error);
