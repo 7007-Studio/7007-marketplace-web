@@ -23,7 +23,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
 
   return (
     <div
-      onClick={() => router.push(`/model/${modelAddress}/detail`)}
+      onClick={() => router.push(`/model/${modelAddress}/aigc/1/detail`)}
       className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-cyan-500 outline-2 transition hover:cursor-pointer"
     >
       <div className="flex justify-between items-center">
