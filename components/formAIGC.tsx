@@ -239,10 +239,12 @@ export default function FormAIGC({
     const prompt = getValues("prompt");
     const tokenUri = await getTokenURI(imageUrl, audio, prompt);
 
+    const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
+
     writeAigcMint({
       args: [
         tokenUri,
-        hashedPrompt!,
+        hashedPrompt,
         "0x7465787400000000000000000000000000000000000000000000000000000000",
       ],
     });
