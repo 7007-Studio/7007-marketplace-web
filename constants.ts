@@ -1,6 +1,7 @@
 import { Model, NFT } from "./types";
 
 export const AIGC_FACTORY_CONTRACT_ADDRESS =
+  // "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // hardhat
   "0x193c9be4d9bb1d5dd7c79606015c2746a4cda235"; // sepolia
 
 export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [

@@ -40,6 +40,7 @@ export default function Detail() {
       <div className="flex items-center justify-center flex-col my-10">
         <ModelDetail
           imageUrl={targModel?.imageUrl as string}
+          modelAddress={index as string}
           modelName={modelName}
           totalSupply={Number(totalSupply)}
           maxSupply={Number(maxSupply)}
@@ -53,13 +54,12 @@ export default function Detail() {
             return (
               <ModelCard
                 modelName="NOV 012"
-                modelAddress="0x123...abc"
+                modelAddress={item.modelAddress}
                 totalSupply={1000}
                 nftMint={500}
                 title={item.title}
                 description={item.description}
                 imageUrl={item.imageUrl}
-                modelIndex={item.modelIndex}
                 key={item.modelIndex}
               />
             );

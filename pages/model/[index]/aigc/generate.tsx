@@ -1,10 +1,14 @@
 import FormAIGC from "@/components/formAIGC";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 
 export default function GenerateAIGC() {
+  const router = useRouter();
+  const { index } = router.query;
+
   const [isGenerating, setIsGenerating] = useState(false);
   const isMounted = useIsMounted();
   const { isConnected } = useAccount();
@@ -22,7 +26,7 @@ export default function GenerateAIGC() {
 
   return (
     <div className="container mx-auto md:max-w-2xl flex min-h-screen flex-col p-4">
-      {isGenerating ? (
+      {false ? (
         <div className="flex flex-col items-center justify-center gap-2 text-center">
           <h3 className="text-xl">Generating in progress...</h3>
           <span>It may take a few minutes</span>

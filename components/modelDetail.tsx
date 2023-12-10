@@ -3,7 +3,7 @@ import Link from "next/link";
 export interface ModelDetailProps {
   imageUrl: string;
   modelName?: string;
-  // modelAddress: string;
+  modelAddress: string;
   totalSupply?: number;
   maxSupply?: number;
   totalNFTMinted?: number;
@@ -12,6 +12,7 @@ export interface ModelDetailProps {
 }
 const ModelDetail: React.FC<ModelDetailProps> = ({
   modelName,
+  modelAddress,
   imageUrl,
   totalSupply,
   maxSupply,
@@ -39,13 +40,13 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
         </div>
         <div className="flex md:w-80 justify-around">
           <Link
-            href="/model/1/aigc/generate"
+            href={`/model/${modelAddress}/aigc/generate`}
             className="bg-white text-black rounded py-2 px-4 w-fit mr-4"
           >
             Generate NFT
           </Link>
           <Link
-            href="/model/1/mint"
+            href={`/model/${modelAddress}/mint`}
             className="bg-primary text-black rounded py-2 px-4"
           >
             Mint Model Tokens
