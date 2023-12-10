@@ -2,7 +2,8 @@ import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
 import { useAigcMint, usePrepareAigcMint } from "@/generated";
-import { useState } from "react";
+import { useState,  Dispatch,SetStateAction } from "react";
+import axios from "axios";
 
 export interface IFormAIGCInput {
   name: string;
@@ -22,7 +23,14 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
   const { config, error, isError } = usePrepareAigcMint();
   const { data, write, isLoading, isSuccess } = useAigcMint(config);
 
-  const { register, handleSubmit } = useForm<IFormAIGCInput>();
+  const { register, handleSubmit, formState } = useForm<IFormAIGCInput>();
+  const { errors } = formState;
+
+  // const [nftName , setNftName] = useState("");
+  // const [prompt , setPrompt] = useState("");
+  // const [audioURL , setAudioURL] = useState("");
+  // const [photo , setPhoto] = useState("");
+
   const onSubmit: SubmitHandler<IFormAIGCInput> = (data) => {
     setIsSubmitting(true);
     setIsGenerating(true);
@@ -44,14 +52,16 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
         placeholder="Let’s give it a cool name"
         name="name"
         register={register}
+        errors={errors}
       />
 
       <label className="form-control w-full">
         <textarea
           className="textarea textarea-bordered h-24"
           placeholder="Enter your prompt"
-          {...register("prompt")}
+          {...register("prompt", {required: "prompt is required"})}
         ></textarea>
+        <p className=" text-red-600 text-left text-sm">{errors.prompt?.message}</p>
       </label>
 
       <div className="flex justify-between items-end">
@@ -80,7 +90,7 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
         </div>
 
         <button
-          disabled={isLoading || isSubmitting || !write}
+          disabled={isLoading || isSubmitting }
           className="btn btn-primary"
         >
           {isSubmitting ? (
@@ -97,3 +107,78 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
     </form>
   );
 }
+
+
+export enum GenerateType {
+  Image,
+  Music,
+}
+
+const initOPML = async (type: GenerateType, prompt: string) => {
+  let error
+  try {
+    console.log("initOPML")
+    let response, data
+    if (type === GenerateType.Image) {
+       data = {
+        modelName: "MusicGen",
+        prompt: prompt
+      }
+      console.log(data)
+       response = await axios.post("/api/v1/dalle/opMLRequest", data, { timeout: 300000 })
+    }else if (type === GenerateType.Music) {
+      data = {
+        modelName: "StableDiffusion",
+        prompt: prompt
+      }
+      console.log(data)
+
+      response = await axios.post("/api/v1/dalle/opMLRequest", data, { timeout: 300000 })
+    }
+    console.log("response", response)
+    return [response?.data.MPChallenge, null]; // return data and null for error
+  } catch (error) {
+    console.error(error);
+    return [null, "Something went wrong! \n\n ERROR: " + error]; // return null for data and error message
+  }
+}
+
+const generateImage = async (contractAddr: string, prompt: string, setIsGenerating: Dispatch<SetStateAction<boolean>>) => {
+  try {
+    setIsGenerating(true);
+    console.log("generate Image")
+    let response = await axios.post("/api/v1/dalle/txt2img", {contractAddress: contractAddr,  prompt: prompt }, {timeout:300000})
+    const imageUrl = "data:image/png;base64," + response.data
+    return [imageUrl, ""]
+  } catch (error) {
+    return [null, "Something went wrong! \n\n ERROR: " + error]
+  }
+};
+
+const generateMusic = async (contractAddr: string, img: string, prompt: string) => {
+    try {
+      var audioUrl
+      console.log("generate Music")
+      axios.post("/api/v1/dalle/txt2music", {contractAddress: contractAddr,  prompt: prompt }, {timeout:300000})
+      .then((response) => {
+          console.log("/api/v1/dalle/txt2music")
+        audioUrl = "data:audio/mpeg;base64," + response.data
+      })
+      
+      // setCorrect
+      axios.post("/api/v1/dalle/setIsCorrect", {contractAddress: contractAddr,  isCorrect: true }, {timeout:300000})
+      .then((response) => {
+          console.log("/api/v1/dalle/setIsCorrect: ", response.data)
+      })
+
+      // submitterUploadResult
+      axios.post("/api/v1/dalle/submitterUploadResult", {contractAddress: contractAddr,}, {timeout:300000})
+      .then((response) => {
+          console.log("submitterUploadResult")
+          console.log(response.data)
+      })
+      return [audioUrl, ""]
+    } catch (error) {
+      return [null, "Something went wrong! \n\n ERROR: " + error]
+    } 
+};
