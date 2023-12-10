@@ -1,11 +1,14 @@
 import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
-import { useAigcMint, usePrepareAigcMint } from "@/generated";
+import { useAigcFactoryGetAigc, useAigcMint, useAigtApprove, useAigtMint, usePrepareAigcMint } from "@/generated";
 import { useState } from "react";
 import axios from "axios";
 import { create } from 'ipfs-http-client';
-import { ethers } from "ethers";
+import { Log, ethers } from "ethers";
+import { log } from "console";
+import { write } from "fs";
+import { Address } from "viem";
 
 const projectId = '2V1B4bBqSCyncDB2jeHd7uy5oLN'
 const projectSecret = '2b18de3a067e0a35d8700ef362c816dc'
@@ -29,14 +32,19 @@ export interface IFormAIGCInput {
 
 interface FormAIGCProps {
   setIsGenerating: (isGenerating: boolean) => void;
+  aigtAddress: string;
+  aigcAddress: string;
 }
 
-export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
+export default function FormAIGC({ setIsGenerating, aigtAddress, aigcAddress }: FormAIGCProps) {
   const router = useRouter();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { data, writeAsync, isLoading, isSuccess, isError, error } = useAigcMint({
-    address: "0x188E4bFB63E1d1027454aF6a6619CCb45B5d83ea"
+
+  const {  writeAsync: writeAsyncAigtApprove } = useAigtApprove({
+    address: aigtAddress as Address
+  });
+  const {  writeAsync: writeAsyncAigcMint } = useAigcMint({
+    address: aigcAddress as Address
   });
 
   const { register, handleSubmit, formState } = useForm<IFormAIGCInput>();
@@ -222,9 +230,13 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
     [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
     await generateMusic(contractAddr, data.prompt);
 
+    await writeAsyncAigtApprove({
+      args: [aigcAddress as Address, BigInt(1000)]
+    });
+
     const tokenUri = await getTokenURI(imageUrl, audio, data.prompt)
     const hashedPrompt = ethers.encodeBytes32String(data.prompt) as `0x${string}`;
-    await writeAsync({
+    await writeAsyncAigcMint({
       args: [tokenUri, hashedPrompt , "0x7465787400000000000000000000000000000000000000000000000000000000"]
     });
     router.push("/marketPlace")

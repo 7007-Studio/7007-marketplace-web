@@ -6,6 +6,7 @@ import Tabs from "@/components/tabs";
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
 import { isModel, isNFT } from "@/helpers";
+import { AIGC_CONTRACT_ADDRESS, AIGT_CONTRACT_ADDRESS } from "@/constants";
 
 export enum TabState {
   All,
@@ -36,7 +37,7 @@ export default function MarketPlace() {
             </li>
             <li>
               <Link
-                href="/model/index/aigc/generate"
+                href={`/model/${AIGT_CONTRACT_ADDRESS}/aigc/${AIGC_CONTRACT_ADDRESS}/generate`}
                 className="bg-black text-white hover:text-black p-2 tracking-wider"
               >
                 AIGC

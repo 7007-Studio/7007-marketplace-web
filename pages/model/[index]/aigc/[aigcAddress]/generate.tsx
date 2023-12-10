@@ -1,6 +1,7 @@
 import FormAIGC from "@/components/formAIGC";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { clsx } from "clsx";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { keccak256, toHex } from "viem";
@@ -8,7 +9,7 @@ import { useAccount } from "wagmi";
 
 export default function GenerateAIGC() {
   const router = useRouter();
-  const { index } = router.query;
+  const { index, aigcAddress } = router.query;
 
   console.log(keccak256(toHex("hello world")));
 
@@ -29,21 +30,25 @@ export default function GenerateAIGC() {
 
   return (
     <div className="container mx-auto md:max-w-2xl flex min-h-screen flex-col p-4">
-      {false ? (
+      {isGenerating && (
         <div className="flex flex-col items-center justify-center gap-2 text-center">
           <h3 className="text-xl">Generating in progress...</h3>
           <span>It may take a few minutes</span>
+          {/* `/model/${aigt_address}/aigc/${aigc_addrss}/generate` */}
 
           <span className="loading loading-dots loading-lg"></span>
         </div>
-      ) : (
-        <>
-          <h1 className="text-3xl font-bold mb-4">
-            Generate your AIGC music and art with 7007 Studio
-          </h1>
-          <FormAIGC setIsGenerating={setIsGenerating} />
-        </>
       )}
+      <div
+        className={clsx({
+          hidden: isGenerating,
+        })}
+      >
+        <h1 className="text-3xl font-bold mb-4">
+          Generate your AIGC music and art with 7007 Studio
+        </h1>
+        <FormAIGC setIsGenerating={setIsGenerating} aigtAddress={index as string} aigcAddress={aigcAddress as string} />
+      </div>
     </div>
   );
 }
