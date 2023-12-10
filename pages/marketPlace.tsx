@@ -5,19 +5,12 @@ import { Model, NFT } from "@/types";
 import Tabs from "@/components/tabs";
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
+import { isModel, isNFT } from "@/helpers";
 
 export enum TabState {
   All,
   Model,
   NFT,
-}
-
-function isNFT(item: any): item is NFT {
-  return (item as NFT).tokenID !== undefined;
-}
-
-function isModel(item: any): item is Model {
-  return (item as Model).modelIndex !== undefined;
 }
 
 export default function MarketPlace() {

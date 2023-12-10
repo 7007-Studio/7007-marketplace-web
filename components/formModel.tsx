@@ -81,11 +81,12 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
     }, 5000);
   };
 
-  console.log("isError", isError, error);
+  // console.log("isError", isError, error);
 
-  if (isSuccess) {
-    router.push("/");
-  }
+  // if (isSuccess) {
+  //   debugger;
+  //   router.push("/model/1/detail");
+  // }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
