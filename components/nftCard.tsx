@@ -22,11 +22,11 @@ const NFTCard: React.FC<NFTCardProps> = ({
   openseaLink,
   imageUrl,
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <div className="card w-80 bg-black text-white rounded-lg shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition">
+    <div className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition">
       <div className="flex justify-between items-center">
         <h2 className="card-title p-4">{nftName}</h2>
         <div className="badge badge-secondary m-4">{modelName}</div>
@@ -70,7 +70,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
         )}
       </button>
 
-      <div className="card-body">
+      <div className="card-body flex-initial">
         <h2 className="text-2xl mb-4 font-bold">{title}</h2>
         <p className="mb-4 text-zinc-400">{description}</p>
         {/* detail */}

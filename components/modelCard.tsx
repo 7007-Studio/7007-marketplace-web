@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export interface ModelCardProps {
   modelName: string;
@@ -19,34 +20,36 @@ const ModelCard: React.FC<ModelCardProps> = ({
   description,
   imageUrl,
 }) => {
-  return (
-    <Link href={`/model/1/detail`}>
-      <div className="card w-80 bg-black text-white rounded-lg shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-cyan-500 outline-2 transition">
-        <div className="flex justify-between items-center">
-          <h2 className="card-title p-4">{modelName}</h2>
-          <div className="badge badge-info m-4 p-3">{modelAddress}</div>
-        </div>
-        <figure>
-          <img
-            src={imageUrl}
-            alt={`Image of ${modelName}`}
-            className="w-full object-cover"
-          />
-        </figure>
+  const router = useRouter();
 
-        {/* Content */}
-        <div className="p-4 mt-7">
-          <h2 className="text-2xl mb-4 font-bold">{title}</h2>
-          <p className="mb-4 text-zinc-400">{description}</p>
-          <div className="bg-black text-white  flex items-center justify-between ">
-            <h2 className="">Token Supply</h2>
-            <span className="text-cyan-400 text-sm">
-              {nftMint} / {totalSupply}
-            </span>
-          </div>
+  return (
+    <div
+      onClick={() => router.push("/model/1/detail")}
+      className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-cyan-500 outline-2 transition hover:cursor-pointer"
+    >
+      <div className="flex justify-between items-center">
+        <h2 className="card-title p-4">{modelName}</h2>
+        <div className="badge badge-info m-4 p-3">{modelAddress}</div>
+      </div>
+      <figure>
+        <img
+          src={imageUrl}
+          alt={`Image of ${modelName}`}
+          className="w-full object-cover"
+        />
+      </figure>
+
+      <div className="p-4 mt-7">
+        <h2 className="text-2xl mb-4 font-bold">{title}</h2>
+        <p className="mb-4 text-zinc-400">{description}</p>
+        <div className="bg-black text-white  flex items-center justify-between ">
+          <h2 className="">Token Supply</h2>
+          <span className="text-cyan-400 text-sm">
+            {nftMint} / {totalSupply}
+          </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
