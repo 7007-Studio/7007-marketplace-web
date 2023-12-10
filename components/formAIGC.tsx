@@ -27,6 +27,7 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
   const { errors } = formState;
 
   const [imageUrl, setImageUrl] = useState("");
+  const [audio, setAudio] = useState("");
   const [contractAddress, setContractAddress] = useState("");
 
   // const [nftName , setNftName] = useState("");
@@ -93,13 +94,8 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
     }
   };
 
-  const generateMusic = async (
-    contractAddr: string,
-    img: string,
-    prompt: string
-  ) => {
+  const generateMusic = async (contractAddr: string, prompt: string) => {
     try {
-      var audioUrl;
       console.log("generate Music");
       axios
         .post(
@@ -109,7 +105,8 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
         )
         .then((response) => {
           console.log("/api/v1/dalle/txt2music");
-          audioUrl = "data:audio/mpeg;base64," + response.data;
+          const audioUrl = "data:audio/mpeg;base64," + response.data;
+          setAudio(audioUrl);
         });
 
       // setCorrect
@@ -134,7 +131,6 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
           console.log("submitterUploadResult");
           console.log(response.data);
         });
-      return [audioUrl, ""];
     } catch (error) {
       return [null, "Something went wrong! \n\n ERROR: " + error];
     }
@@ -147,11 +143,10 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
 
     let [contractAddr, error] = await initOPML(GenerateType.Image, data.prompt);
     // console.log("contractAddr: ", contractAddr)
-    let [img] = await generateImage(contractAddr, data.prompt);
-    if (img) {
-      contractAddr = await initOPML(GenerateType.Music, data.prompt);
-      await generateMusic(contractAddr, img, data.prompt);
-    }
+    const [img] = await generateImage(contractAddr, data.prompt);
+
+    [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
+    await generateMusic(contractAddr, data.prompt);
 
     if (writeAsync) {
       const data = await writeAsync();
@@ -221,7 +216,15 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
         </button>
         {isError && <div>Error: {error?.message}</div>}
       </div>
-      <img src={imageUrl} />
+      {imageUrl && <img src={imageUrl} />}
+      {audio && (
+        <audio
+          controls
+          src={audio}
+          type="audio/ogg"
+          className="w-full h-full object-contain"
+        ></audio>
+      )}
     </form>
   );
 }
