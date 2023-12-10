@@ -42,7 +42,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
       <button onClick={() => setIsPlaying(!isPlaying)} className="ml-5 -mt-5">
         {isPlaying ? (
           <svg
-            className="ml-1 bg-black outline  outline-1 outline-cyan-400 h-12 w-12 p-3 "
+            className="ml-1 bg-black outline  outline-1 outline-primary h-12 w-12 p-3 "
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -58,7 +58,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
           </svg>
         ) : (
           <svg
-            className="ml-1 bg-black outline  outline-1 outline-cyan-400 h-12 w-12 p-2 "
+            className="ml-1 bg-black outline  outline-1 outline-primary h-12 w-12 p-2 "
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -105,17 +105,20 @@ const NFTCard: React.FC<NFTCardProps> = ({
           } `}
         >
           {/* Your collapsible content goes here */}
-          <div className="bg-black text-white  flex items-center justify-between text-xs leading-5	">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
             <h2>Contract Address</h2>
             <span>{nftAddress}</span>
           </div>
-          <div className="bg-black text-white  flex items-center justify-between text-xs leading-5	">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
             <h2>Token ID</h2>
             <span>{tokenID}</span>
           </div>
-          <div className="bg-black text-white  flex items-center justify-between text-xs leading-5">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
             <h2>Opensea link</h2>
-            <a href={openseaLink} className="text-blue-500 hover:text-blue-600">
+            <a
+              href={openseaLink}
+              className="text-blue-500 hover:text-blue-600 overflow-hidden"
+            >
               {openseaLink}
             </a>
           </div>

@@ -28,11 +28,11 @@ export default function ModelDetail() {
 
         <div className=" text-white  flex items-center justify-between mb-3">
           <h2 className="">Token Supply</h2>
-          <span className="text-cyan-400 text-sm">100 / 1000</span>
+          <span className="text-primary text-sm">100 / 1000</span>
         </div>
         <div className=" text-white  flex items-center justify-between  mb-4">
           <h2 className="">Total NFT Mint</h2>
-          <span className="text-cyan-400 text-sm">100</span>
+          <span className="text-primary text-sm">100</span>
         </div>
         <div className="flex md:w-80 justify-around">
           <Link
@@ -43,7 +43,7 @@ export default function ModelDetail() {
           </Link>
           <Link
             href="/model/1/mint"
-            className="bg-cyan-400 text-black rounded py-2 px-4"
+            className="bg-primary text-black rounded py-2 px-4"
           >
             Mint Model Tokens
           </Link>

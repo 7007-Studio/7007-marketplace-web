@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 export interface ModelCardProps {
@@ -42,9 +41,9 @@ const ModelCard: React.FC<ModelCardProps> = ({
       <div className="p-4 mt-7">
         <h2 className="text-2xl mb-4 font-bold">{title}</h2>
         <p className="mb-4 text-zinc-400">{description}</p>
-        <div className="bg-black text-white  flex items-center justify-between ">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <h2 className="">Token Supply</h2>
-          <span className="text-cyan-400 text-sm">
+          <span className="text-primary text-sm">
             {nftMint} / {totalSupply}
           </span>
         </div>
