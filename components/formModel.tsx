@@ -9,6 +9,7 @@ import {
 } from "@/generated";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import TextInput from "./textInput";
+import { useWaitForTransaction } from "wagmi";
 
 export interface IFormModelInput {
   name: string;
