@@ -1,8 +1,9 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
+import { Address, formatEther, parseEther } from "viem";
 import { useAigtMint, usePrepareAigtMint } from "@/generated";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { Address, formatEther, parseEther } from "viem";
 
 export default function MintModelToken() {
   const router = useRouter();
