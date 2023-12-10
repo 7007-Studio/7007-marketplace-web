@@ -47,6 +47,13 @@ export default function MintModelToken() {
     return formatEther(tokenPrice * BigInt(numberOfToken));
   };
 
+  const remainSupply = () => {
+    if (!totalSupply || !maxSupply) {
+      return "";
+    }
+    return maxSupply - totalSupply;
+  };
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
     if (write) {
@@ -144,7 +151,7 @@ export default function MintModelToken() {
 
         <div>
           <span className="text-primary">
-            {totalSupply?.toString()}/{maxSupply?.toString()}
+            {remainSupply().toString()}/{maxSupply?.toString()}
           </span>{" "}
           tokens have been minted under this model.
         </div>
