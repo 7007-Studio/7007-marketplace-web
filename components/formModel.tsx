@@ -74,7 +74,13 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
         // BigInt(10),
       ],
     });
+
+    setIsSubmitting(false);
   };
+
+  if (isError) {
+    setIsGenerating(false);
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -82,6 +88,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
         label="Name of Model"
         placeholder="Model Name"
         name="name"
+        required
         register={register}
       />
 
@@ -139,29 +146,34 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
         <TextInput
           label="Token Symbol"
           name="tokenSymbol"
+          required
           register={register}
         />
         <TextInput
           label="Total Supply"
           name="tokenTotalSupply"
+          required
           register={register}
         />
         <TextInput
           label="Initial Price"
           postfix="ETH"
           name="tokenInitialPrice"
+          required
           register={register}
         />
         <TextInput
           label="Royalty Share"
           postfix="%"
           name="tokenRoyaltyShare"
+          required
           register={register}
         />
         <TextInput
           label="Owner Reserve Percentage"
           postfix="%"
           name="tokenOwnerReservePercentage"
+          required
           register={register}
         />
       </div>
@@ -180,7 +192,11 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
             "Publish"
           )}
         </button>
-        {isError && <div>Error: {error?.message}</div>}
+        {isError && (
+          <div className="overflow-x-auto whitespace-break-spaces">
+            Error: {error?.message}
+          </div>
+        )}
       </div>
     </form>
   );

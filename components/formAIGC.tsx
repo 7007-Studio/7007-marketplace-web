@@ -223,7 +223,7 @@ export default function FormAIGC({ setIsGenerating }: FormAIGCProps) {
         <audio
           controls
           src={audio}
-          type="audio/ogg"
+          // type="audio/ogg"
           className="w-full h-full object-contain"
         ></audio>
       )}

@@ -28,7 +28,7 @@ export default function TextInput<T extends FieldValues>({
 }: TextInputProps<T>) {
   const registerOptions: RegisterOptions = {};
   if (required) {
-    registerOptions.required = "prompt is required";
+    registerOptions.required = "This field is required";
   }
   return (
     <label className="form-control w-full">
