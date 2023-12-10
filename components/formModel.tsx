@@ -1,13 +1,13 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-import TextInput from "./textInput";
+import React, { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import { TransactionExecutionError, zeroAddress } from "viem";
 import {
   useAigcFactoryCreateAigc,
   usePrepareAigcFactoryCreateAigc,
 } from "@/generated";
-import { useState } from "react";
-import { TransactionExecutionError, zeroAddress } from "viem";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
+import TextInput from "./textInput";
 
 export interface IFormModelInput {
   name: string;
@@ -17,6 +17,7 @@ export interface IFormModelInput {
   tokenInitialPrice: number;
   tokenRoyaltyShare: number;
   tokenOwnerReservePercentage: number;
+  file: File[];
 }
 
 interface FormModelProps {
@@ -47,7 +48,9 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
   const { data, writeAsync, isLoading, isSuccess, isError, error } =
     useAigcFactoryCreateAigc(config);
 
-  const { register, handleSubmit } = useForm<IFormModelInput>();
+  const { control, register, handleSubmit, watch } = useForm<IFormModelInput>();
+  const fileInputRef = React.useRef<HTMLInputElement>();
+  const selectedFile = watch("file");
   const onSubmit: SubmitHandler<IFormModelInput> = async (data) => {
     setIsSubmitting(true);
     setIsGenerating(true);
@@ -108,9 +111,46 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
         ></textarea>
       </label>
 
-      {/* <label>Upload your model file to 7007</label>
-        <input {...register("modelFile")} /> */}
       <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <Controller
+            name="file"
+            control={control}
+            defaultValue={[]}
+            render={({ field }) => (
+              <>
+                <input
+                  ref={(e) => {
+                    field.ref(e);
+                    if (e) {
+                      fileInputRef.current = e;
+                    }
+                  }}
+                  type="file"
+                  hidden
+                  onChange={(e) => field.onChange(e.target.files)}
+                />
+                <label className="form-control w-full">
+                  <div className="label">
+                    <span className="label-text">
+                      Upload your model file to 7007
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    Upload File
+                  </button>
+                </label>
+              </>
+            )}
+          />
+          {selectedFile && selectedFile.length > 0 && (
+            <div>Selected file: {selectedFile[0].name}</div>
+          )}
+        </div>
         <TextInput
           label="Token Symbol"
           name="tokenSymbol"
