@@ -1,6 +1,6 @@
 import { useState } from "react";
 import FormModel from "@/components/formModel";
-import { useAccount, useWalletClient } from "wagmi";
+import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function GenerateModel() {
