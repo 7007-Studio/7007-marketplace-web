@@ -123,16 +123,19 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
         />
         <TextInput
           label="Initial Price"
+          postfix="ETH"
           name="tokenInitialPrice"
           register={register}
         />
         <TextInput
           label="Royalty Share"
+          postfix="%"
           name="tokenRoyaltyShare"
           register={register}
         />
         <TextInput
           label="Owner Reserve Percentage"
+          postfix="%"
           name="tokenOwnerReservePercentage"
           register={register}
         />
