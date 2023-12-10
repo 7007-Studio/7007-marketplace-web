@@ -29,7 +29,7 @@ export default function MarketPlace() {
             <li>
               <Link
                 href="/model/generate"
-                className="bg-black text-white p-2 tracking-wider"
+                className="bg-black text-white hover:text-black p-2 tracking-wider"
               >
                 Model
               </Link>
@@ -37,7 +37,7 @@ export default function MarketPlace() {
             <li>
               <Link
                 href="/model/index/aigc/generate"
-                className="bg-black text-white p-2 tracking-wider"
+                className="bg-black text-white hover:text-black p-2 tracking-wider"
               >
                 AIGC
               </Link>
