@@ -1,32 +1,19 @@
+import { TabState } from "@/pages/marketPlace";
+
 interface TabsProps {
-  isAllTab: boolean;
-  setIsAllTab: (isAllTab: boolean) => void;
-  isModelTab: boolean;
-  setIsModelTab: (isModelTab: boolean) => void;
-  isNFTTab: boolean;
-  setIsNFTTab: (isNFTTab: boolean) => void;
+  currentTab: TabState;
+  setCurrentTab: (tabState: TabState) => void;
 }
 
-export default function Tabs({
-  isAllTab,
-  isModelTab,
-  isNFTTab,
-  setIsAllTab,
-  setIsModelTab,
-  setIsNFTTab,
-}: TabsProps) {
+export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
   return (
     <ul className="menu menu-horizontal">
       <li className="mr-2">
         <a
           className={`text-white hover:bg-white hover:text-black text-lg ${
-            isAllTab && "focus"
+            currentTab === TabState.All && "focus"
           }`}
-          onClick={() => {
-            setIsAllTab(true);
-            setIsModelTab(false);
-            setIsNFTTab(false);
-          }}
+          onClick={() => setCurrentTab(TabState.All)}
         >
           ALL
         </a>
@@ -34,13 +21,9 @@ export default function Tabs({
       <li className="mr-2">
         <a
           className={`text-white hover:bg-white hover:text-black text-lg ${
-            isModelTab && "focus"
+            currentTab === TabState.Model && "focus"
           }`}
-          onClick={() => {
-            setIsAllTab(false);
-            setIsModelTab(true);
-            setIsNFTTab(false);
-          }}
+          onClick={() => setCurrentTab(TabState.Model)}
         >
           MODEL
         </a>
@@ -48,13 +31,9 @@ export default function Tabs({
       <li>
         <a
           className={`text-white hover:bg-white hover:text-black text-lg ${
-            isNFTTab && "focus"
+            currentTab === TabState.NFT && "focus"
           }`}
-          onClick={() => {
-            setIsAllTab(false);
-            setIsModelTab(false);
-            setIsNFTTab(true);
-          }}
+          onClick={() => setCurrentTab(TabState.NFT)}
         >
           NFT
         </a>
