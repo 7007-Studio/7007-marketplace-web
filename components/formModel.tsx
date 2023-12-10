@@ -10,6 +10,7 @@ import {
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import TextInput from "./textInput";
 import { parseEther } from "viem";
+import { useWaitForTransaction } from "wagmi";
 
 export interface IFormModelInput {
   name: string;
