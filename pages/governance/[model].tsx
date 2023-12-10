@@ -1,5 +1,10 @@
-import { ResponsiveLine } from "@nivo/line";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const ResponsiveLine = dynamic(
+  () => import("@nivo/line").then((m) => m.ResponsiveLine),
+  { ssr: false }
+);
 
 export default function ModelGovernance() {
   return (
