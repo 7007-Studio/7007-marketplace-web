@@ -244,8 +244,6 @@ export default function FormAIGC({
       args: [aigcAddress as Address, BigInt(1000)],
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
     const tokenUri = await getTokenURI(imageUrl, audio, data.prompt);
     const hashedPrompt = ethers.encodeBytes32String(
       data.prompt
