@@ -11,7 +11,7 @@ export interface ModelDetailProps {
 }
 const ModelDetail: React.FC<ModelDetailProps> = ({ imageUrl }) => {
   return (
-    <div className="flex flex-col shadow md:flex-row max-w-md md:max-w-xl mx-auto self-center bg-[#191717]">
+    <div className="flex flex-col shadow md:flex-row max-w-md md:max-w-2xl mx-auto self-center bg-[#191717]">
       <img src={imageUrl} className="object-cover w-full" alt="" />
       <div className="flex flex-col justify-between p-8">
         <h5 className="mb-2 md:text-2xl font-bold">
