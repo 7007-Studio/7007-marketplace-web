@@ -29,17 +29,17 @@ export default function MintModelToken() {
 
   if (isSuccess) {
     return (
-      <main className="flex min-h-screen flex-col p-4 md:p-48">
+      <div className="container mx-auto md:max-w-2xl flex min-h-screen flex-col p-4">
         <h1 className="text-3xl font-bold mb-4">
           Your model token was minted successfully!
         </h1>
         <div>Transaction: {data?.hash}</div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col p-4 md:p-48">
+    <div className="container mx-auto md:max-w-2xl flex min-h-screen flex-col p-4">
       <h1 className="text-3xl font-bold mb-4">Mint Your Model Token</h1>
       <h2 className="text-2xl mb-2">Model Name</h2>
       <div className="flex flex-col gap-4">
@@ -89,6 +89,6 @@ export default function MintModelToken() {
           under this model.
         </div>
       </div>
-    </main>
+    </div>
   );
 }

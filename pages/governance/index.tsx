@@ -5,12 +5,12 @@ export default function MarketPlace() {
   const items = [1, 2, 3, 4];
 
   return (
-    <main className="flex min-h-screen jus flex-col p-20 py-16 mx-auto lg:w-[75vw]  ">
-      <div className="flex items-center justify-center mb-10 ">
-        <h1 className="text-3xl font-bold text-white">7007Lab Governance</h1>
-      </div>
-      <div className="overflow-x-auto bg-black hidden sm:block">
-        <table className="table">
+    <div className="container mx-auto mt-12 flex min-h-screen flex-col p-20 py-16">
+      <h1 className="text-3xl mb-10 font-bold text-white">
+        7007Lab Governance
+      </h1>
+      <div className="hidden md:flex md:justify-center py-8 overflow-x-auto bg-[#191717]">
+        <table className="table max-w-2xl">
           <thead>
             <tr>
               <th>Model name</th>
@@ -21,7 +21,11 @@ export default function MarketPlace() {
           </thead>
           <tbody>
             {items.map((item) => (
-              <tr key={item} onClick={() => router.push(`/governance/${item}`)}>
+              <tr
+                key={item}
+                className="hover:cursor-pointer"
+                onClick={() => router.push(`/governance/${item}`)}
+              >
                 <td>AI MODEL NAME</td>
                 <td>5</td>
                 <td>150</td>
@@ -32,13 +36,13 @@ export default function MarketPlace() {
         </table>
       </div>
 
-      <div className="block sm:hidden">
-        <div className="bg-black shadow overflow-hidden sm:rounded-lg">
-          <div className="px-4 py-5 sm:px-6">
+      <div className="block md:hidden">
+        <div className="bg-[#191717] shadow overflow-hidden">
+          <div className="px-6 md:px-4 py-5">
             {items.map((item) => (
               <div
                 key={item}
-                className="mb-9"
+                className="mb-9 hover:cursor-pointer"
                 onClick={() => router.push(`/governance/${item}`)}
               >
                 <h3 className="text-lg leading-6 font-medium text-white">
@@ -65,6 +69,6 @@ export default function MarketPlace() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

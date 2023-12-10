@@ -5,7 +5,7 @@ export default function GenerateModel() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   return (
-    <main className="flex min-h-screen flex-col p-4 md:p-48">
+    <div className="container mx-auto md:max-w-2xl flex min-h-screen flex-col p-4">
       {isGenerating ? (
         <div className="flex flex-col items-center justify-center gap-2 text-center">
           <h3 className="text-xl">Generating in progress...</h3>
@@ -21,6 +21,6 @@ export default function GenerateModel() {
           <FormModel setIsGenerating={setIsGenerating} />
         </>
       )}
-    </main>
+    </div>
   );
 }

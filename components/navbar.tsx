@@ -19,12 +19,8 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="flex-none gap-2">
-        <Link href="/marketPlace" className="btn">
-          Marketplace
-        </Link>
-        <Link href="/governance" className="btn">
-          Governance
-        </Link>
+        <Link href="/marketPlace">Marketplace</Link>
+        <Link href="/governance">Governance</Link>
         <ConnectButton />
       </div>
     </div>

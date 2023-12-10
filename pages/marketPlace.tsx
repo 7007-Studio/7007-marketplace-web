@@ -17,7 +17,7 @@ export default function MarketPlace() {
   const [currentTab, setCurrentTab] = useState(TabState.All);
   const items = MOCK_MARKETPLACE_DATA;
   return (
-    <main className="flex min-h-screen flex-col p-20 py-16 mx-auto w-[95vw] ">
+    <div className="flex min-h-screen flex-col p-20 py-16 mx-auto w-[95vw] ">
       <h1 className="text-3xl font-bold text-white">7007Lab Marketplace</h1>
       <div className="flex flex-col md:flex-row justify-between items-baseline">
         <div className="my-5 -mx-2">
@@ -97,6 +97,6 @@ export default function MarketPlace() {
             }
           })}
       </div>
-    </main>
+    </div>
   );
 }

@@ -25,6 +25,7 @@ const config: Config = {
           "--rounded-box": "2px",
           primary: "#00D5FF",
           "--rounded-btn": "2px",
+          "--fallback-bc": "#FFF",
         },
       },
     ],

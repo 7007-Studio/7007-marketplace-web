@@ -8,7 +8,7 @@ const ResponsiveLine = dynamic(
 
 export default function ModelGovernance() {
   return (
-    <div className="bg-[#121212] text-white min-h-screen p-8">
+    <div className="container mx-auto mt-12 md:max-w-6xl bg-[#121212] min-h-screen p-4">
       <div className="flex items-center mb-6">
         <Link href="/governance" className="flex">
           <ArrowLeftIcon className="text-blue-500 mr-2" />
