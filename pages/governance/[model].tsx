@@ -78,7 +78,7 @@ export default function ModelGovernance() {
               <textarea
                 className="w-full p-2 bg-[#2D2D2D] text-white mb-4"
                 placeholder="Describe your proposal"
-                rows="4"
+                rows={4}
               />
               <button className="btn w-full">Submit Proposal</button>
             </div>
