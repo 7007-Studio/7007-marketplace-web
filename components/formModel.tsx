@@ -9,13 +9,14 @@ import {
 } from "@/generated";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import TextInput from "./textInput";
+import { parseEther } from "viem";
 
 export interface IFormModelInput {
   name: string;
   description: string;
   tokenSymbol: string;
   tokenTotalSupply: number;
-  tokenInitialPrice: number;
+  tokenInitialPrice: string;
   tokenRoyaltyShare: number;
   tokenOwnerReservePercentage: number;
   file: File[];
@@ -55,7 +56,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
       args: [
         data.name,
         data.tokenSymbol,
-        BigInt(data.tokenInitialPrice),
+        parseEther(data.tokenInitialPrice),
         BigInt(1),
         "0x7465787400000000000000000000000000000000000000000000000000000000",
         "0xfEBfdE43561Bc74e4F982cdEB40A29966708E035",

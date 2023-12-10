@@ -24,7 +24,7 @@ export default function MarketPlace() {
               <tr
                 key={item}
                 className="hover:cursor-pointer hover:text-primary"
-                onClick={() => router.push(`/governance/${item}`)}
+                onClick={() => router.push(`/model/${item}/governance`)}
               >
                 <td>AI MODEL NAME</td>
                 <td>5</td>

@@ -1,5 +1,8 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useAigtName } from "@/generated";
+import { Address } from "viem";
 
 const ResponsiveLine = dynamic(
   () => import("@nivo/line").then((m) => m.ResponsiveLine),
@@ -7,6 +10,13 @@ const ResponsiveLine = dynamic(
 );
 
 export default function ModelGovernance() {
+  const router = useRouter();
+  const { index } = router.query;
+
+  const { data: modelName } = useAigtName({
+    address: index as Address,
+  });
+
   return (
     <div className="container mx-auto mt-12 md:max-w-6xl bg-[#121212] min-h-screen p-4">
       <div className="flex items-center mb-6">
@@ -18,9 +28,7 @@ export default function ModelGovernance() {
       <div className="grid grid-cols-2 gap-8">
         <div>
           <div className="bg-[#1E1E1E] p-6">
-            <h2 className="text-xl font-bold mb-4">
-              [AI MODEL NAME] Governance
-            </h2>
+            <h2 className="text-xl font-bold mb-4">{modelName} Governance</h2>
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-2">
                 Revenue Graph (past 7 days)
