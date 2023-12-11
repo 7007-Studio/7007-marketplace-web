@@ -9,7 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nivo/core": "^0.84.0",
+    "@nivo/line": "^0.84.0",
     "@rainbow-me/rainbowkit": "^1.3.0",
+    "axios": "^1.6.2",
+    "clsx": "^2.0.0",
+    "ethers": "^6.9.0",
+    "ipfs-http-client": "^60.0.1",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
@@ -21,6 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@wagmi/cli": "^1.5.2",
     "autoprefixer": "^10.0.1",
     "daisyui": "^4.4.19",
     "eslint": "^8",
