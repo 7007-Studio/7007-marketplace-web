@@ -42,17 +42,17 @@ export default function FormAIGC({
 }: FormAIGCProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  console.log("aigtAddress :",aigtAddress);
+  console.log("aigcAddress :",aigcAddress);
   const { data: aigtApprove, write: writeAigtApprove } = useAigtApprove({
     address: aigtAddress as Address,
   });
   const { isSuccess: approveIsSuccess } = useWaitForTransaction({
     hash: aigtApprove?.hash,
   });
-  const { isSuccess: mintIsSuccess, write: writeAigcMint } = useAigcMint({
+  const { isSuccess: mintIsSuccess, write: writeAigcMint} = useAigcMint({
     address: aigcAddress as Address,
   });
-
   const { register, handleSubmit, formState, getValues } =
     useForm<IFormAIGCInput>();
   const { errors } = formState;
@@ -219,11 +219,12 @@ export default function FormAIGC({
 
     [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
     const [audio] = await generateMusic(contractAddr, data.prompt);
-
+    console.log("aigtAddress :",aigtAddress);
+    console.log("aigcAddress :",aigcAddress);
     writeAigtApprove({
       args: [aigcAddress as Address, BigInt(1000)],
     });
-
+  
     const hashedPrompt = ethers.encodeBytes32String(
       data.prompt
     ) as `0x${string}`;
@@ -238,7 +239,8 @@ export default function FormAIGC({
   const onMint = async () => {
     const prompt = getValues("prompt");
     const tokenUri = await getTokenURI(imageUrl, audio, prompt);
-
+    console.log("tokenURI",tokenUri);
+    
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
 
     writeAigcMint({
@@ -249,10 +251,6 @@ export default function FormAIGC({
       ],
     });
   };
-
-  if (mintIsSuccess) {
-    router.push("/marketPlace");
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -298,10 +296,7 @@ export default function FormAIGC({
         </div>
 
         {!approveIsSuccess && (
-          <button
-            // disabled={isLoading || isSubmitting || !writeAsync}
-            className="btn btn-primary"
-          >
+          <button className="btn btn-primary">
             {isSubmitting ? (
               <>
                 <span className="loading loading-spinner"></span>

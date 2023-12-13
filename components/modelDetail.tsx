@@ -33,7 +33,7 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
         <div className=" text-white  flex items-center justify-between mb-3">
           <h2 className="">Token Supply</h2>
           <span className="text-primary text-sm">
-            {totalSupply} / {maxSupply}
+          {totalSupply} / {maxSupply} 
           </span>
         </div>
         <div className=" text-white  flex items-center justify-between  mb-4">
@@ -48,7 +48,7 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
             Generate NFT
           </Link>
           <Link
-            href={`/model/${modelAddress}/mint`}
+            href={`/model/${modelAddress}/aigc/${aigcAddress}/mint`}
             className="bg-primary text-black rounded py-2 px-4"
           >
             Mint Model Tokens

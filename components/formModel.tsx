@@ -40,6 +40,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     listener: (log) => {
       // aigcAddress, aigtAddress
+      console.log(log)
       router.push(
         `/model/${log[0].args.aigtAddress}/aigc/${log[0].args.aigcAddress}/detail`
       );

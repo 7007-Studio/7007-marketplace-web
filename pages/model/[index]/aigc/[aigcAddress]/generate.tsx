@@ -11,8 +11,6 @@ export default function GenerateAIGC() {
   const router = useRouter();
   const { index, aigcAddress } = router.query;
 
-  console.log(keccak256(toHex("hello world")));
-
   const [isGenerating, setIsGenerating] = useState(false);
   const isMounted = useIsMounted();
   const { isConnected } = useAccount();

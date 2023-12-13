@@ -14,27 +14,31 @@ import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function MintModelToken() {
   const router = useRouter();
-  const { index } = router.query;
-  console.log(index);
+  const { index, aigcAddress } = router.query;
+  console.log("mint :",index, aigcAddress);
 
   const [numberOfToken, setNumberOfToken] = useState("1");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isMounted = useIsMounted();
   const { isConnected } = useAccount();
-
+  
   const { data: modelName } = useAigtName({
     address: index as Address,
   });
+  console.log(modelName);
   const { data: tokenPrice } = useAigtTokenPrice({
     address: index as Address,
   });
+
+  console.log(tokenPrice);
   const { data: totalSupply } = useAigtTotalSupply({
     address: index as Address,
   });
   const { data: maxSupply } = useAigtMaxSupply({
     address: index as Address,
   });
+  console.log(totalSupply, maxSupply)
 
   const { data, write, isLoading, isSuccess, isError, error } = useAigtMint({
     address: index as Address,
@@ -44,6 +48,7 @@ export default function MintModelToken() {
     if (!tokenPrice) {
       return "0";
     }
+    console.log(tokenPrice);
     return formatEther(tokenPrice * BigInt(numberOfToken));
   };
 
@@ -86,7 +91,7 @@ export default function MintModelToken() {
         <div className="flex justify-between">
           <button
             className="btn"
-            onClick={() => router.push(`/model/${index}/aigc/1/detail`)}
+            onClick={() => router.push(`/model/${index}/aigc/${aigcAddress}/detail`)}
           >
             View Model Details
           </button>
