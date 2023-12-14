@@ -42,15 +42,15 @@ export default function FormAIGC({
 }: FormAIGCProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  console.log("aigtAddress :",aigtAddress);
-  console.log("aigcAddress :",aigcAddress);
+  console.log("aigtAddress :", aigtAddress);
+  console.log("aigcAddress :", aigcAddress);
   const { data: aigtApprove, write: writeAigtApprove } = useAigtApprove({
     address: aigtAddress as Address,
   });
   const { isSuccess: approveIsSuccess } = useWaitForTransaction({
     hash: aigtApprove?.hash,
   });
-  const { isSuccess: mintIsSuccess, write: writeAigcMint} = useAigcMint({
+  const { isSuccess: mintIsSuccess, write: writeAigcMint } = useAigcMint({
     address: aigcAddress as Address,
   });
   const { register, handleSubmit, formState, getValues } =
@@ -219,12 +219,12 @@ export default function FormAIGC({
 
     [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
     const [audio] = await generateMusic(contractAddr, data.prompt);
-    console.log("aigtAddress :",aigtAddress);
-    console.log("aigcAddress :",aigcAddress);
+    console.log("aigtAddress :", aigtAddress);
+    console.log("aigcAddress :", aigcAddress);
     writeAigtApprove({
       args: [aigcAddress as Address, BigInt(1000)],
     });
-  
+
     const hashedPrompt = ethers.encodeBytes32String(
       data.prompt
     ) as `0x${string}`;
@@ -239,8 +239,8 @@ export default function FormAIGC({
   const onMint = async () => {
     const prompt = getValues("prompt");
     const tokenUri = await getTokenURI(imageUrl, audio, prompt);
-    console.log("tokenURI",tokenUri);
-    
+    console.log("tokenURI", tokenUri);
+
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
 
     writeAigcMint({
@@ -248,6 +248,7 @@ export default function FormAIGC({
         tokenUri,
         hashedPrompt,
         "0x7465787400000000000000000000000000000000000000000000000000000000",
+        imageUrl,
       ],
     });
   };
@@ -309,7 +310,11 @@ export default function FormAIGC({
         )}
 
         {approveIsSuccess && (
-          <button className="btn btn-primary" onClick={() => onMint()}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => onMint()}
+          >
             Mint
           </button>
         )}

@@ -19,20 +19,7 @@ import {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const aigcABI = [
-  {
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-    inputs: [
-      { name: '_modelIndex', internalType: 'uint256', type: 'uint256' },
-      { name: '_modelName', internalType: 'string', type: 'string' },
-      { name: '_modelSymbol', internalType: 'string', type: 'string' },
-      { name: '_token', internalType: 'address', type: 'address' },
-      { name: '_costToken', internalType: 'uint256', type: 'uint256' },
-      { name: '_aiModelVm', internalType: 'bytes32', type: 'bytes32' },
-      { name: '_opmlLib', internalType: 'address', type: 'address' },
-      { name: '_royalty', internalType: 'uint96', type: 'uint96' },
-    ],
-  },
+  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
   {
     type: 'error',
     inputs: [
@@ -110,6 +97,8 @@ export const aigcABI = [
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'ERC721NonexistentToken',
   },
+  { type: 'error', inputs: [], name: 'InvalidInitialization' },
+  { type: 'error', inputs: [], name: 'NotInitializing' },
   {
     type: 'event',
     anonymous: false,
@@ -173,6 +162,19 @@ export const aigcABI = [
       },
     ],
     name: 'BatchMetadataUpdate',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'version',
+        internalType: 'uint64',
+        type: 'uint64',
+        indexed: false,
+      },
+    ],
+    name: 'Initialized',
   },
   {
     type: 'event',
@@ -248,6 +250,26 @@ export const aigcABI = [
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'vals', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: 'vals2', internalType: 'string[]', type: 'string[]' },
+      { name: 'vals3', internalType: 'address[]', type: 'address[]' },
+      { name: '_aiModelVm', internalType: 'bytes32', type: 'bytes32' },
+      { name: '_royalty', internalType: 'uint96', type: 'uint96' },
+    ],
+    name: 'initialize',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'ipOrgAddr',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
     stateMutability: 'view',
     type: 'function',
     inputs: [
@@ -264,6 +286,7 @@ export const aigcABI = [
       { name: '_tokenURI', internalType: 'string', type: 'string' },
       { name: '_promptHash', internalType: 'bytes32', type: 'bytes32' },
       { name: '_opmlFinalState', internalType: 'bytes32', type: 'bytes32' },
+      { name: '_ipAssetMediaUrl', internalType: 'string', type: 'string' },
     ],
     name: 'mint',
     outputs: [],
@@ -274,6 +297,13 @@ export const aigcABI = [
     inputs: [],
     name: 'modelIndex',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'modelName',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
   },
   {
     stateMutability: 'view',
@@ -895,6 +925,25 @@ export function useAigcGetModelIndex<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"ipOrgAddr"`.
+ */
+export function useAigcIpOrgAddr<
+  TFunctionName extends 'ipOrgAddr',
+  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigcABI,
+    functionName: 'ipOrgAddr',
+    ...config,
+  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"isApprovedForAll"`.
  */
 export function useAigcIsApprovedForAll<
@@ -928,6 +977,25 @@ export function useAigcModelIndex<
   return useContractRead({
     abi: aigcABI,
     functionName: 'modelIndex',
+    ...config,
+  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"modelName"`.
+ */
+export function useAigcModelName<
+  TFunctionName extends 'modelName',
+  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: aigcABI,
+    functionName: 'modelName',
     ...config,
   } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
 }
@@ -1149,6 +1217,31 @@ export function useAigcApprove<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"initialize"`.
+ */
+export function useAigcInitialize<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof aigcABI,
+          'initialize'
+        >['request']['abi'],
+        'initialize',
+        TMode
+      > & { functionName?: 'initialize' }
+    : UseContractWriteConfig<typeof aigcABI, 'initialize', TMode> & {
+        abi?: never
+        functionName?: 'initialize'
+      } = {} as any,
+) {
+  return useContractWrite<typeof aigcABI, 'initialize', TMode>({
+    abi: aigcABI,
+    functionName: 'initialize',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"mint"`.
  */
 export function useAigcMint<TMode extends WriteContractMode = undefined>(
@@ -1305,6 +1398,22 @@ export function usePrepareAigcApprove(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"initialize"`.
+ */
+export function usePrepareAigcInitialize(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof aigcABI, 'initialize'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: aigcABI,
+    functionName: 'initialize',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof aigcABI, 'initialize'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"mint"`.
  */
 export function usePrepareAigcMint(
@@ -1445,6 +1554,22 @@ export function useAigcBatchMetadataUpdateEvent(
     eventName: 'BatchMetadataUpdate',
     ...config,
   } as UseContractEventConfig<typeof aigcABI, 'BatchMetadataUpdate'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcABI}__ and `eventName` set to `"Initialized"`.
+ */
+export function useAigcInitializedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof aigcABI, 'Initialized'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: aigcABI,
+    eventName: 'Initialized',
+    ...config,
+  } as UseContractEventConfig<typeof aigcABI, 'Initialized'>)
 }
 
 /**
