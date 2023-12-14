@@ -194,7 +194,7 @@ export default function FormAIGC({
 
     const ipfsLinkMetadata = "https://ipfs.io/ipfs/" + result.path;
     console.log("ipfs metadata: ", ipfsLinkMetadata);
-    return ipfsLinkMetadata;
+    return { ipfsLinkMetadata, metadata };
 
     // mint the nft
     // const provider = new ethers.BrowserProvider(window.ethereum);
@@ -238,17 +238,21 @@ export default function FormAIGC({
 
   const onMint = async () => {
     const prompt = getValues("prompt");
-    const tokenUri = await getTokenURI(imageUrl, audio, prompt);
-    console.log("tokenURI", tokenUri);
+    const { ipfsLinkMetadata, metadata } = await getTokenURI(
+      imageUrl,
+      audio,
+      prompt
+    );
+    console.log("tokenURI", ipfsLinkMetadata);
 
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
 
     writeAigcMint({
       args: [
-        tokenUri,
+        ipfsLinkMetadata,
         hashedPrompt,
         "0x7465787400000000000000000000000000000000000000000000000000000000",
-        imageUrl,
+        metadata.image,
       ],
     });
   };
