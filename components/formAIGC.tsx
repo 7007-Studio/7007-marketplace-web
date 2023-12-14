@@ -156,14 +156,14 @@ export default function FormAIGC({
     let blob = await response.blob();
     let file = new File([blob], "file.png", { type: "image/png" });
     let result = await client.add(file);
-    const ipfsLinkImg = "https://cloudflare-ipfs.com/" + result.path;
+    const ipfsLinkImg = "https://cloudflare-ipfs.com/ipfs/" + result.path;
     // console.log("ipfs hash: ", result.path)
 
     response = await fetch(audio);
     blob = await response.blob();
     file = new File([blob], "file.mp3", { type: "audio/mp3" });
     result = await client.add(file);
-    const ipfsLinkAudio = "https://cloudflare-ipfs.com/" + result.path;
+    const ipfsLinkAudio = "https://cloudflare-ipfs.com/ipfs/" + result.path;
 
     // upload the mp4 to ipfs
     const metadata = {
@@ -192,7 +192,7 @@ export default function FormAIGC({
     let buffer = Buffer.from(JSON.stringify(metadata));
     result = await client.add(buffer);
 
-    const ipfsLinkMetadata = "https://cloudflare-ipfs.com/" + result.path;
+    const ipfsLinkMetadata = "https://cloudflare-ipfs.com/ipfs/" + result.path;
     console.log("ipfs metadata: ", ipfsLinkMetadata);
     return { ipfsLinkMetadata, metadata };
 
