@@ -21,10 +21,10 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
   maxSupply,
   totalNFTMinted,
 }) => {
-  const {data:tokenID} = useAigcTokenId({
+  const { data: tokenID } = useAigcTokenId({
     address: aigcAddress as Address,
   });
-  console.log(Number(tokenID))
+  console.log(Number(tokenID));
   return (
     <div className="flex flex-col shadow md:flex-row max-w-md md:max-w-2xl mx-auto self-center bg-[#191717]">
       <img src={imageUrl} className="object-cover w-full" alt="" />
@@ -38,7 +38,7 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
         <div className=" text-white  flex items-center justify-between mb-3">
           <h2 className="">Token Supply</h2>
           <span className="text-primary text-sm">
-          {totalSupply} / {maxSupply} 
+            {totalSupply} / {maxSupply}
           </span>
         </div>
         <div className=" text-white  flex items-center justify-between  mb-4">
@@ -47,9 +47,18 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
         </div>
         <div className=" text-white  flex items-center justify-between  mb-4">
           <h2 className="">openseaLink:</h2>
-          <span className="text-primary text-sm"> <a href={`https://testnets.opensea.io/assets/sepolia/${aigcAddress}/${Number(tokenID)-1}`} target="_blank" rel="noopener noreferrer">
-          testnets.opensea.io
-        </a></span>
+          <span className="text-primary text-sm">
+            {" "}
+            <a
+              href={`https://testnets.opensea.io/assets/sepolia/${aigcAddress}/${
+                Number(tokenID) - 1
+              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on OpenSea
+            </a>
+          </span>
         </div>
         <div className="flex md:w-80 justify-around">
           <Link
