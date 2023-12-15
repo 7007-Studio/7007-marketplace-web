@@ -7,7 +7,8 @@ import axios from "axios";
 import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
 import { Address } from "viem";
-import { useWaitForTransaction } from "wagmi";
+import { useAccount, useWaitForTransaction } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 const projectId = "2V1B4bBqSCyncDB2jeHd7uy5oLN";
 const projectSecret = "2b18de3a067e0a35d8700ef362c816dc";
@@ -30,18 +31,16 @@ export interface IFormAIGCInput {
 }
 
 interface FormAIGCProps {
-  setIsGenerating: (isGenerating: boolean) => void;
   aigtAddress: string;
   aigcAddress: string;
 }
 
-export default function FormAIGC({
-  setIsGenerating,
-  aigtAddress,
-  aigcAddress,
-}: FormAIGCProps) {
+export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
   const router = useRouter();
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
   console.log("aigtAddress :", aigtAddress);
   console.log("aigcAddress :", aigcAddress);
   const { data: aigtApprove, write: writeAigtApprove } = useAigtApprove({
@@ -50,7 +49,11 @@ export default function FormAIGC({
   const { isSuccess: approveIsSuccess } = useWaitForTransaction({
     hash: aigtApprove?.hash,
   });
-  const { data: mintData, isSuccess: mintIsSuccess, write: writeAigcMint } = useAigcMint({
+  const {
+    data: mintData,
+    isSuccess: mintIsSuccess,
+    write: writeAigcMint,
+  } = useAigcMint({
     address: aigcAddress as Address,
   });
   const { isSuccess: isMinted } = useWaitForTransaction({
@@ -109,7 +112,6 @@ export default function FormAIGC({
 
   const generateImage = async (contractAddr: string, prompt: string) => {
     try {
-      setIsGenerating(true);
       console.log("generate Image");
       let response = await axios.post(
         "https://demo.7007.studio/api/v1/dalle/txt2img",
@@ -212,8 +214,12 @@ export default function FormAIGC({
   };
 
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
+    if (!isConnected) {
+      openConnectModal?.();
+      return;
+    }
+
     setIsSubmitting(true);
-    setIsGenerating(true);
     console.log(data);
 
     let [contractAddr, error] = await initOPML(GenerateType.Image, data.prompt);
@@ -240,6 +246,7 @@ export default function FormAIGC({
   };
 
   const onMint = async () => {
+    setIsMinting(true);
     const prompt = getValues("prompt");
     const { ipfsLinkMetadata, metadata } = await getTokenURI(
       imageUrl,
@@ -261,12 +268,10 @@ export default function FormAIGC({
   };
 
   useEffect(() => {
-    if(isMinted){
-      router.push(
-        `/model/${aigtAddress}/aigc/${aigcAddress}/detail`
-      );
+    if (isMinted) {
+      router.push(`/model/${aigtAddress}/aigc/${aigcAddress}/detail`);
     }
-  },[isMinted,aigtAddress,aigcAddress,router])
+  }, [isMinted, aigtAddress, aigcAddress, router]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -330,7 +335,14 @@ export default function FormAIGC({
             className="btn btn-primary"
             onClick={() => onMint()}
           >
-            Mint
+            {isMinting ? (
+              <>
+                <span className="loading loading-spinner"></span>
+                loading
+              </>
+            ) : (
+              "Mint"
+            )}
           </button>
         )}
         {/* {isError && <div>Error: {error?.message}</div>} */}

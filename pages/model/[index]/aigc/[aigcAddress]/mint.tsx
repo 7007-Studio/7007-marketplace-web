@@ -9,20 +9,21 @@ import {
   useAigtTokenPrice,
   useAigtTotalSupply,
 } from "@/generated";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function MintModelToken() {
   const router = useRouter();
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
   const { index, aigcAddress } = router.query;
-  console.log("mint :",index, aigcAddress);
+  console.log("mint :", index, aigcAddress);
 
   const [numberOfToken, setNumberOfToken] = useState("1");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isMounted = useIsMounted();
-  const { isConnected } = useAccount();
-  
+
   const { data: modelName } = useAigtName({
     address: index as Address,
   });
@@ -38,7 +39,7 @@ export default function MintModelToken() {
   const { data: maxSupply } = useAigtMaxSupply({
     address: index as Address,
   });
-  console.log(totalSupply, maxSupply)
+  console.log(totalSupply, maxSupply);
 
   const { data, write, isLoading, isSuccess, isError, error } = useAigtMint({
     address: index as Address,
@@ -60,6 +61,11 @@ export default function MintModelToken() {
   };
 
   const handleSubmit = async () => {
+    if (!isConnected) {
+      openConnectModal?.();
+      return;
+    }
+
     setIsSubmitting(true);
     if (write) {
       write({
@@ -70,15 +76,6 @@ export default function MintModelToken() {
   };
 
   if (!isMounted) return null;
-
-  if (!isConnected) {
-    return (
-      <div className="container mx-auto flex flex-col items-center justify-center pt-12 gap-4">
-        <div>Please connect your wallet first</div>
-        <ConnectButton />
-      </div>
-    );
-  }
 
   if (isSuccess) {
     return (
@@ -91,7 +88,9 @@ export default function MintModelToken() {
         <div className="flex justify-between">
           <button
             className="btn"
-            onClick={() => router.push(`/model/${index}/aigc/${aigcAddress}/detail`)}
+            onClick={() =>
+              router.push(`/model/${index}/aigc/${aigcAddress}/detail`)
+            }
           >
             View Model Details
           </button>
