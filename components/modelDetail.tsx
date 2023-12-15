@@ -40,6 +40,12 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
           <h2 className="">Total NFT Mint</h2>
           <span className="text-primary text-sm">{totalNFTMinted}</span>
         </div>
+        <div className=" text-white  flex items-center justify-between  mb-4">
+          <h2 className="">openseaLink:</h2>
+          <span className="text-primary text-sm"> <a href="https://testnets.opensea.io/zh-TW/account" target="_blank" rel="noopener noreferrer">
+          testnets.opensea.io
+        </a></span>
+        </div>
         <div className="flex md:w-80 justify-around">
           <Link
             href={`/model/${modelAddress}/aigc/${aigcAddress}/generate`}
