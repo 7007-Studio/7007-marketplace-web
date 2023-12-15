@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
 import { useAigcMint, useAigtApprove } from "@/generated";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
@@ -50,8 +50,11 @@ export default function FormAIGC({
   const { isSuccess: approveIsSuccess } = useWaitForTransaction({
     hash: aigtApprove?.hash,
   });
-  const { isSuccess: mintIsSuccess, write: writeAigcMint } = useAigcMint({
+  const { data: mintData, isSuccess: mintIsSuccess, write: writeAigcMint } = useAigcMint({
     address: aigcAddress as Address,
+  });
+  const { isSuccess: isMinted } = useWaitForTransaction({
+    hash: mintData?.hash,
   });
   const { register, handleSubmit, formState, getValues } =
     useForm<IFormAIGCInput>();
@@ -256,6 +259,14 @@ export default function FormAIGC({
       ],
     });
   };
+
+  useEffect(() => {
+    if(isMinted){
+      router.push(
+        `/model/${aigtAddress}/aigc/${aigcAddress}/detail`
+      );
+    }
+  },[isMinted,aigtAddress,aigcAddress,router])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
