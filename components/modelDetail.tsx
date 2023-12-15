@@ -1,5 +1,6 @@
+import { useAigcTokenId } from "@/generated";
 import Link from "next/link";
-
+import { Address } from "viem";
 export interface ModelDetailProps {
   imageUrl: string;
   modelName?: string;
@@ -20,6 +21,10 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
   maxSupply,
   totalNFTMinted,
 }) => {
+  const {data:tokenID} = useAigcTokenId({
+    address: aigcAddress as Address,
+  });
+  console.log(Number(tokenID))
   return (
     <div className="flex flex-col shadow md:flex-row max-w-md md:max-w-2xl mx-auto self-center bg-[#191717]">
       <img src={imageUrl} className="object-cover w-full" alt="" />
@@ -42,7 +47,7 @@ const ModelDetail: React.FC<ModelDetailProps> = ({
         </div>
         <div className=" text-white  flex items-center justify-between  mb-4">
           <h2 className="">openseaLink:</h2>
-          <span className="text-primary text-sm"> <a href="https://testnets.opensea.io/zh-TW/account" target="_blank" rel="noopener noreferrer">
+          <span className="text-primary text-sm"> <a href={`https://testnets.opensea.io/assets/sepolia/${aigcAddress}/${Number(tokenID)-1}`} target="_blank" rel="noopener noreferrer">
           testnets.opensea.io
         </a></span>
         </div>
