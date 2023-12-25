@@ -10,7 +10,8 @@ import {
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import TextInput from "./textInput";
 import { parseEther } from "viem";
-import { useWaitForTransaction } from "wagmi";
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export interface IFormModelInput {
   name: string;
@@ -29,6 +30,8 @@ interface FormModelProps {
 
 export default function FormModel({ setIsGenerating }: FormModelProps) {
   const router = useRouter();
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,6 +43,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     listener: (log) => {
       // aigcAddress, aigtAddress
+      console.log(log);
       router.push(
         `/model/${log[0].args.aigtAddress}/aigc/${log[0].args.aigcAddress}/detail`
       );
@@ -50,6 +54,11 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
   const fileInputRef = React.useRef<HTMLInputElement>();
   const selectedFile = watch("file");
   const onSubmit: SubmitHandler<IFormModelInput> = async (data) => {
+    if (!isConnected) {
+      openConnectModal?.();
+      return;
+    }
+
     setIsSubmitting(true);
     setIsGenerating(true);
 

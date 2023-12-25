@@ -3,7 +3,7 @@ import ModelDetail from "@/components/modelDetail";
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
 import { useRouter } from "next/router";
-import { MOCK_MARKETPLACE_DATA } from "@/constants";
+import { MOCK_MARKETPLACE_DATA, AIGT_CONTRACT_ADDRESS, AIGC_CONTRACT_ADDRESS } from "@/constants";
 import { isModel, isNFT } from "@/helpers";
 import {
   useAigcTokenId,
@@ -12,10 +12,14 @@ import {
   useAigtTotalSupply,
 } from "@/generated";
 import { Address } from "viem";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function Detail() {
   const router = useRouter();
   const { index, aigcAddress } = router.query;
+  const isMounted = useIsMounted();
+
+  console.log("detail: "+ index, aigcAddress)
 
   const { data: modelName } = useAigtName({
     address: index as Address,
@@ -24,7 +28,7 @@ export default function Detail() {
     address: index as Address,
   });
   const { data: maxSupply } = useAigtMaxSupply({
-    address: index as Address,
+    address: index as Address as Address,
   });
   const { data: totalNFTMinted } = useAigcTokenId({
     address: aigcAddress as Address,
@@ -34,7 +38,7 @@ export default function Detail() {
   const targModel = mockItems.find((item) => {
     return isModel(item);
   });
-
+  if (!isMounted) return null;
   return (
     <div className=" mx-auto w-[85vw]">
       <div className="flex items-center justify-center flex-col my-10">

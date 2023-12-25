@@ -2,12 +2,13 @@ import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
 import { useAigcMint, useAigtApprove } from "@/generated";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
 import { Address } from "viem";
-import { useWaitForTransaction } from "wagmi";
+import { useAccount, useWaitForTransaction } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 const projectId = "2V1B4bBqSCyncDB2jeHd7uy5oLN";
 const projectSecret = "2b18de3a067e0a35d8700ef362c816dc";
@@ -30,29 +31,34 @@ export interface IFormAIGCInput {
 }
 
 interface FormAIGCProps {
-  setIsGenerating: (isGenerating: boolean) => void;
   aigtAddress: string;
   aigcAddress: string;
 }
 
-export default function FormAIGC({
-  setIsGenerating,
-  aigtAddress,
-  aigcAddress,
-}: FormAIGCProps) {
+export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
   const router = useRouter();
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isMinting, setIsMinting] = useState(false);
+  console.log("aigtAddress :", aigtAddress);
+  console.log("aigcAddress :", aigcAddress);
   const { data: aigtApprove, write: writeAigtApprove } = useAigtApprove({
     address: aigtAddress as Address,
   });
   const { isSuccess: approveIsSuccess } = useWaitForTransaction({
     hash: aigtApprove?.hash,
   });
-  const { isSuccess: mintIsSuccess, write: writeAigcMint } = useAigcMint({
+  const {
+    data: mintData,
+    isSuccess: mintIsSuccess,
+    write: writeAigcMint,
+  } = useAigcMint({
     address: aigcAddress as Address,
   });
-
+  const { isSuccess: isMinted } = useWaitForTransaction({
+    hash: mintData?.hash,
+  });
   const { register, handleSubmit, formState, getValues } =
     useForm<IFormAIGCInput>();
   const { errors } = formState;
@@ -106,7 +112,6 @@ export default function FormAIGC({
 
   const generateImage = async (contractAddr: string, prompt: string) => {
     try {
-      setIsGenerating(true);
       console.log("generate Image");
       let response = await axios.post(
         "https://demo.7007.studio/api/v1/dalle/txt2img",
@@ -156,14 +161,14 @@ export default function FormAIGC({
     let blob = await response.blob();
     let file = new File([blob], "file.png", { type: "image/png" });
     let result = await client.add(file);
-    const ipfsLinkImg = "https://ipfs.io/ipfs/" + result.path;
+    const ipfsLinkImg = "https://cloudflare-ipfs.com/ipfs/" + result.path;
     // console.log("ipfs hash: ", result.path)
 
     response = await fetch(audio);
     blob = await response.blob();
     file = new File([blob], "file.mp3", { type: "audio/mp3" });
     result = await client.add(file);
-    const ipfsLinkAudio = "https://ipfs.io/ipfs/" + result.path;
+    const ipfsLinkAudio = "https://cloudflare-ipfs.com/ipfs/" + result.path;
 
     // upload the mp4 to ipfs
     const metadata = {
@@ -192,9 +197,9 @@ export default function FormAIGC({
     let buffer = Buffer.from(JSON.stringify(metadata));
     result = await client.add(buffer);
 
-    const ipfsLinkMetadata = "https://ipfs.io/ipfs/" + result.path;
+    const ipfsLinkMetadata = "https://cloudflare-ipfs.com/ipfs/" + result.path;
     console.log("ipfs metadata: ", ipfsLinkMetadata);
-    return ipfsLinkMetadata;
+    return { ipfsLinkMetadata, metadata };
 
     // mint the nft
     // const provider = new ethers.BrowserProvider(window.ethereum);
@@ -209,8 +214,12 @@ export default function FormAIGC({
   };
 
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
+    if (!isConnected) {
+      openConnectModal?.();
+      return;
+    }
+
     setIsSubmitting(true);
-    setIsGenerating(true);
     console.log(data);
 
     let [contractAddr, error] = await initOPML(GenerateType.Image, data.prompt);
@@ -219,7 +228,8 @@ export default function FormAIGC({
 
     [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
     const [audio] = await generateMusic(contractAddr, data.prompt);
-
+    console.log("aigtAddress :", aigtAddress);
+    console.log("aigcAddress :", aigcAddress);
     writeAigtApprove({
       args: [aigcAddress as Address, BigInt(1000)],
     });
@@ -236,23 +246,32 @@ export default function FormAIGC({
   };
 
   const onMint = async () => {
+    setIsMinting(true);
     const prompt = getValues("prompt");
-    const tokenUri = await getTokenURI(imageUrl, audio, prompt);
+    const { ipfsLinkMetadata, metadata } = await getTokenURI(
+      imageUrl,
+      audio,
+      prompt
+    );
+    console.log("tokenURI", ipfsLinkMetadata);
 
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
 
     writeAigcMint({
       args: [
-        tokenUri,
+        ipfsLinkMetadata,
         hashedPrompt,
         "0x7465787400000000000000000000000000000000000000000000000000000000",
+        metadata.image,
       ],
     });
   };
 
-  if (mintIsSuccess) {
-    router.push("/marketPlace");
-  }
+  useEffect(() => {
+    if (isMinted) {
+      router.push(`/model/${aigtAddress}/aigc/${aigcAddress}/detail`);
+    }
+  }, [isMinted, aigtAddress, aigcAddress, router]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -298,10 +317,7 @@ export default function FormAIGC({
         </div>
 
         {!approveIsSuccess && (
-          <button
-            // disabled={isLoading || isSubmitting || !writeAsync}
-            className="btn btn-primary"
-          >
+          <button className="btn btn-primary">
             {isSubmitting ? (
               <>
                 <span className="loading loading-spinner"></span>
@@ -314,8 +330,19 @@ export default function FormAIGC({
         )}
 
         {approveIsSuccess && (
-          <button className="btn btn-primary" onClick={() => onMint()}>
-            Mint
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => onMint()}
+          >
+            {isMinting ? (
+              <>
+                <span className="loading loading-spinner"></span>
+                loading
+              </>
+            ) : (
+              "Mint"
+            )}
           </button>
         )}
         {/* {isError && <div>Error: {error?.message}</div>} */}

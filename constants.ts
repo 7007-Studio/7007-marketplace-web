@@ -25,8 +25,8 @@ export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [
     modelIndex: "0xe0290A759D12266f43a91b1BDa79E47F5065c42A",
     modelName: "NOV 012",
     modelAddress: "0x123...abc",
-    totalSupply: 1000,
-    nftMint: 500,
+    totalSupply: 1200,
+    nftMint: 1000,
     title: "Tama d’Amore Per Nata",
     description:
       "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
@@ -36,8 +36,8 @@ export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [
     modelIndex: "0xe0290A759D12266f43a91b1BDa79E47F5065c42A",
     modelName: "NOV 012",
     modelAddress: "0x123...abc",
-    totalSupply: 1000,
-    nftMint: 500,
+    totalSupply: 1200,
+    nftMint: 1000,
     title: "Tama d’Amore Per Nata",
     description:
       "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
