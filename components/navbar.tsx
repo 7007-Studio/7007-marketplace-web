@@ -21,7 +21,13 @@ export default function Navbar() {
         </div>
         <div className="flex-none gap-4">
           <Link
-            href="/marketPlace"
+            href="/token"
+            className="hidden md:block hover:text-primary cursor-pointer"
+          >
+            Token
+          </Link>
+          <Link
+            href="/marketplace"
             className="hidden md:block hover:text-primary cursor-pointer"
           >
             Marketplace
@@ -60,7 +66,7 @@ export default function Navbar() {
         }`}
       >
         <Link
-          href="/marketPlace"
+          href="/marketplace"
           className="pl-4 py-4 text-xl hover:text-primary cursor-pointer"
         >
           Marketplace

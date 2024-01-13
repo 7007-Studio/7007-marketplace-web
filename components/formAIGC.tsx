@@ -295,23 +295,10 @@ export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
         <div className="flex flex-1 gap-4">
           <label className="form-control">
             <div className="label">
-              <span className="label-text">Type</span>
-            </div>
-            <select className="select select-bordered w-full">
-              <option selected>Track</option>
-              <option>Image</option>
-              <option>Video</option>
-            </select>
-          </label>
-
-          <label className="form-control">
-            <div className="label">
               <span className="label-text">Model</span>
             </div>
             <select className="select select-bordered w-full">
-              <option selected>Model A</option>
-              <option>Model B</option>
-              <option>Model C</option>
+              <option selected>Genesis Model</option>
             </select>
           </label>
         </div>

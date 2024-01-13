@@ -5,6 +5,8 @@ import { Abi } from "viem";
 import AIGC from "@/abis/AIGC.json";
 import AIGC_Factory from "@/abis/AIGC_Factory.json";
 import AIGT from "@/abis/AIGT.json";
+import Token7007 from "@/abis/Token7007.json";
+import Stake7007 from "@/abis/Stake7007.json";
 
 export default defineConfig({
   out: "generated.ts",
@@ -20,6 +22,14 @@ export default defineConfig({
     {
       abi: AIGT.abi as Abi,
       name: "AIGT",
+    },
+    {
+      abi: Token7007.abi as Abi,
+      name: "Token7007",
+    },
+    {
+      abi: Stake7007.abi as Abi,
+      name: "Stake7007",
     },
   ],
   plugins: [react()],

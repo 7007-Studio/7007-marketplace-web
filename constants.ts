@@ -1,8 +1,18 @@
 import { Model, NFT } from "./types";
 
+// AIGC#AIGC - 0xc7A7576DAfBB542669547a0a02C770b8f9Fa55df
+// AIGC_Factory#AIGC_Factory - 0x8F5B3428f0caBCCBFaD145D22DF0aEa4ba799d10
+// Token7007#Token7007 - 0x6aa8BAE94DbEC32CbeE952c9f7f4248D2103eD5B
+// Stake7007#Stake7007 - 0xBD3F603028b5aF623644DB76275209C90a86f319
+
 export const AIGC_FACTORY_CONTRACT_ADDRESS =
   // "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // hardhat
   "0x191Ad675CA576c8b8dE269548A87Cd3D60696B9e"; // sepolia
+
+export const TOKEN7007_CONTRACT_ADDRESS =
+  "0x6aa8BAE94DbEC32CbeE952c9f7f4248D2103eD5B";
+export const STAKE7007_CONTRACT_ADDRESS =
+  "0xBD3F603028b5aF623644DB76275209C90a86f319";
 
 export const AIGC_CONTRACT_ADDRESS =
   "0xc7bcb472e29668f5d02fd68d15ba17f01498c6c0";
@@ -11,91 +21,14 @@ export const AIGT_CONTRACT_ADDRESS =
 
 export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [
   {
-    nftName: "NOV 012",
-    modelName: "MODEL A",
-    title: "Tama d’Amore Per Nata",
-    description:
-      "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
-    nftAddress: "0x123...abc",
-    tokenID: "7007",
-    openseaLink: "www.opensea.com/dsdw",
-    imageUrl: "/nft1.png",
-  },
-  {
     modelIndex: "0xe0290A759D12266f43a91b1BDa79E47F5065c42A",
     modelName: "NOV 012",
     modelAddress: "0x123...abc",
     totalSupply: 1200,
     nftMint: 1000,
-    title: "Tama d’Amore Per Nata",
+    title: "Genesis Model",
     description:
-      "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
+      "Use stable diffusion model to generate image and music from text",
     imageUrl: "/nft1.png",
-  },
-  {
-    modelIndex: "0xe0290A759D12266f43a91b1BDa79E47F5065c42A",
-    modelName: "NOV 012",
-    modelAddress: "0x123...abc",
-    totalSupply: 1200,
-    nftMint: 1000,
-    title: "Tama d’Amore Per Nata",
-    description:
-      "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
-    imageUrl: "/nft1.png",
-  },
-  {
-    nftName: "NOV 012",
-    modelName: "MODEL A",
-    title: "Tama d’Amore Per Nata",
-    description:
-      "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
-    nftAddress: "0x123...abc",
-    tokenID: "420",
-    openseaLink: "www.opensea.com/dsdw",
-    imageUrl: "/nft2.png",
-  },
-  {
-    nftName: "NOV 012",
-    modelName: "MODEL A",
-    title: "Tama d’Amore Per Nata",
-    description:
-      "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
-    nftAddress: "0x123...abc",
-    tokenID: "1111",
-    openseaLink: "www.opensea.com/dsdw",
-    imageUrl: "/nft3.png",
-  },
-  {
-    nftName: "NOV 012",
-    modelName: "MODEL A",
-    title: "Tama d’Amore Per Nata",
-    description:
-      "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
-    nftAddress: "0x123...abc",
-    tokenID: "101",
-    openseaLink: "www.opensea.com/dsdw",
-    imageUrl: "/nft4.png",
-  },
-  {
-    nftName: "NOV 012",
-    modelName: "MODEL A",
-    title: "Tama d’Amore Per Nata",
-    description:
-      "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
-    nftAddress: "0x123...abc",
-    tokenID: "888",
-    openseaLink: "www.opensea.com/dsdw",
-    imageUrl: "/nft5.png",
-  },
-  {
-    nftName: "NOV 012",
-    modelName: "MODEL A",
-    title: "Tama d’Amore Per Nata",
-    description:
-      "Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer at risus.",
-    nftAddress: "0x123...abc",
-    tokenID: "6969",
-    openseaLink: "www.opensea.com/dsdw",
-    imageUrl: "/nft6.png",
   },
 ];

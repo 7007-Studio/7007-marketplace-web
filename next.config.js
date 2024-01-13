@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         source: "/",
-        destination: "/model/generate",
+        destination: "/marketplace",
         permanent: true,
       },
     ];

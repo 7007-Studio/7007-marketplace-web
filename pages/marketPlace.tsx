@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { MOCK_MARKETPLACE_DATA } from "@/constants";
-import { Model, NFT } from "@/types";
 import Tabs from "@/components/tabs";
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
@@ -9,13 +8,12 @@ import { isModel, isNFT } from "@/helpers";
 import { AIGC_CONTRACT_ADDRESS, AIGT_CONTRACT_ADDRESS } from "@/constants";
 
 export enum TabState {
-  All,
   Model,
   NFT,
 }
 
-export default function MarketPlace() {
-  const [currentTab, setCurrentTab] = useState(TabState.All);
+export default function Marketplace() {
+  const [currentTab, setCurrentTab] = useState(TabState.Model);
   const items = MOCK_MARKETPLACE_DATA;
   return (
     <div className="flex min-h-screen flex-col p-20 py-16 mx-auto w-[95vw] ">
@@ -27,14 +25,6 @@ export default function MarketPlace() {
         <details className="dropdown w-full md:w-fit">
           <summary className="btn btn-primary w-full">Create New</summary>
           <ul className="shadow menu dropdown-content z-[1] bg-base-100 w-full p-0">
-            <li>
-              <Link
-                href="/model/generate"
-                className="bg-black text-white hover:text-black p-2 tracking-wider"
-              >
-                Model
-              </Link>
-            </li>
             <li>
               <Link
                 href={`/model/${AIGT_CONTRACT_ADDRESS}/aigc/${AIGC_CONTRACT_ADDRESS}/generate`}

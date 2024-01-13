@@ -1,4 +1,4 @@
-import { TabState } from "@/pages/marketPlace";
+import { TabState } from "@/pages/marketplace";
 
 interface TabsProps {
   currentTab: TabState;
@@ -8,16 +8,6 @@ interface TabsProps {
 export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
   return (
     <ul className="menu menu-horizontal">
-      <li className="mr-2">
-        <a
-          className={`hover:bg-white hover:text-black text-lg ${
-            currentTab === TabState.All ? "focus" : ""
-          }`}
-          onClick={() => setCurrentTab(TabState.All)}
-        >
-          ALL
-        </a>
-      </li>
       <li className="mr-2">
         <a
           className={`hover:bg-white hover:text-black text-lg ${

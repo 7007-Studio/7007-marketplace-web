@@ -12,7 +12,7 @@ export default function GenerateAIGC() {
   return (
     <div className="container mx-auto md:max-w-2xl flex min-h-screen flex-col p-4">
       <h1 className="text-3xl font-bold mb-4">
-        Generate your AIGC music and art with 7007 Studio
+        Generate your music and art with 7007 Studio
       </h1>
       <FormAIGC
         aigtAddress={index as string}

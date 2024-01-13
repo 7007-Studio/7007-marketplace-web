@@ -229,6 +229,13 @@ export const aigcABI = [
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
+    name: 'buy',
+    outputs: [],
+  },
+  {
     stateMutability: 'view',
     type: 'function',
     inputs: [],
@@ -807,6 +814,350 @@ export const aigtABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Stake7007
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const stake7007ABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'tokenAddr', internalType: 'address', type: 'address' }],
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+    name: 'OwnableInvalidOwner',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'user', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'consumeInferencePoint',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'consumedInferencePoint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
+    name: 'getInferencePoint',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'stake',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'stakeStartTime',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'stakedAmount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'token',
+    outputs: [
+      { name: '', internalType: 'contract Token7007', type: 'address' },
+    ],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Token7007
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const token7007ABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: 'initialOwner', internalType: 'address', type: 'address' },
+    ],
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'allowance', internalType: 'uint256', type: 'uint256' },
+      { name: 'needed', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ERC20InsufficientAllowance',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'balance', internalType: 'uint256', type: 'uint256' },
+      { name: 'needed', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'ERC20InsufficientBalance',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
+    name: 'ERC20InvalidApprover',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
+    name: 'ERC20InvalidReceiver',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
+    name: 'ERC20InvalidSender',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'spender', internalType: 'address', type: 'address' }],
+    name: 'ERC20InvalidSpender',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+    name: 'OwnableInvalidOwner',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'spender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Approval',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Transfer',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'spender', internalType: 'address', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'mint',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transfer',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transferFrom',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // React
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1217,6 +1568,28 @@ export function useAigcApprove<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"buy"`.
+ */
+export function useAigcBuy<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<typeof aigcABI, 'buy'>['request']['abi'],
+        'buy',
+        TMode
+      > & { functionName?: 'buy' }
+    : UseContractWriteConfig<typeof aigcABI, 'buy', TMode> & {
+        abi?: never
+        functionName?: 'buy'
+      } = {} as any,
+) {
+  return useContractWrite<typeof aigcABI, 'buy', TMode>({
+    abi: aigcABI,
+    functionName: 'buy',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"initialize"`.
  */
 export function useAigcInitialize<TMode extends WriteContractMode = undefined>(
@@ -1395,6 +1768,22 @@ export function usePrepareAigcApprove(
     functionName: 'approve',
     ...config,
   } as UsePrepareContractWriteConfig<typeof aigcABI, 'approve'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"buy"`.
+ */
+export function usePrepareAigcBuy(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof aigcABI, 'buy'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: aigcABI,
+    functionName: 'buy',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof aigcABI, 'buy'>)
 }
 
 /**
@@ -2503,4 +2892,912 @@ export function useAigtTransferEvent(
     eventName: 'Transfer',
     ...config,
   } as UseContractEventConfig<typeof aigtABI, 'Transfer'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__.
+ */
+export function useStake7007Read<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: stake7007ABI,
+    ...config,
+  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"consumedInferencePoint"`.
+ */
+export function useStake7007ConsumedInferencePoint<
+  TFunctionName extends 'consumedInferencePoint',
+  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: stake7007ABI,
+    functionName: 'consumedInferencePoint',
+    ...config,
+  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"getInferencePoint"`.
+ */
+export function useStake7007GetInferencePoint<
+  TFunctionName extends 'getInferencePoint',
+  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: stake7007ABI,
+    functionName: 'getInferencePoint',
+    ...config,
+  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"owner"`.
+ */
+export function useStake7007Owner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: stake7007ABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"stakeStartTime"`.
+ */
+export function useStake7007StakeStartTime<
+  TFunctionName extends 'stakeStartTime',
+  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: stake7007ABI,
+    functionName: 'stakeStartTime',
+    ...config,
+  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"stakedAmount"`.
+ */
+export function useStake7007StakedAmount<
+  TFunctionName extends 'stakedAmount',
+  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: stake7007ABI,
+    functionName: 'stakedAmount',
+    ...config,
+  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"token"`.
+ */
+export function useStake7007Token<
+  TFunctionName extends 'token',
+  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: stake7007ABI,
+    functionName: 'token',
+    ...config,
+  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__.
+ */
+export function useStake7007Write<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof stake7007ABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof stake7007ABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof stake7007ABI, TFunctionName, TMode>({
+    abi: stake7007ABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"consumeInferencePoint"`.
+ */
+export function useStake7007ConsumeInferencePoint<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof stake7007ABI,
+          'consumeInferencePoint'
+        >['request']['abi'],
+        'consumeInferencePoint',
+        TMode
+      > & { functionName?: 'consumeInferencePoint' }
+    : UseContractWriteConfig<
+        typeof stake7007ABI,
+        'consumeInferencePoint',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'consumeInferencePoint'
+      } = {} as any,
+) {
+  return useContractWrite<typeof stake7007ABI, 'consumeInferencePoint', TMode>({
+    abi: stake7007ABI,
+    functionName: 'consumeInferencePoint',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function useStake7007RenounceOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof stake7007ABI,
+          'renounceOwnership'
+        >['request']['abi'],
+        'renounceOwnership',
+        TMode
+      > & { functionName?: 'renounceOwnership' }
+    : UseContractWriteConfig<
+        typeof stake7007ABI,
+        'renounceOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'renounceOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof stake7007ABI, 'renounceOwnership', TMode>({
+    abi: stake7007ABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"stake"`.
+ */
+export function useStake7007Stake<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof stake7007ABI,
+          'stake'
+        >['request']['abi'],
+        'stake',
+        TMode
+      > & { functionName?: 'stake' }
+    : UseContractWriteConfig<typeof stake7007ABI, 'stake', TMode> & {
+        abi?: never
+        functionName?: 'stake'
+      } = {} as any,
+) {
+  return useContractWrite<typeof stake7007ABI, 'stake', TMode>({
+    abi: stake7007ABI,
+    functionName: 'stake',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function useStake7007TransferOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof stake7007ABI,
+          'transferOwnership'
+        >['request']['abi'],
+        'transferOwnership',
+        TMode
+      > & { functionName?: 'transferOwnership' }
+    : UseContractWriteConfig<
+        typeof stake7007ABI,
+        'transferOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'transferOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof stake7007ABI, 'transferOwnership', TMode>({
+    abi: stake7007ABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__.
+ */
+export function usePrepareStake7007Write<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof stake7007ABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: stake7007ABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof stake7007ABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"consumeInferencePoint"`.
+ */
+export function usePrepareStake7007ConsumeInferencePoint(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof stake7007ABI, 'consumeInferencePoint'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: stake7007ABI,
+    functionName: 'consumeInferencePoint',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof stake7007ABI,
+    'consumeInferencePoint'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function usePrepareStake7007RenounceOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof stake7007ABI, 'renounceOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: stake7007ABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof stake7007ABI, 'renounceOwnership'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"stake"`.
+ */
+export function usePrepareStake7007Stake(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof stake7007ABI, 'stake'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: stake7007ABI,
+    functionName: 'stake',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof stake7007ABI, 'stake'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function usePrepareStake7007TransferOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof stake7007ABI, 'transferOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: stake7007ABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof stake7007ABI, 'transferOwnership'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link stake7007ABI}__.
+ */
+export function useStake7007Event<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof stake7007ABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: stake7007ABI,
+    ...config,
+  } as UseContractEventConfig<typeof stake7007ABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link stake7007ABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ */
+export function useStake7007OwnershipTransferredEvent(
+  config: Omit<
+    UseContractEventConfig<typeof stake7007ABI, 'OwnershipTransferred'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: stake7007ABI,
+    eventName: 'OwnershipTransferred',
+    ...config,
+  } as UseContractEventConfig<typeof stake7007ABI, 'OwnershipTransferred'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__.
+ */
+export function useToken7007Read<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: token7007ABI,
+    ...config,
+  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"allowance"`.
+ */
+export function useToken7007Allowance<
+  TFunctionName extends 'allowance',
+  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: token7007ABI,
+    functionName: 'allowance',
+    ...config,
+  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"balanceOf"`.
+ */
+export function useToken7007BalanceOf<
+  TFunctionName extends 'balanceOf',
+  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: token7007ABI,
+    functionName: 'balanceOf',
+    ...config,
+  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"decimals"`.
+ */
+export function useToken7007Decimals<
+  TFunctionName extends 'decimals',
+  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: token7007ABI,
+    functionName: 'decimals',
+    ...config,
+  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"name"`.
+ */
+export function useToken7007Name<
+  TFunctionName extends 'name',
+  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: token7007ABI,
+    functionName: 'name',
+    ...config,
+  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"owner"`.
+ */
+export function useToken7007Owner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: token7007ABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"symbol"`.
+ */
+export function useToken7007Symbol<
+  TFunctionName extends 'symbol',
+  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: token7007ABI,
+    functionName: 'symbol',
+    ...config,
+  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"totalSupply"`.
+ */
+export function useToken7007TotalSupply<
+  TFunctionName extends 'totalSupply',
+  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: token7007ABI,
+    functionName: 'totalSupply',
+    ...config,
+  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__.
+ */
+export function useToken7007Write<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof token7007ABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof token7007ABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof token7007ABI, TFunctionName, TMode>({
+    abi: token7007ABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"approve"`.
+ */
+export function useToken7007Approve<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof token7007ABI,
+          'approve'
+        >['request']['abi'],
+        'approve',
+        TMode
+      > & { functionName?: 'approve' }
+    : UseContractWriteConfig<typeof token7007ABI, 'approve', TMode> & {
+        abi?: never
+        functionName?: 'approve'
+      } = {} as any,
+) {
+  return useContractWrite<typeof token7007ABI, 'approve', TMode>({
+    abi: token7007ABI,
+    functionName: 'approve',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"mint"`.
+ */
+export function useToken7007Mint<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof token7007ABI,
+          'mint'
+        >['request']['abi'],
+        'mint',
+        TMode
+      > & { functionName?: 'mint' }
+    : UseContractWriteConfig<typeof token7007ABI, 'mint', TMode> & {
+        abi?: never
+        functionName?: 'mint'
+      } = {} as any,
+) {
+  return useContractWrite<typeof token7007ABI, 'mint', TMode>({
+    abi: token7007ABI,
+    functionName: 'mint',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function useToken7007RenounceOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof token7007ABI,
+          'renounceOwnership'
+        >['request']['abi'],
+        'renounceOwnership',
+        TMode
+      > & { functionName?: 'renounceOwnership' }
+    : UseContractWriteConfig<
+        typeof token7007ABI,
+        'renounceOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'renounceOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof token7007ABI, 'renounceOwnership', TMode>({
+    abi: token7007ABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transfer"`.
+ */
+export function useToken7007Transfer<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof token7007ABI,
+          'transfer'
+        >['request']['abi'],
+        'transfer',
+        TMode
+      > & { functionName?: 'transfer' }
+    : UseContractWriteConfig<typeof token7007ABI, 'transfer', TMode> & {
+        abi?: never
+        functionName?: 'transfer'
+      } = {} as any,
+) {
+  return useContractWrite<typeof token7007ABI, 'transfer', TMode>({
+    abi: token7007ABI,
+    functionName: 'transfer',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transferFrom"`.
+ */
+export function useToken7007TransferFrom<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof token7007ABI,
+          'transferFrom'
+        >['request']['abi'],
+        'transferFrom',
+        TMode
+      > & { functionName?: 'transferFrom' }
+    : UseContractWriteConfig<typeof token7007ABI, 'transferFrom', TMode> & {
+        abi?: never
+        functionName?: 'transferFrom'
+      } = {} as any,
+) {
+  return useContractWrite<typeof token7007ABI, 'transferFrom', TMode>({
+    abi: token7007ABI,
+    functionName: 'transferFrom',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function useToken7007TransferOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof token7007ABI,
+          'transferOwnership'
+        >['request']['abi'],
+        'transferOwnership',
+        TMode
+      > & { functionName?: 'transferOwnership' }
+    : UseContractWriteConfig<
+        typeof token7007ABI,
+        'transferOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'transferOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof token7007ABI, 'transferOwnership', TMode>({
+    abi: token7007ABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__.
+ */
+export function usePrepareToken7007Write<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof token7007ABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: token7007ABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof token7007ABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"approve"`.
+ */
+export function usePrepareToken7007Approve(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof token7007ABI, 'approve'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: token7007ABI,
+    functionName: 'approve',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'approve'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"mint"`.
+ */
+export function usePrepareToken7007Mint(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof token7007ABI, 'mint'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: token7007ABI,
+    functionName: 'mint',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'mint'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function usePrepareToken7007RenounceOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof token7007ABI, 'renounceOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: token7007ABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'renounceOwnership'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transfer"`.
+ */
+export function usePrepareToken7007Transfer(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof token7007ABI, 'transfer'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: token7007ABI,
+    functionName: 'transfer',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'transfer'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transferFrom"`.
+ */
+export function usePrepareToken7007TransferFrom(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof token7007ABI, 'transferFrom'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: token7007ABI,
+    functionName: 'transferFrom',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'transferFrom'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function usePrepareToken7007TransferOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof token7007ABI, 'transferOwnership'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: token7007ABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'transferOwnership'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link token7007ABI}__.
+ */
+export function useToken7007Event<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof token7007ABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: token7007ABI,
+    ...config,
+  } as UseContractEventConfig<typeof token7007ABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link token7007ABI}__ and `eventName` set to `"Approval"`.
+ */
+export function useToken7007ApprovalEvent(
+  config: Omit<
+    UseContractEventConfig<typeof token7007ABI, 'Approval'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: token7007ABI,
+    eventName: 'Approval',
+    ...config,
+  } as UseContractEventConfig<typeof token7007ABI, 'Approval'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link token7007ABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ */
+export function useToken7007OwnershipTransferredEvent(
+  config: Omit<
+    UseContractEventConfig<typeof token7007ABI, 'OwnershipTransferred'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: token7007ABI,
+    eventName: 'OwnershipTransferred',
+    ...config,
+  } as UseContractEventConfig<typeof token7007ABI, 'OwnershipTransferred'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link token7007ABI}__ and `eventName` set to `"Transfer"`.
+ */
+export function useToken7007TransferEvent(
+  config: Omit<
+    UseContractEventConfig<typeof token7007ABI, 'Transfer'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: token7007ABI,
+    eventName: 'Transfer',
+    ...config,
+  } as UseContractEventConfig<typeof token7007ABI, 'Transfer'>)
 }
