@@ -41,10 +41,6 @@ export default function Marketplace() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {items
           .filter((item) => {
-            if (currentTab === TabState.All) {
-              return true;
-            }
-
             if (currentTab === TabState.Model) {
               return isModel(item);
             }
