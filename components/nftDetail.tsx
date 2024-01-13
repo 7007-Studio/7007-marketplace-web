@@ -1,3 +1,5 @@
+import ModelDetail from "./modelDetail";
+
 export interface ModelDetailProps {
   imageUrl: string;
   nftName?: string;
