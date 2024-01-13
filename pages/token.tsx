@@ -1,9 +1,12 @@
-"use client";
-
 import { useState } from "react";
 import {
+  useStake7007ConsumedInferencePoint,
+  useStake7007GetInferencePoint,
   useStake7007Stake,
+  useStake7007StakeStartTime,
   useStake7007StakedAmount,
+  useToken7007ApprovalEvent,
+  useToken7007Approve,
   useToken7007BalanceOf,
   useToken7007Decimals,
   useToken7007Mint,
@@ -14,8 +17,13 @@ import {
   TOKEN7007_CONTRACT_ADDRESS,
 } from "@/constants";
 import { formatUnits, parseUnits } from "viem";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function Token() {
+  const [mintAmount, setMintAmount] = useState("0");
+  const [stakeAmount, setStakeAmount] = useState("0");
+  const [stakingApproved, setStakingApproved] = useState(false);
+
   const { address } = useAccount();
 
   const { data: balance } = useToken7007BalanceOf({
@@ -29,16 +37,41 @@ export default function Token() {
   const { write: mint } = useToken7007Mint({
     address: TOKEN7007_CONTRACT_ADDRESS as Address,
   });
+  const { write: approve } = useToken7007Approve({
+    address: TOKEN7007_CONTRACT_ADDRESS as Address,
+  });
+
+  useToken7007ApprovalEvent({
+    address: TOKEN7007_CONTRACT_ADDRESS as Address,
+    listener(log) {
+      // console.log(log);
+      setStakingApproved(true);
+    },
+  });
 
   const { data: stakedAmount } = useStake7007StakedAmount({
     address: STAKE7007_CONTRACT_ADDRESS as Address,
+    args: address ? [address] : undefined,
   });
+  const { data: stakeStartTime } = useStake7007StakeStartTime({
+    address: STAKE7007_CONTRACT_ADDRESS as Address,
+    args: address ? [address] : undefined,
+  });
+  const { data: inferencePoint } = useStake7007GetInferencePoint({
+    address: STAKE7007_CONTRACT_ADDRESS as Address,
+    args: address ? [address] : undefined,
+  });
+  const { data: consumedInferencePoint } = useStake7007ConsumedInferencePoint({
+    address: STAKE7007_CONTRACT_ADDRESS as Address,
+    args: address ? [address] : undefined,
+  });
+
   const { write: stake } = useStake7007Stake({
     address: STAKE7007_CONTRACT_ADDRESS as Address,
   });
 
-  const [mintAmount, setMintAmount] = useState("0");
-  const [stakeAmount, setStakeAmount] = useState("0");
+  const isMounted = useIsMounted();
+  if (!isMounted) return null;
 
   return (
     <div className="flex min-h-screen flex-col p-20 py-16 mx-auto w-[95vw] ">
@@ -82,6 +115,22 @@ export default function Token() {
           <h2 className="text-2xl font-bold text-white mb-2">
             Stake 7007 Token
           </h2>
+          {stakedAmount != undefined && decimals !== undefined && (
+            <div>
+              You currently have {formatUnits(stakedAmount, decimals)} 7007
+              tokens staked from{" "}
+              {new Date(Number(stakeStartTime) * 1000).toDateString()}
+            </div>
+          )}
+          {inferencePoint != undefined &&
+            consumedInferencePoint !== undefined &&
+            decimals !== undefined && (
+              <div>
+                You have {formatUnits(inferencePoint, decimals)} inference
+                points and have consumed{" "}
+                {formatUnits(consumedInferencePoint, decimals)} inference points
+              </div>
+            )}
           <div className="my-8">
             <input
               type="number"
@@ -89,16 +138,38 @@ export default function Token() {
               placeholder="Amount"
               onChange={(e) => setStakeAmount(e.target.value)}
             />
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                if (!decimals) return;
+            {!stakingApproved && (
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  if (!decimals) return;
 
-                stake({ args: [parseUnits(stakeAmount, decimals)] });
-              }}
-            >
-              Stake
-            </button>
+                  approve({
+                    args: [
+                      STAKE7007_CONTRACT_ADDRESS,
+                      parseUnits(stakeAmount, decimals),
+                    ],
+                  });
+
+                  stake({ args: [parseUnits(stakeAmount, decimals)] });
+                }}
+              >
+                Approve Staking
+              </button>
+            )}
+
+            {stakingApproved && (
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  if (!decimals) return;
+
+                  stake({ args: [parseUnits(stakeAmount, decimals)] });
+                }}
+              >
+                Stake
+              </button>
+            )}
           </div>
         </div>
       </div>
