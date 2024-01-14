@@ -3,7 +3,11 @@ import ModelDetail from "@/components/modelDetail";
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
 import { useRouter } from "next/router";
-import { MOCK_MARKETPLACE_DATA, AIGT_CONTRACT_ADDRESS, AIGC_CONTRACT_ADDRESS } from "@/constants";
+import {
+  MOCK_MARKETPLACE_DATA,
+  AIGT_CONTRACT_ADDRESS,
+  AIGC_CONTRACT_ADDRESS,
+} from "@/constants";
 import { isModel, isNFT } from "@/helpers";
 import {
   useAigcTokenId,
@@ -19,7 +23,7 @@ export default function Detail() {
   const { index, aigcAddress } = router.query;
   const isMounted = useIsMounted();
 
-  console.log("detail: "+ index, aigcAddress)
+  console.log("detail: " + index, aigcAddress);
 
   const { data: modelName } = useAigtName({
     address: index as Address,
@@ -72,14 +76,8 @@ export default function Detail() {
             return (
               <NFTCard
                 key={item.tokenID}
-                title={item.title}
-                description={item.description}
-                nftAddress={item.nftAddress}
+                nftAddress={item.nftAddress as Address}
                 tokenID={item.tokenID}
-                openseaLink={item.openseaLink}
-                imageUrl={item.imageUrl}
-                nftName={item.nftName}
-                modelName={item.modelName}
               />
             );
           }
