@@ -19,10 +19,6 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: [BigInt(modelIndex)],
   });
-  const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
-    args: [BigInt(modelIndex)],
-  });
 
   const { data: modelName } = useAigtName({
     address: aigtAddress,
@@ -34,7 +30,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
   return (
     <div
       onClick={() => router.push(`/model/${modelIndex}`)}
-      className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-cyan-500 outline-2 transition hover:cursor-pointer"
+      className="card w-full max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-cyan-500 outline-2 transition hover:cursor-pointer"
     >
       <div className="flex justify-between items-center">
         {aigtAddress && (

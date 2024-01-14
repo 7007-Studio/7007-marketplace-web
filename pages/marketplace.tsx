@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AIGC_FACTORY_CONTRACT_ADDRESS, MOCK_MODEL_DATA } from "@/constants";
+import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import Tabs from "@/components/tabs";
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
@@ -42,11 +42,6 @@ export default function Marketplace() {
     return ids;
   }, [lastTokenId]);
 
-  // const { data: nftTokensOwned } = useAigcBalanceOf({
-  //   address: AIGC_CONTRACT_ADDRESS,
-  //   args: address ? [address] : undefined,
-  // });
-
   const isMounted = useIsMounted();
   if (!isMounted) return null;
 
@@ -60,18 +55,13 @@ export default function Marketplace() {
       </div>
 
       {/* <div className="flex items-start flex-wrap justify-center gap-6"> */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
         {currentTab === TabState.Model && <ModelCard modelIndex={modelIndex} />}
 
         {currentTab === TabState.NFT &&
           deployedAigc &&
           tokenIds.map((id) => (
-            <NFTCard
-              key={id}
-              modelIndex={modelIndex}
-              nftAddress={deployedAigc}
-              tokenId={id.toString()}
-            />
+            <NFTCard key={id} modelIndex={modelIndex} tokenId={id.toString()} />
           ))}
       </div>
     </div>

@@ -10,11 +10,10 @@ import {
   useNftMarketplaceIsListed,
   useNftMarketplaceList,
 } from "@/generated";
-import { useAccount } from "wagmi";
+import { useAccount, useWaitForTransaction } from "wagmi";
 import axios from "axios";
 import { concatAddress } from "@/helpers";
 import { Metadata, MetadataAttribute } from "@/types";
-import { useRouter } from "next/router";
 import {
   AIGC_FACTORY_CONTRACT_ADDRESS,
   NFT_MARKETPLACE_ADDRESS,
@@ -29,7 +28,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
   const [audioUrl, setAudioUrl] = useState();
-  const [isPlaying, setIsPlaying] = useAudio();
+  const [isPlaying, setIsPlaying] = useAudio(audioUrl);
 
   const { address } = useAccount();
 
@@ -38,7 +37,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
     args: [BigInt(modelIndex)],
   });
 
-  const { data: owner } = useAigcOwnerOf({
+  const { data: owner, refetch: refetchOwner } = useAigcOwnerOf({
     address: aigcAddress,
     args: [BigInt(tokenId)],
   });
@@ -53,6 +52,30 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
     args: [NFT_MARKETPLACE_ADDRESS, BigInt(tokenId)],
   });
 
+  const { data: isListed, refetch: refetchIsListed } =
+    useNftMarketplaceIsListed({
+      address: NFT_MARKETPLACE_ADDRESS,
+      args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
+    });
+
+  const {
+    write: listNft,
+    data: listNftTx,
+    isLoading: isListing,
+  } = useNftMarketplaceList({
+    address: NFT_MARKETPLACE_ADDRESS,
+  });
+
+  const {
+    write: buyNft,
+    data: buyNftTx,
+    isLoading: isBuying,
+  } = useNftMarketplaceBuy({
+    address: NFT_MARKETPLACE_ADDRESS,
+    value: parseEther("0.001"), // default price
+    args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
+  });
+
   useAigcApprovalEvent({
     address: aigcAddress,
     listener: (log) => {
@@ -63,20 +86,29 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
     },
   });
 
-  const { data: isListed } = useNftMarketplaceIsListed({
-    address: NFT_MARKETPLACE_ADDRESS,
-    args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
+  useWaitForTransaction({
+    hash: listNftTx?.hash,
+    onSuccess(data) {
+      refetchOwner();
+      refetchIsListed();
+    },
   });
 
-  const { write: listNft } = useNftMarketplaceList({
-    address: NFT_MARKETPLACE_ADDRESS,
+  useWaitForTransaction({
+    hash: buyNftTx?.hash,
+    onSuccess(data) {
+      refetchOwner();
+      refetchIsListed();
+    },
   });
-
-  const { write: buyNft } = useNftMarketplaceBuy({
-    address: NFT_MARKETPLACE_ADDRESS,
-    value: parseEther("0.001"),
-    args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
-  });
+  // useNftMarketplaceOwnershipTransferredEvent({
+  //   address: NFT_MARKETPLACE_ADDRESS,
+  //   listener: (log) => {
+  //     // console.log(log)
+  //     refetchOwner();
+  //     refetchIsListed();
+  //   },
+  // });
 
   useEffect(() => {
     if (!aigcAddress || !tokenUri) return;
@@ -99,7 +131,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
   if (!metadata) return;
 
   return (
-    <div className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition">
+    <div className="card w-full max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition">
       <div className="flex justify-between items-center">
         <h2 className="card-title p-4">{metadata.name}</h2>
         <div className="badge badge-secondary m-4">Genesis Model</div>
@@ -109,7 +141,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
         <img
           src={metadata.image}
           alt={metadata.name}
-          className="w-full object-cover"
+          className="w-full object-cover min-h-[300px]"
         />
       </figure>
       <button
@@ -216,9 +248,10 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
             onClick={() => {
               buyNft();
             }}
-            className="btn btn-primary"
+            disabled={isBuying}
+            className="btn btn-secondary"
           >
-            Buy NFT
+            {isBuying ? "Loading..." : "Buy NFT"}
           </button>
         )}
         {address === owner && (
@@ -226,9 +259,10 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
             onClick={() => {
               approveListing();
             }}
+            disabled={isListing}
             className="btn btn-primary"
           >
-            List NFT
+            {isListing ? "Loading..." : "List NFT"}
           </button>
         )}
       </div>
