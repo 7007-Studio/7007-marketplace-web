@@ -1,7 +1,8 @@
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
-import { useState, useEffect,Dispatch,SetStateAction } from "react";
-
-const useAudio = (url: string): [boolean, Dispatch<SetStateAction<boolean>>] => {
+const useAudio = (
+  url?: string
+): [boolean, Dispatch<SetStateAction<boolean>>] => {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -11,14 +12,14 @@ const useAudio = (url: string): [boolean, Dispatch<SetStateAction<boolean>>] => 
     setAudio(audioTune);
 
     const handleEnded = () => setIsPlaying(false);
-    audioTune.addEventListener('ended', handleEnded);
+    audioTune.addEventListener("ended", handleEnded);
 
     // Cleanup function to remove the event listener
     return () => {
-      audioTune.removeEventListener('ended', handleEnded);
+      audioTune.removeEventListener("ended", handleEnded);
       audioTune.pause();
     };
-  }, []);
+  }, [url]);
 
   useEffect(() => {
     // Control play/pause when isPlaying changes

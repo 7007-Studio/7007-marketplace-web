@@ -7,7 +7,7 @@ import { Model, NFT } from "./types";
 
 export const AIGC_FACTORY_CONTRACT_ADDRESS =
   // "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // hardhat
-  "0x191Ad675CA576c8b8dE269548A87Cd3D60696B9e"; // sepolia
+  "0x8F5B3428f0caBCCBFaD145D22DF0aEa4ba799d10"; // sepolia
 
 export const TOKEN7007_CONTRACT_ADDRESS =
   "0x6aa8BAE94DbEC32CbeE952c9f7f4248D2103eD5B";
@@ -19,16 +19,19 @@ export const AIGC_CONTRACT_ADDRESS =
 export const AIGT_CONTRACT_ADDRESS =
   "0x18c3054389d370da05ba00bba589ddce3e8cf8c2";
 
-export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [
-  {
-    modelIndex: "0xe0290A759D12266f43a91b1BDa79E47F5065c42A",
-    modelName: "NOV 012",
-    modelAddress: "0x123...abc",
-    totalSupply: 1200,
-    nftMint: 1000,
-    title: "Genesis Model",
-    description:
-      "Use stable diffusion model to generate image and music from text",
-    imageUrl: "/nft1.png",
-  },
-];
+export const NFT_MARKETPLACE_ADDRESS =
+  "0x7e1792c4CFd76971b6Db9662f7Ffe08eFBf60842";
+
+export const MOCK_MODEL_DATA = {
+  modelIndex: "0xe0290A759D12266f43a91b1BDa79E47F5065c42A",
+  modelName: "NOV 012",
+  modelAddress: "0x123...abc",
+  totalSupply: 1200,
+  nftMint: 1000,
+  title: "Genesis Model",
+  description:
+    "Use stable diffusion model to generate image and music from text",
+  imageUrl: "/nft1.png",
+};
+
+export const MOCK_MARKETPLACE_DATA: (NFT | Model)[] = [MOCK_MODEL_DATA];

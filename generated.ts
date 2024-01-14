@@ -814,6 +814,107 @@ export const aigtABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// NFTMarketplace
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const nftMarketplaceABI = [
+  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'AddressInsufficientBalance',
+  },
+  { type: 'error', inputs: [], name: 'FailedInnerCall' },
+  {
+    type: 'error',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+    name: 'OwnableInvalidOwner',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'OwnershipTransferred',
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: 'nftContract', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'buy',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isListed',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'nftContract', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'list',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Stake7007
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2892,6 +2993,385 @@ export function useAigtTransferEvent(
     eventName: 'Transfer',
     ...config,
   } as UseContractEventConfig<typeof aigtABI, 'Transfer'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link nftMarketplaceABI}__.
+ */
+export function useNftMarketplaceRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof nftMarketplaceABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof nftMarketplaceABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: nftMarketplaceABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof nftMarketplaceABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"isListed"`.
+ */
+export function useNftMarketplaceIsListed<
+  TFunctionName extends 'isListed',
+  TSelectData = ReadContractResult<typeof nftMarketplaceABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof nftMarketplaceABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: nftMarketplaceABI,
+    functionName: 'isListed',
+    ...config,
+  } as UseContractReadConfig<
+    typeof nftMarketplaceABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"owner"`.
+ */
+export function useNftMarketplaceOwner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<typeof nftMarketplaceABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof nftMarketplaceABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: nftMarketplaceABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof nftMarketplaceABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__.
+ */
+export function useNftMarketplaceWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nftMarketplaceABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof nftMarketplaceABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof nftMarketplaceABI, TFunctionName, TMode>({
+    abi: nftMarketplaceABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"buy"`.
+ */
+export function useNftMarketplaceBuy<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nftMarketplaceABI,
+          'buy'
+        >['request']['abi'],
+        'buy',
+        TMode
+      > & { functionName?: 'buy' }
+    : UseContractWriteConfig<typeof nftMarketplaceABI, 'buy', TMode> & {
+        abi?: never
+        functionName?: 'buy'
+      } = {} as any,
+) {
+  return useContractWrite<typeof nftMarketplaceABI, 'buy', TMode>({
+    abi: nftMarketplaceABI,
+    functionName: 'buy',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"list"`.
+ */
+export function useNftMarketplaceList<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nftMarketplaceABI,
+          'list'
+        >['request']['abi'],
+        'list',
+        TMode
+      > & { functionName?: 'list' }
+    : UseContractWriteConfig<typeof nftMarketplaceABI, 'list', TMode> & {
+        abi?: never
+        functionName?: 'list'
+      } = {} as any,
+) {
+  return useContractWrite<typeof nftMarketplaceABI, 'list', TMode>({
+    abi: nftMarketplaceABI,
+    functionName: 'list',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function useNftMarketplaceRenounceOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nftMarketplaceABI,
+          'renounceOwnership'
+        >['request']['abi'],
+        'renounceOwnership',
+        TMode
+      > & { functionName?: 'renounceOwnership' }
+    : UseContractWriteConfig<
+        typeof nftMarketplaceABI,
+        'renounceOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'renounceOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof nftMarketplaceABI, 'renounceOwnership', TMode>(
+    {
+      abi: nftMarketplaceABI,
+      functionName: 'renounceOwnership',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function useNftMarketplaceTransferOwnership<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nftMarketplaceABI,
+          'transferOwnership'
+        >['request']['abi'],
+        'transferOwnership',
+        TMode
+      > & { functionName?: 'transferOwnership' }
+    : UseContractWriteConfig<
+        typeof nftMarketplaceABI,
+        'transferOwnership',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'transferOwnership'
+      } = {} as any,
+) {
+  return useContractWrite<typeof nftMarketplaceABI, 'transferOwnership', TMode>(
+    {
+      abi: nftMarketplaceABI,
+      functionName: 'transferOwnership',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"withdraw"`.
+ */
+export function useNftMarketplaceWithdraw<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof nftMarketplaceABI,
+          'withdraw'
+        >['request']['abi'],
+        'withdraw',
+        TMode
+      > & { functionName?: 'withdraw' }
+    : UseContractWriteConfig<typeof nftMarketplaceABI, 'withdraw', TMode> & {
+        abi?: never
+        functionName?: 'withdraw'
+      } = {} as any,
+) {
+  return useContractWrite<typeof nftMarketplaceABI, 'withdraw', TMode>({
+    abi: nftMarketplaceABI,
+    functionName: 'withdraw',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__.
+ */
+export function usePrepareNftMarketplaceWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof nftMarketplaceABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nftMarketplaceABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof nftMarketplaceABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"buy"`.
+ */
+export function usePrepareNftMarketplaceBuy(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'buy'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nftMarketplaceABI,
+    functionName: 'buy',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'buy'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"list"`.
+ */
+export function usePrepareNftMarketplaceList(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'list'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nftMarketplaceABI,
+    functionName: 'list',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'list'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"renounceOwnership"`.
+ */
+export function usePrepareNftMarketplaceRenounceOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof nftMarketplaceABI,
+      'renounceOwnership'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nftMarketplaceABI,
+    functionName: 'renounceOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof nftMarketplaceABI,
+    'renounceOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"transferOwnership"`.
+ */
+export function usePrepareNftMarketplaceTransferOwnership(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof nftMarketplaceABI,
+      'transferOwnership'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nftMarketplaceABI,
+    functionName: 'transferOwnership',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof nftMarketplaceABI,
+    'transferOwnership'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"withdraw"`.
+ */
+export function usePrepareNftMarketplaceWithdraw(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'withdraw'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: nftMarketplaceABI,
+    functionName: 'withdraw',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'withdraw'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link nftMarketplaceABI}__.
+ */
+export function useNftMarketplaceEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof nftMarketplaceABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: nftMarketplaceABI,
+    ...config,
+  } as UseContractEventConfig<typeof nftMarketplaceABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link nftMarketplaceABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ */
+export function useNftMarketplaceOwnershipTransferredEvent(
+  config: Omit<
+    UseContractEventConfig<typeof nftMarketplaceABI, 'OwnershipTransferred'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: nftMarketplaceABI,
+    eventName: 'OwnershipTransferred',
+    ...config,
+  } as UseContractEventConfig<typeof nftMarketplaceABI, 'OwnershipTransferred'>)
 }
 
 /**

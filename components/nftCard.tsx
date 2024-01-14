@@ -1,46 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAudio from "@/hooks/useAudio";
+import { useAigcOwnerOf, useAigcTokenUri } from "@/generated";
+import { Address, useAccount } from "wagmi";
+import axios from "axios";
+import { concatAddress } from "@/helpers";
 export interface NFTCardProps {
-  nftName: string;
-  modelName: string;
-  title: string;
-  description: string;
-  nftAddress: string;
+  nftAddress: Address;
   tokenID: string;
-  openseaLink: string;
-  imageUrl: string;
 }
 
-const NFTCard: React.FC<NFTCardProps> = ({
-  nftName,
-  modelName,
-  title,
-  description,
-  nftAddress,
-  tokenID,
-  openseaLink,
-  imageUrl,
-}) => {
+interface MetadataAttribute {
+  trait_type: string;
+  value: string;
+}
+
+interface Metadata {
+  name: string;
+  description: string;
+  image: string;
+  attributes: MetadataAttribute[];
+}
+
+const NFTCard: React.FC<NFTCardProps> = ({ nftAddress, tokenID }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isPlaying, setIsPlaying] = useAudio('/sound.mp3');
+  const [metadata, setMetadata] = useState<Metadata>();
+  const [audioUrl, setAudioUrl] = useState();
+  const [isPlaying, setIsPlaying] = useAudio();
+
+  const { address } = useAccount();
+
+  const { data: owner } = useAigcOwnerOf({
+    address: nftAddress,
+    args: [BigInt(tokenID)],
+  });
+
+  const { data: tokenUri } = useAigcTokenUri({
+    address: nftAddress,
+    args: [BigInt(tokenID)],
+  });
+
+  useEffect(() => {
+    if (!nftAddress || !tokenUri) return;
+
+    const fetchMetadata = async () => {
+      const res = await axios.get(tokenUri);
+      const metadata = res.data;
+
+      setMetadata(res.data);
+
+      const audioUrl = metadata.attributes.find(
+        (a: MetadataAttribute) => a.trait_type === "Audio"
+      )?.value;
+      if (audioUrl) setAudioUrl(audioUrl);
+    };
+
+    fetchMetadata();
+  }, [nftAddress, tokenUri]);
+
+  if (!metadata) return <div>{tokenID}</div>;
+
   return (
     <div className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition">
       <div className="flex justify-between items-center">
-        <h2 className="card-title p-4">{nftName}</h2>
-        <div className="badge badge-secondary m-4">{modelName}</div>
+        <h2 className="card-title p-4">{metadata.name}</h2>
+        <div className="badge badge-secondary m-4">Genesis Model</div>
       </div>
 
       <figure>
         <img
-          src={imageUrl}
-          alt={`Image of ${nftName}`}
+          src={metadata.image}
+          alt={metadata.name}
           className="w-full object-cover"
         />
       </figure>
-      <button onClick={() => {
-          setIsPlaying(!isPlaying)
-        }} 
-        className="ml-5 -mt-5">
+      <button
+        onClick={() => {
+          setIsPlaying(!isPlaying);
+        }}
+        className="ml-5 -mt-5"
+      >
         {isPlaying ? (
           <svg
             className="ml-1 bg-black outline  outline-1 outline-primary h-12 w-12 p-3 "
@@ -72,8 +110,8 @@ const NFTCard: React.FC<NFTCardProps> = ({
       </button>
 
       <div className="card-body flex-initial">
-        <h2 className="text-2xl mb-4 font-bold">{title}</h2>
-        <p className="mb-4 text-zinc-400">{description}</p>
+        <h2 className="text-2xl mb-4 font-bold">{metadata.name}</h2>
+        <p className="mb-4 text-zinc-400">{metadata.description}</p>
         {/* detail */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -108,19 +146,25 @@ const NFTCard: React.FC<NFTCardProps> = ({
           {/* Your collapsible content goes here */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
             <h2>Contract Address</h2>
-            <span>{nftAddress}</span>
+            <a
+              href={`https://sepolia.etherscan.io/address/${nftAddress}`}
+              className="text-blue-500 hover:text-blue-600 overflow-hidden"
+              target="_blank"
+            >
+              {concatAddress(nftAddress)}
+            </a>
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
             <h2>Token ID</h2>
             <span>{tokenID}</span>
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
-            <h2>Opensea link</h2>
             <a
-              href={openseaLink}
+              href={`https://testnets.opensea.io/assets/sepolia/${nftAddress}/${tokenID}`}
               className="text-blue-500 hover:text-blue-600 overflow-hidden"
+              target="_blank"
             >
-              {openseaLink}
+              View on OpenSea
             </a>
           </div>
         </div>
@@ -130,5 +174,3 @@ const NFTCard: React.FC<NFTCardProps> = ({
 };
 
 export default NFTCard;
-
-

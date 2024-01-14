@@ -7,3 +7,7 @@ export function isNFT(item: any): item is NFT {
 export function isModel(item: any): item is Model {
   return (item as Model).modelIndex !== undefined;
 }
+
+export function concatAddress(address: string): string {
+  return address.slice(0, 6) + "..." + address.slice(-4);
+}

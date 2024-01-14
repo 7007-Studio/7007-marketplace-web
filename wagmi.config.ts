@@ -7,6 +7,7 @@ import AIGC_Factory from "@/abis/AIGC_Factory.json";
 import AIGT from "@/abis/AIGT.json";
 import Token7007 from "@/abis/Token7007.json";
 import Stake7007 from "@/abis/Stake7007.json";
+import NFTMarketplace from "@/abis/NFTMarketplace.json";
 
 export default defineConfig({
   out: "generated.ts",
@@ -30,6 +31,10 @@ export default defineConfig({
     {
       abi: Stake7007.abi as Abi,
       name: "Stake7007",
+    },
+    {
+      abi: NFTMarketplace.abi as Abi,
+      name: "NFTMarketplace",
     },
   ],
   plugins: [react()],
