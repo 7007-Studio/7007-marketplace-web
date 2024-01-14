@@ -2,9 +2,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
+import { STAKE7007_CONTRACT_ADDRESS } from "@/constants";
+import {
+  useStake7007GetInferencePoint,
+  useStake7007ConsumedInferencePoint,
+} from "@/generated";
+import { Address, formatUnits } from "viem";
+import { useAccount } from "wagmi";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function Navbar() {
   const [isShowingMenu, setIsShowingMenu] = useState(false);
+
+  const { address } = useAccount();
+  const { data: inferencePoint } = useStake7007GetInferencePoint({
+    address: STAKE7007_CONTRACT_ADDRESS as Address,
+    args: address ? [address] : undefined,
+  });
+  const { data: consumedInferencePoint } = useStake7007ConsumedInferencePoint({
+    address: STAKE7007_CONTRACT_ADDRESS as Address,
+    args: address ? [address] : undefined,
+  });
+
+  const isMounted = useIsMounted();
 
   return (
     <>
@@ -38,6 +58,13 @@ export default function Navbar() {
           >
             Governance
           </Link>
+          {isMounted &&
+            inferencePoint !== undefined &&
+            consumedInferencePoint !== undefined && (
+              <div className="badge badge-primary text-lg font-bold p-4 mx-4">
+                {formatUnits(inferencePoint - consumedInferencePoint, 18)} IP
+              </div>
+            )}
           <ConnectButton chainStatus="none" showBalance={false} />
           <button
             className="md:hidden btn btn-square btn-ghost hover:text-black"

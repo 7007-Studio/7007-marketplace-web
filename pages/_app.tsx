@@ -9,13 +9,13 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, sepolia, hardhat } from "wagmi/chains";
+import { sepolia } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import Layout from "@/components/layout";
 
 const { chains, publicClient } = configureChains(
-  [mainnet, sepolia, hardhat],
+  [sepolia],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || "" }),
     publicProvider(),
