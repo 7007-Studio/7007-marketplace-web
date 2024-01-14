@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
-import { Address, formatEther, parseEther } from "viem";
+import { formatEther, parseEther } from "viem";
 import {
+  useAigcFactoryDeployedAigTs,
   useAigtMaxSupply,
   useAigtMint,
   useAigtName,
@@ -11,53 +12,54 @@ import {
 } from "@/generated";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 
 export default function MintModelToken() {
   const router = useRouter();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
-  const { index, aigcAddress } = router.query;
-  console.log("mint :", index, aigcAddress);
+  const { index } = router.query;
 
   const [numberOfToken, setNumberOfToken] = useState("1");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isMounted = useIsMounted();
 
-  const { data: modelName } = useAigtName({
-    address: index as Address,
-  });
-  console.log(modelName);
-  const { data: tokenPrice } = useAigtTokenPrice({
-    address: index as Address,
+  const { data: aigtAddress } = useAigcFactoryDeployedAigTs({
+    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    args: index ? [BigInt(index as string)] : undefined,
   });
 
-  console.log(tokenPrice);
+  const { data: modelName } = useAigtName({
+    address: aigtAddress,
+  });
+  const { data: tokenPrice } = useAigtTokenPrice({
+    address: aigtAddress,
+  });
+
   const { data: totalSupply } = useAigtTotalSupply({
-    address: index as Address,
+    address: aigtAddress,
   });
   const { data: maxSupply } = useAigtMaxSupply({
-    address: index as Address,
+    address: aigtAddress,
   });
-  console.log(totalSupply, maxSupply);
 
-  const { data, write, isLoading, isSuccess, isError, error } = useAigtMint({
-    address: index as Address,
+  const {
+    data: mintAIGTTransactionReceipt,
+    write: mintAIGT,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useAigtMint({
+    address: aigtAddress,
   });
 
   const totalPrice = () => {
     if (!tokenPrice) {
       return "0";
     }
-    console.log(tokenPrice);
     return formatEther(tokenPrice * BigInt(numberOfToken));
-  };
-
-  const remainSupply = () => {
-    if (!totalSupply || !maxSupply) {
-      return "";
-    }
-    return maxSupply - totalSupply;
   };
 
   const handleSubmit = async () => {
@@ -67,8 +69,8 @@ export default function MintModelToken() {
     }
 
     setIsSubmitting(true);
-    if (write) {
-      write({
+    if (mintAIGT) {
+      mintAIGT({
         args: [BigInt(numberOfToken)],
         value: parseEther(totalPrice()),
       });
@@ -83,14 +85,19 @@ export default function MintModelToken() {
         <h1 className="text-3xl font-bold mb-4">
           Your model token was minted successfully!
         </h1>
-        <div>Transaction: {data?.hash}</div>
+        <div>
+          Transaction:{" "}
+          <a
+            href={`https://sepolia.etherscan.io/tx/${mintAIGTTransactionReceipt?.hash}`}
+          >
+            {mintAIGTTransactionReceipt?.hash}
+          </a>
+        </div>
 
         <div className="flex justify-between">
           <button
             className="btn"
-            onClick={() =>
-              router.push(`/model/${index}/aigc/${aigcAddress}/detail`)
-            }
+            onClick={() => router.push(`/model/${index}/aigc/detail`)}
           >
             View Model Details
           </button>
@@ -110,10 +117,6 @@ export default function MintModelToken() {
       <h1 className="text-3xl font-bold mb-4">Mint Your Model Token</h1>
       <h2 className="text-2xl mb-2">{modelName}</h2>
       <div className="flex flex-col gap-4">
-        <div>
-          Aliquet pulvinar sit amet id. Venenatis auctor vel turpis quis integer
-          at risus. Venenatis auctor vel turpis quis integer at risus.
-        </div>
         <div>
           Price:{" "}
           <span className="text-primary">
@@ -137,7 +140,10 @@ export default function MintModelToken() {
           <button
             className="btn btn-primary"
             disabled={
-              isLoading || isSubmitting || BigInt(numberOfToken) <= 0 || !write
+              isLoading ||
+              isSubmitting ||
+              BigInt(numberOfToken) <= 0 ||
+              !mintAIGT
             }
             onClick={handleSubmit}
           >

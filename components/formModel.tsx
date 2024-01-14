@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import {
   useAigcFactoryAigcCreatedEvent,
   useAigcFactoryCreateAigc,
+  useAigcFactoryModelIndexCurrent,
 } from "@/generated";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import TextInput from "./textInput";
@@ -35,18 +36,25 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { write, isLoading, isError, error } = useAigcFactoryCreateAigc({
+  const { data: modelIndex } = useAigcFactoryModelIndexCurrent({
+    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+  });
+
+  const {
+    write: createAigc,
+    isLoading,
+    isError,
+    error,
+  } = useAigcFactoryCreateAigc({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
   });
 
   useAigcFactoryAigcCreatedEvent({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     listener: (log) => {
-      // aigcAddress, aigtAddress
-      console.log(log);
-      router.push(
-        `/model/${log[0].args.aigtAddress}/aigc/${log[0].args.aigcAddress}/detail`
-      );
+      // console.log(log)
+      // TODO: event should include model index so that we don't guess
+      router.push(`/model/${Number(modelIndex) + 1}/detail`);
     },
   });
 
@@ -62,7 +70,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
     setIsSubmitting(true);
     setIsGenerating(true);
 
-    write({
+    createAigc({
       // string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, uint256 _ownerReservePercent, uint96 _royalty
       args: [
         data.name,

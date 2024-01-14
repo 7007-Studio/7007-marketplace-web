@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
 import useAudio from "@/hooks/useAudio";
-import { useAigcOwnerOf, useAigcTokenUri } from "@/generated";
-import { Address, useAccount } from "wagmi";
+import {
+  useAigcFactoryDeployedAigCs,
+  useAigcOwnerOf,
+  useAigcTokenUri,
+} from "@/generated";
+import { useAccount } from "wagmi";
 import axios from "axios";
 import { concatAddress } from "@/helpers";
+import { Metadata, MetadataAttribute } from "@/types";
+import { useRouter } from "next/router";
+import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 export interface NFTCardProps {
-  nftAddress: Address;
-  tokenID: string;
+  modelIndex: number;
+  tokenId: string;
 }
 
-interface MetadataAttribute {
-  trait_type: string;
-  value: string;
-}
+const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
+  const router = useRouter();
 
-interface Metadata {
-  name: string;
-  description: string;
-  image: string;
-  attributes: MetadataAttribute[];
-}
-
-const NFTCard: React.FC<NFTCardProps> = ({ nftAddress, tokenID }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
   const [audioUrl, setAudioUrl] = useState();
@@ -29,18 +26,23 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftAddress, tokenID }) => {
 
   const { address } = useAccount();
 
+  const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
+    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    args: [BigInt(modelIndex)],
+  });
+
   const { data: owner } = useAigcOwnerOf({
-    address: nftAddress,
-    args: [BigInt(tokenID)],
+    address: aigcAddress,
+    args: [BigInt(tokenId)],
   });
 
   const { data: tokenUri } = useAigcTokenUri({
-    address: nftAddress,
-    args: [BigInt(tokenID)],
+    address: aigcAddress,
+    args: [BigInt(tokenId)],
   });
 
   useEffect(() => {
-    if (!nftAddress || !tokenUri) return;
+    if (!aigcAddress || !tokenUri) return;
 
     const fetchMetadata = async () => {
       const res = await axios.get(tokenUri);
@@ -55,12 +57,15 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftAddress, tokenID }) => {
     };
 
     fetchMetadata();
-  }, [nftAddress, tokenUri]);
+  }, [aigcAddress, tokenUri]);
 
-  if (!metadata) return <div>{tokenID}</div>;
+  if (!metadata) return;
 
   return (
-    <div className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition">
+    <div
+      onClick={() => router.push(`/model/${modelIndex}/aigc/${tokenId}`)}
+      className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition"
+    >
       <div className="flex justify-between items-center">
         <h2 className="card-title p-4">{metadata.name}</h2>
         <div className="badge badge-secondary m-4">Genesis Model</div>
@@ -143,30 +148,34 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftAddress, tokenID }) => {
               : "opacity-100 transition-opacity ease-in-out duration-500"
           } `}
         >
-          {/* Your collapsible content goes here */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
-            <h2>Contract Address</h2>
-            <a
-              href={`https://sepolia.etherscan.io/address/${nftAddress}`}
-              className="text-blue-500 hover:text-blue-600 overflow-hidden"
-              target="_blank"
-            >
-              {concatAddress(nftAddress)}
-            </a>
-          </div>
+          {aigcAddress && (
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
+              <h2>Contract Address</h2>
+              <a
+                href={`https://sepolia.etherscan.io/address/${aigcAddress}`}
+                className="text-blue-500 hover:text-blue-600 overflow-hidden"
+                target="_blank"
+              >
+                {concatAddress(aigcAddress)}
+              </a>
+            </div>
+          )}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
             <h2>Token ID</h2>
-            <span>{tokenID}</span>
+            <span>{tokenId}</span>
           </div>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
-            <a
-              href={`https://testnets.opensea.io/assets/sepolia/${nftAddress}/${tokenID}`}
-              className="text-blue-500 hover:text-blue-600 overflow-hidden"
-              target="_blank"
-            >
-              View on OpenSea
-            </a>
-          </div>
+
+          {aigcAddress && (
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
+              <a
+                href={`https://testnets.opensea.io/assets/sepolia/${aigcAddress}/${tokenId}`}
+                className="text-blue-500 hover:text-blue-600 overflow-hidden"
+                target="_blank"
+              >
+                View on OpenSea
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

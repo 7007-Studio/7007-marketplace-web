@@ -10,6 +10,11 @@ import { Address } from "viem";
 import { useAccount, useWaitForTransaction } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
+enum GenerateType {
+  Image,
+  Music,
+}
+
 const projectId = "2V1B4bBqSCyncDB2jeHd7uy5oLN";
 const projectSecret = "2b18de3a067e0a35d8700ef362c816dc";
 const auth =
@@ -41,19 +46,13 @@ export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
   const { openConnectModal } = useConnectModal();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
-  console.log("aigtAddress :", aigtAddress);
-  console.log("aigcAddress :", aigcAddress);
   const { data: aigtApprove, write: writeAigtApprove } = useAigtApprove({
     address: aigtAddress as Address,
   });
   const { isSuccess: approveIsSuccess } = useWaitForTransaction({
     hash: aigtApprove?.hash,
   });
-  const {
-    data: mintData,
-    isSuccess: mintIsSuccess,
-    write: writeAigcMint,
-  } = useAigcMint({
+  const { data: mintData, write: writeAigcMint } = useAigcMint({
     address: aigcAddress as Address,
   });
   const { isSuccess: isMinted } = useWaitForTransaction({
@@ -228,8 +227,7 @@ export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
 
     [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
     const [audio] = await generateMusic(contractAddr, data.prompt);
-    console.log("aigtAddress :", aigtAddress);
-    console.log("aigcAddress :", aigcAddress);
+
     writeAigtApprove({
       args: [aigcAddress as Address, BigInt(1000)],
     });
@@ -345,9 +343,4 @@ export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
       )}
     </form>
   );
-}
-
-export enum GenerateType {
-  Image,
-  Music,
 }

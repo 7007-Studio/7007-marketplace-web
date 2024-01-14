@@ -19,3 +19,15 @@ export interface Model {
   description: string;
   imageUrl: string;
 }
+
+export interface MetadataAttribute {
+  trait_type: string;
+  value: string;
+}
+
+export interface Metadata {
+  name: string;
+  description: string;
+  image: string;
+  attributes: MetadataAttribute[];
+}
