@@ -74,10 +74,10 @@ export default function Token() {
   if (!isMounted) return null;
 
   return (
-    <div className="flex min-h-screen flex-col p-20 py-16 mx-auto w-[95vw] ">
+    <div className="flex min-h-screen flex-col p-4 lg:p-20 py-16 mx-auto w-[95vw] ">
       <h1 className="text-3xl font-bold text-white mb-4">7007 Token</h1>
       <div className="flex flex-col">
-        <div className="w-1/2">
+        <div className="lg:w-1/2">
           <h2 className="text-2xl font-bold text-white mb-2">
             Mint 7007 Token
           </h2>
@@ -87,7 +87,11 @@ export default function Token() {
           </div>
           {balance != undefined && decimals !== undefined && (
             <div>
-              You currently have {formatUnits(balance, decimals)} 7007 tokens.
+              You currently have{" "}
+              <span className="font-bold">
+                {formatUnits(balance, decimals)}
+              </span>{" "}
+              7007 tokens.
             </div>
           )}
           <div className="my-8">
@@ -111,14 +115,17 @@ export default function Token() {
             </button>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="lg:w-1/2">
           <h2 className="text-2xl font-bold text-white mb-2">
             Stake 7007 Token
           </h2>
           {stakedAmount != undefined && decimals !== undefined && (
             <div>
-              You currently have {formatUnits(stakedAmount, decimals)} 7007
-              tokens staked from{" "}
+              You currently have{" "}
+              <span className="font-bold">
+                {formatUnits(stakedAmount, decimals)}
+              </span>{" "}
+              7007 tokens staked from{" "}
               {new Date(Number(stakeStartTime) * 1000).toDateString()}
             </div>
           )}
@@ -126,9 +133,15 @@ export default function Token() {
             consumedInferencePoint !== undefined &&
             decimals !== undefined && (
               <div>
-                You have {formatUnits(inferencePoint, decimals)} inference
-                points and have consumed{" "}
-                {formatUnits(consumedInferencePoint, decimals)} inference points
+                You have{" "}
+                <span className="font-bold">
+                  {formatUnits(inferencePoint, decimals)}
+                </span>{" "}
+                inference points and have consumed{" "}
+                <span className="font-bold">
+                  {formatUnits(consumedInferencePoint, decimals)}
+                </span>{" "}
+                inference points
               </div>
             )}
           <div className="my-8">

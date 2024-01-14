@@ -46,7 +46,7 @@ export default function Marketplace() {
   if (!isMounted) return null;
 
   return (
-    <div className="flex min-h-screen flex-col p-20 py-16 mx-auto w-[95vw] ">
+    <div className="flex min-h-screen flex-col p-4 lg:p-20 py-16 mx-auto w-[95vw] ">
       <h1 className="text-3xl font-bold text-white">7007Lab Marketplace</h1>
       <div className="flex flex-col md:flex-row justify-between items-baseline">
         <div className="my-5 -mx-2">
@@ -54,7 +54,6 @@ export default function Marketplace() {
         </div>
       </div>
 
-      {/* <div className="flex items-start flex-wrap justify-center gap-6"> */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
         {currentTab === TabState.Model && <ModelCard modelIndex={modelIndex} />}
 

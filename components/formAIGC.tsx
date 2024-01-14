@@ -144,7 +144,6 @@ const getTokenURI = async (
   result = await client.add(buffer);
 
   const ipfsLinkMetadata = "https://cloudflare-ipfs.com/ipfs/" + result.path;
-  console.log("ipfs metadata: ", ipfsLinkMetadata);
   return { ipfsLinkMetadata, metadata };
 };
 
@@ -169,7 +168,7 @@ export default function FormAIGC({
   aigcAddress,
 }: FormAIGCProps) {
   const router = useRouter();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -201,8 +200,12 @@ export default function FormAIGC({
 
   useAigcTransferEvent({
     address: aigcAddress,
-    listener: (log) => {
+    listener: async (log) => {
       // console.log(log);
+
+      await axios.post("/api/consumeInferencePoint", {
+        user: address,
+      });
       router.push(`/model/${modelIndex}/aigc/${tokenId}`);
     },
   });
@@ -251,9 +254,9 @@ export default function FormAIGC({
       getValues("name"),
       prompt
     );
-    console.log("tokenURI", ipfsLinkMetadata);
 
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
+
     mintAIGC({
       args: [
         ipfsLinkMetadata,

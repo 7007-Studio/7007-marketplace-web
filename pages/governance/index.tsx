@@ -20,7 +20,7 @@ export default function MarketPlace() {
   }, [modelIndex]);
 
   return (
-    <div className="container mx-auto mt-12 flex min-h-screen flex-col p-20 py-16">
+    <div className="container mx-auto mt-12 flex min-h-screen flex-col p-4 lg:p-20 py-16">
       <h1 className="text-3xl mb-10 font-bold text-white">
         7007Lab Governance
       </h1>

@@ -63,7 +63,7 @@ export default function Detail() {
         {index && <ModelDetail modelIndex={Number(index as string)} />}
       </div>
       <h2 className="text-white font-bold text-2xl mb-10">More</h2>
-      <div className="flex items-start flex-wrap justify-center gap-6 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
         {aigcAddress &&
           tokenIds.map((id) => (
             <NFTCard
