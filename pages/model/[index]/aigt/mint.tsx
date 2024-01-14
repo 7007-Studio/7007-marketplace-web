@@ -97,7 +97,7 @@ export default function MintModelToken() {
         <div className="flex justify-between">
           <button
             className="btn"
-            onClick={() => router.push(`/model/${index}/aigc/detail`)}
+            onClick={() => router.push(`/model/${index}`)}
           >
             View Model Details
           </button>

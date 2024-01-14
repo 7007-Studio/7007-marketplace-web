@@ -1,24 +1,31 @@
 import { useEffect, useState } from "react";
 import useAudio from "@/hooks/useAudio";
 import {
+  useAigcApprovalEvent,
+  useAigcApprove,
   useAigcFactoryDeployedAigCs,
   useAigcOwnerOf,
   useAigcTokenUri,
+  useNftMarketplaceBuy,
+  useNftMarketplaceIsListed,
+  useNftMarketplaceList,
 } from "@/generated";
 import { useAccount } from "wagmi";
 import axios from "axios";
 import { concatAddress } from "@/helpers";
 import { Metadata, MetadataAttribute } from "@/types";
 import { useRouter } from "next/router";
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
+import {
+  AIGC_FACTORY_CONTRACT_ADDRESS,
+  NFT_MARKETPLACE_ADDRESS,
+} from "@/constants";
+import { parseEther } from "viem";
 export interface NFTCardProps {
   modelIndex: number;
   tokenId: string;
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
-  const router = useRouter();
-
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
   const [audioUrl, setAudioUrl] = useState();
@@ -39,6 +46,36 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
   const { data: tokenUri } = useAigcTokenUri({
     address: aigcAddress,
     args: [BigInt(tokenId)],
+  });
+
+  const { write: approveListing } = useAigcApprove({
+    address: aigcAddress,
+    args: [NFT_MARKETPLACE_ADDRESS, BigInt(tokenId)],
+  });
+
+  useAigcApprovalEvent({
+    address: aigcAddress,
+    listener: (log) => {
+      // console.log(log)
+      listNft({
+        args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
+      });
+    },
+  });
+
+  const { data: isListed } = useNftMarketplaceIsListed({
+    address: NFT_MARKETPLACE_ADDRESS,
+    args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
+  });
+
+  const { write: listNft } = useNftMarketplaceList({
+    address: NFT_MARKETPLACE_ADDRESS,
+  });
+
+  const { write: buyNft } = useNftMarketplaceBuy({
+    address: NFT_MARKETPLACE_ADDRESS,
+    value: parseEther("0.001"),
+    args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
   });
 
   useEffect(() => {
@@ -62,10 +99,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
   if (!metadata) return;
 
   return (
-    <div
-      onClick={() => router.push(`/model/${modelIndex}/aigc/${tokenId}`)}
-      className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition"
-    >
+    <div className="card w-80 max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-pink-500 outline-2 transition">
       <div className="flex justify-between items-center">
         <h2 className="card-title p-4">{metadata.name}</h2>
         <div className="badge badge-secondary m-4">Genesis Model</div>
@@ -144,7 +178,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
         <div
           className={`${
             isCollapsed
-              ? "opacity-0 max-h-0"
+              ? "opacity-0 max-h-0 hidden"
               : "opacity-100 transition-opacity ease-in-out duration-500"
           } `}
         >
@@ -177,6 +211,26 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
             </div>
           )}
         </div>
+        {isListed && (
+          <button
+            onClick={() => {
+              buyNft();
+            }}
+            className="btn btn-primary"
+          >
+            Buy NFT
+          </button>
+        )}
+        {address === owner && (
+          <button
+            onClick={() => {
+              approveListing();
+            }}
+            className="btn btn-primary"
+          >
+            List NFT
+          </button>
+        )}
       </div>
     </div>
   );

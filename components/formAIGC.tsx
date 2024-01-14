@@ -1,19 +1,88 @@
 import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import TextInput from "./textInput";
-import { useAigcMint, useAigtApprove } from "@/generated";
-import { useEffect, useState } from "react";
+import {
+  useAigcCostToken,
+  useAigcMint,
+  useAigcTokenId,
+  useAigcTransferEvent,
+  useAigtApprovalEvent,
+  useAigtApprove,
+} from "@/generated";
+import { useState } from "react";
 import axios from "axios";
 import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
 import { Address } from "viem";
-import { useAccount, useWaitForTransaction } from "wagmi";
+import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 enum GenerateType {
   Image,
   Music,
 }
+
+const initOPML = async (type: GenerateType, prompt: string) => {
+  let error;
+  try {
+    let response, data;
+    if (type === GenerateType.Image) {
+      data = {
+        modelName: "StableDiffusion",
+        prompt: prompt,
+      };
+
+      response = await axios.post(
+        "https://demo.7007.studio/api/v1/dalle/opMLRequest",
+        data,
+        {
+          timeout: 300000,
+        }
+      );
+    } else if (type === GenerateType.Music) {
+      data = {
+        modelName: "MusicGen",
+        prompt: prompt,
+      };
+      response = await axios.post(
+        "https://demo.7007.studio/api/v1/dalle/opMLRequest",
+        data,
+        {
+          timeout: 300000,
+        }
+      );
+    }
+    return response?.data.MPChallenge;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const generateImage = async (contractAddr: string, prompt: string) => {
+  try {
+    let response = await axios.post(
+      "https://demo.7007.studio/api/v1/dalle/txt2img",
+      { contractAddress: contractAddr, prompt: prompt },
+      { timeout: 300000 }
+    );
+    return "data:image/png;base64," + response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const generateMusic = async (contractAddr: string, prompt: string) => {
+  try {
+    const response = await axios.post(
+      "https://demo.7007.studio/api/v1/dalle/txt2music",
+      { contractAddress: contractAddr, prompt: prompt },
+      { timeout: 300000 }
+    );
+    return "data:audio/mpeg;base64," + response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const projectId = "2V1B4bBqSCyncDB2jeHd7uy5oLN";
 const projectSecret = "2b18de3a067e0a35d8700ef362c816dc";
@@ -28,189 +97,122 @@ const client = create({
   },
 });
 
+const getTokenURI = async (
+  imageUrl: string,
+  audio: string,
+  name: string,
+  prompt: string
+) => {
+  // make an mp4 with the photo and audio
+  let response = await fetch(imageUrl);
+  let blob = await response.blob();
+  let file = new File([blob], "file.png", { type: "image/png" });
+  let result = await client.add(file);
+  const ipfsLinkImg = "https://cloudflare-ipfs.com/ipfs/" + result.path;
+
+  response = await fetch(audio);
+  blob = await response.blob();
+  file = new File([blob], "file.mp3", { type: "audio/mp3" });
+  result = await client.add(file);
+  const ipfsLinkAudio = "https://cloudflare-ipfs.com/ipfs/" + result.path;
+
+  // upload the mp4 to ipfs
+  const metadata = {
+    name,
+    description:
+      "This NFT is generated and verified with OPML on https://demo.7007.studio/. The model used is Stable Diffusion and MusicGen. The original prompt is: " +
+      prompt,
+    image: ipfsLinkImg,
+    external_url: "https://alpha.7007.studio/",
+    attributes: [
+      {
+        trait_type: "prompt",
+        value: prompt,
+      },
+      {
+        trait_type: "music",
+        value: ipfsLinkAudio,
+      },
+      {
+        trait_type: "model",
+        value: "Genesis Model",
+      },
+    ],
+  };
+
+  let buffer = Buffer.from(JSON.stringify(metadata));
+  result = await client.add(buffer);
+
+  const ipfsLinkMetadata = "https://cloudflare-ipfs.com/ipfs/" + result.path;
+  console.log("ipfs metadata: ", ipfsLinkMetadata);
+  return { ipfsLinkMetadata, metadata };
+};
+
 export interface IFormAIGCInput {
   name: string;
   prompt: string;
   type: string;
   model: string;
+  imageUrl: string;
+  audioUrl: string;
 }
 
 interface FormAIGCProps {
-  aigtAddress: string;
-  aigcAddress: string;
+  modelIndex: number;
+  aigtAddress: Address;
+  aigcAddress: Address;
 }
 
-export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
+export default function FormAIGC({
+  modelIndex,
+  aigtAddress,
+  aigcAddress,
+}: FormAIGCProps) {
   const router = useRouter();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isMinting, setIsMinting] = useState(false);
-  const { data: aigtApprove, write: writeAigtApprove } = useAigtApprove({
-    address: aigtAddress as Address,
+
+  // read contracts
+  const { data: tokenId } = useAigcTokenId({
+    address: aigcAddress,
   });
-  const { isSuccess: approveIsSuccess } = useWaitForTransaction({
-    hash: aigtApprove?.hash,
+  const { data: mintCostToken } = useAigcCostToken({
+    address: aigcAddress,
   });
-  const { data: mintData, write: writeAigcMint } = useAigcMint({
-    address: aigcAddress as Address,
+
+  // write contracts
+  const { write: approveSpendingAIGT } = useAigtApprove({
+    address: aigtAddress,
   });
-  const { isSuccess: isMinted } = useWaitForTransaction({
-    hash: mintData?.hash,
+  const { write: mintAIGC } = useAigcMint({
+    address: aigcAddress,
   });
-  const { register, handleSubmit, formState, getValues } =
+
+  // contract events
+  useAigtApprovalEvent({
+    address: aigtAddress,
+    listener: (log) => {
+      // console.log(log);
+      onMint();
+    },
+  });
+
+  useAigcTransferEvent({
+    address: aigcAddress,
+    listener: (log) => {
+      // console.log(log);
+      router.push(`/model/${modelIndex}/aigc/${tokenId}`);
+    },
+  });
+
+  const { register, handleSubmit, formState, getValues, setValue } =
     useForm<IFormAIGCInput>();
   const { errors } = formState;
 
-  const [imageUrl, setImageUrl] = useState("");
-  const [audio, setAudio] = useState("");
-  const [hashedPrompt, setHashedPrompt] = useState<`0x${string}` | undefined>();
-  const [contractAddress, setContractAddress] = useState("");
-
-  const initOPML = async (type: GenerateType, prompt: string) => {
-    let error;
-    try {
-      console.log("initOPML");
-      let response, data;
-      if (type === GenerateType.Image) {
-        data = {
-          modelName: "StableDiffusion",
-          prompt: prompt,
-        };
-        console.log(data);
-
-        response = await axios.post(
-          "https://demo.7007.studio/api/v1/dalle/opMLRequest",
-          data,
-          {
-            timeout: 300000,
-          }
-        );
-      } else if (type === GenerateType.Music) {
-        data = {
-          modelName: "MusicGen",
-          prompt: prompt,
-        };
-        console.log(data);
-        response = await axios.post(
-          "https://demo.7007.studio/api/v1/dalle/opMLRequest",
-          data,
-          {
-            timeout: 300000,
-          }
-        );
-      }
-      console.log("response", response);
-      setContractAddress(response?.data.MPChallenge);
-      return [response?.data.MPChallenge, null]; // return data and null for error
-    } catch (error) {
-      console.error(error);
-      return [null, "Something went wrong! \n\n ERROR: " + error]; // return null for data and error message
-    }
-  };
-
-  const generateImage = async (contractAddr: string, prompt: string) => {
-    try {
-      console.log("generate Image");
-      let response = await axios.post(
-        "https://demo.7007.studio/api/v1/dalle/txt2img",
-        { contractAddress: contractAddr, prompt: prompt },
-        { timeout: 300000 }
-      );
-      const imageUrl = "data:image/png;base64," + response.data;
-      setImageUrl(imageUrl);
-      return [imageUrl, ""];
-    } catch (error) {
-      return [null, "Something went wrong! \n\n ERROR: " + error];
-    }
-  };
-
-  const generateMusic = async (contractAddr: string, prompt: string) => {
-    try {
-      console.log("generate Music");
-      const response = await axios.post(
-        "https://demo.7007.studio/api/v1/dalle/txt2music",
-        { contractAddress: contractAddr, prompt: prompt },
-        { timeout: 300000 }
-      );
-      console.log("/api/v1/dalle/txt2music");
-      const audioUrl = "data:audio/mpeg;base64," + response.data;
-
-      console.log(audioUrl);
-      setAudio(audioUrl);
-
-      return [audioUrl, null];
-    } catch (error) {
-      return [null, "Something went wrong! \n\n ERROR: " + error];
-    }
-  };
-
-  const getTokenURI = async (
-    imageUrl: string,
-    audio: string,
-    prompt: string
-  ) => {
-    console.log("mintNft");
-    console.log("imageUrl: ", imageUrl);
-    console.log("audio: ", audio);
-
-    // mint an nft with the photo and audio
-    // make an mp4 with the photo and audio
-    let response = await fetch(imageUrl);
-    let blob = await response.blob();
-    let file = new File([blob], "file.png", { type: "image/png" });
-    let result = await client.add(file);
-    const ipfsLinkImg = "https://cloudflare-ipfs.com/ipfs/" + result.path;
-    // console.log("ipfs hash: ", result.path)
-
-    response = await fetch(audio);
-    blob = await response.blob();
-    file = new File([blob], "file.mp3", { type: "audio/mp3" });
-    result = await client.add(file);
-    const ipfsLinkAudio = "https://cloudflare-ipfs.com/ipfs/" + result.path;
-
-    // upload the mp4 to ipfs
-    const metadata = {
-      name: "7007 AIGC NFT",
-      description:
-        "This NFT is generated and verified with OPML on https://demo.7007.studio/. The model used is Stable Diffusion and MusicGen. The original prompt is: " +
-        prompt,
-      image: ipfsLinkImg,
-      external_url: "https://demo.7007.studio/",
-      attributes: [
-        {
-          trait_type: "prompt",
-          value: prompt,
-        },
-        {
-          trait_type: "music",
-          value: ipfsLinkAudio,
-        },
-        {
-          trait_type: "model",
-          value: "Stable Diffusion, MusicGen",
-        },
-      ],
-    };
-
-    let buffer = Buffer.from(JSON.stringify(metadata));
-    result = await client.add(buffer);
-
-    const ipfsLinkMetadata = "https://cloudflare-ipfs.com/ipfs/" + result.path;
-    console.log("ipfs metadata: ", ipfsLinkMetadata);
-    return { ipfsLinkMetadata, metadata };
-
-    // mint the nft
-    // const provider = new ethers.BrowserProvider(window.ethereum);
-    // await provider.send("eth_requestAccounts", []);
-    // const signer = await provider.getSigner();
-    // // const provider = new JsonRpcProvider("https://goerli.infura.io/v3/a84b538abf714818b3662cd1fcd7c530");
-    // const contract = new ethers.Contract("0x4754a4059128fF45ae408bc7AB8Efe52b69cc5a4", abi, signer);
-    // console.log("contract: ", contract)
-    // let tx = await contract.mint(ipfsLinkMetadata)
-    // await tx.wait()
-    // console.log("tx: ", tx)
-  };
+  // const [imageUrl, setImageUrl] = useState("");
+  // const [audio, setAudio] = useState("");
 
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
     if (!isConnected) {
@@ -219,43 +221,40 @@ export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
     }
 
     setIsSubmitting(true);
-    console.log(data);
 
-    let [contractAddr, error] = await initOPML(GenerateType.Image, data.prompt);
-    // console.log("contractAddr: ", contractAddr)
-    const [img] = await generateImage(contractAddr, data.prompt);
+    let contractAddr = await initOPML(GenerateType.Image, data.prompt);
+    const imageUrl = await generateImage(contractAddr, data.prompt);
+    if (imageUrl) {
+      setValue("imageUrl", imageUrl);
+    }
 
-    [contractAddr, error] = await initOPML(GenerateType.Music, data.prompt);
-    const [audio] = await generateMusic(contractAddr, data.prompt);
+    contractAddr = await initOPML(GenerateType.Music, data.prompt);
+    const audioUrl = await generateMusic(contractAddr, data.prompt);
+    if (audioUrl) {
+      setValue("audioUrl", audioUrl);
+    }
 
-    writeAigtApprove({
-      args: [aigcAddress as Address, BigInt(1000)],
+    if (mintCostToken === undefined) {
+      return;
+    }
+
+    approveSpendingAIGT({
+      args: [aigcAddress as Address, mintCostToken],
     });
-
-    const hashedPrompt = ethers.encodeBytes32String(
-      data.prompt
-    ) as `0x${string}`;
-    setHashedPrompt(hashedPrompt);
-
-    // TODO: replace with call to mint model
-    // setTimeout(() => {
-    //   router.push("/");
-    // }, 5000);
   };
 
   const onMint = async () => {
-    setIsMinting(true);
     const prompt = getValues("prompt");
     const { ipfsLinkMetadata, metadata } = await getTokenURI(
-      imageUrl,
-      audio,
+      getValues("imageUrl"),
+      getValues("audioUrl"),
+      getValues("name"),
       prompt
     );
     console.log("tokenURI", ipfsLinkMetadata);
 
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
-
-    writeAigcMint({
+    mintAIGC({
       args: [
         ipfsLinkMetadata,
         hashedPrompt,
@@ -264,12 +263,6 @@ export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
       ],
     });
   };
-
-  useEffect(() => {
-    if (isMinted) {
-      router.push(`/model/${aigtAddress}/aigc/${aigcAddress}/detail`);
-    }
-  }, [isMinted, aigtAddress, aigcAddress, router]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -295,49 +288,28 @@ export default function FormAIGC({ aigtAddress, aigcAddress }: FormAIGCProps) {
             <div className="label">
               <span className="label-text">Model</span>
             </div>
-            <select className="select select-bordered w-full">
-              <option selected>Genesis Model</option>
+            <select className="select select-bordered w-full" value={1}>
+              <option value={1}>Genesis Model</option>
             </select>
           </label>
         </div>
 
-        {!approveIsSuccess && (
-          <button className="btn btn-primary">
-            {isSubmitting ? (
-              <>
-                <span className="loading loading-spinner"></span>
-                loading
-              </>
-            ) : (
-              "Generate"
-            )}
-          </button>
-        )}
-
-        {approveIsSuccess && (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => onMint()}
-          >
-            {isMinting ? (
-              <>
-                <span className="loading loading-spinner"></span>
-                loading
-              </>
-            ) : (
-              "Mint"
-            )}
-          </button>
-        )}
-        {/* {isError && <div>Error: {error?.message}</div>} */}
+        <button className="btn btn-primary">
+          {isSubmitting ? (
+            <>
+              <span className="loading loading-spinner"></span>
+              loading
+            </>
+          ) : (
+            "Generate"
+          )}
+        </button>
       </div>
-      {imageUrl && <img src={imageUrl} />}
-      {audio && (
+      {getValues("imageUrl") && <img src={getValues("imageUrl")} />}
+      {getValues("audioUrl") && (
         <audio
           controls
-          src={audio}
-          // type="audio/ogg"
+          src={getValues("audioUrl")}
           className="w-full h-full object-contain"
         ></audio>
       )}

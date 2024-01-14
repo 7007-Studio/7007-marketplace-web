@@ -68,7 +68,7 @@ export default function Detail() {
           tokenIds.map((id) => (
             <NFTCard
               key={id}
-              nftAddress={aigcAddress}
+              modelIndex={Number(index as string)}
               tokenId={id.toString()}
             />
           ))}
