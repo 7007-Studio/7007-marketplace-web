@@ -19,8 +19,12 @@ import {
 } from "@/constants";
 import { formatUnits, parseUnits } from "viem";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 export default function Token() {
+  const { isConnected, address } = useAccount();
+  const { openConnectModal } = useConnectModal();
+
   const [mintAmount, setMintAmount] = useState("");
   const [stakeAmount, setStakeAmount] = useState("");
   const [stakingApproved, setStakingApproved] = useState(false);
@@ -28,8 +32,6 @@ export default function Token() {
   const [mintInitialized, setMintInitialized] = useState(false);
   const [approveInitialized, setApproveInitialized] = useState(false);
   const [stakeInitialized, setStakeInitialized] = useState(false);
-
-  const { address } = useAccount();
 
   // read contracts
   const { data: balance, refetch: refetchBalance } = useToken7007BalanceOf({
@@ -154,6 +156,11 @@ export default function Token() {
               className="btn btn-primary"
               disabled={mintInitialized}
               onClick={() => {
+                if (!isConnected) {
+                  openConnectModal?.();
+                  return;
+                }
+
                 if (!address || !decimals) return;
                 setMintInitialized(true);
 
@@ -215,6 +222,11 @@ export default function Token() {
                 className="btn btn-primary"
                 disabled={approveInitialized}
                 onClick={() => {
+                  if (!isConnected) {
+                    openConnectModal?.();
+                    return;
+                  }
+
                   if (!decimals) return;
                   setApproveInitialized(true);
 
@@ -242,6 +254,11 @@ export default function Token() {
                 className="btn btn-primary"
                 disabled={stakeInitialized}
                 onClick={() => {
+                  if (!isConnected) {
+                    openConnectModal?.();
+                    return;
+                  }
+
                   if (!decimals) return;
                   setStakeInitialized(true);
 
