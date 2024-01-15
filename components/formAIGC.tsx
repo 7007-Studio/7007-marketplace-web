@@ -8,14 +8,19 @@ import {
   useAigcTransferEvent,
   useAigtApprovalEvent,
   useAigtApprove,
+  useAigtBalanceOf,
+  useAigtSymbol,
+  useStake7007ConsumedInferencePoint,
+  useStake7007GetInferencePoint,
 } from "@/generated";
 import { useState } from "react";
 import axios from "axios";
 import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
-import { Address } from "viem";
-import { useAccount } from "wagmi";
+import { Address, parseUnits } from "viem";
+import { useAccount, useWaitForTransaction } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { STAKE7007_CONTRACT_ADDRESS } from "@/constants";
 
 enum GenerateType {
   Image,
@@ -84,8 +89,8 @@ const generateMusic = async (contractAddr: string, prompt: string) => {
   }
 };
 
-const projectId = "2V1B4bBqSCyncDB2jeHd7uy5oLN";
-const projectSecret = "2b18de3a067e0a35d8700ef362c816dc";
+const projectId = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
+const projectSecret = process.env.NEXT_PUBLIC_INFURA_PROJECT_SECRET;
 const auth =
   "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
 const client = create({
@@ -171,9 +176,23 @@ export default function FormAIGC({
   const { isConnected, address } = useAccount();
   const { openConnectModal } = useConnectModal();
 
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [artGenerated, setArtGenerated] = useState(false);
+  const [approvedSpending, setApprovedSpending] = useState(false);
+  const [approveInitialized, setApproveInitialized] = useState(false);
+  const [mintInitialized, setMintInitialized] = useState(false);
+
+  const [log, setLog] = useState("");
 
   // read contracts
+  const { data: symbol } = useAigtSymbol({
+    address: aigtAddress,
+  });
+  const { data: balance } = useAigtBalanceOf({
+    address: aigtAddress,
+    args: address ? [address] : undefined,
+  });
   const { data: tokenId } = useAigcTokenId({
     address: aigcAddress,
   });
@@ -181,12 +200,36 @@ export default function FormAIGC({
     address: aigcAddress,
   });
 
-  // write contracts
-  const { write: approveSpendingAIGT } = useAigtApprove({
-    address: aigtAddress,
+  const { data: inferencePoint } = useStake7007GetInferencePoint({
+    address: STAKE7007_CONTRACT_ADDRESS,
+    args: address ? [address] : undefined,
   });
-  const { write: mintAIGC } = useAigcMint({
+
+  const { data: consumedInferencePoint } = useStake7007ConsumedInferencePoint({
+    address: STAKE7007_CONTRACT_ADDRESS,
+    args: address ? [address] : undefined,
+  });
+
+  // write contracts
+  const { write: approveSpendingAIGT, data: approveTx } = useAigtApprove({
+    address: aigtAddress,
+    onError(error) {
+      setLog(`Approve spending is canceled due to: ${error.message}\n`);
+      setApproveInitialized(false);
+    },
+    onSuccess(data) {
+      setLog(`Approval transaction sent. Waiting for confirmation event.\n`);
+    },
+  });
+  const { write: mintAIGC, data: mintTx } = useAigcMint({
     address: aigcAddress,
+    onError(error) {
+      setLog(`Mint is canceled due to: ${error.message}\n`);
+      setMintInitialized(false);
+    },
+    onSuccess(data) {
+      setLog(`Mint transaction sent. Waiting for confirmation event.\n`);
+    },
   });
 
   // contract events
@@ -202,11 +245,22 @@ export default function FormAIGC({
     address: aigcAddress,
     listener: async (log) => {
       // console.log(log);
-
-      await axios.post("/api/consumeInferencePoint", {
-        user: address,
-      });
       router.push(`/model/${modelIndex}/aigc/${tokenId}`);
+    },
+  });
+
+  // wait for tx confirmation
+  useWaitForTransaction({
+    hash: approveTx?.hash,
+    onSuccess(data) {
+      setApprovedSpending(true);
+      setApproveInitialized(false);
+    },
+  });
+  useWaitForTransaction({
+    hash: mintTx?.hash,
+    onSuccess(data) {
+      setMintInitialized(false);
     },
   });
 
@@ -214,22 +268,53 @@ export default function FormAIGC({
     useForm<IFormAIGCInput>();
   const { errors } = formState;
 
-  // const [imageUrl, setImageUrl] = useState("");
-  // const [audio, setAudio] = useState("");
+  const insufficientInferencePoint = () => {
+    if (inferencePoint === undefined || consumedInferencePoint === undefined) {
+      return true;
+    }
+
+    return (
+      0 > inferencePoint - consumedInferencePoint - parseUnits("10000", 18)
+    );
+  };
+
+  const insufficientCostToken = () => {
+    if (balance === undefined || mintCostToken === undefined) {
+      return true;
+    }
+
+    return 0 > balance - mintCostToken;
+  };
 
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
+    setErrorMessage("");
     if (!isConnected) {
       openConnectModal?.();
+      return;
+    }
+
+    if (insufficientInferencePoint()) {
+      setErrorMessage(
+        "Insufficient inference point. Please mint and stake 7007 token to earn inference points."
+      );
+      return;
+    }
+
+    if (insufficientCostToken()) {
+      setErrorMessage(`Insufficient ${symbol} token.`);
       return;
     }
 
     setIsSubmitting(true);
 
     let contractAddr = await initOPML(GenerateType.Image, data.prompt);
+    setLog(`Generating image...\n`);
     const imageUrl = await generateImage(contractAddr, data.prompt);
     if (imageUrl) {
       setValue("imageUrl", imageUrl);
     }
+
+    setLog(`Image generated. Generating music...\n`);
 
     contractAddr = await initOPML(GenerateType.Music, data.prompt);
     const audioUrl = await generateMusic(contractAddr, data.prompt);
@@ -237,16 +322,25 @@ export default function FormAIGC({
       setValue("audioUrl", audioUrl);
     }
 
+    setLog(`Audio generated. Please approve ${symbol} token spending...\n`);
+
+    setArtGenerated(true);
+
+    onApprove();
+  };
+
+  const onApprove = () => {
     if (mintCostToken === undefined) {
       return;
     }
 
-    approveSpendingAIGT({
-      args: [aigcAddress as Address, mintCostToken],
-    });
+    setApproveInitialized(true);
+    approveSpendingAIGT({ args: [aigcAddress, mintCostToken] });
   };
 
   const onMint = async () => {
+    setMintInitialized(true);
+
     const prompt = getValues("prompt");
     const { ipfsLinkMetadata, metadata } = await getTokenURI(
       getValues("imageUrl"),
@@ -256,6 +350,12 @@ export default function FormAIGC({
     );
 
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
+
+    setLog(`Token ready to be minted. Consuming inference points...\n`);
+
+    await axios.post("/api/consumeInferencePoint", {
+      user: address,
+    });
 
     mintAIGC({
       args: [
@@ -269,11 +369,30 @@ export default function FormAIGC({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      {errorMessage && (
+        <div role="alert" className="alert alert-error">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="stroke-current shrink-0 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>{errorMessage}</span>
+        </div>
+      )}
       <TextInput
         placeholder="Let’s give it a cool name"
         name="name"
         register={register}
         errors={errors}
+        required
       />
       <label className="form-control w-full">
         <textarea
@@ -291,23 +410,70 @@ export default function FormAIGC({
             <div className="label">
               <span className="label-text">Model</span>
             </div>
-            <select className="select select-bordered w-full" value={1}>
+            <select
+              className="select select-bordered w-full"
+              value={1}
+              onChange={(e) => {}}
+            >
               <option value={1}>Genesis Model</option>
             </select>
           </label>
         </div>
 
-        <button className="btn btn-primary">
-          {isSubmitting ? (
-            <>
-              <span className="loading loading-spinner"></span>
-              loading
-            </>
-          ) : (
-            "Generate"
-          )}
-        </button>
+        {!artGenerated && (
+          <button className="btn btn-primary" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <span className="loading loading-spinner"></span>
+                loading
+              </>
+            ) : (
+              "Generate"
+            )}
+          </button>
+        )}
+
+        {artGenerated && !approvedSpending && (
+          <button
+            className="btn btn-primary"
+            type="button"
+            disabled={approveInitialized}
+            onClick={() => {
+              onApprove();
+            }}
+          >
+            {approveInitialized ? (
+              <>
+                <span className="loading loading-spinner"></span>
+                loading
+              </>
+            ) : (
+              "Approve"
+            )}
+          </button>
+        )}
+
+        {artGenerated && approvedSpending && (
+          <button
+            className="btn btn-primary"
+            type="button"
+            disabled={mintInitialized}
+            onClick={() => {
+              onMint();
+            }}
+          >
+            {mintInitialized ? (
+              <>
+                <span className="loading loading-spinner"></span>
+                loading
+              </>
+            ) : (
+              "Mint"
+            )}
+          </button>
+        )}
       </div>
+      <div>{log && <code>{log}</code>}</div>
       {getValues("imageUrl") && <img src={getValues("imageUrl")} />}
       {getValues("audioUrl") && (
         <audio

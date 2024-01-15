@@ -1,6 +1,5 @@
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import {
-  useAigcFactoryDeployedAigCs,
   useAigcFactoryDeployedAigTs,
   useAigtMaxSupply,
   useAigtName,

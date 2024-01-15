@@ -14,10 +14,12 @@ export default function GenerateAIGC() {
   const { data: aigtAddress } = useAigcFactoryDeployedAigTs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: index ? [BigInt(index as string)] : undefined,
+    enabled: !!index,
   });
   const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: index ? [BigInt(index as string)] : undefined,
+    enabled: !!index,
   });
 
   const isMounted = useIsMounted();

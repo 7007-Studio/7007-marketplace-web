@@ -6,10 +6,6 @@ import { sepolia } from "viem/chains";
 import Stake7007 from "@/abis/Stake7007.json";
 import { privateKeyToAccount } from "viem/accounts";
 
-function getRandomNumber() {
-  return Math.floor(Math.random() * (10000 - 6000 + 1)) + 6000;
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -35,7 +31,7 @@ export default async function handler(
     address: STAKE7007_CONTRACT_ADDRESS,
     abi: Stake7007.abi,
     functionName: "consumeInferencePoint",
-    args: [user, parseUnits(getRandomNumber().toString(), 18)],
+    args: [user, parseUnits("100", 18)],
   });
   await walletClient.writeContract(request);
 

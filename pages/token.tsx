@@ -10,8 +10,9 @@ import {
   useToken7007BalanceOf,
   useToken7007Decimals,
   useToken7007Mint,
+  useToken7007TransferEvent,
 } from "@/generated";
-import { Address, useAccount } from "wagmi";
+import { Address, useAccount, useWaitForTransaction } from "wagmi";
 import {
   STAKE7007_CONTRACT_ADDRESS,
   TOKEN7007_CONTRACT_ADDRESS,
@@ -20,43 +21,34 @@ import { formatUnits, parseUnits } from "viem";
 import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function Token() {
-  const [mintAmount, setMintAmount] = useState("0");
-  const [stakeAmount, setStakeAmount] = useState("0");
+  const [mintAmount, setMintAmount] = useState("");
+  const [stakeAmount, setStakeAmount] = useState("");
   const [stakingApproved, setStakingApproved] = useState(false);
+
+  const [mintInitialized, setMintInitialized] = useState(false);
+  const [approveInitialized, setApproveInitialized] = useState(false);
+  const [stakeInitialized, setStakeInitialized] = useState(false);
 
   const { address } = useAccount();
 
-  const { data: balance } = useToken7007BalanceOf({
+  // read contracts
+  const { data: balance, refetch: refetchBalance } = useToken7007BalanceOf({
     address: TOKEN7007_CONTRACT_ADDRESS as Address,
     args: address ? [address] : undefined,
   });
-
   const { data: decimals } = useToken7007Decimals({
     address: TOKEN7007_CONTRACT_ADDRESS as Address,
   });
-  const { write: mint } = useToken7007Mint({
-    address: TOKEN7007_CONTRACT_ADDRESS as Address,
-  });
-  const { write: approve } = useToken7007Approve({
-    address: TOKEN7007_CONTRACT_ADDRESS as Address,
-  });
-
-  useToken7007ApprovalEvent({
-    address: TOKEN7007_CONTRACT_ADDRESS as Address,
-    listener(log) {
-      // console.log(log);
-      setStakingApproved(true);
-    },
-  });
-
-  const { data: stakedAmount } = useStake7007StakedAmount({
-    address: STAKE7007_CONTRACT_ADDRESS as Address,
-    args: address ? [address] : undefined,
-  });
-  const { data: stakeStartTime } = useStake7007StakeStartTime({
-    address: STAKE7007_CONTRACT_ADDRESS as Address,
-    args: address ? [address] : undefined,
-  });
+  const { data: stakedAmount, refetch: refetchStakedAmount } =
+    useStake7007StakedAmount({
+      address: STAKE7007_CONTRACT_ADDRESS as Address,
+      args: address ? [address] : undefined,
+    });
+  const { data: stakeStartTime, refetch: refetchStakeStartTime } =
+    useStake7007StakeStartTime({
+      address: STAKE7007_CONTRACT_ADDRESS as Address,
+      args: address ? [address] : undefined,
+    });
   const { data: inferencePoint } = useStake7007GetInferencePoint({
     address: STAKE7007_CONTRACT_ADDRESS as Address,
     args: address ? [address] : undefined,
@@ -66,8 +58,64 @@ export default function Token() {
     args: address ? [address] : undefined,
   });
 
-  const { write: stake } = useStake7007Stake({
+  // write contracts
+  const { write: mint, data: mintTx } = useToken7007Mint({
+    address: TOKEN7007_CONTRACT_ADDRESS as Address,
+    onError(error) {
+      setMintInitialized(false);
+    },
+  });
+  const { write: approve, data: approveTx } = useToken7007Approve({
+    address: TOKEN7007_CONTRACT_ADDRESS as Address,
+    onError(error) {
+      setApproveInitialized(false);
+    },
+  });
+  const { write: stake, data: stakeTx } = useStake7007Stake({
     address: STAKE7007_CONTRACT_ADDRESS as Address,
+    onError(error) {
+      setStakeInitialized(false);
+    },
+  });
+
+  // contract events
+  useToken7007TransferEvent({
+    address: TOKEN7007_CONTRACT_ADDRESS as Address,
+    listener(log) {
+      // console.log(log);
+      refetchBalance();
+    },
+  });
+  useToken7007ApprovalEvent({
+    address: TOKEN7007_CONTRACT_ADDRESS as Address,
+    listener(log) {
+      // console.log(log);
+      setStakingApproved(true);
+    },
+  });
+
+  // wait for tx confirmation
+  useWaitForTransaction({
+    hash: mintTx?.hash,
+    onSuccess(data) {
+      setMintInitialized(false);
+      setMintAmount("");
+    },
+  });
+  useWaitForTransaction({
+    hash: approveTx?.hash,
+    onSuccess(data) {
+      setApproveInitialized(false);
+    },
+  });
+  useWaitForTransaction({
+    hash: stakeTx?.hash,
+    onSuccess(data) {
+      setStakeInitialized(false);
+      refetchStakedAmount();
+      refetchStakeStartTime();
+      setStakeAmount("");
+    },
   });
 
   const isMounted = useIsMounted();
@@ -99,19 +147,29 @@ export default function Token() {
               type="number"
               className="pl-3 pr-8 py-2 border rounded w-full mb-4"
               placeholder="Amount"
+              value={mintAmount}
               onChange={(e) => setMintAmount(e.target.value)}
             />
             <button
               className="btn btn-primary"
+              disabled={mintInitialized}
               onClick={() => {
                 if (!address || !decimals) return;
+                setMintInitialized(true);
 
                 mint({
                   args: [address, parseUnits(mintAmount, decimals)],
                 });
               }}
             >
-              Mint
+              {mintInitialized ? (
+                <>
+                  <span className="loading loading-spinner"></span>
+                  loading
+                </>
+              ) : (
+                "Mint"
+              )}
             </button>
           </div>
         </div>
@@ -149,13 +207,16 @@ export default function Token() {
               type="number"
               className="pl-3 pr-8 py-2 border rounded w-full mb-4"
               placeholder="Amount"
+              value={stakeAmount}
               onChange={(e) => setStakeAmount(e.target.value)}
             />
             {!stakingApproved && (
               <button
                 className="btn btn-primary"
+                disabled={approveInitialized}
                 onClick={() => {
                   if (!decimals) return;
+                  setApproveInitialized(true);
 
                   approve({
                     args: [
@@ -163,24 +224,38 @@ export default function Token() {
                       parseUnits(stakeAmount, decimals),
                     ],
                   });
-
-                  stake({ args: [parseUnits(stakeAmount, decimals)] });
                 }}
               >
-                Approve Staking
+                {approveInitialized ? (
+                  <>
+                    <span className="loading loading-spinner"></span>
+                    loading
+                  </>
+                ) : (
+                  "Approve"
+                )}
               </button>
             )}
 
             {stakingApproved && (
               <button
                 className="btn btn-primary"
+                disabled={stakeInitialized}
                 onClick={() => {
                   if (!decimals) return;
+                  setStakeInitialized(true);
 
                   stake({ args: [parseUnits(stakeAmount, decimals)] });
                 }}
               >
-                Stake
+                {stakeInitialized ? (
+                  <>
+                    <span className="loading loading-spinner"></span>
+                    loading
+                  </>
+                ) : (
+                  "Stake"
+                )}
               </button>
             )}
           </div>

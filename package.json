@@ -20,7 +20,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.48.2",
-    "viem": "^1.19.11",
+    "viem": "^1.21.4",
     "wagmi": "^1.4.10"
   },
   "devDependencies": {

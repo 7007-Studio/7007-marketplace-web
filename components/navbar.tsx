@@ -61,7 +61,7 @@ export default function Navbar() {
           {isMounted &&
             inferencePoint !== undefined &&
             consumedInferencePoint !== undefined && (
-              <div className="badge badge-primary text-lg font-bold p-4 mx-4">
+              <div className="hidden md:block badge badge-primary text-lg font-bold p-4 mx-4">
                 {formatUnits(inferencePoint - consumedInferencePoint, 18)} IP
               </div>
             )}
@@ -92,6 +92,19 @@ export default function Navbar() {
           isShowingMenu ? "flex" : "hidden"
         }`}
       >
+        {isMounted &&
+          inferencePoint !== undefined &&
+          consumedInferencePoint !== undefined && (
+            <div className="badge badge-primary self-end text-lg font-bold p-4 mx-4">
+              {formatUnits(inferencePoint - consumedInferencePoint, 18)} IP
+            </div>
+          )}
+        <Link
+          href="/token"
+          className="pl-4 py-4 text-xl hover:text-primary cursor-pointer"
+        >
+          Token
+        </Link>
         <Link
           href="/marketplace"
           className="pl-4 py-4 text-xl hover:text-primary cursor-pointer"

@@ -37,6 +37,8 @@ export default function Marketplace() {
     if (!lastTokenId) return ids;
 
     for (let i = 0; i < Number(lastTokenId); i++) {
+      // skipping for now b/c a screw up NFT
+      if (i === 1) continue;
       ids.push(i);
     }
     return ids;

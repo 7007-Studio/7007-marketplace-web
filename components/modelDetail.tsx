@@ -2,12 +2,9 @@ import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import {
   useAigcFactoryDeployedAigCs,
   useAigcFactoryDeployedAigTs,
-  useAigcTokenId,
-  useAigtMaxSupply,
   useAigtName,
 } from "@/generated";
 import Link from "next/link";
-import { Address } from "viem";
 export interface ModelDetailProps {
   modelIndex: number;
 }
@@ -22,9 +19,6 @@ const ModelDetail: React.FC<ModelDetailProps> = ({ modelIndex }) => {
   });
 
   const { data: modelName } = useAigtName({
-    address: aigtAddress,
-  });
-  const { data: maxSupply } = useAigtMaxSupply({
     address: aigtAddress,
   });
 

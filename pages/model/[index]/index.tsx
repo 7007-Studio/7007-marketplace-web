@@ -2,14 +2,7 @@ import ModelDetail from "@/components/modelDetail";
 import NFTCard from "@/components/nftCard";
 import { useRouter } from "next/router";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import {
-  useAigcFactoryDeployedAigCs,
-  useAigcFactoryDeployedAigTs,
-  useAigcTokenId,
-  useAigtMaxSupply,
-  useAigtName,
-  useAigtTotalSupply,
-} from "@/generated";
+import { useAigcFactoryDeployedAigCs, useAigcTokenId } from "@/generated";
 import { Address } from "viem";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { useMemo } from "react";
@@ -19,23 +12,9 @@ export default function Detail() {
   const { index } = router.query;
   const isMounted = useIsMounted();
 
-  const { data: aigtAddress } = useAigcFactoryDeployedAigTs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
-    args: index ? [BigInt(index as string)] : undefined,
-  });
   const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: index ? [BigInt(index as string)] : undefined,
-  });
-
-  const { data: modelName } = useAigtName({
-    address: index as Address,
-  });
-  const { data: totalSupply } = useAigtTotalSupply({
-    address: index as Address,
-  });
-  const { data: maxSupply } = useAigtMaxSupply({
-    address: index as Address as Address,
   });
   const { data: totalNFTMinted } = useAigcTokenId({
     address: aigcAddress as Address,
