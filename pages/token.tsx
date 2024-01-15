@@ -154,12 +154,14 @@ export default function Token() {
             />
             <button
               className="btn btn-primary"
-              disabled={mintInitialized}
+              disabled={mintAmount === "" || mintInitialized}
               onClick={() => {
                 if (!isConnected) {
                   openConnectModal?.();
                   return;
                 }
+
+                if (mintAmount === "") return;
 
                 if (!address || !decimals) return;
                 setMintInitialized(true);
@@ -220,12 +222,14 @@ export default function Token() {
             {!stakingApproved && (
               <button
                 className="btn btn-primary"
-                disabled={approveInitialized}
+                disabled={stakeAmount === "" || approveInitialized}
                 onClick={() => {
                   if (!isConnected) {
                     openConnectModal?.();
                     return;
                   }
+
+                  if (stakeAmount === "") return;
 
                   if (!decimals) return;
                   setApproveInitialized(true);
