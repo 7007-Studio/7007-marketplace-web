@@ -115,11 +115,11 @@ const getTokenURI = async (
   let result = await client.add(file);
   const ipfsLinkImg = "https://cloudflare-ipfs.com/ipfs/" + result.path;
 
-  response = await fetch(audio);
-  blob = await response.blob();
-  file = new File([blob], "file.mp3", { type: "audio/mp3" });
-  result = await client.add(file);
-  const ipfsLinkAudio = "https://cloudflare-ipfs.com/ipfs/" + result.path;
+  // response = await fetch(audio);
+  // blob = await response.blob();
+  // file = new File([blob], "file.mp3", { type: "audio/mp3" });
+  // result = await client.add(file);
+  // const ipfsLinkAudio = "https://cloudflare-ipfs.com/ipfs/" + result.path;
 
   // upload the mp4 to ipfs
   const metadata = {
@@ -134,10 +134,10 @@ const getTokenURI = async (
         trait_type: "prompt",
         value: prompt,
       },
-      {
-        trait_type: "music",
-        value: ipfsLinkAudio,
-      },
+      // {
+      //   trait_type: "music",
+      //   value: ipfsLinkAudio,
+      // },
       {
         trait_type: "model",
         value: "Genesis Model",
@@ -273,9 +273,7 @@ export default function FormAIGC({
       return true;
     }
 
-    return (
-      0 > inferencePoint - consumedInferencePoint - parseUnits("10000", 18)
-    );
+    return 0 > inferencePoint - consumedInferencePoint - parseUnits("100", 0);
   };
 
   const insufficientCostToken = () => {
@@ -313,16 +311,17 @@ export default function FormAIGC({
     if (imageUrl) {
       setValue("imageUrl", imageUrl);
     }
+    setLog(`Image generated. Please approve ${symbol} token spending...\n`);
 
-    setLog(`Image generated. Generating music...\n`);
+    // setLog(`Image generated. Generating music...\n`);
 
-    contractAddr = await initOPML(GenerateType.Music, data.prompt);
-    const audioUrl = await generateMusic(contractAddr, data.prompt);
-    if (audioUrl) {
-      setValue("audioUrl", audioUrl);
-    }
+    // contractAddr = await initOPML(GenerateType.Music, data.prompt);
+    // const audioUrl = await generateMusic(contractAddr, data.prompt);
+    // if (audioUrl) {
+    //   setValue("audioUrl", audioUrl);
+    // }
 
-    setLog(`Audio generated. Please approve ${symbol} token spending...\n`);
+    // setLog(`Audio generated. Please approve ${symbol} token spending...\n`);
 
     setArtGenerated(true);
 

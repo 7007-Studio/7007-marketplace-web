@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import useAudio from "@/hooks/useAudio";
 import {
-  useAigcApprovalEvent,
   useAigcApprove,
   useAigcFactoryDeployedAigCs,
   useAigcOwnerOf,
@@ -150,7 +149,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
           className="w-full object-cover min-h-[300px]"
         />
       </figure>
-      <button
+      {/* <button
         onClick={() => {
           setIsPlaying(!isPlaying);
         }}
@@ -184,7 +183,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
             <path d="M8 5v14l11-7z" />
           </svg>
         )}
-      </button>
+      </button> */}
 
       <div className="card-body flex-initial">
         <h2 className="text-2xl mb-4 font-bold">{metadata.name}</h2>

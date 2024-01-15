@@ -62,7 +62,7 @@ export default function Navbar() {
             inferencePoint !== undefined &&
             consumedInferencePoint !== undefined && (
               <div className="hidden md:block badge badge-primary text-lg font-bold p-4 mx-4">
-                {formatUnits(inferencePoint - consumedInferencePoint, 18)} IP
+                {formatUnits(inferencePoint - consumedInferencePoint, 0)} IP
               </div>
             )}
           <ConnectButton chainStatus="none" showBalance={false} />
@@ -96,7 +96,7 @@ export default function Navbar() {
           inferencePoint !== undefined &&
           consumedInferencePoint !== undefined && (
             <div className="badge badge-primary self-end text-lg font-bold p-4 mx-4">
-              {formatUnits(inferencePoint - consumedInferencePoint, 18)} IP
+              {formatUnits(inferencePoint - consumedInferencePoint, 0)} IP
             </div>
           )}
         <Link
