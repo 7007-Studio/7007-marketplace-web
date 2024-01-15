@@ -186,16 +186,18 @@ export default function Token() {
           <h2 className="text-2xl font-bold text-white mb-2">
             Stake 7007 Token
           </h2>
-          {stakedAmount != undefined && decimals !== undefined && (
-            <div>
-              You currently have{" "}
-              <span className="font-bold">
-                {formatUnits(stakedAmount, decimals)}
-              </span>{" "}
-              7007 tokens staked from{" "}
-              {new Date(Number(stakeStartTime) * 1000).toDateString()}
-            </div>
-          )}
+          {stakedAmount != undefined &&
+            stakedAmount > 0 &&
+            decimals !== undefined && (
+              <div>
+                You currently have{" "}
+                <span className="font-bold">
+                  {formatUnits(stakedAmount, decimals)}
+                </span>{" "}
+                7007 tokens staked from{" "}
+                {new Date(Number(stakeStartTime) * 1000).toDateString()}
+              </div>
+            )}
           {inferencePoint != undefined &&
             consumedInferencePoint !== undefined && (
               <div>
