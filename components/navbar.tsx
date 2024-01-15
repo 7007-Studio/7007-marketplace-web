@@ -61,7 +61,7 @@ export default function Navbar() {
           {isMounted &&
             inferencePoint !== undefined &&
             consumedInferencePoint !== undefined && (
-              <div className="hidden md:block badge badge-primary text-lg font-bold p-4 mx-4">
+              <div className="hidden md:flex badge badge-primary text-lg font-bold p-4 mx-4">
                 {formatUnits(inferencePoint - consumedInferencePoint, 0)} IP
               </div>
             )}
