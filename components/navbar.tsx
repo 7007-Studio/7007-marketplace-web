@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { STAKE7007_CONTRACT_ADDRESS } from "@/constants";
 import {
   useStake7007GetInferencePoint,
@@ -15,16 +15,29 @@ export default function Navbar() {
   const [isShowingMenu, setIsShowingMenu] = useState(false);
 
   const { address } = useAccount();
-  const { data: inferencePoint } = useStake7007GetInferencePoint({
-    address: STAKE7007_CONTRACT_ADDRESS as Address,
-    args: address ? [address] : undefined,
-  });
-  const { data: consumedInferencePoint } = useStake7007ConsumedInferencePoint({
+  const { data: inferencePoint, refetch: refetchInferencePoint } =
+    useStake7007GetInferencePoint({
+      address: STAKE7007_CONTRACT_ADDRESS as Address,
+      args: address ? [address] : undefined,
+    });
+  const {
+    data: consumedInferencePoint,
+    refetch: refetchConsumedInferencePoint,
+  } = useStake7007ConsumedInferencePoint({
     address: STAKE7007_CONTRACT_ADDRESS as Address,
     args: address ? [address] : undefined,
   });
 
   const isMounted = useIsMounted();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      refetchInferencePoint();
+      refetchConsumedInferencePoint();
+    }, 10000);
+    // clearing interval
+    return () => clearInterval(timer);
+  });
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useStake7007ConsumedInferencePoint,
   useStake7007GetInferencePoint,
@@ -51,11 +51,15 @@ export default function Token() {
       address: STAKE7007_CONTRACT_ADDRESS as Address,
       args: address ? [address] : undefined,
     });
-  const { data: inferencePoint } = useStake7007GetInferencePoint({
-    address: STAKE7007_CONTRACT_ADDRESS as Address,
-    args: address ? [address] : undefined,
-  });
-  const { data: consumedInferencePoint } = useStake7007ConsumedInferencePoint({
+  const { data: inferencePoint, refetch: refetchInferencePoint } =
+    useStake7007GetInferencePoint({
+      address: STAKE7007_CONTRACT_ADDRESS as Address,
+      args: address ? [address] : undefined,
+    });
+  const {
+    data: consumedInferencePoint,
+    refetch: refetchConsumedInferencePoint,
+  } = useStake7007ConsumedInferencePoint({
     address: STAKE7007_CONTRACT_ADDRESS as Address,
     args: address ? [address] : undefined,
   });
@@ -118,6 +122,15 @@ export default function Token() {
       refetchStakeStartTime();
       setStakeAmount("");
     },
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      refetchInferencePoint();
+      refetchConsumedInferencePoint();
+    }, 10000);
+    // clearing interval
+    return () => clearInterval(timer);
   });
 
   const isMounted = useIsMounted();
