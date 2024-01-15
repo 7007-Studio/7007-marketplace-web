@@ -19,6 +19,7 @@ import {
 } from "@/constants";
 import { parseEther } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import Image from "next/image";
 export interface NFTCardProps {
   modelIndex: number;
   tokenId: string;
@@ -143,9 +144,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
       </div>
 
       <figure>
-        <img
+        <Image
           src={metadata.image}
           alt={metadata.name}
+          width={512}
+          height={512}
           className="w-full object-cover min-h-[300px]"
         />
       </figure>

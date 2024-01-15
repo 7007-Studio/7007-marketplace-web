@@ -1,3 +1,4 @@
+import Image from "next/image";
 import ModelDetail from "./modelDetail";
 
 export interface ModelDetailProps {
@@ -19,7 +20,13 @@ const NFTDetail: React.FC<ModelDetailProps> = ({
 }) => {
   return (
     <div className="flex flex-col shadow md:flex-row max-w-md md:max-w-2xl mx-auto self-center bg-[#191717]">
-      <img src={imageUrl} className="object-cover w-full" alt="" />
+      <Image
+        src={imageUrl}
+        className="object-cover w-full"
+        width={512}
+        height={512}
+        alt=""
+      />
       <div className="flex flex-col justify-between p-8">
         <h5 className="mb-2 md:text-2xl font-bold">{nftName}</h5>
         <p className="mb-5 font-normal">

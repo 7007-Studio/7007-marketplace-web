@@ -1,22 +1,13 @@
-import ModelDetail from "@/components/modelDetail";
-import NFTCard from "@/components/nftCard";
 import { useRouter } from "next/router";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import {
-  useAigcFactoryDeployedAigCs,
-  useAigcTokenId,
-  useAigcTokenUri,
-  useAigtMaxSupply,
-  useAigtName,
-  useAigtTotalSupply,
-} from "@/generated";
-import { Address } from "viem";
+import { useAigcFactoryDeployedAigCs, useAigcTokenUri } from "@/generated";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import useAudio from "@/hooks/useAudio";
 import axios from "axios";
 import { Metadata, MetadataAttribute } from "@/types";
 import { concatAddress } from "@/helpers";
+import Image from "next/image";
 
 export default function Detail() {
   const router = useRouter();
@@ -64,9 +55,11 @@ export default function Detail() {
       <div className="flex items-center justify-center flex-col my-10">
         {metadata && (
           <div className="flex flex-col shadow md:flex-row max-w-md md:max-w-2xl mx-auto self-center bg-[#191717]">
-            <img
+            <Image
               src={metadata.image}
               alt={metadata.name}
+              width={512}
+              height={512}
               className="object-cover w-full"
             />
             <div className="flex flex-col justify-between p-8">
