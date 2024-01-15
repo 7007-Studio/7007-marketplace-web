@@ -197,16 +197,15 @@ export default function Token() {
             </div>
           )}
           {inferencePoint != undefined &&
-            consumedInferencePoint !== undefined &&
-            decimals !== undefined && (
+            consumedInferencePoint !== undefined && (
               <div>
                 You have{" "}
                 <span className="font-bold">
-                  {formatUnits(inferencePoint, decimals)}
+                  {formatUnits(inferencePoint, 0)}
                 </span>{" "}
                 inference points and have consumed{" "}
                 <span className="font-bold">
-                  {formatUnits(consumedInferencePoint, decimals)}
+                  {formatUnits(consumedInferencePoint, 0)}
                 </span>{" "}
                 inference points
               </div>

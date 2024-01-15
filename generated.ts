@@ -887,6 +887,16 @@ export const nftMarketplaceABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'nftOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [],
     name: 'owner',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -3032,6 +3042,29 @@ export function useNftMarketplaceIsListed<
   return useContractRead({
     abi: nftMarketplaceABI,
     functionName: 'isListed',
+    ...config,
+  } as UseContractReadConfig<
+    typeof nftMarketplaceABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"nftOwner"`.
+ */
+export function useNftMarketplaceNftOwner<
+  TFunctionName extends 'nftOwner',
+  TSelectData = ReadContractResult<typeof nftMarketplaceABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof nftMarketplaceABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: nftMarketplaceABI,
+    functionName: 'nftOwner',
     ...config,
   } as UseContractReadConfig<
     typeof nftMarketplaceABI,

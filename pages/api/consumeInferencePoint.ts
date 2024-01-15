@@ -31,7 +31,7 @@ export default async function handler(
     address: STAKE7007_CONTRACT_ADDRESS,
     abi: Stake7007.abi,
     functionName: "consumeInferencePoint",
-    args: [user, parseUnits("100", 18)],
+    args: [user, "100"],
   });
   await walletClient.writeContract(request);
 
