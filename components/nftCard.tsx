@@ -19,18 +19,20 @@ import {
   NFT_MARKETPLACE_ADDRESS,
 } from "@/constants";
 import { parseEther } from "viem";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 export interface NFTCardProps {
   modelIndex: number;
   tokenId: string;
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
+  const { isConnected, address } = useAccount();
+  const { openConnectModal } = useConnectModal();
+
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
   const [audioUrl, setAudioUrl] = useState();
   const [isPlaying, setIsPlaying] = useAudio(audioUrl);
-
-  const { address } = useAccount();
 
   const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
@@ -246,6 +248,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
         {isListed && (
           <button
             onClick={() => {
+              if (!isConnected) {
+                openConnectModal?.();
+                return;
+              }
+
               buyNft();
             }}
             disabled={isBuying}
@@ -257,6 +264,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
         {address === owner && (
           <button
             onClick={() => {
+              if (!isConnected) {
+                openConnectModal?.();
+                return;
+              }
+
               approveListing();
             }}
             disabled={isListing}
