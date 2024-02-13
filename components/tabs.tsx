@@ -1,33 +1,65 @@
-import { TabState } from "@/pages/marketplace";
+import clsx from "clsx";
+
+export enum TabState {
+  ModelLaunchpad,
+  Marketplace,
+  Created,
+  Collected,
+}
 
 interface TabsProps {
   currentTab: TabState;
   setCurrentTab: (tabState: TabState) => void;
 }
 
+function Tab({
+  isActive = false,
+  onClick,
+  children,
+}: {
+  isActive?: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      className={clsx("tab", {
+        "tab-active": isActive,
+      })}
+      onClick={onClick}
+    >
+      {children}
+    </a>
+  );
+}
+
 export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
   return (
-    <ul className="menu menu-horizontal">
-      <li className="mr-2">
-        <a
-          className={`hover:bg-white hover:text-black text-lg ${
-            currentTab === TabState.Model ? "focus" : ""
-          }`}
-          onClick={() => setCurrentTab(TabState.Model)}
-        >
-          MODEL
-        </a>
-      </li>
-      <li>
-        <a
-          className={`hover:bg-white hover:text-black text-lg ${
-            currentTab === TabState.NFT ? "focus" : ""
-          }`}
-          onClick={() => setCurrentTab(TabState.NFT)}
-        >
-          NFT
-        </a>
-      </li>
-    </ul>
+    <div className="tabs tabs-lg tabs-bordered gap-4">
+      <Tab
+        isActive={currentTab === TabState.ModelLaunchpad}
+        onClick={() => setCurrentTab(TabState.ModelLaunchpad)}
+      >
+        Model Launchpad
+      </Tab>
+      <Tab
+        isActive={currentTab === TabState.Marketplace}
+        onClick={() => setCurrentTab(TabState.Marketplace)}
+      >
+        AIGC NFT Marketplace
+      </Tab>
+      <Tab
+        isActive={currentTab === TabState.Created}
+        onClick={() => setCurrentTab(TabState.Created)}
+      >
+        Created
+      </Tab>
+      <Tab
+        isActive={currentTab === TabState.Collected}
+        onClick={() => setCurrentTab(TabState.Collected)}
+      >
+        Collected
+      </Tab>
+    </div>
   );
 }

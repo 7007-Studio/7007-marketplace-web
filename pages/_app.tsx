@@ -1,5 +1,5 @@
-import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import "@/styles/globals.css";
 
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -39,9 +39,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider
         chains={chains}
-        theme={darkTheme({
-          accentColor: "#00D5FF",
-        })}
+        // theme={darkTheme({
+        //   accentColor: "#00D5FF",
+        // })}
       >
         <Layout>
           <Component {...pageProps} />

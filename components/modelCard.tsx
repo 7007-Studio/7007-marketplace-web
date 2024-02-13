@@ -6,6 +6,8 @@ import {
 } from "@/generated";
 import { concatAddress } from "@/helpers";
 import { useRouter } from "next/router";
+import Card from "./card";
+import HeadingLarge from "./text/headingLarge";
 
 export interface ModelCardProps {
   modelIndex: number;
@@ -27,13 +29,13 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
   });
 
   return (
-    <div
-      onClick={() => router.push(`/model/${modelIndex}`)}
-      className="card w-full max-w-full h-fit bg-black text-white shadow-lg overflow-hidden hover:scale-[1.02] hover:outline outline-cyan-500 outline-2 transition hover:cursor-pointer"
-    >
-      <div className="flex justify-between items-center">
+    <Card className="max-w-[390px]">
+      <div className="p-6">
+        <div className="flex justify-between items-center">
+          <HeadingLarge>{modelName}</HeadingLarge>
+        </div>
         {aigtAddress && (
-          <div className="badge badge-info m-4 p-3">
+          <div>
             <a
               href={`https://sepolia.etherscan.io/address/${aigtAddress}`}
               target="_blank"
@@ -42,24 +44,56 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
             </a>
           </div>
         )}
-      </div>
-      <figure>
-        <img src="/nft1.png" alt={modelName} className="w-full object-cover" />
-      </figure>
 
-      <div className="p-4 mt-7">
-        <h2 className="text-2xl mb-4 font-bold">{modelName}</h2>
-        <p className="mb-4 text-zinc-400">
+        <div className="py-6">{/* tags */}</div>
+
+        <div>
           Use stable diffusion model to generate image and music from text
-        </p>
-        {maxSupply !== undefined && (
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <h2 className="">Token Supply</h2>
-            <span className="text-primary text-sm">{Number(maxSupply)}</span>
+        </div>
+        <div className="py-6 grid grid-cols-2 gap-8 border-b border-b-neutral-50">
+          <div>
+            <div className="pb-1 text-xl leading-6 font-bold text-neutral-300">
+              N/A
+            </div>
+            <div className="text-sm  text-neutral-200">Token Price</div>
           </div>
-        )}
+          <div>
+            <div className="pb-1 text-xl leading-6 font-bold text-neutral-300">
+              N/A
+            </div>
+            <div className="text-sm  text-neutral-200">
+              24 hrs Trading Volume
+            </div>
+          </div>
+          <div>
+            <div className="pb-1 text-xl leading-6 font-bold text-neutral-300">
+              N/A
+            </div>
+            <div className="text-sm  text-neutral-200">AIGC NFT Minted</div>
+          </div>
+          <div>
+            <div className="pb-1 text-xl leading-6 font-bold text-neutral-300">
+              N/A
+            </div>
+            <div className="text-sm  text-neutral-200">Token Holders</div>
+          </div>
+          <div>
+            <div className="pb-1 text-xl leading-6 font-bold text-neutral-300">
+              N/A
+            </div>
+            <div className="text-sm  text-neutral-200">Inference Time</div>
+          </div>
+        </div>
+        <div className="py-6">
+          <button
+            className="btn btn-secondary w-full"
+            onClick={() => router.push(`/model/${modelIndex}`)}
+          >
+            Learn More
+          </button>
+        </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

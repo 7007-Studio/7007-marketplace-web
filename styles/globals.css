@@ -5,3 +5,19 @@
 .menu .focus {
   color: black !important;
 }
+
+@layer components {
+  [data-theme="light-7007"] .card {
+    @apply border-neutral-50;
+    background-color: theme("colors.white");
+    border-radius: 6px;
+  }
+
+  .tabs-bordered > .tab {
+    border-color: transparent;
+  }
+
+  :where(.timeline > li) {
+    grid-template-columns: 0 auto var(--timeline-col-end, minmax(0, 1fr));
+  }
+}

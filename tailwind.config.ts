@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
 
 const config: Config = {
   content: [
@@ -7,11 +8,66 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+    borderColor: {
+      neutral: {
+        "25": "#F5F5F5",
+        "50": "#EAEAEB",
+        "200": "#A7A6A9",
+        "300": "#4E4B55",
+        "400": "#302E35",
+        "500": "#222027",
+        "700": "#141317",
+      },
+    },
+    fontSize: {
+      sm: [
+        "12px",
+        {
+          lineHeight: "16px",
+          fontWeight: 500,
+        },
+      ],
+      base: [
+        "16px",
+        {
+          lineHeight: "24px",
+          fontWeight: 500,
+        },
+      ],
+      lg: [
+        "20px",
+        {
+          lineHeight: "24px",
+          fontWeight: 700,
+        },
+      ],
+    },
+    textColor: {
+      primary: "#FFC900",
+      secondary: "#222027",
+      neutral: {
+        "25": "#F5F5F5",
+        "50": "#EAEAEB",
+        "200": "#A7A6A9",
+        "300": "#4E4B55",
+        "400": "#302E35",
+        "500": "#222027",
+        "700": "#141317",
+      },
+    },
+    colors: {
+      transparent: "transparent",
+      current: "currentColor",
+      black: colors.black,
+      white: colors.white,
+      neutral: {
+        "25": "#F5F5F5",
+        "50": "#EAEAEB",
+        "200": "#A7A6A9",
+        "300": "#4E4B55",
+        "400": "#302E35",
+        "500": "#222027",
+        "700": "#141317",
       },
     },
   },
@@ -19,13 +75,24 @@ const config: Config = {
   daisyui: {
     themes: [
       {
+        "light-7007": {
+          "color-scheme": "light",
+          primary: "#FFC900",
+          secondary: "#222027",
+          "secondary-content": "#FFFFFF",
+          "base-100": "#F5F5F5",
+          "base-content": "#4E4B55",
+          "--padding-card": "24px",
+        },
+      },
+      {
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
-          "--fallback-b1": "#3B3B3B",
           "--rounded-box": "2px",
           primary: "#00D5FF",
+          "base-100": "#3B3B3B",
           "--rounded-btn": "2px",
-          "--fallback-bc": "#FFF",
+          // "--fallback-bc": "#FFF",
         },
       },
     ],

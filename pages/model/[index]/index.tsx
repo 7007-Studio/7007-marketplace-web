@@ -1,17 +1,35 @@
-import ModelDetail from "@/components/modelDetail";
-import NFTCard from "@/components/nftCard";
 import { useRouter } from "next/router";
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import { useAigcFactoryDeployedAigCs, useAigcTokenId } from "@/generated";
+import {
+  AIGC_FACTORY_CONTRACT_ADDRESS,
+  AIGT_CONTRACT_ADDRESS,
+} from "@/constants";
+import {
+  useAigcFactoryDeployedAigCs,
+  useAigcFactoryDeployedAigTs,
+  useAigcTokenId,
+  useAigtName,
+} from "@/generated";
 import { Address } from "viem";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { useMemo } from "react";
+import Hero from "@/components/model/hero";
+import HeadingLarge from "@/components/text/headingLarge";
+import AigcNftCreated from "@/components/model/aigcNftCreated";
+import Link from "next/link";
+import ModelTimeline from "@/components/model/modelTimeline";
+import Launched from "@/components/model/launched";
 
 export default function Detail() {
   const router = useRouter();
   const { index } = router.query;
   const isMounted = useIsMounted();
-
+  const { data: aigtAddress } = useAigcFactoryDeployedAigTs({
+    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    args: index ? [BigInt(index as string)] : undefined,
+  });
+  const { data: modelName } = useAigtName({
+    address: aigtAddress,
+  });
   const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: index ? [BigInt(index as string)] : undefined,
@@ -37,21 +55,27 @@ export default function Detail() {
   if (!isMounted) return null;
 
   return (
-    <div className=" mx-auto w-[85vw]">
-      <div className="flex items-center justify-center flex-col my-10">
-        {index && <ModelDetail modelIndex={Number(index as string)} />}
+    <div>
+      <Link href="/">Back</Link>
+      <Hero modelName={modelName} aigtAddress={AIGT_CONTRACT_ADDRESS} />
+      <HeadingLarge>Portfolio</HeadingLarge>
+      <div className="flex flex-row gap-x-10">
+        <div className="flex-1">
+          <ModelTimeline />
+        </div>
+        <div className="flex-grow-0">
+          <Launched />
+        </div>
       </div>
-      <h2 className="text-white font-bold text-2xl mb-10">More</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
-        {aigcAddress &&
-          tokenIds.map((id) => (
-            <NFTCard
-              key={id}
-              modelIndex={Number(index as string)}
-              tokenId={id.toString()}
-            />
-          ))}
-      </div>
+      <HeadingLarge>AIGC NFT Created</HeadingLarge>
+      <div></div>
+
+      {aigcAddress && (
+        <AigcNftCreated
+          tokenIds={tokenIds}
+          modelIndex={Number(index as string)}
+        />
+      )}
     </div>
   );
 }

@@ -41,12 +41,12 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="navbar bg-[#272727] px-4 md:px-8 py-4">
+      <div className="navbar px-4 md:px-12 py-6">
         <div className="flex-1">
           <Link href="/">
             <Image
-              src="/7007-marketplace.svg"
-              alt="7007 Marketplace"
+              src="/7007-logo-black.svg"
+              alt="7007 Studio"
               width={106}
               height={36}
             />
@@ -101,9 +101,7 @@ export default function Navbar() {
       </div>
 
       <div
-        className={`flex-col md:hidden bg-[#272727] ${
-          isShowingMenu ? "flex" : "hidden"
-        }`}
+        className={`flex-col md:hidden ${isShowingMenu ? "flex" : "hidden"}`}
       >
         {isMounted &&
           inferencePoint !== undefined &&
