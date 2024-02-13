@@ -1,6 +1,4 @@
 import React from "react";
-import HeadingMedium from "../text/headingMedium";
-import HeadingLarge from "../text/headingLarge";
 
 const Launched = () => {
   const items = [
@@ -11,11 +9,11 @@ const Launched = () => {
   ];
   return (
     <div className="w-full min-w-[533px] py-12 px-12 rounded-md bg-white">
-      <HeadingMedium>Launched</HeadingMedium>
+      <h3 className="heading-md">Launched</h3>
       <div className="grid grid-cols-2 py-12 gap-y-10">
         {items.map((i) => (
           <div key={i} className="flex flex-col">
-            <HeadingLarge>-</HeadingLarge>
+            <h2 className="text-lg mb4-4">-</h2>
             <span className="text-neutral-200">{i}</span>
           </div>
         ))}

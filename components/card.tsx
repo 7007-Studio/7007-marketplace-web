@@ -7,10 +7,6 @@ const Card = ({
 }: {
   className?: string;
   children: ReactNode;
-}) => (
-  <div className={clsx(`card h-fit overflow-hidden`, className)}>
-    {children}
-  </div>
-);
+}) => <div className={clsx(`card overflow-hidden`, className)}>{children}</div>;
 
 export default Card;

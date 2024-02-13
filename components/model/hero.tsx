@@ -1,8 +1,6 @@
 import React from "react";
 import { Address } from "viem";
 
-import HeadingLarge from "../text/headingLarge";
-
 interface HeroProps {
   aigtAddress?: Address;
   modelName?: string;
@@ -11,7 +9,7 @@ interface HeroProps {
 const Hero = ({ aigtAddress, modelName }: HeroProps) => {
   return (
     <div className="mt-10 py-16 px-20">
-      <HeadingLarge>{modelName}</HeadingLarge>
+      <h2 className="text-lg mb-4">{modelName}</h2>
       <div>{aigtAddress}</div>
       <div>labels...</div>
       <div>Description...</div>

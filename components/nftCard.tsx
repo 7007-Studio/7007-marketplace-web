@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import {
-  useAigcApprove,
   useAigcFactoryDeployedAigCs,
   useAigcOwnerOf,
   useAigcTokenUri,
   useNftMarketplaceBuy,
   useNftMarketplaceIsListed,
-  useNftMarketplaceList,
 } from "@/generated";
 import { useAccount, useWaitForTransaction } from "wagmi";
 import axios from "axios";
@@ -20,13 +18,20 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Card from "./card";
 import { concatAddress } from "@/helpers";
-import HeadingMedium from "./text/headingMedium";
+import { ListingNFT } from "./tabContent/collected";
 export interface NFTCardProps {
   modelIndex: string | number;
   tokenId: string | number;
+  ownedOnly?: boolean;
+  onListingNFT?: ({ tokenId, metadata }: ListingNFT) => void;
 }
 
-const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
+const NFTCard: React.FC<NFTCardProps> = ({
+  modelIndex,
+  tokenId,
+  ownedOnly,
+  onListingNFT,
+}) => {
   const { isConnected, address } = useAccount();
   const { openConnectModal } = useConnectModal();
 
@@ -34,9 +39,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
   const [metadata, setMetadata] = useState<Metadata>();
   const [audioUrl, setAudioUrl] = useState();
 
-  const [listInitialized, setListInitialized] = useState(false);
   const [buyInitialized, setBuyInitialized] = useState(false);
-  const [approvedListing, setApprovedListing] = useState(false);
 
   // read contracts
   const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
@@ -60,49 +63,12 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
       args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
     });
 
-  // write contracts
-  const { write: approveListing, data: approveTx } = useAigcApprove({
-    address: aigcAddress,
-    args: [NFT_MARKETPLACE_ADDRESS, BigInt(tokenId)],
-    onError(error) {
-      setListInitialized(false);
-    },
-  });
-
-  const { write: listNft, data: listNftTx } = useNftMarketplaceList({
-    address: NFT_MARKETPLACE_ADDRESS,
-    args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
-    onError(error) {
-      setListInitialized(false);
-    },
-  });
-
   const { write: buyNft, data: buyNftTx } = useNftMarketplaceBuy({
     address: NFT_MARKETPLACE_ADDRESS,
     value: parseEther("0.001"), // default price
     args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
     onError(error) {
       setBuyInitialized(false);
-    },
-  });
-
-  // wait for transactions
-  useWaitForTransaction({
-    hash: approveTx?.hash,
-    onSuccess(data) {
-      setApprovedListing(true);
-      listNft();
-    },
-  });
-
-  useWaitForTransaction({
-    hash: listNftTx?.hash,
-    onSuccess(data) {
-      refetchOwner();
-      refetchIsListed();
-
-      setApprovedListing(false);
-      setListInitialized(false);
     },
   });
 
@@ -136,6 +102,8 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
 
   if (!metadata) return;
 
+  if (ownedOnly && owner !== address) return null;
+
   return (
     <Card className="max-w-[258px]">
       <div className="flex py-4 px-6 justify-between items-center">
@@ -153,8 +121,8 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
         />
       </figure>
 
-      <div className="card-body flex-initial">
-        <HeadingMedium>{metadata.name}</HeadingMedium>
+      <div className="card-body flex-grow">
+        <h3 className="heading-md">{metadata.name}</h3>
         <p className="mb-4 text-zinc-400">{metadata.description}</p>
 
         {isListed && (
@@ -180,35 +148,14 @@ const NFTCard: React.FC<NFTCardProps> = ({ modelIndex, tokenId }) => {
             )}
           </button>
         )}
-        {address === owner && (
+        {aigcAddress && address === owner && (
           <button
             onClick={() => {
-              if (!isConnected) {
-                openConnectModal?.();
-                return;
-              }
-              setListInitialized(true);
-              if (!approvedListing) {
-                approveListing();
-              } else {
-                listNft({
-                  args: aigcAddress
-                    ? [aigcAddress, BigInt(tokenId)]
-                    : undefined,
-                });
-              }
+              onListingNFT?.({ address: aigcAddress, tokenId, metadata });
             }}
-            disabled={listInitialized}
             className="btn btn-primary"
           >
-            {listInitialized ? (
-              <>
-                <span className="loading loading-spinner"></span>
-                loading
-              </>
-            ) : (
-              "List"
-            )}
+            List
           </button>
         )}
 

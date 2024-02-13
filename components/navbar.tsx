@@ -41,7 +41,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="navbar px-4 md:px-12 py-6">
+      <div className="navbar px-4 md:px-12 py-6 border-b border-b-neutral-100">
         <div className="flex-1">
           <Link href="/">
             <Image
@@ -52,82 +52,73 @@ export default function Navbar() {
             />
           </Link>
         </div>
-        <div className="flex-none gap-4">
+        <div className="flex-none gap-10">
           <Link
-            href="/token"
+            href="/"
             className="hidden md:block hover:text-primary cursor-pointer"
           >
-            Token
+            Model Launchpad
           </Link>
           <Link
-            href="/marketplace"
+            href="#"
             className="hidden md:block hover:text-primary cursor-pointer"
           >
-            Marketplace
+            Staking
           </Link>
-          <Link
-            href="/governance"
-            className="hidden md:block hover:text-primary cursor-pointer"
-          >
-            Governance
-          </Link>
-          {isMounted &&
+          <button className="hidden md:block btn btn-primary px-6">
+            Publish Model
+          </button>
+          {/* {isMounted &&
             inferencePoint !== undefined &&
             consumedInferencePoint !== undefined && (
               <div className="hidden md:flex badge badge-primary text-lg font-bold p-4 mx-4">
                 {formatUnits(inferencePoint - consumedInferencePoint, 0)} IP
               </div>
-            )}
-          <ConnectButton chainStatus="none" showBalance={false} />
-          <button
-            className="md:hidden btn btn-square btn-ghost hover:text-black"
-            onClick={() => setIsShowingMenu(!isShowingMenu)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="inline-block w-5 h-5 stroke-current"
+            )} */}
+          <div className="max-md:hidden">
+            <ConnectButton chainStatus="none" showBalance={false} />
+            <button
+              className="md:hidden btn btn-square btn-ghost hover:text-black"
+              onClick={() => setIsShowingMenu(!isShowingMenu)}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              ></path>
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="inline-block w-5 h-5 stroke-current"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <div
         className={`flex-col md:hidden ${isShowingMenu ? "flex" : "hidden"}`}
       >
-        {isMounted &&
+        {/* {isMounted &&
           inferencePoint !== undefined &&
           consumedInferencePoint !== undefined && (
             <div className="badge badge-primary self-end text-lg font-bold p-4 mx-4">
               {formatUnits(inferencePoint - consumedInferencePoint, 0)} IP
             </div>
-          )}
-        <Link
-          href="/token"
-          className="pl-4 py-4 text-xl hover:text-primary cursor-pointer"
-        >
-          Token
+          )} */}
+
+        <Link href="/" className="pl-4 py-4 text-xl hover:text-primary">
+          Model Launchpad
         </Link>
-        <Link
-          href="/marketplace"
-          className="pl-4 py-4 text-xl hover:text-primary cursor-pointer"
-        >
-          Marketplace
+        <Link href="#" className="pl-4 py-4 text-xl hover:text-primary">
+          Staking
         </Link>
-        <Link
-          href="/governance"
-          className="pl-4 py-4 text-xl hover:text-primary cursor-pointer"
-        >
-          Governance
-        </Link>
+        <div className="w-full px-4">
+          <button className="btn btn-primary w-full">Publish Model</button>
+        </div>
       </div>
     </>
   );

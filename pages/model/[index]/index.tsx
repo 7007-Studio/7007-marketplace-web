@@ -13,7 +13,6 @@ import { Address } from "viem";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { useMemo } from "react";
 import Hero from "@/components/model/hero";
-import HeadingLarge from "@/components/text/headingLarge";
 import AigcNftCreated from "@/components/model/aigcNftCreated";
 import Link from "next/link";
 import ModelTimeline from "@/components/model/modelTimeline";
@@ -58,7 +57,7 @@ export default function Detail() {
     <div>
       <Link href="/">Back</Link>
       <Hero modelName={modelName} aigtAddress={AIGT_CONTRACT_ADDRESS} />
-      <HeadingLarge>Portfolio</HeadingLarge>
+      <h2 className="text-lg mb4-4">Portfolio</h2>
       <div className="flex flex-row gap-x-10">
         <div className="flex-1">
           <ModelTimeline />
@@ -67,7 +66,7 @@ export default function Detail() {
           <Launched />
         </div>
       </div>
-      <HeadingLarge>AIGC NFT Created</HeadingLarge>
+      <h2 className="text-lg mb4-4">AIGC NFT Created</h2>
       <div></div>
 
       {aigcAddress && (

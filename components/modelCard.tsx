@@ -7,7 +7,6 @@ import {
 import { concatAddress } from "@/helpers";
 import { useRouter } from "next/router";
 import Card from "./card";
-import HeadingLarge from "./text/headingLarge";
 
 export interface ModelCardProps {
   modelIndex: number;
@@ -32,7 +31,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
     <Card className="max-w-[390px]">
       <div className="p-6">
         <div className="flex justify-between items-center">
-          <HeadingLarge>{modelName}</HeadingLarge>
+          <h2 className="text-lg mb-4">{modelName}</h2>
         </div>
         {aigtAddress && (
           <div>

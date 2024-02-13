@@ -1,4 +1,4 @@
-import FormAIGC from "@/components/formAIGC";
+import FormAIGC from "@/components/formAIGC/formAIGC";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import {
   useAigcFactoryDeployedAigTs,
@@ -26,16 +26,18 @@ export default function GenerateAIGC() {
   if (!isMounted) return null;
 
   return (
-    <div className="container mx-auto md:max-w-2xl flex min-h-screen flex-col p-4">
-      <h1 className="text-3xl font-bold mb-4">
-        Generate your music and art with 7007 Studio
-      </h1>
+    <div>
+      <h2 className="heading-lg mb-12 text-center">
+        Generate your AIGC music and art with 7007 Studio
+      </h2>
       {aigtAddress && aigcAddress && (
-        <FormAIGC
-          modelIndex={Number(index as string)}
-          aigtAddress={aigtAddress}
-          aigcAddress={aigcAddress}
-        />
+        <div className="py-20 px-40 max-w-[1106px] mx-auto bg-white">
+          <FormAIGC
+            modelIndex={Number(index as string)}
+            aigtAddress={aigtAddress}
+            aigcAddress={aigcAddress}
+          />
+        </div>
       )}
     </div>
   );

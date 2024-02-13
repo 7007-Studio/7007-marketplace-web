@@ -5,7 +5,7 @@ import {
   FieldErrors,
   RegisterOptions,
 } from "react-hook-form";
-import { IFormAIGCInput } from "./formAIGC";
+import { IFormAIGCInput } from "./formAIGC/formAIGC";
 
 interface TextInputProps<T extends FieldValues> {
   label?: string;
@@ -40,7 +40,7 @@ export default function TextInput<T extends FieldValues>({
       <div className="relative w-full">
         <input
           type="text"
-          className="pl-3 pr-8 py-2 border rounded w-full"
+          className="input pl-3 pr-8 py-2 border rounded w-full"
           placeholder={placeholder}
           {...register(name, registerOptions)}
         />

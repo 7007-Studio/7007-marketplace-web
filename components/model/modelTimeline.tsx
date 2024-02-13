@@ -1,5 +1,4 @@
 import React from "react";
-import HeadingMedium from "../text/headingMedium";
 import Timeline from "./timeline";
 
 const KeyEvent = () => {
@@ -24,7 +23,7 @@ const Distribution = () => {
 const ModelTimeline = () => {
   return (
     <div className="py-20 px-12 rounded-md bg-white">
-      <HeadingMedium>Model Timeline</HeadingMedium>
+      <h3 className="heading-md">Model Timeline</h3>
       <div className="pb-28">
         <Timeline
           milestones={[
@@ -38,7 +37,7 @@ const ModelTimeline = () => {
       </div>
       <div className="flex flex-row">
         <div className="flex-1">
-          <HeadingMedium>Distribution Timeline</HeadingMedium>
+          <h3 className="heading-md">Distribution Timeline</h3>
           <div className="flex">
             <Timeline
               milestones={[
@@ -51,7 +50,7 @@ const ModelTimeline = () => {
           </div>
         </div>
         <div className="flex-1">
-          <HeadingMedium>Distribution Allocation</HeadingMedium>
+          <h3 className="heading-md">Distribution Allocation</h3>
         </div>
       </div>
     </div>

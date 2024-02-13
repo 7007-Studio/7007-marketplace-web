@@ -20,4 +20,17 @@
   :where(.timeline > li) {
     grid-template-columns: 0 auto var(--timeline-col-end, minmax(0, 1fr));
   }
+
+  .label {
+    @apply pl-0;
+  }
+}
+
+@layer utilities {
+  .heading-md {
+    @apply text-[24px] leading-[28px] text-neutral-700 font-semibold;
+  }
+  .heading-lg {
+    @apply text-[32px] leading-[40px] text-neutral-700 font-bold;
+  }
 }

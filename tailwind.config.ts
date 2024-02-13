@@ -1,6 +1,17 @@
 import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
 
+const neutral = {
+  "25": "#F5F5F5",
+  "50": "#EAEAEB",
+  "100": "#D3D2D4",
+  "200": "#A7A6A9",
+  "300": "#4E4B55",
+  "400": "#302E35",
+  "500": "#222027",
+  "700": "#141317",
+};
+
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,15 +20,7 @@ const config: Config = {
   ],
   theme: {
     borderColor: {
-      neutral: {
-        "25": "#F5F5F5",
-        "50": "#EAEAEB",
-        "200": "#A7A6A9",
-        "300": "#4E4B55",
-        "400": "#302E35",
-        "500": "#222027",
-        "700": "#141317",
-      },
+      neutral,
     },
     fontSize: {
       sm: [
@@ -45,30 +48,14 @@ const config: Config = {
     textColor: {
       primary: "#FFC900",
       secondary: "#222027",
-      neutral: {
-        "25": "#F5F5F5",
-        "50": "#EAEAEB",
-        "200": "#A7A6A9",
-        "300": "#4E4B55",
-        "400": "#302E35",
-        "500": "#222027",
-        "700": "#141317",
-      },
+      neutral,
     },
     colors: {
       transparent: "transparent",
       current: "currentColor",
       black: colors.black,
       white: colors.white,
-      neutral: {
-        "25": "#F5F5F5",
-        "50": "#EAEAEB",
-        "200": "#A7A6A9",
-        "300": "#4E4B55",
-        "400": "#302E35",
-        "500": "#222027",
-        "700": "#141317",
-      },
+      neutral,
     },
   },
   plugins: [require("daisyui")],

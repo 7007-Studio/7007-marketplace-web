@@ -1,5 +1,4 @@
 import React from "react";
-import HeadingLarge from "../text/headingLarge";
 import NFTCard from "../nftCard";
 
 const AigcNftCreated = ({
