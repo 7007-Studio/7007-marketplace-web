@@ -24,6 +24,10 @@
   .label {
     @apply pl-0;
   }
+
+  .modal-box {
+    @apply rounded-md;
+  }
 }
 
 @layer utilities {

@@ -1,14 +1,8 @@
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import Tabs, { TabState } from "@/components/tabs";
-import NFTCard from "@/components/nftCard";
-import {
-  useAigcFactoryDeployedAigCs,
-  useAigcTokenId,
-  useNftMarketplaceIsListed,
-} from "@/generated";
+import { useAigcFactoryDeployedAigCs, useAigcTokenId } from "@/generated";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import Filter, { FilterEntry, FilterProps } from "@/components/filter";
 import ModelLaunchpad from "@/components/tabContent/modelLaunchpad";
 import Marketplace from "@/components/tabContent/marketplace";
 import Collected from "@/components/tabContent/collected";
@@ -52,6 +46,10 @@ export default function Main() {
 
       {currentTab === TabState.Marketplace && deployedAigc && (
         <Marketplace modelIndex={modelIndex} tokenIds={tokenIds} />
+      )}
+
+      {currentTab === TabState.Created && deployedAigc && (
+        <Collected modelIndex={modelIndex} tokenIds={tokenIds} />
       )}
 
       {currentTab === TabState.Collected && deployedAigc && (

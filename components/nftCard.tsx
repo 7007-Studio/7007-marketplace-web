@@ -18,7 +18,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Card from "./card";
 import { concatAddress } from "@/helpers";
-import { ListingNFT } from "./tabContent/collected";
+import { ListingNFT } from "./modal/listingNFTModal";
 export interface NFTCardProps {
   modelIndex: string | number;
   tokenId: string | number;

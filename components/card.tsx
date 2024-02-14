@@ -7,6 +7,15 @@ const Card = ({
 }: {
   className?: string;
   children: ReactNode;
-}) => <div className={clsx(`card overflow-hidden`, className)}>{children}</div>;
+}) => (
+  <div
+    className={clsx(
+      `card border-2 border-neutral-50 overflow-hidden`,
+      className
+    )}
+  >
+    {children}
+  </div>
+);
 
 export default Card;
