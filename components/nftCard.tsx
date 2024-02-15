@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   useAigcFactoryDeployedAigCs,
+  useAigcModelName,
   useAigcOwnerOf,
   useAigcTokenUri,
   useNftMarketplaceBuy,
@@ -17,13 +18,14 @@ import { parseEther } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Card from "./card";
-import { concatAddress } from "@/helpers";
+import { concatAddress, openseaUrl } from "@/helpers";
 import { ListingNFT } from "./modal/listingNFTModal";
 export interface NFTCardProps {
   modelIndex: string | number;
   tokenId: string | number;
   ownedOnly?: boolean;
   onListingNFT?: ({ tokenId, metadata }: ListingNFT) => void;
+  onConnectToSP?: () => void;
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({
@@ -31,6 +33,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
   tokenId,
   ownedOnly,
   onListingNFT,
+  onConnectToSP,
 }) => {
   const { isConnected, address } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -45,6 +48,10 @@ const NFTCard: React.FC<NFTCardProps> = ({
   const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: [BigInt(modelIndex)],
+  });
+
+  const { data: modelName } = useAigcModelName({
+    address: aigcAddress,
   });
 
   const { data: owner, refetch: refetchOwner } = useAigcOwnerOf({
@@ -63,6 +70,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
       args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
     });
 
+  // write contracts
   const { write: buyNft, data: buyNftTx } = useNftMarketplaceBuy({
     address: NFT_MARKETPLACE_ADDRESS,
     value: parseEther("0.001"), // default price
@@ -81,6 +89,8 @@ const NFTCard: React.FC<NFTCardProps> = ({
       setBuyInitialized(false);
     },
   });
+
+  // TODO: find creator of the token
 
   useEffect(() => {
     if (!aigcAddress || !tokenUri) return;
@@ -108,7 +118,9 @@ const NFTCard: React.FC<NFTCardProps> = ({
     <Card className="max-w-[258px]">
       <div className="flex py-4 px-6 justify-between items-center">
         <span>DATE</span>
-        <span>Genesis Model</span>
+        <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
+          {modelName}
+        </span>
       </div>
 
       <figure>
@@ -160,6 +172,15 @@ const NFTCard: React.FC<NFTCardProps> = ({
         )}
 
         <button
+          onClick={() => {
+            onConnectToSP?.();
+          }}
+          className="btn btn-primary"
+        >
+          Connect
+        </button>
+
+        <button
           className="flex flex-row justify-between items-center"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
@@ -208,7 +229,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
             <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
               <div>Link</div>
               <a
-                href={`https://testnets.opensea.io/assets/sepolia/${aigcAddress}/${tokenId}`}
+                href={openseaUrl(aigcAddress, tokenId as string)}
                 className="text-blue-500 hover:text-blue-600 overflow-hidden"
                 target="_blank"
               >

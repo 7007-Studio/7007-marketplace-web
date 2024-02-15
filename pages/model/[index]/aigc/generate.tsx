@@ -27,17 +27,12 @@ export default function GenerateAIGC() {
 
   return (
     <div>
-      <h2 className="heading-lg mb-12 text-center">
-        Generate your AIGC music and art with 7007 Studio
-      </h2>
       {aigtAddress && aigcAddress && (
-        <div className="py-20 px-40 max-w-[1106px] mx-auto bg-white">
-          <FormAIGC
-            modelIndex={Number(index as string)}
-            aigtAddress={aigtAddress}
-            aigcAddress={aigcAddress}
-          />
-        </div>
+        <FormAIGC
+          modelIndex={Number(index as string)}
+          aigtAddress={aigtAddress}
+          aigcAddress={aigcAddress}
+        />
       )}
     </div>
   );

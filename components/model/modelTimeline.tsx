@@ -22,7 +22,7 @@ const Distribution = () => {
 
 const ModelTimeline = () => {
   return (
-    <div className="py-20 px-12 rounded-md bg-white">
+    <div className="py-12 px-12 rounded-md bg-white">
       <h3 className="heading-md">Model Timeline</h3>
       <div className="pb-28">
         <Timeline

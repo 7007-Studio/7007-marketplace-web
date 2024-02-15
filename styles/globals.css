@@ -28,6 +28,10 @@
   .modal-box {
     @apply rounded-md;
   }
+
+  .badge {
+    @apply rounded-md;
+  }
 }
 
 @layer utilities {

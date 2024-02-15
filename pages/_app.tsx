@@ -5,6 +5,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import {
   darkTheme,
+  DisclaimerComponent,
   getDefaultWallets,
   lightTheme,
   RainbowKitProvider,
@@ -24,7 +25,7 @@ const { chains, publicClient } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "7007 Marketplace",
+  appName: "7007 Studio",
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
   chains,
 });
@@ -39,6 +40,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider
+        appInfo={{
+          appName: "7007 Studio",
+        }}
         chains={chains}
         theme={lightTheme({
           accentColor: "#FFC900",

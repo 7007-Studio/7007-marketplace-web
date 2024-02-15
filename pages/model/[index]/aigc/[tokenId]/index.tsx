@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import useAudio from "@/hooks/useAudio";
 import axios from "axios";
 import { Metadata, MetadataAttribute } from "@/types";
-import { concatAddress } from "@/helpers";
+import { concatAddress, openseaUrl } from "@/helpers";
 import Image from "next/image";
 
 export default function Detail() {
@@ -86,7 +86,7 @@ export default function Detail() {
               {aigcAddress && (
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
                   <a
-                    href={`https://testnets.opensea.io/assets/sepolia/${aigcAddress}/${tokenId}`}
+                    href={openseaUrl(aigcAddress, tokenId as string)}
                     className="text-blue-500 hover:text-blue-600 overflow-hidden"
                     target="_blank"
                   >

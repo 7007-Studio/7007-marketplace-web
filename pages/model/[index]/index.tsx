@@ -17,6 +17,7 @@ import AigcNftCreated from "@/components/model/aigcNftCreated";
 import Link from "next/link";
 import ModelTimeline from "@/components/model/modelTimeline";
 import Launched from "@/components/model/launched";
+import ArrowLeftIcon from "@/components/arrowLeftIcon";
 
 export default function Detail() {
   const router = useRouter();
@@ -55,18 +56,22 @@ export default function Detail() {
 
   return (
     <div>
-      <Link href="/">Back</Link>
+      <div className="py-10">
+        <Link href="/" className="flex flex-row gap-2">
+          <ArrowLeftIcon className="text-primary" /> Back
+        </Link>
+      </div>
       <Hero modelName={modelName} aigtAddress={AIGT_CONTRACT_ADDRESS} />
-      <h2 className="text-lg mb4-4">Portfolio</h2>
+      <h2 className="text-lg mt-10 mb-6">Portfolio</h2>
       <div className="flex flex-row gap-x-10">
         <div className="flex-1">
           <ModelTimeline />
         </div>
         <div className="flex-grow-0">
-          <Launched />
+          <Launched modelIndex={index as string} />
         </div>
       </div>
-      <h2 className="text-lg mb4-4">AIGC NFT Created</h2>
+      <h2 className="text-lg mt-14 mb-6">AIGC NFT Created</h2>
       <div></div>
 
       {aigcAddress && (

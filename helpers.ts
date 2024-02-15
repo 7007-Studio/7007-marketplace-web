@@ -11,3 +11,7 @@ export function isModel(item: any): item is Model {
 export function concatAddress(address: string): string {
   return address.slice(0, 6) + "..." + address.slice(-4);
 }
+
+export function openseaUrl(address: string, tokenId: string | number): string {
+  return `https://testnets.opensea.io/assets/sepolia/${address}/${tokenId}`;
+}

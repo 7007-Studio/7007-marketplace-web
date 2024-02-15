@@ -1,6 +1,8 @@
+import { useRouter } from "next/router";
 import React from "react";
 
-const Launched = () => {
+const Launched = ({ modelIndex }: { modelIndex: number | string }) => {
+  const router = useRouter();
   const items = [
     "Current Total Participants",
     "Accumulated Staked",
@@ -20,7 +22,14 @@ const Launched = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        <button className="btn btn-primary w-full">Generate AIGC NFT</button>
+        <button
+          className="btn btn-primary w-full"
+          onClick={() => {
+            router.push(`/model/${modelIndex}/aigc/generate`);
+          }}
+        >
+          Generate AIGC NFT
+        </button>
         <button className="btn btn-secondary w-full">Trade Model Tokens</button>
       </div>
     </div>

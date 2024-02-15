@@ -3,6 +3,7 @@ import Filter from "@/components/filter";
 import NFTCard from "@/components/nftCard";
 import { useRef, useState } from "react";
 import ListingNFTModal, { ListingNFT } from "../modal/listingNFTModal";
+import ConnectToSPModal from "../modal/connectToSPModal";
 
 const Collected = ({
   modelIndex,
@@ -19,6 +20,7 @@ const Collected = ({
   ]);
 
   const listingNFTModalRef = useRef<HTMLDialogElement>(null);
+  const connectToSPModalRef = useRef<HTMLDialogElement>(null);
   const [listingNFT, setListingNFT] = useState<ListingNFT>();
 
   return (
@@ -39,6 +41,9 @@ const Collected = ({
                   setListingNFT(nft);
                   listingNFTModalRef.current?.showModal();
                 }}
+                onConnectToSP={() => {
+                  connectToSPModalRef.current?.showModal();
+                }}
               />
             ))}
           </div>
@@ -54,7 +59,9 @@ const Collected = ({
       <ListingNFTModal
         listingNFT={listingNFT}
         listingNFTModalRef={listingNFTModalRef}
+        // listingSuccess={() => {TODO: refresh the card state}}
       />
+      <ConnectToSPModal ref={connectToSPModalRef} onConnect={() => {}} />
     </>
   );
 };
