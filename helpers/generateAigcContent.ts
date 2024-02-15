@@ -1,4 +1,4 @@
-import { AIGCContent } from "@/components/formAIGC/formAIGC";
+import { AIGCContent } from "@/components/formAIGC";
 import generateImage from "./generateImage";
 import initOPML, { GenerateType } from "./initOPML";
 

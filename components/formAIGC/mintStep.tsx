@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ethers } from "ethers";
 import { Address, useWaitForTransaction } from "wagmi";
 import { create } from "ipfs-http-client";
@@ -15,7 +15,8 @@ import {
 import generateAigcContent from "@/helpers/generateAigcContent";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
 
-import { AIGCContent } from "./formAIGC";
+import { AIGCContent } from ".";
+import PromptForm from "./promptForm";
 
 interface MintStepProps {
   modelIndex: number | string;
@@ -100,6 +101,8 @@ const MintStep = ({
   setAigcContent,
   onMintSuccess,
 }: MintStepProps) => {
+  const editPromptModalRef = useRef<HTMLDialogElement>(null);
+
   const [approvedSpending, setApprovedSpending] = useState(false);
   const [approveInitialized, setApproveInitialized] = useState(false);
   const [mintInitialized, setMintInitialized] = useState(false);
@@ -200,87 +203,116 @@ const MintStep = ({
   };
 
   return (
-    <div>
-      <div className="py-10">
-        <span
-          onClick={() => {
-            setAigcContent(undefined);
-          }}
-          className="flex flex-row gap-2"
-        >
-          <ArrowLeftIcon className="text-primary" /> Back
-        </span>
-      </div>
-      <div className="card card-bordered max-w-[534px] mx-auto mb-10 bg-white">
-        <div className="py-4 px-6">
-          <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
-            {modelName}
+    <>
+      <div>
+        <div className="py-10">
+          <span
+            onClick={() => {
+              setAigcContent(undefined);
+            }}
+            className="flex flex-row gap-2"
+          >
+            <ArrowLeftIcon className="text-primary" /> Back
           </span>
         </div>
-        {regenerating ? (
-          <div className="flex justify-center align-middle aspect-square bg-base-100">
-            <span className="loading loading-spinner loading-lg text-primary"></span>
+        <div className="card card-bordered max-w-[534px] mx-auto mb-10 bg-white">
+          <div className="py-4 px-6">
+            <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
+              {modelName}
+            </span>
           </div>
-        ) : (
-          <img src={aigcContent.imageUrl} alt="Generated image" />
-        )}
-        <div className="pt-20 px-6 pb-4 heading-lg">{aigcContent.name}</div>
-        <div className="px-6">{aigcContent.prompt}</div>
-        <div className="flex flex-row pt-4 px-6 pb-10 justify-end gap-4">
-          <button
-            className="btn btn-secondary"
-            onClick={async () => {
-              setRegenerating(true);
-              const newAigcContent = await generateAigcContent(
-                aigcContent.name,
-                aigcContent.prompt
-              );
-              setAigcContent(newAigcContent);
+          {regenerating ? (
+            <div className="flex justify-center align-middle aspect-square bg-base-100">
+              <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+          ) : (
+            <img src={aigcContent.imageUrl} alt="Generated image" />
+          )}
+          <div className="pt-20 px-6 pb-4 flex flex-row justify-between items-center">
+            <h2 className="heading-lg">{aigcContent.name}</h2>
+            <button
+              className="btn btn-sm btn-secondary"
+              onClick={() => {
+                editPromptModalRef?.current?.showModal();
+              }}
+            >
+              Edit
+            </button>
+          </div>
+          <div className="px-6">{aigcContent.prompt}</div>
+          <div className="flex flex-row pt-4 px-6 pb-10 justify-end gap-4">
+            <button
+              className="btn btn-secondary"
+              onClick={async () => {
+                setRegenerating(true);
+                const newAigcContent = await generateAigcContent(
+                  aigcContent.name,
+                  aigcContent.prompt
+                );
+                setAigcContent(newAigcContent);
 
-              setRegenerating(false);
-            }}
-          >
-            Regenerate
-          </button>
-          {!approvedSpending && (
-            <button
-              className="btn btn-primary"
-              type="button"
-              disabled={approveInitialized}
-              onClick={() => {
-                onApprove();
+                setRegenerating(false);
               }}
             >
-              {approveInitialized ? (
-                <>
-                  <span className="loading loading-spinner"></span>
-                  loading
-                </>
-              ) : (
-                "Approve"
-              )}
+              Regenerate
             </button>
-          )}
-          {approvedSpending && (
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                onMint();
-              }}
-            >
-              {mintInitialized ? (
-                <>
-                  <span className="loading loading-spinner"></span>
-                  loading
-                </>
-              ) : (
-                "Mint for 0.001eth"
-              )}
-            </button>
-          )}
+            {!approvedSpending && (
+              <button
+                className="btn btn-primary"
+                type="button"
+                disabled={approveInitialized}
+                onClick={() => {
+                  onApprove();
+                }}
+              >
+                {approveInitialized ? (
+                  <>
+                    <span className="loading loading-spinner"></span>
+                    loading
+                  </>
+                ) : (
+                  "Approve"
+                )}
+              </button>
+            )}
+            {approvedSpending && (
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  onMint();
+                }}
+              >
+                {mintInitialized ? (
+                  <>
+                    <span className="loading loading-spinner"></span>
+                    loading
+                  </>
+                ) : (
+                  "Mint for 0.001eth"
+                )}
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      <dialog ref={editPromptModalRef} id="" className="modal">
+        <div className="modal-box max-w-[904px] py-16 px-20">
+          <h2 className="heading-lg mb-12">Edit prompt</h2>
+          <PromptForm
+            submitText="Generate"
+            defaultValues={{
+              name: aigcContent.name,
+              prompt: aigcContent.prompt,
+            }}
+            onArtGenerated={(_aigcContent) => {
+              setAigcContent(_aigcContent);
+              editPromptModalRef.current?.close();
+            }}
+          />
+        </div>
+      </dialog>
+    </>
   );
 };
 

@@ -31,8 +31,8 @@ export default function FormAIGC({
     return (
       <PromptStep
         modelIndex={modelIndex}
-        onArtGenerated={(metadata) => {
-          setAigcContent(metadata);
+        onArtGenerated={(_aigcContent) => {
+          setAigcContent(_aigcContent);
         }}
       />
     );

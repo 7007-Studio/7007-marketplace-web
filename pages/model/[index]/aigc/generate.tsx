@@ -1,11 +1,11 @@
-import FormAIGC from "@/components/formAIGC/formAIGC";
+import { useRouter } from "next/router";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import {
   useAigcFactoryDeployedAigTs,
   useAigcFactoryDeployedAigCs,
 } from "@/generated";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { useRouter } from "next/router";
+import FormAIGC from "@/components/formAIGC";
 
 export default function GenerateAIGC() {
   const router = useRouter();
