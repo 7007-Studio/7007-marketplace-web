@@ -57,8 +57,8 @@ const Collected = ({
         </div>
       </div>
       <ListingNFTModal
+        ref={listingNFTModalRef}
         listingNFT={listingNFT}
-        listingNFTModalRef={listingNFTModalRef}
         // listingSuccess={() => {TODO: refresh the card state}}
       />
       <ConnectToSPModal ref={connectToSPModalRef} onConnect={() => {}} />

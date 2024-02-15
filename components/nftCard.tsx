@@ -171,14 +171,16 @@ const NFTCard: React.FC<NFTCardProps> = ({
           </button>
         )}
 
-        <button
-          onClick={() => {
-            onConnectToSP?.();
-          }}
-          className="btn btn-primary"
-        >
-          Connect
-        </button>
+        {aigcAddress && address === owner && (
+          <button
+            onClick={() => {
+              onConnectToSP?.();
+            }}
+            className="btn btn-primary"
+          >
+            Connect
+          </button>
+        )}
 
         <button
           className="flex flex-row justify-between items-center"
