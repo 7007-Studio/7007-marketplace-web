@@ -40,7 +40,7 @@ export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
         isActive={currentTab === TabState.ModelLaunchpad}
         onClick={() => setCurrentTab(TabState.ModelLaunchpad)}
       >
-        Model Launchpad
+        IMO
       </Tab>
       <Tab
         isActive={currentTab === TabState.Marketplace}

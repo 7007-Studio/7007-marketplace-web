@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import {
   FieldValues,
   Path,
@@ -5,7 +6,6 @@ import {
   FieldErrors,
   RegisterOptions,
 } from "react-hook-form";
-import { IFormAIGCInput } from "./formAIGC/formAIGC";
 
 interface TextInputProps<T extends FieldValues> {
   label?: string;
@@ -13,7 +13,7 @@ interface TextInputProps<T extends FieldValues> {
   postfix?: string;
   required?: boolean;
   register: UseFormRegister<T>;
-  errors?: FieldErrors<IFormAIGCInput>;
+  errors?: FieldErrors<T>;
   name: Path<T>;
 }
 
@@ -52,7 +52,7 @@ export default function TextInput<T extends FieldValues>({
       </div>
       {errors && (
         <p className="text-red-600 text-left text-sm">
-          {errors?.name?.message}
+          {errors.name?.message as ReactNode}
         </p>
       )}
     </label>
