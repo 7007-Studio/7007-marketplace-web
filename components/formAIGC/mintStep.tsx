@@ -1,6 +1,8 @@
-import { AIGCContent } from "./formAIGC";
-import ArrowLeftIcon from "../arrowLeftIcon";
-import router from "next/router";
+import { useState } from "react";
+import { ethers } from "ethers";
+import { Address, useWaitForTransaction } from "wagmi";
+import { create } from "ipfs-http-client";
+
 import {
   useAigcCostToken,
   useAigcMint,
@@ -10,17 +12,17 @@ import {
   useAigtApprovalEvent,
   useAigtApprove,
 } from "@/generated";
-import { Address, useWaitForTransaction } from "wagmi";
-import { ethers } from "ethers";
-import { useState } from "react";
-import { create } from "ipfs-http-client";
+import generateAigcContent from "@/helpers/generateAigcContent";
+import ArrowLeftIcon from "@/components/arrowLeftIcon";
+
+import { AIGCContent } from "./formAIGC";
 
 interface MintStepProps {
   modelIndex: number | string;
   aigtAddress: Address;
   aigcAddress: Address;
   aigcContent: AIGCContent;
-  resetAigcContent: () => void;
+  setAigcContent: (aigcContent?: AIGCContent) => void;
   onMintSuccess: (tokenId: string | number) => void;
 }
 
@@ -95,12 +97,13 @@ const MintStep = ({
   aigtAddress,
   aigcAddress,
   aigcContent,
-  resetAigcContent,
+  setAigcContent,
   onMintSuccess,
 }: MintStepProps) => {
   const [approvedSpending, setApprovedSpending] = useState(false);
   const [approveInitialized, setApproveInitialized] = useState(false);
   const [mintInitialized, setMintInitialized] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
 
   const { data: modelName } = useAigcModelName({
     address: aigcAddress,
@@ -201,7 +204,7 @@ const MintStep = ({
       <div className="py-10">
         <span
           onClick={() => {
-            resetAigcContent();
+            setAigcContent(undefined);
           }}
           className="flex flex-row gap-2"
         >
@@ -214,11 +217,29 @@ const MintStep = ({
             {modelName}
           </span>
         </div>
-        <img src={aigcContent.imageUrl} alt="Generated image" />
+        {regenerating ? (
+          <div className="flex justify-center align-middle aspect-square bg-base-100">
+            <span className="loading loading-spinner loading-lg text-primary"></span>
+          </div>
+        ) : (
+          <img src={aigcContent.imageUrl} alt="Generated image" />
+        )}
         <div className="pt-20 px-6 pb-4 heading-lg">{aigcContent.name}</div>
         <div className="px-6">{aigcContent.prompt}</div>
         <div className="flex flex-row pt-4 px-6 pb-10 justify-end gap-4">
-          <button className="btn btn-secondary" onClick={() => {}}>
+          <button
+            className="btn btn-secondary"
+            onClick={async () => {
+              setRegenerating(true);
+              const newAigcContent = await generateAigcContent(
+                aigcContent.name,
+                aigcContent.prompt
+              );
+              setAigcContent(newAigcContent);
+
+              setRegenerating(false);
+            }}
+          >
             Regenerate
           </button>
           {!approvedSpending && (

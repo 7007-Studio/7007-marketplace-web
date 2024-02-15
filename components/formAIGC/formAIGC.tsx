@@ -45,9 +45,7 @@ export default function FormAIGC({
         aigtAddress={aigtAddress}
         aigcAddress={aigcAddress}
         aigcContent={aigcContent}
-        resetAigcContent={() => {
-          setAigcContent(undefined);
-        }}
+        setAigcContent={setAigcContent}
         onMintSuccess={(tokenId) => {
           setIsMinted(tokenId);
         }}

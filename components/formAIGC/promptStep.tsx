@@ -1,78 +1,13 @@
-import axios from "axios";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import TextInput from "../textInput";
-import { AIGCContent } from "./formAIGC";
+
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import { useAigcFactoryDeployedAigCs, useAigcTokenId } from "@/generated";
-import AigcNftCreated from "../model/aigcNftCreated";
+import TextInput from "@/components/textInput";
+import AigcNftCreated from "@/components/model/aigcNftCreated";
 
-enum GenerateType {
-  Image,
-  Music,
-}
-
-const initOPML = async (type: GenerateType, prompt: string) => {
-  let error;
-  try {
-    let response, data;
-    if (type === GenerateType.Image) {
-      data = {
-        modelName: "StableDiffusion",
-        prompt: prompt,
-      };
-
-      response = await axios.post(
-        "https://demo.7007.studio/api/v1/dalle/opMLRequest",
-        data,
-        {
-          timeout: 300000,
-        }
-      );
-    } else if (type === GenerateType.Music) {
-      data = {
-        modelName: "MusicGen",
-        prompt: prompt,
-      };
-      response = await axios.post(
-        "https://demo.7007.studio/api/v1/dalle/opMLRequest",
-        data,
-        {
-          timeout: 300000,
-        }
-      );
-    }
-    return response?.data.MPChallenge;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const generateImage = async (contractAddr: string, prompt: string) => {
-  try {
-    let response = await axios.post(
-      "https://demo.7007.studio/api/v1/dalle/txt2img",
-      { contractAddress: contractAddr, prompt: prompt },
-      { timeout: 300000 }
-    );
-    return "data:image/png;base64," + response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const generateMusic = async (contractAddr: string, prompt: string) => {
-  try {
-    const response = await axios.post(
-      "https://demo.7007.studio/api/v1/dalle/txt2music",
-      { contractAddress: contractAddr, prompt: prompt },
-      { timeout: 300000 }
-    );
-    return "data:audio/mpeg;base64," + response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
+import { AIGCContent } from "./formAIGC";
+import generateAigcContent from "@/helpers/generateAigcContent";
 
 export interface IFormAIGCInput {
   name: string;
@@ -91,8 +26,6 @@ interface PromptStepProps {
 const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [artGenerated, setArtGenerated] = useState(false);
-  const [log, setLog] = useState("");
 
   const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
@@ -113,42 +46,15 @@ const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
     return ids;
   }, [lastTokenId]);
 
-  const { register, handleSubmit, formState, getValues, setValue } =
-    useForm<IFormAIGCInput>();
+  const { register, handleSubmit, formState } = useForm<IFormAIGCInput>();
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
     setErrorMessage("");
-
     setIsSubmitting(true);
 
-    let contractAddr = await initOPML(GenerateType.Image, data.prompt);
-    setLog(`Generating image...\n`);
-    const imageUrl = await generateImage(contractAddr, data.prompt);
-    if (imageUrl) {
-      setValue("imageUrl", imageUrl);
-    }
-    setLog(`Image generated.\n`);
-    // setLog(`Image generated. Please approve ${symbol} token spending...\n`);
-
-    // setLog(`Image generated. Generating music...\n`);
-
-    // contractAddr = await initOPML(GenerateType.Music, data.prompt);
-    // const audioUrl = await generateMusic(contractAddr, data.prompt);
-    // if (audioUrl) {
-    //   setValue("audioUrl", audioUrl);
-    // }
-
-    // setLog(`Audio generated. Please approve ${symbol} token spending...\n`);
-
-    setArtGenerated(true);
-
-    onArtGenerated({
-      name: data.name,
-      prompt: data.prompt,
-      imageUrl,
-      // audioUrl
-    });
+    const aigcContent = await generateAigcContent(data.name, data.prompt);
+    onArtGenerated(aigcContent);
   };
 
   return (
@@ -221,28 +127,17 @@ const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
               </label>
             </div>
 
-            {!artGenerated && (
-              <button className="btn btn-primary" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <span className="loading loading-spinner"></span>
-                    loading
-                  </>
-                ) : (
-                  "Prompt for free"
-                )}
-              </button>
-            )}
+            <button className="btn btn-primary" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <span className="loading loading-spinner"></span>
+                  loading
+                </>
+              ) : (
+                "Prompt for free"
+              )}
+            </button>
           </div>
-          <div>{log && <code>{log}</code>}</div>
-          {getValues("imageUrl") && <img src={getValues("imageUrl")} />}
-          {getValues("audioUrl") && (
-            <audio
-              controls
-              src={getValues("audioUrl")}
-              className="w-full h-full object-contain"
-            ></audio>
-          )}
         </form>
       </div>
 
