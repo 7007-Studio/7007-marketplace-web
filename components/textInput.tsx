@@ -8,6 +8,7 @@ import {
 } from "react-hook-form";
 
 interface TextInputProps<T extends FieldValues> {
+  type?: string;
   label?: string;
   placeholder?: string;
   postfix?: string;
@@ -15,9 +16,12 @@ interface TextInputProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   errors?: FieldErrors<T>;
   name: Path<T>;
+  min?: number;
+  max?: number;
 }
 
 export default function TextInput<T extends FieldValues>({
+  type = "text",
   label,
   placeholder,
   postfix,
@@ -25,6 +29,8 @@ export default function TextInput<T extends FieldValues>({
   register,
   name,
   errors,
+  min,
+  max,
 }: TextInputProps<T>) {
   const registerOptions: RegisterOptions = {};
   if (required) {
@@ -42,6 +48,8 @@ export default function TextInput<T extends FieldValues>({
           type="text"
           className="input pl-3 pr-8 py-2 border rounded w-full"
           placeholder={placeholder}
+          min={min}
+          max={max}
           {...register(name, registerOptions)}
         />
         {postfix && (

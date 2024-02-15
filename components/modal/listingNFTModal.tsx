@@ -4,12 +4,13 @@ import Image from "next/image";
 import { Address, useAccount, useWaitForTransaction } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
-import { NFT_MARKETPLACE_ADDRESS } from "@/constants";
-import { useAigcApprove, useNftMarketplaceList } from "@/generated";
+import { DIRECT_LISTINGS_ADDRESS, WRAPPED_ETH_ADDRESS } from "@/constants";
+import { useAigcApprove, useDirectListingsCreateListing } from "@/generated";
 import { Metadata } from "@/types";
 
 import TextInput from "../textInput";
 import React from "react";
+import { parseEther, zeroAddress } from "viem";
 
 export interface ListingNFT {
   address: Address;
@@ -37,12 +38,14 @@ const ListingNFTModal = React.forwardRef(
     const [isListed, setIsListed] = useState(false);
 
     useEffect(() => {
+      reset();
       setApprovedListing(false);
       setListInitialized(false);
       setIsListed(false);
     }, [listingNFT]);
 
-    const { register, handleSubmit } = useForm<IFormListNFTInput>();
+    const { register, handleSubmit, getValues, reset } =
+      useForm<IFormListNFTInput>();
     const onSubmit: SubmitHandler<IFormListNFTInput> = async (data) => {
       if (!isConnected) {
         openConnectModal?.();
@@ -53,10 +56,21 @@ const ListingNFTModal = React.forwardRef(
       if (!approvedListing) {
         approveListing();
       } else {
-        listNft({
-          args: listingNFT
-            ? [listingNFT.address, BigInt(listingNFT.tokenId)]
-            : undefined,
+        createListing({
+          args: [
+            {
+              assetContract: listingNFT ? listingNFT?.address : zeroAddress,
+              tokenId: listingNFT ? BigInt(listingNFT?.tokenId) : BigInt(0),
+              quantity: BigInt(1),
+              currency: WRAPPED_ETH_ADDRESS,
+              pricePerToken: parseEther(data.price),
+              startTimestamp: BigInt(Math.round(Date.now() / 1000)),
+              endTimestamp: BigInt(
+                Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60 * 1000
+              ),
+              reserved: false,
+            },
+          ],
         });
       }
     };
@@ -65,34 +79,49 @@ const ListingNFTModal = React.forwardRef(
     const { write: approveListing, data: approveTx } = useAigcApprove({
       address: listingNFT?.address,
       args: listingNFT
-        ? [NFT_MARKETPLACE_ADDRESS, BigInt(listingNFT?.tokenId)]
+        ? [DIRECT_LISTINGS_ADDRESS, BigInt(listingNFT?.tokenId)]
         : undefined,
       onError(error) {
         setListInitialized(false);
       },
     });
 
-    const { write: listNft, data: listNftTx } = useNftMarketplaceList({
-      address: NFT_MARKETPLACE_ADDRESS,
-      args: listingNFT
-        ? [listingNFT?.address, BigInt(listingNFT?.tokenId)]
-        : undefined,
-      onError(error) {
-        setListInitialized(false);
-      },
-    });
+    const { write: createListing, data: createListingTx } =
+      useDirectListingsCreateListing({
+        address: DIRECT_LISTINGS_ADDRESS,
+        onError(error) {
+          console.error(error);
+          setListInitialized(false);
+        },
+      });
 
     // wait for transactions
     useWaitForTransaction({
       hash: approveTx?.hash,
       onSuccess(data) {
         setApprovedListing(true);
-        listNft();
+        createListing({
+          args: [
+            {
+              assetContract: listingNFT ? listingNFT?.address : zeroAddress,
+              tokenId: listingNFT ? BigInt(listingNFT?.tokenId) : BigInt(0),
+              quantity: BigInt(1),
+              currency: WRAPPED_ETH_ADDRESS,
+              pricePerToken: parseEther(getValues("price")),
+              startTimestamp: BigInt(Math.round(Date.now() / 1000)),
+              endTimestamp: BigInt(
+                Math.round(Date.now() / 1000) +
+                  getValues("duration") * 24 * 60 * 60 * 1000
+              ),
+              reserved: false,
+            },
+          ],
+        });
       },
     });
 
     useWaitForTransaction({
-      hash: listNftTx?.hash,
+      hash: createListingTx?.hash,
       onSuccess(data) {
         setIsListed(true);
         setApprovedListing(false);
@@ -134,9 +163,14 @@ const ListingNFTModal = React.forwardRef(
                   postfix="Days"
                   name="duration"
                   placeholder="0"
+                  min={1}
+                  max={7}
                   required
                   register={register}
                 />
+                <span className="text-sm">
+                  You can set a maximum of 7 days.
+                </span>
                 <div className="flex flex-row gap-4">
                   <div className="flex-1">
                     <button

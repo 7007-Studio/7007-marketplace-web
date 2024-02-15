@@ -814,6 +814,1025 @@ export const aigtABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// DirectListings
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const directListingsABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: '_nativeTokenWrapper', internalType: 'address', type: 'address' },
+    ],
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'listingId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'buyer',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'approved', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'BuyerApprovedForListing',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'listingCreator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'listingId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'CancelledListing',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'listingId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'currency',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'pricePerToken',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'CurrencyApprovedForListing',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'listingCreator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'listingId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'assetContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'listing',
+        internalType: 'struct IDirectListings.Listing',
+        type: 'tuple',
+        components: [
+          { name: 'listingId', internalType: 'uint256', type: 'uint256' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IDirectListings.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IDirectListings.Status',
+            type: 'uint8',
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'NewListing',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'listingCreator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'listingId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'assetContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'tokenId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'buyer',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'quantityBought',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'totalPricePaid',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'NewSale',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'listingCreator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'listingId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'assetContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'listing',
+        internalType: 'struct IDirectListings.Listing',
+        type: 'tuple',
+        components: [
+          { name: 'listingId', internalType: 'uint256', type: 'uint256' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IDirectListings.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IDirectListings.Status',
+            type: 'uint8',
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'UpdatedListing',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: '_msgData',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: '_msgSender',
+    outputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '_listingId', internalType: 'uint256', type: 'uint256' },
+      { name: '_buyer', internalType: 'address', type: 'address' },
+      { name: '_toApprove', internalType: 'bool', type: 'bool' },
+    ],
+    name: 'approveBuyerForListing',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '_listingId', internalType: 'uint256', type: 'uint256' },
+      { name: '_currency', internalType: 'address', type: 'address' },
+      {
+        name: '_pricePerTokenInCurrency',
+        internalType: 'uint256',
+        type: 'uint256',
+      },
+    ],
+    name: 'approveCurrencyForListing',
+    outputs: [],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [
+      { name: '_listingId', internalType: 'uint256', type: 'uint256' },
+      { name: '_buyFor', internalType: 'address', type: 'address' },
+      { name: '_quantity', internalType: 'uint256', type: 'uint256' },
+      { name: '_currency', internalType: 'address', type: 'address' },
+      { name: '_expectedTotalPrice', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'buyFromListing',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: '_listingId', internalType: 'uint256', type: 'uint256' }],
+    name: 'cancelListing',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: '_params',
+        internalType: 'struct IDirectListings.ListingParameters',
+        type: 'tuple',
+        components: [
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    name: 'createListing',
+    outputs: [{ name: 'listingId', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '_listingId', internalType: 'uint256', type: 'uint256' },
+      { name: '_currency', internalType: 'address', type: 'address' },
+    ],
+    name: 'currencyPriceForListing',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '_startId', internalType: 'uint256', type: 'uint256' },
+      { name: '_endId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getAllListings',
+    outputs: [
+      {
+        name: '_allListings',
+        internalType: 'struct IDirectListings.Listing[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'listingId', internalType: 'uint256', type: 'uint256' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IDirectListings.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IDirectListings.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '_startId', internalType: 'uint256', type: 'uint256' },
+      { name: '_endId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getAllValidListings',
+    outputs: [
+      {
+        name: '_validListings',
+        internalType: 'struct IDirectListings.Listing[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'listingId', internalType: 'uint256', type: 'uint256' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IDirectListings.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IDirectListings.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '_listingId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getListing',
+    outputs: [
+      {
+        name: 'listing',
+        internalType: 'struct IDirectListings.Listing',
+        type: 'tuple',
+        components: [
+          { name: 'listingId', internalType: 'uint256', type: 'uint256' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IDirectListings.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IDirectListings.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '_listingId', internalType: 'uint256', type: 'uint256' },
+      { name: '_buyer', internalType: 'address', type: 'address' },
+    ],
+    name: 'isBuyerApprovedForListing',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '_listingId', internalType: 'uint256', type: 'uint256' },
+      { name: '_currency', internalType: 'address', type: 'address' },
+    ],
+    name: 'isCurrencyApprovedForListing',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'totalListings',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '_listingId', internalType: 'uint256', type: 'uint256' },
+      {
+        name: '_params',
+        internalType: 'struct IDirectListings.ListingParameters',
+        type: 'tuple',
+        components: [
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
+          { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
+        ],
+      },
+    ],
+    name: 'updateListing',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MarketplaceV3
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const marketplaceV3ABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: '_pluginMap', internalType: 'address', type: 'address' }],
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'prevURI',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'newURI',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+    ],
+    name: 'ContractURIUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'platformFeeRecipient',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'flatFee',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'FlatPlatformFeeUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'platformFeeRecipient',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'platformFeeBps',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'PlatformFeeInfoUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'feeType',
+        internalType: 'enum IPlatformFee.PlatformFeeType',
+        type: 'uint8',
+        indexed: false,
+      },
+    ],
+    name: 'PlatformFeeTypeUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'functionSelector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: true,
+      },
+      {
+        name: 'pluginAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'PluginAdded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'functionSelector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: true,
+      },
+      {
+        name: 'pluginAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'PluginRemoved',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'functionSelector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: true,
+      },
+      {
+        name: 'functionSignature',
+        internalType: 'string',
+        type: 'string',
+        indexed: true,
+      },
+      {
+        name: 'pluginAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'PluginSet',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'functionSelector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: true,
+      },
+      {
+        name: 'oldPluginAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newPluginAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'PluginUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32', indexed: true },
+      {
+        name: 'previousAdminRole',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      {
+        name: 'newAdminRole',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+    ],
+    name: 'RoleAdminChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32', indexed: true },
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'RoleGranted',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32', indexed: true },
+      {
+        name: 'account',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'RoleRevoked',
+  },
+  { stateMutability: 'payable', type: 'fallback' },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'DEFAULT_ADMIN_ROLE',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: '_plugin',
+        internalType: 'struct IPluginMap.Plugin',
+        type: 'tuple',
+        components: [
+          { name: 'functionSelector', internalType: 'bytes4', type: 'bytes4' },
+          { name: 'functionSignature', internalType: 'string', type: 'string' },
+          { name: 'pluginAddress', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    name: 'addPlugin',
+    outputs: [],
+  },
+  {
+    stateMutability: 'pure',
+    type: 'function',
+    inputs: [],
+    name: 'contractType',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'contractURI',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+  },
+  {
+    stateMutability: 'pure',
+    type: 'function',
+    inputs: [],
+    name: 'contractVersion',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: '_pluginAddress', internalType: 'address', type: 'address' },
+    ],
+    name: 'getAllFunctionsOfPlugin',
+    outputs: [
+      { name: 'registered', internalType: 'bytes4[]', type: 'bytes4[]' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getAllPlugins',
+    outputs: [
+      {
+        name: 'registered',
+        internalType: 'struct IPluginMap.Plugin[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'functionSelector', internalType: 'bytes4', type: 'bytes4' },
+          { name: 'functionSignature', internalType: 'string', type: 'string' },
+          { name: 'pluginAddress', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getPlatformFeeInfo',
+    outputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint16', type: 'uint16' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'getPluginForFunction',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'getRoleAdmin',
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'index', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getRoleMember',
+    outputs: [{ name: 'member', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'getRoleMemberCount',
+    outputs: [{ name: 'count', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'account', internalType: 'address', type: 'address' },
+    ],
+    name: 'grantRole',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'account', internalType: 'address', type: 'address' },
+    ],
+    name: 'hasRole',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'account', internalType: 'address', type: 'address' },
+    ],
+    name: 'hasRoleWithSwitch',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '_defaultAdmin', internalType: 'address', type: 'address' },
+      { name: '_contractURI', internalType: 'string', type: 'string' },
+      {
+        name: '_trustedForwarders',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+      {
+        name: '_platformFeeRecipient',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: '_platformFeeBps', internalType: 'uint16', type: 'uint16' },
+    ],
+    name: 'initialize',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
+    name: 'isTrustedForwarder',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'data', internalType: 'bytes[]', type: 'bytes[]' }],
+    name: 'multicall',
+    outputs: [{ name: 'results', internalType: 'bytes[]', type: 'bytes[]' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'uint256[]', type: 'uint256[]' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155BatchReceived',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC1155Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'pure',
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'onERC721Received',
+    outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'pluginMap',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'removePlugin',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'account', internalType: 'address', type: 'address' },
+    ],
+    name: 'renounceRole',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'role', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'account', internalType: 'address', type: 'address' },
+    ],
+    name: 'revokeRole',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: '_uri', internalType: 'string', type: 'string' }],
+    name: 'setContractURI',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: '_platformFeeRecipient',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: '_platformFeeBps', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setPlatformFeeInfo',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
+    name: 'supportsInterface',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: '_plugin',
+        internalType: 'struct IPluginMap.Plugin',
+        type: 'tuple',
+        components: [
+          { name: 'functionSelector', internalType: 'bytes4', type: 'bytes4' },
+          { name: 'functionSignature', internalType: 'string', type: 'string' },
+          { name: 'pluginAddress', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    name: 'updatePlugin',
+    outputs: [],
+  },
+  { stateMutability: 'payable', type: 'receive' },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NFTMarketplace
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -3003,6 +4022,1908 @@ export function useAigtTransferEvent(
     eventName: 'Transfer',
     ...config,
   } as UseContractEventConfig<typeof aigtABI, 'Transfer'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__.
+ */
+export function useDirectListingsRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"_msgData"`.
+ */
+export function useDirectListingsMsgData<
+  TFunctionName extends '_msgData',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: '_msgData',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"_msgSender"`.
+ */
+export function useDirectListingsMsgSender<
+  TFunctionName extends '_msgSender',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: '_msgSender',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"currencyPriceForListing"`.
+ */
+export function useDirectListingsCurrencyPriceForListing<
+  TFunctionName extends 'currencyPriceForListing',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: 'currencyPriceForListing',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"getAllListings"`.
+ */
+export function useDirectListingsGetAllListings<
+  TFunctionName extends 'getAllListings',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: 'getAllListings',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"getAllValidListings"`.
+ */
+export function useDirectListingsGetAllValidListings<
+  TFunctionName extends 'getAllValidListings',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: 'getAllValidListings',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"getListing"`.
+ */
+export function useDirectListingsGetListing<
+  TFunctionName extends 'getListing',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: 'getListing',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"isBuyerApprovedForListing"`.
+ */
+export function useDirectListingsIsBuyerApprovedForListing<
+  TFunctionName extends 'isBuyerApprovedForListing',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: 'isBuyerApprovedForListing',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"isCurrencyApprovedForListing"`.
+ */
+export function useDirectListingsIsCurrencyApprovedForListing<
+  TFunctionName extends 'isCurrencyApprovedForListing',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: 'isCurrencyApprovedForListing',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"totalListings"`.
+ */
+export function useDirectListingsTotalListings<
+  TFunctionName extends 'totalListings',
+  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: directListingsABI,
+    functionName: 'totalListings',
+    ...config,
+  } as UseContractReadConfig<
+    typeof directListingsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__.
+ */
+export function useDirectListingsWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof directListingsABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof directListingsABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof directListingsABI, TFunctionName, TMode>({
+    abi: directListingsABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"approveBuyerForListing"`.
+ */
+export function useDirectListingsApproveBuyerForListing<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof directListingsABI,
+          'approveBuyerForListing'
+        >['request']['abi'],
+        'approveBuyerForListing',
+        TMode
+      > & { functionName?: 'approveBuyerForListing' }
+    : UseContractWriteConfig<
+        typeof directListingsABI,
+        'approveBuyerForListing',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'approveBuyerForListing'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof directListingsABI,
+    'approveBuyerForListing',
+    TMode
+  >({
+    abi: directListingsABI,
+    functionName: 'approveBuyerForListing',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"approveCurrencyForListing"`.
+ */
+export function useDirectListingsApproveCurrencyForListing<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof directListingsABI,
+          'approveCurrencyForListing'
+        >['request']['abi'],
+        'approveCurrencyForListing',
+        TMode
+      > & { functionName?: 'approveCurrencyForListing' }
+    : UseContractWriteConfig<
+        typeof directListingsABI,
+        'approveCurrencyForListing',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'approveCurrencyForListing'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof directListingsABI,
+    'approveCurrencyForListing',
+    TMode
+  >({
+    abi: directListingsABI,
+    functionName: 'approveCurrencyForListing',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"buyFromListing"`.
+ */
+export function useDirectListingsBuyFromListing<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof directListingsABI,
+          'buyFromListing'
+        >['request']['abi'],
+        'buyFromListing',
+        TMode
+      > & { functionName?: 'buyFromListing' }
+    : UseContractWriteConfig<
+        typeof directListingsABI,
+        'buyFromListing',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'buyFromListing'
+      } = {} as any,
+) {
+  return useContractWrite<typeof directListingsABI, 'buyFromListing', TMode>({
+    abi: directListingsABI,
+    functionName: 'buyFromListing',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"cancelListing"`.
+ */
+export function useDirectListingsCancelListing<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof directListingsABI,
+          'cancelListing'
+        >['request']['abi'],
+        'cancelListing',
+        TMode
+      > & { functionName?: 'cancelListing' }
+    : UseContractWriteConfig<
+        typeof directListingsABI,
+        'cancelListing',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'cancelListing'
+      } = {} as any,
+) {
+  return useContractWrite<typeof directListingsABI, 'cancelListing', TMode>({
+    abi: directListingsABI,
+    functionName: 'cancelListing',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"createListing"`.
+ */
+export function useDirectListingsCreateListing<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof directListingsABI,
+          'createListing'
+        >['request']['abi'],
+        'createListing',
+        TMode
+      > & { functionName?: 'createListing' }
+    : UseContractWriteConfig<
+        typeof directListingsABI,
+        'createListing',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'createListing'
+      } = {} as any,
+) {
+  return useContractWrite<typeof directListingsABI, 'createListing', TMode>({
+    abi: directListingsABI,
+    functionName: 'createListing',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"updateListing"`.
+ */
+export function useDirectListingsUpdateListing<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof directListingsABI,
+          'updateListing'
+        >['request']['abi'],
+        'updateListing',
+        TMode
+      > & { functionName?: 'updateListing' }
+    : UseContractWriteConfig<
+        typeof directListingsABI,
+        'updateListing',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'updateListing'
+      } = {} as any,
+) {
+  return useContractWrite<typeof directListingsABI, 'updateListing', TMode>({
+    abi: directListingsABI,
+    functionName: 'updateListing',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__.
+ */
+export function usePrepareDirectListingsWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof directListingsABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: directListingsABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof directListingsABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"approveBuyerForListing"`.
+ */
+export function usePrepareDirectListingsApproveBuyerForListing(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof directListingsABI,
+      'approveBuyerForListing'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: directListingsABI,
+    functionName: 'approveBuyerForListing',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof directListingsABI,
+    'approveBuyerForListing'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"approveCurrencyForListing"`.
+ */
+export function usePrepareDirectListingsApproveCurrencyForListing(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof directListingsABI,
+      'approveCurrencyForListing'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: directListingsABI,
+    functionName: 'approveCurrencyForListing',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof directListingsABI,
+    'approveCurrencyForListing'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"buyFromListing"`.
+ */
+export function usePrepareDirectListingsBuyFromListing(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof directListingsABI, 'buyFromListing'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: directListingsABI,
+    functionName: 'buyFromListing',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof directListingsABI,
+    'buyFromListing'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"cancelListing"`.
+ */
+export function usePrepareDirectListingsCancelListing(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof directListingsABI, 'cancelListing'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: directListingsABI,
+    functionName: 'cancelListing',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof directListingsABI, 'cancelListing'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"createListing"`.
+ */
+export function usePrepareDirectListingsCreateListing(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof directListingsABI, 'createListing'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: directListingsABI,
+    functionName: 'createListing',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof directListingsABI, 'createListing'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"updateListing"`.
+ */
+export function usePrepareDirectListingsUpdateListing(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof directListingsABI, 'updateListing'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: directListingsABI,
+    functionName: 'updateListing',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof directListingsABI, 'updateListing'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__.
+ */
+export function useDirectListingsEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof directListingsABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: directListingsABI,
+    ...config,
+  } as UseContractEventConfig<typeof directListingsABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"BuyerApprovedForListing"`.
+ */
+export function useDirectListingsBuyerApprovedForListingEvent(
+  config: Omit<
+    UseContractEventConfig<typeof directListingsABI, 'BuyerApprovedForListing'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: directListingsABI,
+    eventName: 'BuyerApprovedForListing',
+    ...config,
+  } as UseContractEventConfig<
+    typeof directListingsABI,
+    'BuyerApprovedForListing'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"CancelledListing"`.
+ */
+export function useDirectListingsCancelledListingEvent(
+  config: Omit<
+    UseContractEventConfig<typeof directListingsABI, 'CancelledListing'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: directListingsABI,
+    eventName: 'CancelledListing',
+    ...config,
+  } as UseContractEventConfig<typeof directListingsABI, 'CancelledListing'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"CurrencyApprovedForListing"`.
+ */
+export function useDirectListingsCurrencyApprovedForListingEvent(
+  config: Omit<
+    UseContractEventConfig<
+      typeof directListingsABI,
+      'CurrencyApprovedForListing'
+    >,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: directListingsABI,
+    eventName: 'CurrencyApprovedForListing',
+    ...config,
+  } as UseContractEventConfig<
+    typeof directListingsABI,
+    'CurrencyApprovedForListing'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"NewListing"`.
+ */
+export function useDirectListingsNewListingEvent(
+  config: Omit<
+    UseContractEventConfig<typeof directListingsABI, 'NewListing'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: directListingsABI,
+    eventName: 'NewListing',
+    ...config,
+  } as UseContractEventConfig<typeof directListingsABI, 'NewListing'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"NewSale"`.
+ */
+export function useDirectListingsNewSaleEvent(
+  config: Omit<
+    UseContractEventConfig<typeof directListingsABI, 'NewSale'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: directListingsABI,
+    eventName: 'NewSale',
+    ...config,
+  } as UseContractEventConfig<typeof directListingsABI, 'NewSale'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"UpdatedListing"`.
+ */
+export function useDirectListingsUpdatedListingEvent(
+  config: Omit<
+    UseContractEventConfig<typeof directListingsABI, 'UpdatedListing'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: directListingsABI,
+    eventName: 'UpdatedListing',
+    ...config,
+  } as UseContractEventConfig<typeof directListingsABI, 'UpdatedListing'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__.
+ */
+export function useMarketplaceV3Read<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"DEFAULT_ADMIN_ROLE"`.
+ */
+export function useMarketplaceV3DefaultAdminRole<
+  TFunctionName extends 'DEFAULT_ADMIN_ROLE',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'DEFAULT_ADMIN_ROLE',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"contractType"`.
+ */
+export function useMarketplaceV3ContractType<
+  TFunctionName extends 'contractType',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'contractType',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"contractURI"`.
+ */
+export function useMarketplaceV3ContractUri<
+  TFunctionName extends 'contractURI',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'contractURI',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"contractVersion"`.
+ */
+export function useMarketplaceV3ContractVersion<
+  TFunctionName extends 'contractVersion',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'contractVersion',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getAllFunctionsOfPlugin"`.
+ */
+export function useMarketplaceV3GetAllFunctionsOfPlugin<
+  TFunctionName extends 'getAllFunctionsOfPlugin',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'getAllFunctionsOfPlugin',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getAllPlugins"`.
+ */
+export function useMarketplaceV3GetAllPlugins<
+  TFunctionName extends 'getAllPlugins',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'getAllPlugins',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getPlatformFeeInfo"`.
+ */
+export function useMarketplaceV3GetPlatformFeeInfo<
+  TFunctionName extends 'getPlatformFeeInfo',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'getPlatformFeeInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getPluginForFunction"`.
+ */
+export function useMarketplaceV3GetPluginForFunction<
+  TFunctionName extends 'getPluginForFunction',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'getPluginForFunction',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getRoleAdmin"`.
+ */
+export function useMarketplaceV3GetRoleAdmin<
+  TFunctionName extends 'getRoleAdmin',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'getRoleAdmin',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getRoleMember"`.
+ */
+export function useMarketplaceV3GetRoleMember<
+  TFunctionName extends 'getRoleMember',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'getRoleMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getRoleMemberCount"`.
+ */
+export function useMarketplaceV3GetRoleMemberCount<
+  TFunctionName extends 'getRoleMemberCount',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'getRoleMemberCount',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"hasRole"`.
+ */
+export function useMarketplaceV3HasRole<
+  TFunctionName extends 'hasRole',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'hasRole',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"hasRoleWithSwitch"`.
+ */
+export function useMarketplaceV3HasRoleWithSwitch<
+  TFunctionName extends 'hasRoleWithSwitch',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'hasRoleWithSwitch',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"isTrustedForwarder"`.
+ */
+export function useMarketplaceV3IsTrustedForwarder<
+  TFunctionName extends 'isTrustedForwarder',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'isTrustedForwarder',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC721Received"`.
+ */
+export function useMarketplaceV3OnErc721Received<
+  TFunctionName extends 'onERC721Received',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'onERC721Received',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"pluginMap"`.
+ */
+export function useMarketplaceV3PluginMap<
+  TFunctionName extends 'pluginMap',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'pluginMap',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"supportsInterface"`.
+ */
+export function useMarketplaceV3SupportsInterface<
+  TFunctionName extends 'supportsInterface',
+  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: marketplaceV3ABI,
+    functionName: 'supportsInterface',
+    ...config,
+  } as UseContractReadConfig<
+    typeof marketplaceV3ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__.
+ */
+export function useMarketplaceV3Write<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof marketplaceV3ABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, TFunctionName, TMode>({
+    abi: marketplaceV3ABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"addPlugin"`.
+ */
+export function useMarketplaceV3AddPlugin<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'addPlugin'
+        >['request']['abi'],
+        'addPlugin',
+        TMode
+      > & { functionName?: 'addPlugin' }
+    : UseContractWriteConfig<typeof marketplaceV3ABI, 'addPlugin', TMode> & {
+        abi?: never
+        functionName?: 'addPlugin'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'addPlugin', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'addPlugin',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"grantRole"`.
+ */
+export function useMarketplaceV3GrantRole<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'grantRole'
+        >['request']['abi'],
+        'grantRole',
+        TMode
+      > & { functionName?: 'grantRole' }
+    : UseContractWriteConfig<typeof marketplaceV3ABI, 'grantRole', TMode> & {
+        abi?: never
+        functionName?: 'grantRole'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'grantRole', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'grantRole',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"initialize"`.
+ */
+export function useMarketplaceV3Initialize<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'initialize'
+        >['request']['abi'],
+        'initialize',
+        TMode
+      > & { functionName?: 'initialize' }
+    : UseContractWriteConfig<typeof marketplaceV3ABI, 'initialize', TMode> & {
+        abi?: never
+        functionName?: 'initialize'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'initialize', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'initialize',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"multicall"`.
+ */
+export function useMarketplaceV3Multicall<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'multicall'
+        >['request']['abi'],
+        'multicall',
+        TMode
+      > & { functionName?: 'multicall' }
+    : UseContractWriteConfig<typeof marketplaceV3ABI, 'multicall', TMode> & {
+        abi?: never
+        functionName?: 'multicall'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'multicall', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'multicall',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function useMarketplaceV3OnErc1155BatchReceived<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'onERC1155BatchReceived'
+        >['request']['abi'],
+        'onERC1155BatchReceived',
+        TMode
+      > & { functionName?: 'onERC1155BatchReceived' }
+    : UseContractWriteConfig<
+        typeof marketplaceV3ABI,
+        'onERC1155BatchReceived',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155BatchReceived'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof marketplaceV3ABI,
+    'onERC1155BatchReceived',
+    TMode
+  >({
+    abi: marketplaceV3ABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function useMarketplaceV3OnErc1155Received<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'onERC1155Received'
+        >['request']['abi'],
+        'onERC1155Received',
+        TMode
+      > & { functionName?: 'onERC1155Received' }
+    : UseContractWriteConfig<
+        typeof marketplaceV3ABI,
+        'onERC1155Received',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'onERC1155Received'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'onERC1155Received', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"removePlugin"`.
+ */
+export function useMarketplaceV3RemovePlugin<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'removePlugin'
+        >['request']['abi'],
+        'removePlugin',
+        TMode
+      > & { functionName?: 'removePlugin' }
+    : UseContractWriteConfig<typeof marketplaceV3ABI, 'removePlugin', TMode> & {
+        abi?: never
+        functionName?: 'removePlugin'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'removePlugin', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'removePlugin',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"renounceRole"`.
+ */
+export function useMarketplaceV3RenounceRole<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'renounceRole'
+        >['request']['abi'],
+        'renounceRole',
+        TMode
+      > & { functionName?: 'renounceRole' }
+    : UseContractWriteConfig<typeof marketplaceV3ABI, 'renounceRole', TMode> & {
+        abi?: never
+        functionName?: 'renounceRole'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'renounceRole', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'renounceRole',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"revokeRole"`.
+ */
+export function useMarketplaceV3RevokeRole<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'revokeRole'
+        >['request']['abi'],
+        'revokeRole',
+        TMode
+      > & { functionName?: 'revokeRole' }
+    : UseContractWriteConfig<typeof marketplaceV3ABI, 'revokeRole', TMode> & {
+        abi?: never
+        functionName?: 'revokeRole'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'revokeRole', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'revokeRole',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"setContractURI"`.
+ */
+export function useMarketplaceV3SetContractUri<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'setContractURI'
+        >['request']['abi'],
+        'setContractURI',
+        TMode
+      > & { functionName?: 'setContractURI' }
+    : UseContractWriteConfig<
+        typeof marketplaceV3ABI,
+        'setContractURI',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setContractURI'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'setContractURI', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'setContractURI',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"setPlatformFeeInfo"`.
+ */
+export function useMarketplaceV3SetPlatformFeeInfo<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'setPlatformFeeInfo'
+        >['request']['abi'],
+        'setPlatformFeeInfo',
+        TMode
+      > & { functionName?: 'setPlatformFeeInfo' }
+    : UseContractWriteConfig<
+        typeof marketplaceV3ABI,
+        'setPlatformFeeInfo',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setPlatformFeeInfo'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'setPlatformFeeInfo', TMode>(
+    {
+      abi: marketplaceV3ABI,
+      functionName: 'setPlatformFeeInfo',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"updatePlugin"`.
+ */
+export function useMarketplaceV3UpdatePlugin<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof marketplaceV3ABI,
+          'updatePlugin'
+        >['request']['abi'],
+        'updatePlugin',
+        TMode
+      > & { functionName?: 'updatePlugin' }
+    : UseContractWriteConfig<typeof marketplaceV3ABI, 'updatePlugin', TMode> & {
+        abi?: never
+        functionName?: 'updatePlugin'
+      } = {} as any,
+) {
+  return useContractWrite<typeof marketplaceV3ABI, 'updatePlugin', TMode>({
+    abi: marketplaceV3ABI,
+    functionName: 'updatePlugin',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__.
+ */
+export function usePrepareMarketplaceV3Write<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"addPlugin"`.
+ */
+export function usePrepareMarketplaceV3AddPlugin(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'addPlugin'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'addPlugin',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'addPlugin'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"grantRole"`.
+ */
+export function usePrepareMarketplaceV3GrantRole(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'grantRole'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'grantRole',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'grantRole'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"initialize"`.
+ */
+export function usePrepareMarketplaceV3Initialize(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'initialize'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'initialize',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'initialize'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"multicall"`.
+ */
+export function usePrepareMarketplaceV3Multicall(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'multicall'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'multicall',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'multicall'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ */
+export function usePrepareMarketplaceV3OnErc1155BatchReceived(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof marketplaceV3ABI,
+      'onERC1155BatchReceived'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'onERC1155BatchReceived',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof marketplaceV3ABI,
+    'onERC1155BatchReceived'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC1155Received"`.
+ */
+export function usePrepareMarketplaceV3OnErc1155Received(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'onERC1155Received'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'onERC1155Received',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof marketplaceV3ABI,
+    'onERC1155Received'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"removePlugin"`.
+ */
+export function usePrepareMarketplaceV3RemovePlugin(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'removePlugin'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'removePlugin',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'removePlugin'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"renounceRole"`.
+ */
+export function usePrepareMarketplaceV3RenounceRole(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'renounceRole'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'renounceRole',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'renounceRole'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"revokeRole"`.
+ */
+export function usePrepareMarketplaceV3RevokeRole(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'revokeRole'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'revokeRole',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'revokeRole'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"setContractURI"`.
+ */
+export function usePrepareMarketplaceV3SetContractUri(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'setContractURI'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'setContractURI',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'setContractURI'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"setPlatformFeeInfo"`.
+ */
+export function usePrepareMarketplaceV3SetPlatformFeeInfo(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof marketplaceV3ABI,
+      'setPlatformFeeInfo'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'setPlatformFeeInfo',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof marketplaceV3ABI,
+    'setPlatformFeeInfo'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"updatePlugin"`.
+ */
+export function usePrepareMarketplaceV3UpdatePlugin(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'updatePlugin'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: marketplaceV3ABI,
+    functionName: 'updatePlugin',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'updatePlugin'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__.
+ */
+export function useMarketplaceV3Event<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"ContractURIUpdated"`.
+ */
+export function useMarketplaceV3ContractUriUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'ContractURIUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'ContractURIUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, 'ContractURIUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"FlatPlatformFeeUpdated"`.
+ */
+export function useMarketplaceV3FlatPlatformFeeUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'FlatPlatformFeeUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'FlatPlatformFeeUpdated',
+    ...config,
+  } as UseContractEventConfig<
+    typeof marketplaceV3ABI,
+    'FlatPlatformFeeUpdated'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PlatformFeeInfoUpdated"`.
+ */
+export function useMarketplaceV3PlatformFeeInfoUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'PlatformFeeInfoUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'PlatformFeeInfoUpdated',
+    ...config,
+  } as UseContractEventConfig<
+    typeof marketplaceV3ABI,
+    'PlatformFeeInfoUpdated'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PlatformFeeTypeUpdated"`.
+ */
+export function useMarketplaceV3PlatformFeeTypeUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'PlatformFeeTypeUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'PlatformFeeTypeUpdated',
+    ...config,
+  } as UseContractEventConfig<
+    typeof marketplaceV3ABI,
+    'PlatformFeeTypeUpdated'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PluginAdded"`.
+ */
+export function useMarketplaceV3PluginAddedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'PluginAdded'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'PluginAdded',
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, 'PluginAdded'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PluginRemoved"`.
+ */
+export function useMarketplaceV3PluginRemovedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'PluginRemoved'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'PluginRemoved',
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, 'PluginRemoved'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PluginSet"`.
+ */
+export function useMarketplaceV3PluginSetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'PluginSet'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'PluginSet',
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, 'PluginSet'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PluginUpdated"`.
+ */
+export function useMarketplaceV3PluginUpdatedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'PluginUpdated'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'PluginUpdated',
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, 'PluginUpdated'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"RoleAdminChanged"`.
+ */
+export function useMarketplaceV3RoleAdminChangedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'RoleAdminChanged'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'RoleAdminChanged',
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, 'RoleAdminChanged'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"RoleGranted"`.
+ */
+export function useMarketplaceV3RoleGrantedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'RoleGranted'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'RoleGranted',
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, 'RoleGranted'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"RoleRevoked"`.
+ */
+export function useMarketplaceV3RoleRevokedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof marketplaceV3ABI, 'RoleRevoked'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: marketplaceV3ABI,
+    eventName: 'RoleRevoked',
+    ...config,
+  } as UseContractEventConfig<typeof marketplaceV3ABI, 'RoleRevoked'>)
 }
 
 /**
