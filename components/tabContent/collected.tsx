@@ -8,9 +8,15 @@ import ConnectToSPModal from "../modal/connectToSPModal";
 const Collected = ({
   modelIndex,
   tokenIds,
+  listingNFTModalRef,
+  setListingNFT,
+  connectToSPModalRef,
 }: {
   modelIndex: number;
   tokenIds: number[];
+  listingNFTModalRef: React.RefObject<HTMLDialogElement>;
+  setListingNFT: (nft: ListingNFT) => void;
+  connectToSPModalRef: React.RefObject<HTMLDialogElement>;
 }) => {
   const [aigcNftTypeFilter, setAigcNftTypeFilter] = useState([
     { id: "music", label: "Music", checked: false },
@@ -18,10 +24,6 @@ const Collected = ({
     { id: "music-image", label: "Music and Image", checked: false },
     { id: "text", label: "Text", checked: false },
   ]);
-
-  const listingNFTModalRef = useRef<HTMLDialogElement>(null);
-  const connectToSPModalRef = useRef<HTMLDialogElement>(null);
-  const [listingNFT, setListingNFT] = useState<ListingNFT>();
 
   return (
     <>
@@ -56,12 +58,6 @@ const Collected = ({
           />
         </div>
       </div>
-      <ListingNFTModal
-        ref={listingNFTModalRef}
-        listingNFT={listingNFT}
-        // listingSuccess={() => {TODO: refresh the card state}}
-      />
-      <ConnectToSPModal ref={connectToSPModalRef} onConnect={() => {}} />
     </>
   );
 };

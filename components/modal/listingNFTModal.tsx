@@ -15,7 +15,7 @@ import { parseEther, zeroAddress } from "viem";
 export interface ListingNFT {
   address: Address;
   tokenId: string | number;
-  metadata: Metadata;
+  metadata: Partial<Metadata>;
 }
 
 interface IFormListNFTInput {

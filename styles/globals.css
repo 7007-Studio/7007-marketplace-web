@@ -32,6 +32,10 @@
   .badge {
     @apply rounded-md;
   }
+
+  .my-tooltip:before {
+    white-space: pre;
+  }
 }
 
 @layer utilities {
