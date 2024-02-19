@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import { useAigcFactoryDeployedAigCs, useAigcTokenUri } from "@/generated";
+import { useReadAigcFactoryDeployedAigCs, useReadAigcTokenUri } from "@/generated";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { useEffect, useState } from "react";
 import useAudio from "@/hooks/useAudio";
@@ -17,12 +17,12 @@ export default function Detail() {
   const [audioUrl, setAudioUrl] = useState();
   const [isPlaying, setIsPlaying] = useAudio();
 
-  const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
+  const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: index ? [BigInt(index as string)] : undefined,
   });
 
-  const { data: tokenUri } = useAigcTokenUri({
+  const { data: tokenUri } = useReadAigcTokenUri({
     address: aigcAddress,
     args: tokenId ? [BigInt(tokenId as string)] : undefined,
   });

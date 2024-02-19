@@ -1,24 +1,24 @@
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import {
-  useAigcFactoryDeployedAigCs,
-  useAigcFactoryDeployedAigTs,
-  useAigtName,
+  useReadAigcFactoryDeployedAigCs,
+  useReadAigcFactoryDeployedAigTs,
+  useReadAigtName,
 } from "@/generated";
 import Link from "next/link";
 export interface ModelDetailProps {
   modelIndex: number;
 }
 const ModelDetail: React.FC<ModelDetailProps> = ({ modelIndex }) => {
-  const { data: aigtAddress } = useAigcFactoryDeployedAigTs({
+  const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: [BigInt(modelIndex)],
   });
-  const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
+  const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: [BigInt(modelIndex)],
   });
 
-  const { data: modelName } = useAigtName({
+  const { data: modelName } = useReadAigtName({
     address: aigtAddress,
   });
 

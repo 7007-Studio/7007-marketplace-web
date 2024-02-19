@@ -4,8 +4,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { STAKE7007_CONTRACT_ADDRESS } from "@/constants";
 import {
-  useStake7007GetInferencePoint,
-  useStake7007ConsumedInferencePoint,
+  useReadStake7007GetInferencePoint,
+  useReadStake7007ConsumedInferencePoint,
 } from "@/generated";
 import { Address, formatUnits } from "viem";
 import { useAccount } from "wagmi";
@@ -16,14 +16,14 @@ export default function Navbar() {
 
   const { address } = useAccount();
   const { data: inferencePoint, refetch: refetchInferencePoint } =
-    useStake7007GetInferencePoint({
+    useReadStake7007GetInferencePoint({
       address: STAKE7007_CONTRACT_ADDRESS as Address,
       args: address ? [address] : undefined,
     });
   const {
     data: consumedInferencePoint,
     refetch: refetchConsumedInferencePoint,
-  } = useStake7007ConsumedInferencePoint({
+  } = useReadStake7007ConsumedInferencePoint({
     address: STAKE7007_CONTRACT_ADDRESS as Address,
     args: address ? [address] : undefined,
   });

@@ -1,16 +1,17 @@
 import { useRef, useState } from "react";
 import { ethers } from "ethers";
-import { Address, useWaitForTransaction } from "wagmi";
+import { Address } from "viem";
+import { useWaitForTransactionReceipt } from "wagmi";
 import { create } from "ipfs-http-client";
 
 import {
-  useAigcCostToken,
-  useAigcMint,
-  useAigcModelName,
-  useAigcTokenId,
-  useAigcTransferEvent,
-  useAigtApprovalEvent,
-  useAigtApprove,
+  useReadAigcCostToken,
+  useReadAigcModelName,
+  useReadAigcTokenId,
+  useWatchAigcTransferEvent,
+  useWatchAigtApprovalEvent,
+  useWriteAigcMint,
+  useWriteAigtApprove,
 } from "@/generated";
 import generateAigcContent from "@/helpers/generateAigcContent";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
@@ -108,44 +109,32 @@ const MintStep = ({
   const [mintInitialized, setMintInitialized] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
 
-  const { data: modelName } = useAigcModelName({
+  const { data: modelName } = useReadAigcModelName({
     address: aigcAddress,
   });
-  const { data: tokenId } = useAigcTokenId({
+  const { data: tokenId } = useReadAigcTokenId({
     address: aigcAddress,
   });
-  const { data: mintCostToken } = useAigcCostToken({
+  const { data: mintCostToken } = useReadAigcCostToken({
     address: aigcAddress,
   });
 
   // write contracts
-  const { write: approveSpendingAIGT, data: approveTx } = useAigtApprove({
-    address: aigtAddress,
-    onError(error) {
-      setApproveInitialized(false);
-    },
-    onSuccess(data) {},
-  });
-  const { write: mintAIGC, data: mintTx } = useAigcMint({
-    address: aigcAddress,
-    onError(error) {
-      setMintInitialized(false);
-    },
-    onSuccess(data) {},
-  });
+  const { writeContract: approveSpendingAIGT, data: approveTx } = useWriteAigtApprove();
+  const { writeContract: mintAIGC, data: mintTx } = useWriteAigcMint();
 
   // contract events
-  useAigtApprovalEvent({
+  useWatchAigtApprovalEvent({
     address: aigtAddress,
-    listener: (log) => {
+    onLogs: (log) => {
       // console.log(log);
       onMint();
     },
   });
 
-  useAigcTransferEvent({
+  useWatchAigcTransferEvent({
     address: aigcAddress,
-    listener: async (log) => {
+    onLogs: async (log) => {
       // console.log(log);
       // router.push(`/model/${modelIndex}/aigc/${tokenId}`);
       onMintSuccess(String(tokenId));
@@ -153,19 +142,20 @@ const MintStep = ({
   });
 
   // wait for tx confirmation
-  useWaitForTransaction({
-    hash: approveTx?.hash,
-    onSuccess(data) {
-      setApprovedSpending(true);
-      setApproveInitialized(false);
-    },
+  const approveResult = useWaitForTransactionReceipt({
+    hash: approveTx,
   });
-  useWaitForTransaction({
-    hash: mintTx?.hash,
-    onSuccess(data) {
-      setMintInitialized(false);
-    },
+  if (approveResult.isSuccess) {
+    setApprovedSpending(true);
+    setApproveInitialized(false);
+  }
+
+  const mintResult = useWaitForTransactionReceipt({
+    hash: mintTx,
   });
+  if (mintResult.isSuccess) {
+    setMintInitialized(false);
+  }
 
   const onApprove = () => {
     if (mintCostToken === undefined) {
@@ -173,7 +163,15 @@ const MintStep = ({
     }
 
     setApproveInitialized(true);
-    approveSpendingAIGT({ args: [aigcAddress, mintCostToken] });
+    approveSpendingAIGT({
+      address: aigtAddress,
+      args: [aigcAddress, mintCostToken]
+    }, {
+      onError(error) {
+        setApproveInitialized(false);
+      },
+      onSuccess(data) {},
+    });
   };
 
   const onMint = async () => {
@@ -193,12 +191,19 @@ const MintStep = ({
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
 
     mintAIGC({
+      address: aigcAddress,
       args: [
         ipfsLinkMetadata,
         hashedPrompt,
         "0x7465787400000000000000000000000000000000000000000000000000000000",
         metadata?.image || "",
       ],
+    },
+    {
+      onError(error) {
+        setMintInitialized(false);
+      },
+      onSuccess(data) {},
     });
   };
 

@@ -1,8 +1,7 @@
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import {
-  useAigcFactoryDeployedAigTs,
-  useAigtMaxSupply,
-  useAigtName,
+  useReadAigcFactoryDeployedAigTs,
+  useReadAigtName,
 } from "@/generated";
 import { concatAddress } from "@/helpers";
 import { useRouter } from "next/router";
@@ -15,15 +14,12 @@ export interface ModelCardProps {
 const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
   const router = useRouter();
 
-  const { data: aigtAddress } = useAigcFactoryDeployedAigTs({
+  const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
-    args: [BigInt(modelIndex)],
+    args: modelIndex ? [BigInt(modelIndex)]: undefined,
   });
 
-  const { data: modelName } = useAigtName({
-    address: aigtAddress,
-  });
-  const { data: maxSupply } = useAigtMaxSupply({
+  const { data: modelName } = useReadAigtName({
     address: aigtAddress,
   });
 

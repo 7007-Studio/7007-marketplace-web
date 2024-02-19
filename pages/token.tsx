@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
 import {
-  useStake7007ConsumedInferencePoint,
-  useStake7007GetInferencePoint,
-  useStake7007Stake,
-  useStake7007StakeStartTime,
-  useStake7007StakedAmount,
-  useToken7007ApprovalEvent,
-  useToken7007Approve,
-  useToken7007BalanceOf,
-  useToken7007Decimals,
-  useToken7007Mint,
-  useToken7007TransferEvent,
+  useReadStake7007ConsumedInferencePoint,
+  useReadStake7007GetInferencePoint,
+  useWriteStake7007Stake,
+  useReadStake7007StakeStartTime,
+  useReadStake7007StakedAmount,
+  useWatchToken7007ApprovalEvent,
+  useWriteToken7007Approve,
+  useReadToken7007BalanceOf,
+  useReadToken7007Decimals,
+  useWriteToken7007Mint,
+  useWatchToken7007TransferEvent,
 } from "@/generated";
-import { Address, useAccount, useWaitForTransaction } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import {
   STAKE7007_CONTRACT_ADDRESS,
   TOKEN7007_CONTRACT_ADDRESS,
 } from "@/constants";
-import { formatUnits, parseUnits } from "viem";
+import { Address, formatUnits, parseUnits } from "viem";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
@@ -34,95 +34,80 @@ export default function Token() {
   const [stakeInitialized, setStakeInitialized] = useState(false);
 
   // read contracts
-  const { data: balance, refetch: refetchBalance } = useToken7007BalanceOf({
+  const { data: balance, refetch: refetchBalance } = useReadToken7007BalanceOf({
     address: TOKEN7007_CONTRACT_ADDRESS as Address,
     args: address ? [address] : undefined,
   });
-  const { data: decimals } = useToken7007Decimals({
+  const { data: decimals } = useReadToken7007Decimals({
     address: TOKEN7007_CONTRACT_ADDRESS as Address,
   });
   const { data: stakedAmount, refetch: refetchStakedAmount } =
-    useStake7007StakedAmount({
+    useReadStake7007StakedAmount({
       address: STAKE7007_CONTRACT_ADDRESS as Address,
       args: address ? [address] : undefined,
     });
   const { data: stakeStartTime, refetch: refetchStakeStartTime } =
-    useStake7007StakeStartTime({
+    useReadStake7007StakeStartTime({
       address: STAKE7007_CONTRACT_ADDRESS as Address,
       args: address ? [address] : undefined,
     });
   const { data: inferencePoint, refetch: refetchInferencePoint } =
-    useStake7007GetInferencePoint({
+    useReadStake7007GetInferencePoint({
       address: STAKE7007_CONTRACT_ADDRESS as Address,
       args: address ? [address] : undefined,
     });
   const {
     data: consumedInferencePoint,
     refetch: refetchConsumedInferencePoint,
-  } = useStake7007ConsumedInferencePoint({
+  } = useReadStake7007ConsumedInferencePoint({
     address: STAKE7007_CONTRACT_ADDRESS as Address,
     args: address ? [address] : undefined,
   });
 
   // write contracts
-  const { write: mint, data: mintTx } = useToken7007Mint({
-    address: TOKEN7007_CONTRACT_ADDRESS as Address,
-    onError(error) {
-      setMintInitialized(false);
-    },
-  });
-  const { write: approve, data: approveTx } = useToken7007Approve({
-    address: TOKEN7007_CONTRACT_ADDRESS as Address,
-    onError(error) {
-      setApproveInitialized(false);
-    },
-  });
-  const { write: stake, data: stakeTx } = useStake7007Stake({
-    address: STAKE7007_CONTRACT_ADDRESS as Address,
-    onError(error) {
-      setStakeInitialized(false);
-    },
-  });
+  const { writeContract: mint, data: mintTx } = useWriteToken7007Mint();
+  const { writeContract: approve, data: approveTx } = useWriteToken7007Approve();
+  const { writeContract: stake, data: stakeTx } = useWriteStake7007Stake();
 
   // contract events
-  useToken7007TransferEvent({
-    address: TOKEN7007_CONTRACT_ADDRESS as Address,
-    listener(log) {
+  useWatchToken7007TransferEvent({
+    address: TOKEN7007_CONTRACT_ADDRESS,
+    onLogs(log) {
       // console.log(log);
       refetchBalance();
     },
   });
-  useToken7007ApprovalEvent({
-    address: TOKEN7007_CONTRACT_ADDRESS as Address,
-    listener(log) {
+  useWatchToken7007ApprovalEvent({
+    address: TOKEN7007_CONTRACT_ADDRESS,
+    onLogs(log) {
       // console.log(log);
       setStakingApproved(true);
     },
   });
 
   // wait for tx confirmation
-  useWaitForTransaction({
-    hash: mintTx?.hash,
-    onSuccess(data) {
-      setMintInitialized(false);
-      setMintAmount("");
-    },
+  const mintResult = useWaitForTransactionReceipt({
+    hash: mintTx
   });
-  useWaitForTransaction({
-    hash: approveTx?.hash,
-    onSuccess(data) {
-      setApproveInitialized(false);
-    },
+  if (mintResult.isSuccess) {
+    setMintInitialized(false);
+    setMintAmount("");
+  }
+  const approveResult = useWaitForTransactionReceipt({
+    hash: approveTx,
   });
-  useWaitForTransaction({
-    hash: stakeTx?.hash,
-    onSuccess(data) {
-      setStakeInitialized(false);
-      refetchStakedAmount();
-      refetchStakeStartTime();
-      setStakeAmount("");
-    },
+  if (approveResult.isSuccess) {
+    setApproveInitialized(false);
+  }
+  const stakeResult = useWaitForTransactionReceipt({
+    hash: stakeTx,
   });
+  if (stakeResult.isSuccess) {
+    setStakeInitialized(false);
+    refetchStakedAmount();
+    refetchStakeStartTime();
+    setStakeAmount("");
+  }
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -180,7 +165,12 @@ export default function Token() {
                 setMintInitialized(true);
 
                 mint({
+                  address: TOKEN7007_CONTRACT_ADDRESS,
                   args: [address, parseUnits(mintAmount, decimals)],
+                }, {
+                  onError(error) {
+                    setMintInitialized(false);
+                  },
                 });
               }}
             >
@@ -251,10 +241,15 @@ export default function Token() {
                   setApproveInitialized(true);
 
                   approve({
+                    address: TOKEN7007_CONTRACT_ADDRESS,
                     args: [
                       STAKE7007_CONTRACT_ADDRESS,
                       parseUnits(stakeAmount, decimals),
                     ],
+                  }, {
+                    onError(error) {
+                      setApproveInitialized(false);
+                    },
                   });
                 }}
               >
@@ -282,7 +277,11 @@ export default function Token() {
                   if (!decimals) return;
                   setStakeInitialized(true);
 
-                  stake({ args: [parseUnits(stakeAmount, decimals)] });
+                  stake({ address: STAKE7007_CONTRACT_ADDRESS, args: [parseUnits(stakeAmount, decimals)] }, {
+                    onError(error) {
+                      setStakeInitialized(false);
+                    },
+                  });
                 }}
               >
                 {stakeInitialized ? (

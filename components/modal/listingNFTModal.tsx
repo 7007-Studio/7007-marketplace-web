@@ -1,16 +1,19 @@
 import { RefObject, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
-import { Address, useAccount, useWaitForTransaction } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
-import { DIRECT_LISTINGS_ADDRESS, WRAPPED_ETH_ADDRESS } from "@/constants";
-import { useAigcApprove, useDirectListingsCreateListing } from "@/generated";
+import {
+  MARKETPLACE_V3_ADDRESS,
+  NATIVE_TOKEN_ADDRESS,
+} from "@/constants";
+import { useReadAigcGetApproved, useWriteAigcApprove, useWriteMarketplaceV3CreateListing } from "@/generated";
 import { Metadata } from "@/types";
 
 import TextInput from "../textInput";
 import React from "react";
-import { parseEther, zeroAddress } from "viem";
+import { Address, parseEther } from "viem";
 
 export interface ListingNFT {
   address: Address;
@@ -53,83 +56,93 @@ const ListingNFTModal = React.forwardRef(
       }
 
       setListInitialized(true);
+
+      if (!listingNFT) {
+        return;
+      }
+
       if (!approvedListing) {
-        approveListing();
-      } else {
-        createListing({
-          args: [
-            {
-              assetContract: listingNFT ? listingNFT?.address : zeroAddress,
-              tokenId: listingNFT ? BigInt(listingNFT?.tokenId) : BigInt(0),
-              quantity: BigInt(1),
-              currency: WRAPPED_ETH_ADDRESS,
-              pricePerToken: parseEther(data.price),
-              startTimestamp: BigInt(Math.round(Date.now() / 1000)),
-              endTimestamp: BigInt(
-                Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60 * 1000
-              ),
-              reserved: false,
-            },
-          ],
+        approveListing({
+          address: listingNFT?.address,
+          args: [MARKETPLACE_V3_ADDRESS, BigInt(listingNFT?.tokenId)]
+        }, {
+          onError(error) {
+            console.log("approveListing onError", data);
+            setListInitialized(false);
+          }
         });
+      } else {
+        createListingWrapper();
       }
     };
 
-    // write contracts
-    const { write: approveListing, data: approveTx } = useAigcApprove({
+    // read contracts
+    const { data: approved } = useReadAigcGetApproved({
       address: listingNFT?.address,
-      args: listingNFT
-        ? [DIRECT_LISTINGS_ADDRESS, BigInt(listingNFT?.tokenId)]
-        : undefined,
-      onError(error) {
-        setListInitialized(false);
-      },
+      args: listingNFT ? [BigInt(listingNFT?.tokenId)]: undefined,
     });
+    // setApprovedListing(approved);
 
-    const { write: createListing, data: createListingTx } =
-      useDirectListingsCreateListing({
-        address: DIRECT_LISTINGS_ADDRESS,
+    // write contracts
+    const { writeContract: approveListing, data: approveTx } = useWriteAigcApprove();
+
+    const { writeContract: createListing, data: createListingTx } =
+      useWriteMarketplaceV3CreateListing();
+
+    // wait for transactions
+    const approveResult = useWaitForTransactionReceipt({
+      hash: approveTx,
+    });
+    useEffect(() => {
+      console.log("approveResult refreshed");
+      if (!approveResult.isSuccess) return;
+
+      console.log("approveResult.isSuccess", approveResult.isSuccess);
+      setApprovedListing(true);
+      setListInitialized(false);
+    }, [approveResult]);
+
+
+    const listingResult = useWaitForTransactionReceipt({
+      hash: createListingTx,
+    });
+    useEffect(() => {
+      console.log("listingResult refreshed");
+      if (!listingResult.isSuccess) return;
+      setIsListed(true);
+      setApprovedListing(false);
+      setListInitialized(false);
+
+      listingSuccess?.();
+    }, [listingResult]);
+
+    function createListingWrapper() {
+      if (!listingNFT) return;
+      const args = [{
+        assetContract: listingNFT.address,
+        tokenId: BigInt(listingNFT.tokenId),
+        quantity: BigInt(1),
+        currency: NATIVE_TOKEN_ADDRESS,
+        pricePerToken: parseEther(getValues("price")),
+        startTimestamp: BigInt(Math.round(Date.now() / 1000)),
+        endTimestamp: BigInt(
+          Math.round(Date.now() / 1000) +
+            getValues("duration") * 24 * 60 * 60
+        ),
+        reserved: false,
+      }];
+      createListing({
+        address: MARKETPLACE_V3_ADDRESS,
+        args,
+      }, {
         onError(error) {
           console.error(error);
           setListInitialized(false);
         },
       });
+    }
 
-    // wait for transactions
-    useWaitForTransaction({
-      hash: approveTx?.hash,
-      onSuccess(data) {
-        setApprovedListing(true);
-        createListing({
-          args: [
-            {
-              assetContract: listingNFT ? listingNFT?.address : zeroAddress,
-              tokenId: listingNFT ? BigInt(listingNFT?.tokenId) : BigInt(0),
-              quantity: BigInt(1),
-              currency: WRAPPED_ETH_ADDRESS,
-              pricePerToken: parseEther(getValues("price")),
-              startTimestamp: BigInt(Math.round(Date.now() / 1000)),
-              endTimestamp: BigInt(
-                Math.round(Date.now() / 1000) +
-                  getValues("duration") * 24 * 60 * 60 * 1000
-              ),
-              reserved: false,
-            },
-          ],
-        });
-      },
-    });
 
-    useWaitForTransaction({
-      hash: createListingTx?.hash,
-      onSuccess(data) {
-        setIsListed(true);
-        setApprovedListing(false);
-        setListInitialized(false);
-
-        listingSuccess?.();
-      },
-    });
     return (
       <dialog
         ref={ref as RefObject<HTMLDialogElement> | null}

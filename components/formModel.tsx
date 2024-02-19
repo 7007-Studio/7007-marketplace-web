@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import {
-  useAigcFactoryAigcCreatedEvent,
-  useAigcFactoryCreateAigc,
-  useAigcFactoryModelIndexCurrent,
+  useWatchAigcFactoryAigcCreatedEvent,
+  useWriteAigcFactoryCreateAigc,
+  useReadAigcFactoryModelIndexCurrent,
 } from "@/generated";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import TextInput from "./textInput";
@@ -36,23 +36,21 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: modelIndex } = useAigcFactoryModelIndexCurrent({
+  const { data: modelIndex } = useReadAigcFactoryModelIndexCurrent({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
   });
 
   const {
-    write: createAigc,
-    isLoading,
+    writeContract: createAigc,
+    isPending,
     isError,
     error,
-  } = useAigcFactoryCreateAigc({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
-  });
+  } = useWriteAigcFactoryCreateAigc();
 
-  useAigcFactoryAigcCreatedEvent({
+  useWatchAigcFactoryAigcCreatedEvent({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
-    listener: (log) => {
-      // console.log(log)
+    onLogs: (log) => {
+      console.log(log)
       // TODO: event should include model index so that we don't guess
       router.push(`/model/${Number(modelIndex) + 1}/detail`);
     },
@@ -71,6 +69,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
     setIsGenerating(true);
 
     createAigc({
+      address: AIGC_FACTORY_CONTRACT_ADDRESS,
       // string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, uint256 _ownerReservePercent, uint96 _royalty
       args: [
         data.name,
@@ -197,7 +196,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
 
       <div>
         <button
-          disabled={isLoading || isSubmitting}
+          disabled={isPending || isSubmitting}
           className="btn btn-primary"
         >
           {isSubmitting ? (

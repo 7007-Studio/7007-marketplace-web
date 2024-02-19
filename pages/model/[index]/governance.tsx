@@ -1,7 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useAigtName } from "@/generated";
+import { useReadAigtName } from "@/generated";
 import { Address } from "viem";
 
 const ResponsiveLine = dynamic(
@@ -13,7 +13,7 @@ export default function ModelGovernance() {
   const router = useRouter();
   const { index } = router.query;
 
-  const { data: modelName } = useAigtName({
+  const { data: modelName } = useReadAigtName({
     address: index as Address,
   });
 

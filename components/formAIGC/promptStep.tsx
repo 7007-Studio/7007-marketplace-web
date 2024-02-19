@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useMemo } from "react";
 
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import { useAigcFactoryDeployedAigCs, useAigcTokenId } from "@/generated";
+import { useReadAigcFactoryDeployedAigCs, useReadAigcTokenId } from "@/generated";
 import AigcNftCreated from "@/components/model/aigcNftCreated";
 
 import { AIGCContent } from ".";
@@ -14,12 +13,12 @@ interface PromptStepProps {
 }
 
 const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
-  const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
+  const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: modelIndex ? [BigInt(modelIndex)] : undefined,
   });
 
-  const { data: lastTokenId } = useAigcTokenId({
+  const { data: lastTokenId } = useReadAigcTokenId({
     address: aigcAddress,
   });
 

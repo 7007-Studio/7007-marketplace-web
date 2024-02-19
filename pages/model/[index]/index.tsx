@@ -4,10 +4,10 @@ import {
   AIGT_CONTRACT_ADDRESS,
 } from "@/constants";
 import {
-  useAigcFactoryDeployedAigCs,
-  useAigcFactoryDeployedAigTs,
-  useAigcTokenId,
-  useAigtName,
+  useReadAigcFactoryDeployedAigCs,
+  useReadAigcFactoryDeployedAigTs,
+  useReadAigcTokenId,
+  useReadAigtName,
 } from "@/generated";
 import { Address } from "viem";
 import { useIsMounted } from "@/hooks/useIsMounted";
@@ -23,22 +23,22 @@ export default function Detail() {
   const router = useRouter();
   const { index } = router.query;
   const isMounted = useIsMounted();
-  const { data: aigtAddress } = useAigcFactoryDeployedAigTs({
+  const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: index ? [BigInt(index as string)] : undefined,
   });
-  const { data: modelName } = useAigtName({
+  const { data: modelName } = useReadAigtName({
     address: aigtAddress,
   });
-  const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
+  const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: index ? [BigInt(index as string)] : undefined,
   });
-  const { data: totalNFTMinted } = useAigcTokenId({
+  const { data: totalNFTMinted } = useReadAigcTokenId({
     address: aigcAddress as Address,
   });
 
-  const { data: lastTokenId } = useAigcTokenId({
+  const { data: lastTokenId } = useReadAigcTokenId({
     address: aigcAddress,
   });
 

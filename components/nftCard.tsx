@@ -1,41 +1,40 @@
 import { useEffect, useState } from "react";
-import {
-  useAigcFactoryDeployedAigCs,
-  useAigcModelName,
-  useAigcOwnerOf,
-  useAigcTokenUri,
-  useNftMarketplaceBuy,
-  useNftMarketplaceIsListed,
-} from "@/generated";
-import { useAccount, useWaitForTransaction } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import axios from "axios";
-import { Metadata, MetadataAttribute } from "@/types";
-import {
-  AIGC_FACTORY_CONTRACT_ADDRESS,
-  NFT_MARKETPLACE_ADDRESS,
-} from "@/constants";
-import { parseEther } from "viem";
+import { Listing, Metadata, MetadataAttribute } from "@/types";
+import { MARKETPLACE_V3_ADDRESS, NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { Address, formatEther, formatUnits } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Card from "./card";
-import { concatAddress, openseaUrl } from "@/helpers";
+import { concatAddress, formatDaysLeft, openseaUrl } from "@/helpers";
 import { ListingNFT } from "./modal/listingNFTModal";
+import {
+  useReadAigcModelName,
+  useReadAigcOwnerOf,
+  useReadAigcTokenUri,
+  useReadErc20Decimals,
+  useReadErc20Symbol,
+  useWriteMarketplaceV3BuyFromListing,
+} from "@/generated";
 export interface NFTCardProps {
-  modelIndex: string | number;
+  aigcAddress: Address;
   tokenId: string | number;
   ownedOnly?: boolean;
   onListingNFT?: ({ tokenId, metadata }: ListingNFT) => void;
   onConnectToSP?: () => void;
+  listing?: Listing;
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({
-  modelIndex,
+  aigcAddress,
   tokenId,
   ownedOnly,
   onListingNFT,
   onConnectToSP,
+  listing,
 }) => {
-  const { isConnected, address } = useAccount();
+  const { isConnected, address: connectedWallet } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -45,50 +44,43 @@ const NFTCard: React.FC<NFTCardProps> = ({
   const [buyInitialized, setBuyInitialized] = useState(false);
 
   // read contracts
-  const { data: aigcAddress } = useAigcFactoryDeployedAigCs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
-    args: [BigInt(modelIndex)],
-  });
-
-  const { data: modelName } = useAigcModelName({
+  const { data: modelName } = useReadAigcModelName({
     address: aigcAddress,
   });
 
-  const { data: owner, refetch: refetchOwner } = useAigcOwnerOf({
+  const { data: owner, refetch: refetchOwner } = useReadAigcOwnerOf({
     address: aigcAddress,
     args: [BigInt(tokenId)],
   });
 
-  const { data: tokenUri } = useAigcTokenUri({
+  const { data: tokenUri } = useReadAigcTokenUri({
     address: aigcAddress,
     args: [BigInt(tokenId)],
   });
 
-  const { data: isListed, refetch: refetchIsListed } =
-    useNftMarketplaceIsListed({
-      address: NFT_MARKETPLACE_ADDRESS,
-      args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
-    });
+  const { data: decimals } = useReadErc20Decimals({
+    address: listing?.currency,
+  });
+  const { data: symbol } = useReadErc20Symbol({
+    address: listing?.currency,
+  });
 
   // write contracts
-  const { write: buyNft, data: buyNftTx } = useNftMarketplaceBuy({
-    address: NFT_MARKETPLACE_ADDRESS,
-    value: parseEther("0.001"), // default price
-    args: aigcAddress ? [aigcAddress, BigInt(tokenId)] : undefined,
-    onError(error) {
-      setBuyInitialized(false);
-    },
-  });
+  const { writeContract: buyNft, data: buyNftTx } =
+    useWriteMarketplaceV3BuyFromListing();
 
-  useWaitForTransaction({
-    hash: buyNftTx?.hash,
-    onSuccess(data) {
-      refetchOwner();
-      refetchIsListed();
+  const buyResult = useWaitForTransactionReceipt({
+    hash: buyNftTx,
+  });
+  useEffect(() => {
+    console.debug("buyResult changed");
+    if (buyResult.isSuccess) {
+      // refetchOwner();
+      // refetchIsListed();
 
       setBuyInitialized(false);
-    },
-  });
+    }
+  }, [buyResult]);
 
   // TODO: find creator of the token
 
@@ -112,12 +104,12 @@ const NFTCard: React.FC<NFTCardProps> = ({
 
   if (!metadata) return;
 
-  if (ownedOnly && owner !== address) return null;
+  if (ownedOnly && owner !== connectedWallet) return null;
 
   return (
     <Card className="max-w-[258px]">
       <div className="flex py-4 px-6 justify-between items-center">
-        <span>DATE</span>
+        <span>DATE {tokenId}</span>
         <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
           {modelName}
         </span>
@@ -137,41 +129,78 @@ const NFTCard: React.FC<NFTCardProps> = ({
         <h3 className="heading-md">{metadata.name}</h3>
         <p className="mb-4 text-zinc-400">{metadata.description}</p>
 
-        {isListed && (
-          <button
-            onClick={() => {
-              if (!isConnected) {
-                openConnectModal?.();
-                return;
-              }
-              setBuyInitialized(true);
-              buyNft();
-            }}
-            disabled={buyInitialized}
-            className="btn btn-primary"
-          >
-            {buyInitialized ? (
-              <>
-                <span className="loading loading-spinner"></span>
-                loading
-              </>
-            ) : (
-              "Buy Now"
-            )}
-          </button>
+        {listing && owner !== connectedWallet && (
+          <>
+            <div className="flex flex-row justify-between items-baseline">
+              <span className="heading-md">
+                {decimals
+                  ? formatUnits(listing.pricePerToken, decimals)
+                  : formatEther(listing.pricePerToken)}{" "}
+                {symbol ? symbol : "ETH"}
+              </span>
+              <span className="text-sm">
+                {formatDaysLeft(Number(listing.endTimestamp) * 1000)}
+              </span>
+            </div>
+            <button
+              onClick={() => {
+                if (!isConnected || !connectedWallet) {
+                  openConnectModal?.();
+                  return;
+                }
+                setBuyInitialized(true);
+                const args: [bigint, Address, bigint, Address, bigint] = [
+                  listing.listingId,
+                  connectedWallet,
+                  listing.quantity,
+                  listing.currency,
+                  listing.pricePerToken,
+                ];
+                console.log(args);
+                buyNft(
+                  {
+                    address: MARKETPLACE_V3_ADDRESS,
+                    value:
+                      listing.currency === NATIVE_TOKEN_ADDRESS
+                        ? listing.pricePerToken
+                        : undefined,
+                    args,
+                  },
+                  {
+                    onError(error) {
+                      console.log("buyNft error", error);
+                      setBuyInitialized(false);
+                    },
+                  }
+                );
+              }}
+              disabled={buyInitialized}
+              className="btn btn-primary"
+            >
+              {buyInitialized ? (
+                <>
+                  <span className="loading loading-spinner"></span>
+                  loading
+                </>
+              ) : (
+                "Buy Now"
+              )}
+            </button>
+          </>
         )}
-        {aigcAddress && address === owner && (
+        {aigcAddress && connectedWallet === owner && (
           <button
             onClick={() => {
               onListingNFT?.({ address: aigcAddress, tokenId, metadata });
             }}
             className="btn btn-primary"
+            disabled={!!listing}
           >
-            List
+            {!!listing ? "Listed" : "List"}
           </button>
         )}
 
-        {aigcAddress && address === owner && (
+        {aigcAddress && connectedWallet === owner && (
           <button
             onClick={() => {
               onConnectToSP?.();

@@ -4,57 +4,47 @@ import "@/styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
 import {
-  darkTheme,
-  DisclaimerComponent,
-  getDefaultWallets,
+  getDefaultConfig,
   lightTheme,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createConfig, http, WagmiProvider } from "wagmi";
 import { sepolia } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+
+const queryClient = new QueryClient();
+
 import Layout from "@/components/layout";
 
-const { chains, publicClient } = configureChains(
-  [sepolia],
-  [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || "" }),
-    publicProvider(),
-  ]
-);
-
-const { connectors } = getDefaultWallets({
+const wagmiConfig = getDefaultConfig({
   appName: "7007 Studio",
-  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
-  chains,
-});
-
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
+  projectId: "YOUR_PROJECT_ID",
+  chains: [sepolia],
+  transports: {
+    [sepolia.id]: http(),
+  },
 });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider
-        appInfo={{
-          appName: "7007 Studio",
-        }}
-        chains={chains}
-        theme={lightTheme({
-          accentColor: "#FFC900",
-          accentColorForeground: "#000000",
-          borderRadius: "small",
-          // fontStack: "system",
-        })}
-      >
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider
+          appInfo={{
+            appName: "7007 Studio",
+          }}
+          theme={lightTheme({
+            accentColor: "#FFC900",
+            accentColorForeground: "#000000",
+            borderRadius: "small",
+            // fontStack: "system",
+          })}
+        >
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }

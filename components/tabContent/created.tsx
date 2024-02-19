@@ -11,13 +11,11 @@ import { sepoliaClient } from "@/client";
 
 const Collected = ({
   aigcAddress,
-  tokenIds,
   listingNFTModalRef,
   setListingNFT,
   connectToSPModalRef,
 }: {
   aigcAddress: Address;
-  tokenIds: number[];
   listingNFTModalRef: React.RefObject<HTMLDialogElement>;
   setListingNFT: (nft: ListingNFT) => void;
   connectToSPModalRef: React.RefObject<HTMLDialogElement>;
@@ -29,37 +27,36 @@ const Collected = ({
     { id: "text", label: "Text", checked: false },
   ]);
 
-  const [filteredTokenIds, setFilteredTokenIds] = useState<string[]>([]);
+  const [tokenIds, setTokenIds] = useState<string[]>([]);
 
   const { address } = useAccount();
   useEffect(() => {
     if (!aigcAddress || !address) return;
 
-    const contract = {
-      address: aigcAddress,
-      abi: AIGC.abi as Abi,
-      functionName: "ownerOf",
-    };
-
-    const fetchOwner = async () => {
-      const results = await sepoliaClient.multicall({
-        contracts: tokenIds.map((id) => ({
-          ...contract,
-          args: [BigInt(id)],
-        })),
+    const fetchMintEvents = async () => {
+      const logs = await sepoliaClient.getContractEvents({
+        address: aigcAddress,
+        abi: AIGC.abi as Abi,
+        eventName: "Transfer",
+        args: {
+          from: zeroAddress,
+          to: address,
+        },
+        fromBlock: BigInt(5079109),
       });
-      const ownedTokenIds = [];
-      for (let i = 0; i < results.length; i++) {
-        const result = results[i];
-        if (result.result === address) {
-          ownedTokenIds.push(String(tokenIds[i]));
-        }
-      }
-      setFilteredTokenIds(ownedTokenIds);
+      setTokenIds(
+        logs
+          .filter(
+            (log) => (log.args as { tokenId?: string }).tokenId !== undefined
+          )
+          .map((log) => {
+            const args = log.args as { tokenId: string };
+            return args.tokenId;
+          })
+      );
     };
-
-    fetchOwner();
-  }, [aigcAddress, address, tokenIds]);
+    fetchMintEvents();
+  }, [aigcAddress, address]);
 
   return (
     <>
@@ -69,7 +66,7 @@ const Collected = ({
       <div className="flex flex-row gap-x-11 justify-between">
         <div>
           <div className="flex flex-row flex-wrap gap-6">
-            {filteredTokenIds.map((id) => (
+            {tokenIds.map((id) => (
               <NFTCard
                 key={id}
                 aigcAddress={aigcAddress}

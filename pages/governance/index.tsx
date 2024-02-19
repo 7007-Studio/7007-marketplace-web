@@ -2,10 +2,10 @@ import { useMemo } from "react";
 
 import AIGTEntry from "@/components/aigtEntry";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import { useAigcFactoryModelIndexCurrent } from "@/generated";
+import { useReadAigcFactoryModelIndexCurrent } from "@/generated";
 
 export default function MarketPlace() {
-  const { data: modelIndex } = useAigcFactoryModelIndexCurrent({
+  const { data: modelIndex } = useReadAigcFactoryModelIndexCurrent({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
   });
 

@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
 import { formatEther, parseEther } from "viem";
 import {
-  useAigcFactoryDeployedAigTs,
-  useAigtMaxSupply,
-  useAigtMint,
-  useAigtName,
-  useAigtTokenPrice,
-  useAigtTotalSupply,
+  useReadAigcFactoryDeployedAigTs,
+  useReadAigtMaxSupply,
+  useReadAigtName,
+  useReadAigtTokenPrice,
+  useReadAigtTotalSupply,
+  useWriteAigtMint,
 } from "@/generated";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useIsMounted } from "@/hooks/useIsMounted";
@@ -25,35 +25,33 @@ export default function MintModelToken() {
 
   const isMounted = useIsMounted();
 
-  const { data: aigtAddress } = useAigcFactoryDeployedAigTs({
+  const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: index ? [BigInt(index as string)] : undefined,
   });
 
-  const { data: modelName } = useAigtName({
+  const { data: modelName } = useReadAigtName({
     address: aigtAddress,
   });
-  const { data: tokenPrice } = useAigtTokenPrice({
+  const { data: tokenPrice } = useReadAigtTokenPrice({
     address: aigtAddress,
   });
 
-  const { data: totalSupply } = useAigtTotalSupply({
+  const { data: totalSupply } = useReadAigtTotalSupply({
     address: aigtAddress,
   });
-  const { data: maxSupply } = useAigtMaxSupply({
+  const { data: maxSupply } = useReadAigtMaxSupply({
     address: aigtAddress,
   });
 
   const {
     data: mintAIGTTransactionReceipt,
-    write: mintAIGT,
-    isLoading,
+    writeContract: mintAIGT,
+    isPending,
     isSuccess,
     isError,
     error,
-  } = useAigtMint({
-    address: aigtAddress,
-  });
+  } = useWriteAigtMint();
 
   const totalPrice = () => {
     if (!tokenPrice) {
@@ -68,9 +66,14 @@ export default function MintModelToken() {
       return;
     }
 
+    if (!aigtAddress) {
+      return;
+    }
+
     setIsSubmitting(true);
     if (mintAIGT) {
       mintAIGT({
+        address: aigtAddress,
         args: [BigInt(numberOfToken)],
         value: parseEther(totalPrice()),
       });
@@ -88,9 +91,9 @@ export default function MintModelToken() {
         <div>
           Transaction:{" "}
           <a
-            href={`https://sepolia.etherscan.io/tx/${mintAIGTTransactionReceipt?.hash}`}
+            href={`https://sepolia.etherscan.io/tx/${mintAIGTTransactionReceipt}`}
           >
-            {mintAIGTTransactionReceipt?.hash}
+            {mintAIGTTransactionReceipt}
           </a>
         </div>
 
@@ -140,7 +143,7 @@ export default function MintModelToken() {
           <button
             className="btn btn-primary"
             disabled={
-              isLoading ||
+              isPending ||
               isSubmitting ||
               BigInt(numberOfToken) <= 0 ||
               !mintAIGT

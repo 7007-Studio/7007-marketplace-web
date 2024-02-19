@@ -1,25 +1,16 @@
 import {
-  useContractRead,
-  UseContractReadConfig,
-  useContractWrite,
-  UseContractWriteConfig,
-  usePrepareContractWrite,
-  UsePrepareContractWriteConfig,
-  useContractEvent,
-  UseContractEventConfig,
-} from 'wagmi'
-import {
-  ReadContractResult,
-  WriteContractMode,
-  PrepareWriteContractResult,
-} from 'wagmi/actions'
+  createUseReadContract,
+  createUseWriteContract,
+  createUseSimulateContract,
+  createUseWatchContractEvent,
+} from 'wagmi/codegen'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // AIGC
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const aigcABI = [
-  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+export const aigcAbi = [
+  { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
   {
     type: 'error',
     inputs: [
@@ -205,14 +196,13 @@ export const aigcABI = [
     name: 'Transfer',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'aiModelVm',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
@@ -220,44 +210,44 @@ export const aigcABI = [
     ],
     name: 'approve',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
     name: 'balanceOf',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'payable',
     type: 'function',
     inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'buy',
     outputs: [],
+    stateMutability: 'payable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'costToken',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'getApproved',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'getModelIndex',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'vals', internalType: 'uint256[]', type: 'uint256[]' },
@@ -268,16 +258,16 @@ export const aigcABI = [
     ],
     name: 'initialize',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'ipOrgAddr',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
@@ -285,9 +275,9 @@ export const aigcABI = [
     ],
     name: 'isApprovedForAll',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: '_tokenURI', internalType: 'string', type: 'string' },
@@ -297,44 +287,44 @@ export const aigcABI = [
     ],
     name: 'mint',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'modelIndex',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'modelName',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'name',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'opmlLib',
     outputs: [{ name: '', internalType: 'contract IOpmlLib', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'ownerOf',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
@@ -345,9 +335,9 @@ export const aigcABI = [
       { name: '', internalType: 'address', type: 'address' },
       { name: '', internalType: 'uint256', type: 'uint256' },
     ],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
@@ -356,9 +346,9 @@ export const aigcABI = [
     ],
     name: 'safeTransferFrom',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
@@ -368,9 +358,9 @@ export const aigcABI = [
     ],
     name: 'safeTransferFrom',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'operator', internalType: 'address', type: 'address' },
@@ -378,44 +368,44 @@ export const aigcABI = [
     ],
     name: 'setApprovalForAll',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
     name: 'supportsInterface',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'symbol',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'token',
     outputs: [{ name: '', internalType: 'contract IERC20', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'tokenId',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'tokenURI',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
@@ -424,13 +414,14 @@ export const aigcABI = [
     ],
     name: 'transferFrom',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'verify',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
 ] as const
 
@@ -438,13 +429,13 @@ export const aigcABI = [
 // AIGC_Factory
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const aigcFactoryABI = [
+export const aigcFactoryAbi = [
   {
-    stateMutability: 'nonpayable',
     type: 'constructor',
     inputs: [
       { name: '_aigcContractImpl', internalType: 'address', type: 'address' },
     ],
+    stateMutability: 'nonpayable',
   },
   { type: 'error', inputs: [], name: 'ERC1167FailedCreateClone' },
   {
@@ -467,14 +458,13 @@ export const aigcFactoryABI = [
     name: 'AIGC_Created',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'aigcContractImpl',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: '_modelName', internalType: 'string', type: 'string' },
@@ -491,48 +481,49 @@ export const aigcFactoryABI = [
     ],
     name: 'createAIGC',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     name: 'deployedAIGCs',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     name: 'deployedAIGTs',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '_modelIndex', internalType: 'uint256', type: 'uint256' }],
     name: 'getAIGC',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '_modelIndex', internalType: 'uint256', type: 'uint256' }],
     name: 'getAIGT',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'modelIndexCurrent',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     name: 'modelIndexToIpOrgAddr',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
 ] as const
 
@@ -540,9 +531,8 @@ export const aigcFactoryABI = [
 // AIGT
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const aigtABI = [
+export const aigtAbi = [
   {
-    stateMutability: 'nonpayable',
     type: 'constructor',
     inputs: [
       { name: '_modelIndex', internalType: 'uint256', type: 'uint256' },
@@ -557,6 +547,7 @@ export const aigtABI = [
         type: 'uint256',
       },
     ],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'error',
@@ -666,7 +657,6 @@ export const aigtABI = [
     name: 'Transfer',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
@@ -674,9 +664,9 @@ export const aigtABI = [
     ],
     name: 'allowance',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'spender', internalType: 'address', type: 'address' },
@@ -684,100 +674,100 @@ export const aigtABI = [
     ],
     name: 'approve',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
     name: 'balanceOf',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'decimals',
     outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'getModelIndex',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'getShare',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'maxSupply',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'payable',
     type: 'function',
     inputs: [{ name: '_amount', internalType: 'uint256', type: 'uint256' }],
     name: 'mint',
     outputs: [],
+    stateMutability: 'payable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'modelIndex',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'name',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'owner',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [],
     name: 'renounceOwnership',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'symbol',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'tokenPrice',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'totalSupply',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
@@ -785,9 +775,9 @@ export const aigtABI = [
     ],
     name: 'transfer',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
@@ -796,35 +786,130 @@ export const aigtABI = [
     ],
     name: 'transferFrom',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
     name: 'transferOwnership',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [],
     name: 'withdraw',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// DirectListings
+// Erc20
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const directListingsABI = [
+export const erc20Abi = [
   {
-    stateMutability: 'nonpayable',
-    type: 'constructor',
+    type: 'event',
     inputs: [
-      { name: '_nativeTokenWrapper', internalType: 'address', type: 'address' },
+      { name: 'owner', type: 'address', indexed: true },
+      { name: 'spender', type: 'address', indexed: true },
+      { name: 'value', type: 'uint256', indexed: false },
     ],
+    name: 'Approval',
   },
+  {
+    type: 'event',
+    inputs: [
+      { name: 'from', type: 'address', indexed: true },
+      { name: 'to', type: 'address', indexed: true },
+      { name: 'value', type: 'uint256', indexed: false },
+    ],
+    name: 'Transfer',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'spender', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ type: 'uint8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'recipient', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    name: 'transfer',
+    outputs: [{ type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'sender', type: 'address' },
+      { name: 'recipient', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    name: 'transferFrom',
+    outputs: [{ type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MarketplaceV3
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const marketplaceV3Abi = [
   {
     type: 'event',
     anonymous: false,
@@ -917,15 +1002,14 @@ export const directListingsABI = [
         type: 'tuple',
         components: [
           { name: 'listingId', internalType: 'uint256', type: 'uint256' },
-          { name: 'listingCreator', internalType: 'address', type: 'address' },
-          { name: 'assetContract', internalType: 'address', type: 'address' },
           { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
           { name: 'quantity', internalType: 'uint256', type: 'uint256' },
-          { name: 'currency', internalType: 'address', type: 'address' },
           { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
           { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
           { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
-          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
           {
             name: 'tokenType',
             internalType: 'enum IDirectListings.TokenType',
@@ -936,6 +1020,7 @@ export const directListingsABI = [
             internalType: 'enum IDirectListings.Status',
             type: 'uint8',
           },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
         ],
         indexed: false,
       },
@@ -1019,15 +1104,14 @@ export const directListingsABI = [
         type: 'tuple',
         components: [
           { name: 'listingId', internalType: 'uint256', type: 'uint256' },
-          { name: 'listingCreator', internalType: 'address', type: 'address' },
-          { name: 'assetContract', internalType: 'address', type: 'address' },
           { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
           { name: 'quantity', internalType: 'uint256', type: 'uint256' },
-          { name: 'currency', internalType: 'address', type: 'address' },
           { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
           { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
           { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
-          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
           {
             name: 'tokenType',
             internalType: 'enum IDirectListings.TokenType',
@@ -1038,6 +1122,7 @@ export const directListingsABI = [
             internalType: 'enum IDirectListings.Status',
             type: 'uint8',
           },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
         ],
         indexed: false,
       },
@@ -1045,21 +1130,20 @@ export const directListingsABI = [
     name: 'UpdatedListing',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: '_msgData',
     outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: '_msgSender',
     outputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: '_listingId', internalType: 'uint256', type: 'uint256' },
@@ -1068,9 +1152,9 @@ export const directListingsABI = [
     ],
     name: 'approveBuyerForListing',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: '_listingId', internalType: 'uint256', type: 'uint256' },
@@ -1083,9 +1167,9 @@ export const directListingsABI = [
     ],
     name: 'approveCurrencyForListing',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'payable',
     type: 'function',
     inputs: [
       { name: '_listingId', internalType: 'uint256', type: 'uint256' },
@@ -1096,16 +1180,16 @@ export const directListingsABI = [
     ],
     name: 'buyFromListing',
     outputs: [],
+    stateMutability: 'payable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: '_listingId', internalType: 'uint256', type: 'uint256' }],
     name: 'cancelListing',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       {
@@ -1126,9 +1210,9 @@ export const directListingsABI = [
     ],
     name: 'createListing',
     outputs: [{ name: 'listingId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: '_listingId', internalType: 'uint256', type: 'uint256' },
@@ -1136,9 +1220,9 @@ export const directListingsABI = [
     ],
     name: 'currencyPriceForListing',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: '_startId', internalType: 'uint256', type: 'uint256' },
@@ -1152,15 +1236,14 @@ export const directListingsABI = [
         type: 'tuple[]',
         components: [
           { name: 'listingId', internalType: 'uint256', type: 'uint256' },
-          { name: 'listingCreator', internalType: 'address', type: 'address' },
-          { name: 'assetContract', internalType: 'address', type: 'address' },
           { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
           { name: 'quantity', internalType: 'uint256', type: 'uint256' },
-          { name: 'currency', internalType: 'address', type: 'address' },
           { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
           { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
           { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
-          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
           {
             name: 'tokenType',
             internalType: 'enum IDirectListings.TokenType',
@@ -1171,12 +1254,13 @@ export const directListingsABI = [
             internalType: 'enum IDirectListings.Status',
             type: 'uint8',
           },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
         ],
       },
     ],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: '_startId', internalType: 'uint256', type: 'uint256' },
@@ -1190,15 +1274,14 @@ export const directListingsABI = [
         type: 'tuple[]',
         components: [
           { name: 'listingId', internalType: 'uint256', type: 'uint256' },
-          { name: 'listingCreator', internalType: 'address', type: 'address' },
-          { name: 'assetContract', internalType: 'address', type: 'address' },
           { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
           { name: 'quantity', internalType: 'uint256', type: 'uint256' },
-          { name: 'currency', internalType: 'address', type: 'address' },
           { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
           { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
           { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
-          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
           {
             name: 'tokenType',
             internalType: 'enum IDirectListings.TokenType',
@@ -1209,12 +1292,13 @@ export const directListingsABI = [
             internalType: 'enum IDirectListings.Status',
             type: 'uint8',
           },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
         ],
       },
     ],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '_listingId', internalType: 'uint256', type: 'uint256' }],
     name: 'getListing',
@@ -1225,15 +1309,14 @@ export const directListingsABI = [
         type: 'tuple',
         components: [
           { name: 'listingId', internalType: 'uint256', type: 'uint256' },
-          { name: 'listingCreator', internalType: 'address', type: 'address' },
-          { name: 'assetContract', internalType: 'address', type: 'address' },
           { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
           { name: 'quantity', internalType: 'uint256', type: 'uint256' },
-          { name: 'currency', internalType: 'address', type: 'address' },
           { name: 'pricePerToken', internalType: 'uint256', type: 'uint256' },
           { name: 'startTimestamp', internalType: 'uint128', type: 'uint128' },
           { name: 'endTimestamp', internalType: 'uint128', type: 'uint128' },
-          { name: 'reserved', internalType: 'bool', type: 'bool' },
+          { name: 'listingCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
           {
             name: 'tokenType',
             internalType: 'enum IDirectListings.TokenType',
@@ -1244,12 +1327,13 @@ export const directListingsABI = [
             internalType: 'enum IDirectListings.Status',
             type: 'uint8',
           },
+          { name: 'reserved', internalType: 'bool', type: 'bool' },
         ],
       },
     ],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: '_listingId', internalType: 'uint256', type: 'uint256' },
@@ -1257,9 +1341,9 @@ export const directListingsABI = [
     ],
     name: 'isBuyerApprovedForListing',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: '_listingId', internalType: 'uint256', type: 'uint256' },
@@ -1267,16 +1351,16 @@ export const directListingsABI = [
     ],
     name: 'isCurrencyApprovedForListing',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'totalListings',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: '_listingId', internalType: 'uint256', type: 'uint256' },
@@ -1298,19 +1382,803 @@ export const directListingsABI = [
     ],
     name: 'updateListing',
     outputs: [],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MarketplaceV3
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const marketplaceV3ABI = [
-  {
     stateMutability: 'nonpayable',
-    type: 'constructor',
-    inputs: [{ name: '_pluginMap', internalType: 'address', type: 'address' }],
   },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'auctionId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'assetContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'closer',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'tokenId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'auctionCreator',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'winningBidder',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'AuctionClosed',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'auctionCreator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'auctionId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'CancelledAuction',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'auctionCreator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'auctionId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'assetContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'auction',
+        internalType: 'struct IEnglishAuctions.Auction',
+        type: 'tuple',
+        components: [
+          { name: 'auctionId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minimumBidAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'buyoutBidAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'timeBufferInSeconds',
+            internalType: 'uint64',
+            type: 'uint64',
+          },
+          { name: 'bidBufferBps', internalType: 'uint64', type: 'uint64' },
+          { name: 'startTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'endTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'auctionCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IEnglishAuctions.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IEnglishAuctions.Status',
+            type: 'uint8',
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'NewAuction',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'auctionId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'bidder',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'assetContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'bidAmount',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'auction',
+        internalType: 'struct IEnglishAuctions.Auction',
+        type: 'tuple',
+        components: [
+          { name: 'auctionId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minimumBidAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'buyoutBidAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'timeBufferInSeconds',
+            internalType: 'uint64',
+            type: 'uint64',
+          },
+          { name: 'bidBufferBps', internalType: 'uint64', type: 'uint64' },
+          { name: 'startTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'endTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'auctionCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IEnglishAuctions.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IEnglishAuctions.Status',
+            type: 'uint8',
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'NewBid',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_auctionId', internalType: 'uint256', type: 'uint256' },
+      { name: '_bidAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'bidInAuction',
+    outputs: [],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_auctionId', internalType: 'uint256', type: 'uint256' }],
+    name: 'cancelAuction',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_auctionId', internalType: 'uint256', type: 'uint256' }],
+    name: 'collectAuctionPayout',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_auctionId', internalType: 'uint256', type: 'uint256' }],
+    name: 'collectAuctionTokens',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: '_params',
+        internalType: 'struct IEnglishAuctions.AuctionParameters',
+        type: 'tuple',
+        components: [
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'minimumBidAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'buyoutBidAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'timeBufferInSeconds',
+            internalType: 'uint64',
+            type: 'uint64',
+          },
+          { name: 'bidBufferBps', internalType: 'uint64', type: 'uint64' },
+          { name: 'startTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'endTimestamp', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+    name: 'createAuction',
+    outputs: [{ name: 'auctionId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_startId', internalType: 'uint256', type: 'uint256' },
+      { name: '_endId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getAllAuctions',
+    outputs: [
+      {
+        name: '_allAuctions',
+        internalType: 'struct IEnglishAuctions.Auction[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'auctionId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minimumBidAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'buyoutBidAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'timeBufferInSeconds',
+            internalType: 'uint64',
+            type: 'uint64',
+          },
+          { name: 'bidBufferBps', internalType: 'uint64', type: 'uint64' },
+          { name: 'startTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'endTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'auctionCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IEnglishAuctions.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IEnglishAuctions.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_startId', internalType: 'uint256', type: 'uint256' },
+      { name: '_endId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getAllValidAuctions',
+    outputs: [
+      {
+        name: '_validAuctions',
+        internalType: 'struct IEnglishAuctions.Auction[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'auctionId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minimumBidAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'buyoutBidAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'timeBufferInSeconds',
+            internalType: 'uint64',
+            type: 'uint64',
+          },
+          { name: 'bidBufferBps', internalType: 'uint64', type: 'uint64' },
+          { name: 'startTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'endTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'auctionCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IEnglishAuctions.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IEnglishAuctions.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_auctionId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getAuction',
+    outputs: [
+      {
+        name: '_auction',
+        internalType: 'struct IEnglishAuctions.Auction',
+        type: 'tuple',
+        components: [
+          { name: 'auctionId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'minimumBidAmount',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'buyoutBidAmount', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'timeBufferInSeconds',
+            internalType: 'uint64',
+            type: 'uint64',
+          },
+          { name: 'bidBufferBps', internalType: 'uint64', type: 'uint64' },
+          { name: 'startTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'endTimestamp', internalType: 'uint64', type: 'uint64' },
+          { name: 'auctionCreator', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IEnglishAuctions.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IEnglishAuctions.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_auctionId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getWinningBid',
+    outputs: [
+      { name: '_bidder', internalType: 'address', type: 'address' },
+      { name: '_currency', internalType: 'address', type: 'address' },
+      { name: '_bidAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_auctionId', internalType: 'uint256', type: 'uint256' }],
+    name: 'isAuctionExpired',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_auctionId', internalType: 'uint256', type: 'uint256' },
+      { name: '_bidAmount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isNewWinningBid',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalAuctions',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'offeror',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'offerId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'assetContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'tokenId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'seller',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'quantityBought',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'totalPricePaid',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'AcceptedOffer',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'offeror',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'offerId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'CancelledOffer',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'offeror',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'offerId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'assetContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'offer',
+        internalType: 'struct IOffers.Offer',
+        type: 'tuple',
+        components: [
+          { name: 'offerId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'totalPrice', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'expirationTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'offeror', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IOffers.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IOffers.Status',
+            type: 'uint8',
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'NewOffer',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_offerId', internalType: 'uint256', type: 'uint256' }],
+    name: 'acceptOffer',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_offerId', internalType: 'uint256', type: 'uint256' }],
+    name: 'cancelOffer',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_startId', internalType: 'uint256', type: 'uint256' },
+      { name: '_endId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getAllOffers',
+    outputs: [
+      {
+        name: '_allOffers',
+        internalType: 'struct IOffers.Offer[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'offerId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'totalPrice', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'expirationTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'offeror', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IOffers.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IOffers.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_startId', internalType: 'uint256', type: 'uint256' },
+      { name: '_endId', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getAllValidOffers',
+    outputs: [
+      {
+        name: '_validOffers',
+        internalType: 'struct IOffers.Offer[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'offerId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'totalPrice', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'expirationTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'offeror', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IOffers.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IOffers.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_offerId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getOffer',
+    outputs: [
+      {
+        name: '_offer',
+        internalType: 'struct IOffers.Offer',
+        type: 'tuple',
+        components: [
+          { name: 'offerId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'totalPrice', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'expirationTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+          { name: 'offeror', internalType: 'address', type: 'address' },
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          {
+            name: 'tokenType',
+            internalType: 'enum IOffers.TokenType',
+            type: 'uint8',
+          },
+          {
+            name: 'status',
+            internalType: 'enum IOffers.Status',
+            type: 'uint8',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: '_params',
+        internalType: 'struct IOffers.OfferParams',
+        type: 'tuple',
+        components: [
+          { name: 'assetContract', internalType: 'address', type: 'address' },
+          { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'quantity', internalType: 'uint256', type: 'uint256' },
+          { name: 'currency', internalType: 'address', type: 'address' },
+          { name: 'totalPrice', internalType: 'uint256', type: 'uint256' },
+          {
+            name: 'expirationTimestamp',
+            internalType: 'uint256',
+            type: 'uint256',
+          },
+        ],
+      },
+    ],
+    name: 'makeOffer',
+    outputs: [{ name: '_offerId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalOffers',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'constructor',
+    inputs: [
+      {
+        name: '_marketplaceV3Params',
+        internalType: 'struct MarketplaceV3.MarketplaceConstructorParams',
+        type: 'tuple',
+        components: [
+          {
+            name: 'extensions',
+            internalType: 'struct IExtension.Extension[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'metadata',
+                internalType: 'struct IExtension.ExtensionMetadata',
+                type: 'tuple',
+                components: [
+                  { name: 'name', internalType: 'string', type: 'string' },
+                  {
+                    name: 'metadataURI',
+                    internalType: 'string',
+                    type: 'string',
+                  },
+                  {
+                    name: 'implementation',
+                    internalType: 'address',
+                    type: 'address',
+                  },
+                ],
+              },
+              {
+                name: 'functions',
+                internalType: 'struct IExtension.ExtensionFunction[]',
+                type: 'tuple[]',
+                components: [
+                  {
+                    name: 'functionSelector',
+                    internalType: 'bytes4',
+                    type: 'bytes4',
+                  },
+                  {
+                    name: 'functionSignature',
+                    internalType: 'string',
+                    type: 'string',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'royaltyEngineAddress',
+            internalType: 'address',
+            type: 'address',
+          },
+          {
+            name: 'nativeTokenWrapper',
+            internalType: 'address',
+            type: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: '_size', internalType: 'uint256', type: 'uint256' },
+      { name: '_start', internalType: 'uint256', type: 'uint256' },
+      { name: '_end', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'InvalidCodeAtRange',
+  },
+  { type: 'error', inputs: [], name: 'WriteError' },
   {
     type: 'event',
     anonymous: false,
@@ -1334,6 +2202,159 @@ export const marketplaceV3ABI = [
     type: 'event',
     anonymous: false,
     inputs: [
+      { name: 'name', internalType: 'string', type: 'string', indexed: true },
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'extension',
+        internalType: 'struct IExtension.Extension',
+        type: 'tuple',
+        components: [
+          {
+            name: 'metadata',
+            internalType: 'struct IExtension.ExtensionMetadata',
+            type: 'tuple',
+            components: [
+              { name: 'name', internalType: 'string', type: 'string' },
+              { name: 'metadataURI', internalType: 'string', type: 'string' },
+              {
+                name: 'implementation',
+                internalType: 'address',
+                type: 'address',
+              },
+            ],
+          },
+          {
+            name: 'functions',
+            internalType: 'struct IExtension.ExtensionFunction[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'functionSelector',
+                internalType: 'bytes4',
+                type: 'bytes4',
+              },
+              {
+                name: 'functionSignature',
+                internalType: 'string',
+                type: 'string',
+              },
+            ],
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'ExtensionAdded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string', indexed: true },
+      {
+        name: 'extension',
+        internalType: 'struct IExtension.Extension',
+        type: 'tuple',
+        components: [
+          {
+            name: 'metadata',
+            internalType: 'struct IExtension.ExtensionMetadata',
+            type: 'tuple',
+            components: [
+              { name: 'name', internalType: 'string', type: 'string' },
+              { name: 'metadataURI', internalType: 'string', type: 'string' },
+              {
+                name: 'implementation',
+                internalType: 'address',
+                type: 'address',
+              },
+            ],
+          },
+          {
+            name: 'functions',
+            internalType: 'struct IExtension.ExtensionFunction[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'functionSelector',
+                internalType: 'bytes4',
+                type: 'bytes4',
+              },
+              {
+                name: 'functionSignature',
+                internalType: 'string',
+                type: 'string',
+              },
+            ],
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'ExtensionRemoved',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string', indexed: true },
+      {
+        name: 'implementation',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'extension',
+        internalType: 'struct IExtension.Extension',
+        type: 'tuple',
+        components: [
+          {
+            name: 'metadata',
+            internalType: 'struct IExtension.ExtensionMetadata',
+            type: 'tuple',
+            components: [
+              { name: 'name', internalType: 'string', type: 'string' },
+              { name: 'metadataURI', internalType: 'string', type: 'string' },
+              {
+                name: 'implementation',
+                internalType: 'address',
+                type: 'address',
+              },
+            ],
+          },
+          {
+            name: 'functions',
+            internalType: 'struct IExtension.ExtensionFunction[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'functionSelector',
+                internalType: 'bytes4',
+                type: 'bytes4',
+              },
+              {
+                name: 'functionSignature',
+                internalType: 'string',
+                type: 'string',
+              },
+            ],
+          },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'ExtensionReplaced',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       {
         name: 'platformFeeRecipient',
         internalType: 'address',
@@ -1348,6 +2369,74 @@ export const marketplaceV3ABI = [
       },
     ],
     name: 'FlatPlatformFeeUpdated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string', indexed: true },
+      {
+        name: 'functionSelector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: true,
+      },
+      {
+        name: 'extMetadata',
+        internalType: 'struct IExtension.ExtensionMetadata',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          { name: 'metadataURI', internalType: 'string', type: 'string' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'FunctionDisabled',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'name', internalType: 'string', type: 'string', indexed: true },
+      {
+        name: 'functionSelector',
+        internalType: 'bytes4',
+        type: 'bytes4',
+        indexed: true,
+      },
+      {
+        name: 'extFunction',
+        internalType: 'struct IExtension.ExtensionFunction',
+        type: 'tuple',
+        components: [
+          { name: 'functionSelector', internalType: 'bytes4', type: 'bytes4' },
+          { name: 'functionSignature', internalType: 'string', type: 'string' },
+        ],
+        indexed: false,
+      },
+      {
+        name: 'extMetadata',
+        internalType: 'struct IExtension.ExtensionMetadata',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          { name: 'metadataURI', internalType: 'string', type: 'string' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+        indexed: false,
+      },
+    ],
+    name: 'FunctionEnabled',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'version', internalType: 'uint8', type: 'uint8', indexed: false },
+    ],
+    name: 'Initialized',
   },
   {
     type: 'event',
@@ -1380,94 +2469,6 @@ export const marketplaceV3ABI = [
       },
     ],
     name: 'PlatformFeeTypeUpdated',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'functionSelector',
-        internalType: 'bytes4',
-        type: 'bytes4',
-        indexed: true,
-      },
-      {
-        name: 'pluginAddress',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'PluginAdded',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'functionSelector',
-        internalType: 'bytes4',
-        type: 'bytes4',
-        indexed: true,
-      },
-      {
-        name: 'pluginAddress',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'PluginRemoved',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'functionSelector',
-        internalType: 'bytes4',
-        type: 'bytes4',
-        indexed: true,
-      },
-      {
-        name: 'functionSignature',
-        internalType: 'string',
-        type: 'string',
-        indexed: true,
-      },
-      {
-        name: 'pluginAddress',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'PluginSet',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'functionSelector',
-        internalType: 'bytes4',
-        type: 'bytes4',
-        indexed: true,
-      },
-      {
-        name: 'oldPluginAddress',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'newPluginAddress',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'PluginUpdated',
   },
   {
     type: 'event',
@@ -1529,84 +2530,267 @@ export const marketplaceV3ABI = [
     ],
     name: 'RoleRevoked',
   },
-  { stateMutability: 'payable', type: 'fallback' },
   {
-    stateMutability: 'view',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'previousAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'newAddress',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'RoyaltyEngineUpdated',
+  },
+  { type: 'fallback', inputs: [], stateMutability: 'payable' },
+  {
     type: 'function',
     inputs: [],
     name: 'DEFAULT_ADMIN_ROLE',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       {
-        name: '_plugin',
-        internalType: 'struct IPluginMap.Plugin',
+        name: '_extension',
+        internalType: 'struct IExtension.Extension',
         type: 'tuple',
         components: [
-          { name: 'functionSelector', internalType: 'bytes4', type: 'bytes4' },
-          { name: 'functionSignature', internalType: 'string', type: 'string' },
-          { name: 'pluginAddress', internalType: 'address', type: 'address' },
+          {
+            name: 'metadata',
+            internalType: 'struct IExtension.ExtensionMetadata',
+            type: 'tuple',
+            components: [
+              { name: 'name', internalType: 'string', type: 'string' },
+              { name: 'metadataURI', internalType: 'string', type: 'string' },
+              {
+                name: 'implementation',
+                internalType: 'address',
+                type: 'address',
+              },
+            ],
+          },
+          {
+            name: 'functions',
+            internalType: 'struct IExtension.ExtensionFunction[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'functionSelector',
+                internalType: 'bytes4',
+                type: 'bytes4',
+              },
+              {
+                name: 'functionSignature',
+                internalType: 'string',
+                type: 'string',
+              },
+            ],
+          },
         ],
       },
     ],
-    name: 'addPlugin',
+    name: 'addExtension',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'pure',
     type: 'function',
     inputs: [],
     name: 'contractType',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'pure',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'contractURI',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'pure',
     type: 'function',
     inputs: [],
     name: 'contractVersion',
     outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    stateMutability: 'pure',
   },
   {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: '_pluginAddress', internalType: 'address', type: 'address' },
-    ],
-    name: 'getAllFunctionsOfPlugin',
-    outputs: [
-      { name: 'registered', internalType: 'bytes4[]', type: 'bytes4[]' },
-    ],
-  },
-  {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
-    name: 'getAllPlugins',
-    outputs: [
+    name: 'defaultExtensions',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_extensionName', internalType: 'string', type: 'string' },
+      { name: '_functionSelector', internalType: 'bytes4', type: 'bytes4' },
+    ],
+    name: 'disableFunctionInExtension',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_extensionName', internalType: 'string', type: 'string' },
       {
-        name: 'registered',
-        internalType: 'struct IPluginMap.Plugin[]',
-        type: 'tuple[]',
+        name: '_function',
+        internalType: 'struct IExtension.ExtensionFunction',
+        type: 'tuple',
         components: [
           { name: 'functionSelector', internalType: 'bytes4', type: 'bytes4' },
           { name: 'functionSignature', internalType: 'string', type: 'string' },
-          { name: 'pluginAddress', internalType: 'address', type: 'address' },
         ],
       },
     ],
+    name: 'enableFunctionInExtension',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
+    type: 'function',
+    inputs: [],
+    name: 'getAllExtensions',
+    outputs: [
+      {
+        name: 'allExtensions',
+        internalType: 'struct IExtension.Extension[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'metadata',
+            internalType: 'struct IExtension.ExtensionMetadata',
+            type: 'tuple',
+            components: [
+              { name: 'name', internalType: 'string', type: 'string' },
+              { name: 'metadataURI', internalType: 'string', type: 'string' },
+              {
+                name: 'implementation',
+                internalType: 'address',
+                type: 'address',
+              },
+            ],
+          },
+          {
+            name: 'functions',
+            internalType: 'struct IExtension.ExtensionFunction[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'functionSelector',
+                internalType: 'bytes4',
+                type: 'bytes4',
+              },
+              {
+                name: 'functionSignature',
+                internalType: 'string',
+                type: 'string',
+              },
+            ],
+          },
+        ],
+      },
+    ],
     stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'extensionName', internalType: 'string', type: 'string' }],
+    name: 'getExtension',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct IExtension.Extension',
+        type: 'tuple',
+        components: [
+          {
+            name: 'metadata',
+            internalType: 'struct IExtension.ExtensionMetadata',
+            type: 'tuple',
+            components: [
+              { name: 'name', internalType: 'string', type: 'string' },
+              { name: 'metadataURI', internalType: 'string', type: 'string' },
+              {
+                name: 'implementation',
+                internalType: 'address',
+                type: 'address',
+              },
+            ],
+          },
+          {
+            name: 'functions',
+            internalType: 'struct IExtension.ExtensionFunction[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'functionSelector',
+                internalType: 'bytes4',
+                type: 'bytes4',
+              },
+              {
+                name: 'functionSignature',
+                internalType: 'string',
+                type: 'string',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getFlatPlatformFeeInfo',
+    outputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '_functionSelector', internalType: 'bytes4', type: 'bytes4' },
+    ],
+    name: 'getImplementationForFunction',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'functionSelector', internalType: 'bytes4', type: 'bytes4' },
+    ],
+    name: 'getMetadataForFunction',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct IExtension.ExtensionMetadata',
+        type: 'tuple',
+        components: [
+          { name: 'name', internalType: 'string', type: 'string' },
+          { name: 'metadataURI', internalType: 'string', type: 'string' },
+          { name: 'implementation', internalType: 'address', type: 'address' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
     type: 'function',
     inputs: [],
     name: 'getPlatformFeeInfo',
@@ -1614,23 +2798,29 @@ export const marketplaceV3ABI = [
       { name: '', internalType: 'address', type: 'address' },
       { name: '', internalType: 'uint16', type: 'uint16' },
     ],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'getPluginForFunction',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    inputs: [],
+    name: 'getPlatformFeeType',
+    outputs: [
+      {
+        name: '',
+        internalType: 'enum IPlatformFee.PlatformFeeType',
+        type: 'uint8',
+      },
+    ],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'role', internalType: 'bytes32', type: 'bytes32' },
@@ -1638,16 +2828,47 @@ export const marketplaceV3ABI = [
     ],
     name: 'getRoleMember',
     outputs: [{ name: 'member', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleMemberCount',
     outputs: [{ name: 'count', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
+    type: 'function',
+    inputs: [
+      { name: 'tokenAddress', internalType: 'address', type: 'address' },
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getRoyalty',
+    outputs: [
+      {
+        name: 'recipients',
+        internalType: 'address payable[]',
+        type: 'address[]',
+      },
+      { name: 'amounts', internalType: 'uint256[]', type: 'uint256[]' },
+    ],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'getRoyaltyEngineAddress',
+    outputs: [
+      {
+        name: 'royaltyEngineAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
     type: 'function',
     inputs: [
       { name: 'role', internalType: 'bytes32', type: 'bytes32' },
@@ -1655,9 +2876,9 @@ export const marketplaceV3ABI = [
     ],
     name: 'grantRole',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'role', internalType: 'bytes32', type: 'bytes32' },
@@ -1665,9 +2886,9 @@ export const marketplaceV3ABI = [
     ],
     name: 'hasRole',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'role', internalType: 'bytes32', type: 'bytes32' },
@@ -1675,9 +2896,9 @@ export const marketplaceV3ABI = [
     ],
     name: 'hasRoleWithSwitch',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: '_defaultAdmin', internalType: 'address', type: 'address' },
@@ -1696,23 +2917,23 @@ export const marketplaceV3ABI = [
     ],
     name: 'initialize',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'forwarder', internalType: 'address', type: 'address' }],
     name: 'isTrustedForwarder',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'data', internalType: 'bytes[]', type: 'bytes[]' }],
     name: 'multicall',
     outputs: [{ name: 'results', internalType: 'bytes[]', type: 'bytes[]' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: '', internalType: 'address', type: 'address' },
@@ -1723,9 +2944,9 @@ export const marketplaceV3ABI = [
     ],
     name: 'onERC1155BatchReceived',
     outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: '', internalType: 'address', type: 'address' },
@@ -1736,9 +2957,9 @@ export const marketplaceV3ABI = [
     ],
     name: 'onERC1155Received',
     outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'pure',
     type: 'function',
     inputs: [
       { name: '', internalType: 'address', type: 'address' },
@@ -1748,23 +2969,18 @@ export const marketplaceV3ABI = [
     ],
     name: 'onERC721Received',
     outputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'pluginMap',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
     stateMutability: 'nonpayable',
+  },
+  {
     type: 'function',
-    inputs: [{ name: '_selector', internalType: 'bytes4', type: 'bytes4' }],
-    name: 'removePlugin',
+    inputs: [
+      { name: '_extensionName', internalType: 'string', type: 'string' },
+    ],
+    name: 'removeExtension',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'role', internalType: 'bytes32', type: 'bytes32' },
@@ -1772,9 +2988,55 @@ export const marketplaceV3ABI = [
     ],
     name: 'renounceRole',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
+    type: 'function',
+    inputs: [
+      {
+        name: '_extension',
+        internalType: 'struct IExtension.Extension',
+        type: 'tuple',
+        components: [
+          {
+            name: 'metadata',
+            internalType: 'struct IExtension.ExtensionMetadata',
+            type: 'tuple',
+            components: [
+              { name: 'name', internalType: 'string', type: 'string' },
+              { name: 'metadataURI', internalType: 'string', type: 'string' },
+              {
+                name: 'implementation',
+                internalType: 'address',
+                type: 'address',
+              },
+            ],
+          },
+          {
+            name: 'functions',
+            internalType: 'struct IExtension.ExtensionFunction[]',
+            type: 'tuple[]',
+            components: [
+              {
+                name: 'functionSelector',
+                internalType: 'bytes4',
+                type: 'bytes4',
+              },
+              {
+                name: 'functionSignature',
+                internalType: 'string',
+                type: 'string',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    name: 'replaceExtension',
+    outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
     type: 'function',
     inputs: [
       { name: 'role', internalType: 'bytes32', type: 'bytes32' },
@@ -1782,16 +3044,30 @@ export const marketplaceV3ABI = [
     ],
     name: 'revokeRole',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: '_uri', internalType: 'string', type: 'string' }],
     name: 'setContractURI',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
+    type: 'function',
+    inputs: [
+      {
+        name: '_platformFeeRecipient',
+        internalType: 'address',
+        type: 'address',
+      },
+      { name: '_flatFee', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setFlatPlatformFeeInfo',
+    outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
     type: 'function',
     inputs: [
       {
@@ -1803,155 +3079,53 @@ export const marketplaceV3ABI = [
     ],
     name: 'setPlatformFeeInfo',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      {
+        name: '_feeType',
+        internalType: 'enum IPlatformFee.PlatformFeeType',
+        type: 'uint8',
+      },
+    ],
+    name: 'setPlatformFeeType',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      {
+        name: '_royaltyEngineAddress',
+        internalType: 'address',
+        type: 'address',
+      },
+    ],
+    name: 'setRoyaltyEngine',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
     type: 'function',
     inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
     name: 'supportsInterface',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      {
-        name: '_plugin',
-        internalType: 'struct IPluginMap.Plugin',
-        type: 'tuple',
-        components: [
-          { name: 'functionSelector', internalType: 'bytes4', type: 'bytes4' },
-          { name: 'functionSignature', internalType: 'string', type: 'string' },
-          { name: 'pluginAddress', internalType: 'address', type: 'address' },
-        ],
-      },
-    ],
-    name: 'updatePlugin',
-    outputs: [],
-  },
-  { stateMutability: 'payable', type: 'receive' },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// NFTMarketplace
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const nftMarketplaceABI = [
-  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'AddressInsufficientBalance',
-  },
-  { type: 'error', inputs: [], name: 'FailedInnerCall' },
-  {
-    type: 'error',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'OwnableInvalidOwner',
-  },
-  {
-    type: 'error',
-    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
-    name: 'OwnableUnauthorizedAccount',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'previousOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'newOwner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'OwnershipTransferred',
-  },
-  {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [
-      { name: 'nftContract', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'buy',
-    outputs: [],
-  },
-  {
     stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: '', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'isListed',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'nftContract', internalType: 'address', type: 'address' },
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'list',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: '', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'nftOwner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'owner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [],
-    name: 'renounceOwnership',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
-    name: 'transferOwnership',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [],
-    name: 'withdraw',
-    outputs: [],
-  },
+  { type: 'receive', stateMutability: 'payable' },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Stake7007
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const stake7007ABI = [
+export const stake7007Abi = [
   {
-    stateMutability: 'nonpayable',
     type: 'constructor',
     inputs: [{ name: 'tokenAddr', internalType: 'address', type: 'address' }],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'error',
@@ -1983,7 +3157,6 @@ export const stake7007ABI = [
     name: 'OwnershipTransferred',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'user', internalType: 'address', type: 'address' },
@@ -1991,71 +3164,72 @@ export const stake7007ABI = [
     ],
     name: 'consumeInferencePoint',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'consumedInferencePoint',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
     name: 'getInferencePoint',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'owner',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [],
     name: 'renounceOwnership',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
     name: 'stake',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'stakeStartTime',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'stakedAmount',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'token',
     outputs: [
       { name: '', internalType: 'contract Token7007', type: 'address' },
     ],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
     name: 'transferOwnership',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
 ] as const
 
@@ -2063,13 +3237,13 @@ export const stake7007ABI = [
 // Token7007
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const token7007ABI = [
+export const token7007Abi = [
   {
-    stateMutability: 'nonpayable',
     type: 'constructor',
     inputs: [
       { name: 'initialOwner', internalType: 'address', type: 'address' },
     ],
+    stateMutability: 'nonpayable',
   },
   {
     type: 'error',
@@ -2179,7 +3353,6 @@ export const token7007ABI = [
     name: 'Transfer',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
@@ -2187,9 +3360,9 @@ export const token7007ABI = [
     ],
     name: 'allowance',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'spender', internalType: 'address', type: 'address' },
@@ -2197,23 +3370,23 @@ export const token7007ABI = [
     ],
     name: 'approve',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
     name: 'balanceOf',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'decimals',
     outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
@@ -2221,44 +3394,44 @@ export const token7007ABI = [
     ],
     name: 'mint',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'name',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'owner',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [],
     name: 'renounceOwnership',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'symbol',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'view',
     type: 'function',
     inputs: [],
     name: 'totalSupply',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
@@ -2266,9 +3439,9 @@ export const token7007ABI = [
     ],
     name: 'transfer',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
@@ -2277,13 +3450,14 @@ export const token7007ABI = [
     ],
     name: 'transferFrom',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
   {
-    stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
     name: 'transferOwnership',
     outputs: [],
+    stateMutability: 'nonpayable',
   },
 ] as const
 
@@ -2292,4946 +3466,2473 @@ export const token7007ABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__
  */
-export function useAigcRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({ abi: aigcABI, ...config } as UseContractReadConfig<
-    typeof aigcABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadAigc = /*#__PURE__*/ createUseReadContract({ abi: aigcAbi })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"aiModelVm"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"aiModelVm"`
  */
-export function useAigcAiModelVm<
-  TFunctionName extends 'aiModelVm',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'aiModelVm',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcAiModelVm = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'aiModelVm',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"balanceOf"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"balanceOf"`
  */
-export function useAigcBalanceOf<
-  TFunctionName extends 'balanceOf',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'balanceOf',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcBalanceOf = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'balanceOf',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"costToken"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"costToken"`
  */
-export function useAigcCostToken<
-  TFunctionName extends 'costToken',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'costToken',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcCostToken = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'costToken',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"getApproved"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"getApproved"`
  */
-export function useAigcGetApproved<
-  TFunctionName extends 'getApproved',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'getApproved',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcGetApproved = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'getApproved',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"getModelIndex"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"getModelIndex"`
  */
-export function useAigcGetModelIndex<
-  TFunctionName extends 'getModelIndex',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'getModelIndex',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcGetModelIndex = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'getModelIndex',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"ipOrgAddr"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"ipOrgAddr"`
  */
-export function useAigcIpOrgAddr<
-  TFunctionName extends 'ipOrgAddr',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'ipOrgAddr',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcIpOrgAddr = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'ipOrgAddr',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"isApprovedForAll"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"isApprovedForAll"`
  */
-export function useAigcIsApprovedForAll<
-  TFunctionName extends 'isApprovedForAll',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'isApprovedForAll',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcIsApprovedForAll = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'isApprovedForAll',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"modelIndex"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"modelIndex"`
  */
-export function useAigcModelIndex<
-  TFunctionName extends 'modelIndex',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'modelIndex',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcModelIndex = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'modelIndex',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"modelName"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"modelName"`
  */
-export function useAigcModelName<
-  TFunctionName extends 'modelName',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'modelName',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcModelName = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'modelName',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"name"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"name"`
  */
-export function useAigcName<
-  TFunctionName extends 'name',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'name',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcName = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'name',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"opmlLib"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"opmlLib"`
  */
-export function useAigcOpmlLib<
-  TFunctionName extends 'opmlLib',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'opmlLib',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcOpmlLib = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'opmlLib',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"ownerOf"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"ownerOf"`
  */
-export function useAigcOwnerOf<
-  TFunctionName extends 'ownerOf',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'ownerOf',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcOwnerOf = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'ownerOf',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"royaltyInfo"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"royaltyInfo"`
  */
-export function useAigcRoyaltyInfo<
-  TFunctionName extends 'royaltyInfo',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'royaltyInfo',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcRoyaltyInfo = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'royaltyInfo',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"supportsInterface"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"supportsInterface"`
  */
-export function useAigcSupportsInterface<
-  TFunctionName extends 'supportsInterface',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'supportsInterface',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcSupportsInterface = /*#__PURE__*/ createUseReadContract(
+  { abi: aigcAbi, functionName: 'supportsInterface' },
+)
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"symbol"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"symbol"`
  */
-export function useAigcSymbol<
-  TFunctionName extends 'symbol',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'symbol',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcSymbol = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'symbol',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"token"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"token"`
  */
-export function useAigcToken<
-  TFunctionName extends 'token',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'token',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcToken = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'token',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"tokenId"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"tokenId"`
  */
-export function useAigcTokenId<
-  TFunctionName extends 'tokenId',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'tokenId',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcTokenId = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'tokenId',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"tokenURI"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"tokenURI"`
  */
-export function useAigcTokenUri<
-  TFunctionName extends 'tokenURI',
-  TSelectData = ReadContractResult<typeof aigcABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcABI,
-    functionName: 'tokenURI',
-    ...config,
-  } as UseContractReadConfig<typeof aigcABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcTokenUri = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'tokenURI',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__
  */
-export function useAigcWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof aigcABI, string>['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof aigcABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, TFunctionName, TMode>({
-    abi: aigcABI,
-    ...config,
-  } as any)
-}
+export const useWriteAigc = /*#__PURE__*/ createUseWriteContract({
+  abi: aigcAbi,
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"approve"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"approve"`
  */
-export function useAigcApprove<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof aigcABI, 'approve'>['request']['abi'],
-        'approve',
-        TMode
-      > & { functionName?: 'approve' }
-    : UseContractWriteConfig<typeof aigcABI, 'approve', TMode> & {
-        abi?: never
-        functionName?: 'approve'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, 'approve', TMode>({
-    abi: aigcABI,
-    functionName: 'approve',
-    ...config,
-  } as any)
-}
+export const useWriteAigcApprove = /*#__PURE__*/ createUseWriteContract({
+  abi: aigcAbi,
+  functionName: 'approve',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"buy"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"buy"`
  */
-export function useAigcBuy<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof aigcABI, 'buy'>['request']['abi'],
-        'buy',
-        TMode
-      > & { functionName?: 'buy' }
-    : UseContractWriteConfig<typeof aigcABI, 'buy', TMode> & {
-        abi?: never
-        functionName?: 'buy'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, 'buy', TMode>({
-    abi: aigcABI,
-    functionName: 'buy',
-    ...config,
-  } as any)
-}
+export const useWriteAigcBuy = /*#__PURE__*/ createUseWriteContract({
+  abi: aigcAbi,
+  functionName: 'buy',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"initialize"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"initialize"`
  */
-export function useAigcInitialize<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigcABI,
-          'initialize'
-        >['request']['abi'],
-        'initialize',
-        TMode
-      > & { functionName?: 'initialize' }
-    : UseContractWriteConfig<typeof aigcABI, 'initialize', TMode> & {
-        abi?: never
-        functionName?: 'initialize'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, 'initialize', TMode>({
-    abi: aigcABI,
-    functionName: 'initialize',
-    ...config,
-  } as any)
-}
+export const useWriteAigcInitialize = /*#__PURE__*/ createUseWriteContract({
+  abi: aigcAbi,
+  functionName: 'initialize',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"mint"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"mint"`
  */
-export function useAigcMint<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof aigcABI, 'mint'>['request']['abi'],
-        'mint',
-        TMode
-      > & { functionName?: 'mint' }
-    : UseContractWriteConfig<typeof aigcABI, 'mint', TMode> & {
-        abi?: never
-        functionName?: 'mint'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, 'mint', TMode>({
-    abi: aigcABI,
-    functionName: 'mint',
-    ...config,
-  } as any)
-}
+export const useWriteAigcMint = /*#__PURE__*/ createUseWriteContract({
+  abi: aigcAbi,
+  functionName: 'mint',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"safeTransferFrom"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"safeTransferFrom"`
  */
-export function useAigcSafeTransferFrom<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigcABI,
-          'safeTransferFrom'
-        >['request']['abi'],
-        'safeTransferFrom',
-        TMode
-      > & { functionName?: 'safeTransferFrom' }
-    : UseContractWriteConfig<typeof aigcABI, 'safeTransferFrom', TMode> & {
-        abi?: never
-        functionName?: 'safeTransferFrom'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, 'safeTransferFrom', TMode>({
-    abi: aigcABI,
+export const useWriteAigcSafeTransferFrom =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigcAbi,
     functionName: 'safeTransferFrom',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"setApprovalForAll"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"setApprovalForAll"`
  */
-export function useAigcSetApprovalForAll<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigcABI,
-          'setApprovalForAll'
-        >['request']['abi'],
-        'setApprovalForAll',
-        TMode
-      > & { functionName?: 'setApprovalForAll' }
-    : UseContractWriteConfig<typeof aigcABI, 'setApprovalForAll', TMode> & {
-        abi?: never
-        functionName?: 'setApprovalForAll'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, 'setApprovalForAll', TMode>({
-    abi: aigcABI,
+export const useWriteAigcSetApprovalForAll =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigcAbi,
     functionName: 'setApprovalForAll',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"transferFrom"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"transferFrom"`
  */
-export function useAigcTransferFrom<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigcABI,
-          'transferFrom'
-        >['request']['abi'],
-        'transferFrom',
-        TMode
-      > & { functionName?: 'transferFrom' }
-    : UseContractWriteConfig<typeof aigcABI, 'transferFrom', TMode> & {
-        abi?: never
-        functionName?: 'transferFrom'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, 'transferFrom', TMode>({
-    abi: aigcABI,
-    functionName: 'transferFrom',
-    ...config,
-  } as any)
-}
+export const useWriteAigcTransferFrom = /*#__PURE__*/ createUseWriteContract({
+  abi: aigcAbi,
+  functionName: 'transferFrom',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"verify"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"verify"`
  */
-export function useAigcVerify<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof aigcABI, 'verify'>['request']['abi'],
-        'verify',
-        TMode
-      > & { functionName?: 'verify' }
-    : UseContractWriteConfig<typeof aigcABI, 'verify', TMode> & {
-        abi?: never
-        functionName?: 'verify'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcABI, 'verify', TMode>({
-    abi: aigcABI,
-    functionName: 'verify',
-    ...config,
-  } as any)
-}
+export const useWriteAigcVerify = /*#__PURE__*/ createUseWriteContract({
+  abi: aigcAbi,
+  functionName: 'verify',
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__
  */
-export function usePrepareAigcWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, TFunctionName>)
-}
+export const useSimulateAigc = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigcAbi,
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"approve"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"approve"`
  */
-export function usePrepareAigcApprove(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, 'approve'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
-    functionName: 'approve',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, 'approve'>)
-}
+export const useSimulateAigcApprove = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigcAbi,
+  functionName: 'approve',
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"buy"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"buy"`
  */
-export function usePrepareAigcBuy(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, 'buy'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
-    functionName: 'buy',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, 'buy'>)
-}
+export const useSimulateAigcBuy = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigcAbi,
+  functionName: 'buy',
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"initialize"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"initialize"`
  */
-export function usePrepareAigcInitialize(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, 'initialize'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
+export const useSimulateAigcInitialize =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
     functionName: 'initialize',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, 'initialize'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"mint"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"mint"`
  */
-export function usePrepareAigcMint(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, 'mint'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
-    functionName: 'mint',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, 'mint'>)
-}
+export const useSimulateAigcMint = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigcAbi,
+  functionName: 'mint',
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"safeTransferFrom"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"safeTransferFrom"`
  */
-export function usePrepareAigcSafeTransferFrom(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, 'safeTransferFrom'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
+export const useSimulateAigcSafeTransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
     functionName: 'safeTransferFrom',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, 'safeTransferFrom'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"setApprovalForAll"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"setApprovalForAll"`
  */
-export function usePrepareAigcSetApprovalForAll(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, 'setApprovalForAll'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
+export const useSimulateAigcSetApprovalForAll =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
     functionName: 'setApprovalForAll',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, 'setApprovalForAll'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"transferFrom"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"transferFrom"`
  */
-export function usePrepareAigcTransferFrom(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, 'transferFrom'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
+export const useSimulateAigcTransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
     functionName: 'transferFrom',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, 'transferFrom'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcABI}__ and `functionName` set to `"verify"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"verify"`
  */
-export function usePrepareAigcVerify(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcABI, 'verify'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcABI,
-    functionName: 'verify',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcABI, 'verify'>)
-}
+export const useSimulateAigcVerify = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigcAbi,
+  functionName: 'verify',
+})
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcABI}__.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__
  */
-export function useAigcEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof aigcABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({ abi: aigcABI, ...config } as UseContractEventConfig<
-    typeof aigcABI,
-    TEventName
-  >)
-}
+export const useWatchAigcEvent = /*#__PURE__*/ createUseWatchContractEvent({
+  abi: aigcAbi,
+})
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcABI}__ and `eventName` set to `"Approval"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"Approval"`
  */
-export function useAigcApprovalEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigcABI, 'Approval'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigcABI,
+export const useWatchAigcApprovalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcAbi,
     eventName: 'Approval',
-    ...config,
-  } as UseContractEventConfig<typeof aigcABI, 'Approval'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcABI}__ and `eventName` set to `"ApprovalForAll"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"ApprovalForAll"`
  */
-export function useAigcApprovalForAllEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigcABI, 'ApprovalForAll'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigcABI,
+export const useWatchAigcApprovalForAllEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcAbi,
     eventName: 'ApprovalForAll',
-    ...config,
-  } as UseContractEventConfig<typeof aigcABI, 'ApprovalForAll'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcABI}__ and `eventName` set to `"BatchMetadataUpdate"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"BatchMetadataUpdate"`
  */
-export function useAigcBatchMetadataUpdateEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigcABI, 'BatchMetadataUpdate'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigcABI,
+export const useWatchAigcBatchMetadataUpdateEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcAbi,
     eventName: 'BatchMetadataUpdate',
-    ...config,
-  } as UseContractEventConfig<typeof aigcABI, 'BatchMetadataUpdate'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcABI}__ and `eventName` set to `"Initialized"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"Initialized"`
  */
-export function useAigcInitializedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigcABI, 'Initialized'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigcABI,
+export const useWatchAigcInitializedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcAbi,
     eventName: 'Initialized',
-    ...config,
-  } as UseContractEventConfig<typeof aigcABI, 'Initialized'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcABI}__ and `eventName` set to `"MetadataUpdate"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"MetadataUpdate"`
  */
-export function useAigcMetadataUpdateEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigcABI, 'MetadataUpdate'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigcABI,
+export const useWatchAigcMetadataUpdateEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcAbi,
     eventName: 'MetadataUpdate',
-    ...config,
-  } as UseContractEventConfig<typeof aigcABI, 'MetadataUpdate'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcABI}__ and `eventName` set to `"Transfer"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"Transfer"`
  */
-export function useAigcTransferEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigcABI, 'Transfer'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigcABI,
+export const useWatchAigcTransferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcAbi,
     eventName: 'Transfer',
-    ...config,
-  } as UseContractEventConfig<typeof aigcABI, 'Transfer'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcFactoryAbi}__
  */
-export function useAigcFactoryRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcFactoryABI,
-    ...config,
-  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcFactory = /*#__PURE__*/ createUseReadContract({
+  abi: aigcFactoryAbi,
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"aigcContractImpl"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"aigcContractImpl"`
  */
-export function useAigcFactoryAigcContractImpl<
-  TFunctionName extends 'aigcContractImpl',
-  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcFactoryABI,
+export const useReadAigcFactoryAigcContractImpl =
+  /*#__PURE__*/ createUseReadContract({
+    abi: aigcFactoryAbi,
     functionName: 'aigcContractImpl',
-    ...config,
-  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"deployedAIGCs"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"deployedAIGCs"`
  */
-export function useAigcFactoryDeployedAigCs<
-  TFunctionName extends 'deployedAIGCs',
-  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcFactoryABI,
+export const useReadAigcFactoryDeployedAigCs =
+  /*#__PURE__*/ createUseReadContract({
+    abi: aigcFactoryAbi,
     functionName: 'deployedAIGCs',
-    ...config,
-  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"deployedAIGTs"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"deployedAIGTs"`
  */
-export function useAigcFactoryDeployedAigTs<
-  TFunctionName extends 'deployedAIGTs',
-  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcFactoryABI,
+export const useReadAigcFactoryDeployedAigTs =
+  /*#__PURE__*/ createUseReadContract({
+    abi: aigcFactoryAbi,
     functionName: 'deployedAIGTs',
-    ...config,
-  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"getAIGC"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"getAIGC"`
  */
-export function useAigcFactoryGetAigc<
-  TFunctionName extends 'getAIGC',
-  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcFactoryABI,
-    functionName: 'getAIGC',
-    ...config,
-  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcFactoryGetAigc = /*#__PURE__*/ createUseReadContract({
+  abi: aigcFactoryAbi,
+  functionName: 'getAIGC',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"getAIGT"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"getAIGT"`
  */
-export function useAigcFactoryGetAigt<
-  TFunctionName extends 'getAIGT',
-  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcFactoryABI,
-    functionName: 'getAIGT',
-    ...config,
-  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
-}
+export const useReadAigcFactoryGetAigt = /*#__PURE__*/ createUseReadContract({
+  abi: aigcFactoryAbi,
+  functionName: 'getAIGT',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"modelIndexCurrent"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"modelIndexCurrent"`
  */
-export function useAigcFactoryModelIndexCurrent<
-  TFunctionName extends 'modelIndexCurrent',
-  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcFactoryABI,
+export const useReadAigcFactoryModelIndexCurrent =
+  /*#__PURE__*/ createUseReadContract({
+    abi: aigcFactoryAbi,
     functionName: 'modelIndexCurrent',
-    ...config,
-  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"modelIndexToIpOrgAddr"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"modelIndexToIpOrgAddr"`
  */
-export function useAigcFactoryModelIndexToIpOrgAddr<
-  TFunctionName extends 'modelIndexToIpOrgAddr',
-  TSelectData = ReadContractResult<typeof aigcFactoryABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigcFactoryABI,
+export const useReadAigcFactoryModelIndexToIpOrgAddr =
+  /*#__PURE__*/ createUseReadContract({
+    abi: aigcFactoryAbi,
     functionName: 'modelIndexToIpOrgAddr',
-    ...config,
-  } as UseContractReadConfig<typeof aigcFactoryABI, TFunctionName, TSelectData>)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcFactoryABI}__.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcFactoryAbi}__
  */
-export function useAigcFactoryWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigcFactoryABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof aigcFactoryABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcFactoryABI, TFunctionName, TMode>({
-    abi: aigcFactoryABI,
-    ...config,
-  } as any)
-}
+export const useWriteAigcFactory = /*#__PURE__*/ createUseWriteContract({
+  abi: aigcFactoryAbi,
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"createAIGC"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"createAIGC"`
  */
-export function useAigcFactoryCreateAigc<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigcFactoryABI,
-          'createAIGC'
-        >['request']['abi'],
-        'createAIGC',
-        TMode
-      > & { functionName?: 'createAIGC' }
-    : UseContractWriteConfig<typeof aigcFactoryABI, 'createAIGC', TMode> & {
-        abi?: never
-        functionName?: 'createAIGC'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigcFactoryABI, 'createAIGC', TMode>({
-    abi: aigcFactoryABI,
+export const useWriteAigcFactoryCreateAigc =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigcFactoryAbi,
     functionName: 'createAIGC',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcFactoryABI}__.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcFactoryAbi}__
  */
-export function usePrepareAigcFactoryWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcFactoryABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcFactoryABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcFactoryABI, TFunctionName>)
-}
+export const useSimulateAigcFactory = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigcFactoryAbi,
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigcFactoryABI}__ and `functionName` set to `"createAIGC"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcFactoryAbi}__ and `functionName` set to `"createAIGC"`
  */
-export function usePrepareAigcFactoryCreateAigc(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigcFactoryABI, 'createAIGC'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigcFactoryABI,
+export const useSimulateAigcFactoryCreateAigc =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcFactoryAbi,
     functionName: 'createAIGC',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigcFactoryABI, 'createAIGC'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcFactoryABI}__.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcFactoryAbi}__
  */
-export function useAigcFactoryEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof aigcFactoryABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigcFactoryABI,
-    ...config,
-  } as UseContractEventConfig<typeof aigcFactoryABI, TEventName>)
-}
+export const useWatchAigcFactoryEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({ abi: aigcFactoryAbi })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigcFactoryABI}__ and `eventName` set to `"AIGC_Created"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcFactoryAbi}__ and `eventName` set to `"AIGC_Created"`
  */
-export function useAigcFactoryAigcCreatedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigcFactoryABI, 'AIGC_Created'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigcFactoryABI,
+export const useWatchAigcFactoryAigcCreatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcFactoryAbi,
     eventName: 'AIGC_Created',
-    ...config,
-  } as UseContractEventConfig<typeof aigcFactoryABI, 'AIGC_Created'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__
  */
-export function useAigtRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({ abi: aigtABI, ...config } as UseContractReadConfig<
-    typeof aigtABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadAigt = /*#__PURE__*/ createUseReadContract({ abi: aigtAbi })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"allowance"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"allowance"`
  */
-export function useAigtAllowance<
-  TFunctionName extends 'allowance',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'allowance',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtAllowance = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'allowance',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"balanceOf"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"balanceOf"`
  */
-export function useAigtBalanceOf<
-  TFunctionName extends 'balanceOf',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'balanceOf',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtBalanceOf = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'balanceOf',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"decimals"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"decimals"`
  */
-export function useAigtDecimals<
-  TFunctionName extends 'decimals',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'decimals',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtDecimals = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'decimals',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"getModelIndex"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"getModelIndex"`
  */
-export function useAigtGetModelIndex<
-  TFunctionName extends 'getModelIndex',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'getModelIndex',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtGetModelIndex = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'getModelIndex',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"getShare"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"getShare"`
  */
-export function useAigtGetShare<
-  TFunctionName extends 'getShare',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'getShare',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtGetShare = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'getShare',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"maxSupply"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"maxSupply"`
  */
-export function useAigtMaxSupply<
-  TFunctionName extends 'maxSupply',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'maxSupply',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtMaxSupply = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'maxSupply',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"modelIndex"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"modelIndex"`
  */
-export function useAigtModelIndex<
-  TFunctionName extends 'modelIndex',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'modelIndex',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtModelIndex = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'modelIndex',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"name"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"name"`
  */
-export function useAigtName<
-  TFunctionName extends 'name',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'name',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtName = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'name',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"owner"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"owner"`
  */
-export function useAigtOwner<
-  TFunctionName extends 'owner',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'owner',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtOwner = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'owner',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"symbol"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"symbol"`
  */
-export function useAigtSymbol<
-  TFunctionName extends 'symbol',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'symbol',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtSymbol = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'symbol',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"tokenPrice"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"tokenPrice"`
  */
-export function useAigtTokenPrice<
-  TFunctionName extends 'tokenPrice',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'tokenPrice',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtTokenPrice = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'tokenPrice',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"totalSupply"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"totalSupply"`
  */
-export function useAigtTotalSupply<
-  TFunctionName extends 'totalSupply',
-  TSelectData = ReadContractResult<typeof aigtABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: aigtABI,
-    functionName: 'totalSupply',
-    ...config,
-  } as UseContractReadConfig<typeof aigtABI, TFunctionName, TSelectData>)
-}
+export const useReadAigtTotalSupply = /*#__PURE__*/ createUseReadContract({
+  abi: aigtAbi,
+  functionName: 'totalSupply',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigtABI}__.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigtAbi}__
  */
-export function useAigtWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof aigtABI, string>['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof aigtABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigtABI, TFunctionName, TMode>({
-    abi: aigtABI,
-    ...config,
-  } as any)
-}
+export const useWriteAigt = /*#__PURE__*/ createUseWriteContract({
+  abi: aigtAbi,
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"approve"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"approve"`
  */
-export function useAigtApprove<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof aigtABI, 'approve'>['request']['abi'],
-        'approve',
-        TMode
-      > & { functionName?: 'approve' }
-    : UseContractWriteConfig<typeof aigtABI, 'approve', TMode> & {
-        abi?: never
-        functionName?: 'approve'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigtABI, 'approve', TMode>({
-    abi: aigtABI,
-    functionName: 'approve',
-    ...config,
-  } as any)
-}
+export const useWriteAigtApprove = /*#__PURE__*/ createUseWriteContract({
+  abi: aigtAbi,
+  functionName: 'approve',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"mint"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"mint"`
  */
-export function useAigtMint<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof aigtABI, 'mint'>['request']['abi'],
-        'mint',
-        TMode
-      > & { functionName?: 'mint' }
-    : UseContractWriteConfig<typeof aigtABI, 'mint', TMode> & {
-        abi?: never
-        functionName?: 'mint'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigtABI, 'mint', TMode>({
-    abi: aigtABI,
-    functionName: 'mint',
-    ...config,
-  } as any)
-}
+export const useWriteAigtMint = /*#__PURE__*/ createUseWriteContract({
+  abi: aigtAbi,
+  functionName: 'mint',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"renounceOwnership"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"renounceOwnership"`
  */
-export function useAigtRenounceOwnership<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigtABI,
-          'renounceOwnership'
-        >['request']['abi'],
-        'renounceOwnership',
-        TMode
-      > & { functionName?: 'renounceOwnership' }
-    : UseContractWriteConfig<typeof aigtABI, 'renounceOwnership', TMode> & {
-        abi?: never
-        functionName?: 'renounceOwnership'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigtABI, 'renounceOwnership', TMode>({
-    abi: aigtABI,
+export const useWriteAigtRenounceOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigtAbi,
     functionName: 'renounceOwnership',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"transfer"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"transfer"`
  */
-export function useAigtTransfer<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigtABI,
-          'transfer'
-        >['request']['abi'],
-        'transfer',
-        TMode
-      > & { functionName?: 'transfer' }
-    : UseContractWriteConfig<typeof aigtABI, 'transfer', TMode> & {
-        abi?: never
-        functionName?: 'transfer'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigtABI, 'transfer', TMode>({
-    abi: aigtABI,
-    functionName: 'transfer',
-    ...config,
-  } as any)
-}
+export const useWriteAigtTransfer = /*#__PURE__*/ createUseWriteContract({
+  abi: aigtAbi,
+  functionName: 'transfer',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"transferFrom"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"transferFrom"`
  */
-export function useAigtTransferFrom<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigtABI,
-          'transferFrom'
-        >['request']['abi'],
-        'transferFrom',
-        TMode
-      > & { functionName?: 'transferFrom' }
-    : UseContractWriteConfig<typeof aigtABI, 'transferFrom', TMode> & {
-        abi?: never
-        functionName?: 'transferFrom'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigtABI, 'transferFrom', TMode>({
-    abi: aigtABI,
-    functionName: 'transferFrom',
-    ...config,
-  } as any)
-}
+export const useWriteAigtTransferFrom = /*#__PURE__*/ createUseWriteContract({
+  abi: aigtAbi,
+  functionName: 'transferFrom',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"transferOwnership"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"transferOwnership"`
  */
-export function useAigtTransferOwnership<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigtABI,
-          'transferOwnership'
-        >['request']['abi'],
-        'transferOwnership',
-        TMode
-      > & { functionName?: 'transferOwnership' }
-    : UseContractWriteConfig<typeof aigtABI, 'transferOwnership', TMode> & {
-        abi?: never
-        functionName?: 'transferOwnership'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigtABI, 'transferOwnership', TMode>({
-    abi: aigtABI,
+export const useWriteAigtTransferOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigtAbi,
     functionName: 'transferOwnership',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"withdraw"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"withdraw"`
  */
-export function useAigtWithdraw<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof aigtABI,
-          'withdraw'
-        >['request']['abi'],
-        'withdraw',
-        TMode
-      > & { functionName?: 'withdraw' }
-    : UseContractWriteConfig<typeof aigtABI, 'withdraw', TMode> & {
-        abi?: never
-        functionName?: 'withdraw'
-      } = {} as any,
-) {
-  return useContractWrite<typeof aigtABI, 'withdraw', TMode>({
-    abi: aigtABI,
-    functionName: 'withdraw',
-    ...config,
-  } as any)
-}
+export const useWriteAigtWithdraw = /*#__PURE__*/ createUseWriteContract({
+  abi: aigtAbi,
+  functionName: 'withdraw',
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigtABI}__.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigtAbi}__
  */
-export function usePrepareAigtWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigtABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigtABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigtABI, TFunctionName>)
-}
+export const useSimulateAigt = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigtAbi,
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"approve"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"approve"`
  */
-export function usePrepareAigtApprove(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigtABI, 'approve'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigtABI,
-    functionName: 'approve',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigtABI, 'approve'>)
-}
+export const useSimulateAigtApprove = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigtAbi,
+  functionName: 'approve',
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"mint"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"mint"`
  */
-export function usePrepareAigtMint(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigtABI, 'mint'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigtABI,
-    functionName: 'mint',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigtABI, 'mint'>)
-}
+export const useSimulateAigtMint = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigtAbi,
+  functionName: 'mint',
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"renounceOwnership"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"renounceOwnership"`
  */
-export function usePrepareAigtRenounceOwnership(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigtABI, 'renounceOwnership'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigtABI,
+export const useSimulateAigtRenounceOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigtAbi,
     functionName: 'renounceOwnership',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigtABI, 'renounceOwnership'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"transfer"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"transfer"`
  */
-export function usePrepareAigtTransfer(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigtABI, 'transfer'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigtABI,
-    functionName: 'transfer',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigtABI, 'transfer'>)
-}
+export const useSimulateAigtTransfer = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigtAbi,
+  functionName: 'transfer',
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"transferFrom"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"transferFrom"`
  */
-export function usePrepareAigtTransferFrom(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigtABI, 'transferFrom'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigtABI,
+export const useSimulateAigtTransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigtAbi,
     functionName: 'transferFrom',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigtABI, 'transferFrom'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"transferOwnership"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"transferOwnership"`
  */
-export function usePrepareAigtTransferOwnership(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigtABI, 'transferOwnership'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigtABI,
+export const useSimulateAigtTransferOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigtAbi,
     functionName: 'transferOwnership',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigtABI, 'transferOwnership'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link aigtABI}__ and `functionName` set to `"withdraw"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigtAbi}__ and `functionName` set to `"withdraw"`
  */
-export function usePrepareAigtWithdraw(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof aigtABI, 'withdraw'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: aigtABI,
-    functionName: 'withdraw',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof aigtABI, 'withdraw'>)
-}
+export const useSimulateAigtWithdraw = /*#__PURE__*/ createUseSimulateContract({
+  abi: aigtAbi,
+  functionName: 'withdraw',
+})
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigtABI}__.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigtAbi}__
  */
-export function useAigtEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof aigtABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({ abi: aigtABI, ...config } as UseContractEventConfig<
-    typeof aigtABI,
-    TEventName
-  >)
-}
+export const useWatchAigtEvent = /*#__PURE__*/ createUseWatchContractEvent({
+  abi: aigtAbi,
+})
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigtABI}__ and `eventName` set to `"Approval"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigtAbi}__ and `eventName` set to `"Approval"`
  */
-export function useAigtApprovalEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigtABI, 'Approval'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigtABI,
+export const useWatchAigtApprovalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigtAbi,
     eventName: 'Approval',
-    ...config,
-  } as UseContractEventConfig<typeof aigtABI, 'Approval'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigtABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigtAbi}__ and `eventName` set to `"OwnershipTransferred"`
  */
-export function useAigtOwnershipTransferredEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigtABI, 'OwnershipTransferred'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigtABI,
+export const useWatchAigtOwnershipTransferredEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigtAbi,
     eventName: 'OwnershipTransferred',
-    ...config,
-  } as UseContractEventConfig<typeof aigtABI, 'OwnershipTransferred'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link aigtABI}__ and `eventName` set to `"Transfer"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigtAbi}__ and `eventName` set to `"Transfer"`
  */
-export function useAigtTransferEvent(
-  config: Omit<
-    UseContractEventConfig<typeof aigtABI, 'Transfer'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: aigtABI,
+export const useWatchAigtTransferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigtAbi,
     eventName: 'Transfer',
-    ...config,
-  } as UseContractEventConfig<typeof aigtABI, 'Transfer'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__
  */
-export function useDirectListingsRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadErc20 = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"_msgData"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"allowance"`
  */
-export function useDirectListingsMsgData<
-  TFunctionName extends '_msgData',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
-    functionName: '_msgData',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadErc20Allowance = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'allowance',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"_msgSender"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"balanceOf"`
  */
-export function useDirectListingsMsgSender<
-  TFunctionName extends '_msgSender',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
+export const useReadErc20BalanceOf = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'balanceOf',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"decimals"`
+ */
+export const useReadErc20Decimals = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'decimals',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"name"`
+ */
+export const useReadErc20Name = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'name',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"symbol"`
+ */
+export const useReadErc20Symbol = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'symbol',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"totalSupply"`
+ */
+export const useReadErc20TotalSupply = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'totalSupply',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__
+ */
+export const useWriteErc20 = /*#__PURE__*/ createUseWriteContract({
+  abi: erc20Abi,
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"approve"`
+ */
+export const useWriteErc20Approve = /*#__PURE__*/ createUseWriteContract({
+  abi: erc20Abi,
+  functionName: 'approve',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"transfer"`
+ */
+export const useWriteErc20Transfer = /*#__PURE__*/ createUseWriteContract({
+  abi: erc20Abi,
+  functionName: 'transfer',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useWriteErc20TransferFrom = /*#__PURE__*/ createUseWriteContract({
+  abi: erc20Abi,
+  functionName: 'transferFrom',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__
+ */
+export const useSimulateErc20 = /*#__PURE__*/ createUseSimulateContract({
+  abi: erc20Abi,
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"approve"`
+ */
+export const useSimulateErc20Approve = /*#__PURE__*/ createUseSimulateContract({
+  abi: erc20Abi,
+  functionName: 'approve',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"transfer"`
+ */
+export const useSimulateErc20Transfer = /*#__PURE__*/ createUseSimulateContract(
+  { abi: erc20Abi, functionName: 'transfer' },
+)
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useSimulateErc20TransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: erc20Abi,
+    functionName: 'transferFrom',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link erc20Abi}__
+ */
+export const useWatchErc20Event = /*#__PURE__*/ createUseWatchContractEvent({
+  abi: erc20Abi,
+})
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link erc20Abi}__ and `eventName` set to `"Approval"`
+ */
+export const useWatchErc20ApprovalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: erc20Abi,
+    eventName: 'Approval',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link erc20Abi}__ and `eventName` set to `"Transfer"`
+ */
+export const useWatchErc20TransferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: erc20Abi,
+    eventName: 'Transfer',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__
+ */
+export const useReadMarketplaceV3 = /*#__PURE__*/ createUseReadContract({
+  abi: marketplaceV3Abi,
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"_msgData"`
+ */
+export const useReadMarketplaceV3MsgData = /*#__PURE__*/ createUseReadContract({
+  abi: marketplaceV3Abi,
+  functionName: '_msgData',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"_msgSender"`
+ */
+export const useReadMarketplaceV3MsgSender =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: '_msgSender',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"currencyPriceForListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"currencyPriceForListing"`
  */
-export function useDirectListingsCurrencyPriceForListing<
-  TFunctionName extends 'currencyPriceForListing',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
+export const useReadMarketplaceV3CurrencyPriceForListing =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'currencyPriceForListing',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"getAllListings"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getAllListings"`
  */
-export function useDirectListingsGetAllListings<
-  TFunctionName extends 'getAllListings',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
+export const useReadMarketplaceV3GetAllListings =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'getAllListings',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"getAllValidListings"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getAllValidListings"`
  */
-export function useDirectListingsGetAllValidListings<
-  TFunctionName extends 'getAllValidListings',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
+export const useReadMarketplaceV3GetAllValidListings =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'getAllValidListings',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"getListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getListing"`
  */
-export function useDirectListingsGetListing<
-  TFunctionName extends 'getListing',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
+export const useReadMarketplaceV3GetListing =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'getListing',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"isBuyerApprovedForListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"isBuyerApprovedForListing"`
  */
-export function useDirectListingsIsBuyerApprovedForListing<
-  TFunctionName extends 'isBuyerApprovedForListing',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
+export const useReadMarketplaceV3IsBuyerApprovedForListing =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'isBuyerApprovedForListing',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"isCurrencyApprovedForListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"isCurrencyApprovedForListing"`
  */
-export function useDirectListingsIsCurrencyApprovedForListing<
-  TFunctionName extends 'isCurrencyApprovedForListing',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
+export const useReadMarketplaceV3IsCurrencyApprovedForListing =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'isCurrencyApprovedForListing',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"totalListings"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"totalListings"`
  */
-export function useDirectListingsTotalListings<
-  TFunctionName extends 'totalListings',
-  TSelectData = ReadContractResult<typeof directListingsABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof directListingsABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: directListingsABI,
+export const useReadMarketplaceV3TotalListings =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'totalListings',
-    ...config,
-  } as UseContractReadConfig<
-    typeof directListingsABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getAllAuctions"`
  */
-export function useDirectListingsWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof directListingsABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof directListingsABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof directListingsABI, TFunctionName, TMode>({
-    abi: directListingsABI,
-    ...config,
-  } as any)
-}
+export const useReadMarketplaceV3GetAllAuctions =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getAllAuctions',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"approveBuyerForListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getAllValidAuctions"`
  */
-export function useDirectListingsApproveBuyerForListing<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof directListingsABI,
-          'approveBuyerForListing'
-        >['request']['abi'],
-        'approveBuyerForListing',
-        TMode
-      > & { functionName?: 'approveBuyerForListing' }
-    : UseContractWriteConfig<
-        typeof directListingsABI,
-        'approveBuyerForListing',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'approveBuyerForListing'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof directListingsABI,
-    'approveBuyerForListing',
-    TMode
-  >({
-    abi: directListingsABI,
-    functionName: 'approveBuyerForListing',
-    ...config,
-  } as any)
-}
+export const useReadMarketplaceV3GetAllValidAuctions =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getAllValidAuctions',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"approveCurrencyForListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getAuction"`
  */
-export function useDirectListingsApproveCurrencyForListing<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof directListingsABI,
-          'approveCurrencyForListing'
-        >['request']['abi'],
-        'approveCurrencyForListing',
-        TMode
-      > & { functionName?: 'approveCurrencyForListing' }
-    : UseContractWriteConfig<
-        typeof directListingsABI,
-        'approveCurrencyForListing',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'approveCurrencyForListing'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof directListingsABI,
-    'approveCurrencyForListing',
-    TMode
-  >({
-    abi: directListingsABI,
-    functionName: 'approveCurrencyForListing',
-    ...config,
-  } as any)
-}
+export const useReadMarketplaceV3GetAuction =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getAuction',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"buyFromListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getWinningBid"`
  */
-export function useDirectListingsBuyFromListing<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof directListingsABI,
-          'buyFromListing'
-        >['request']['abi'],
-        'buyFromListing',
-        TMode
-      > & { functionName?: 'buyFromListing' }
-    : UseContractWriteConfig<
-        typeof directListingsABI,
-        'buyFromListing',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'buyFromListing'
-      } = {} as any,
-) {
-  return useContractWrite<typeof directListingsABI, 'buyFromListing', TMode>({
-    abi: directListingsABI,
-    functionName: 'buyFromListing',
-    ...config,
-  } as any)
-}
+export const useReadMarketplaceV3GetWinningBid =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getWinningBid',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"cancelListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"isAuctionExpired"`
  */
-export function useDirectListingsCancelListing<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof directListingsABI,
-          'cancelListing'
-        >['request']['abi'],
-        'cancelListing',
-        TMode
-      > & { functionName?: 'cancelListing' }
-    : UseContractWriteConfig<
-        typeof directListingsABI,
-        'cancelListing',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'cancelListing'
-      } = {} as any,
-) {
-  return useContractWrite<typeof directListingsABI, 'cancelListing', TMode>({
-    abi: directListingsABI,
-    functionName: 'cancelListing',
-    ...config,
-  } as any)
-}
+export const useReadMarketplaceV3IsAuctionExpired =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'isAuctionExpired',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"createListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"isNewWinningBid"`
  */
-export function useDirectListingsCreateListing<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof directListingsABI,
-          'createListing'
-        >['request']['abi'],
-        'createListing',
-        TMode
-      > & { functionName?: 'createListing' }
-    : UseContractWriteConfig<
-        typeof directListingsABI,
-        'createListing',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'createListing'
-      } = {} as any,
-) {
-  return useContractWrite<typeof directListingsABI, 'createListing', TMode>({
-    abi: directListingsABI,
-    functionName: 'createListing',
-    ...config,
-  } as any)
-}
+export const useReadMarketplaceV3IsNewWinningBid =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'isNewWinningBid',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"updateListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"totalAuctions"`
  */
-export function useDirectListingsUpdateListing<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof directListingsABI,
-          'updateListing'
-        >['request']['abi'],
-        'updateListing',
-        TMode
-      > & { functionName?: 'updateListing' }
-    : UseContractWriteConfig<
-        typeof directListingsABI,
-        'updateListing',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'updateListing'
-      } = {} as any,
-) {
-  return useContractWrite<typeof directListingsABI, 'updateListing', TMode>({
-    abi: directListingsABI,
-    functionName: 'updateListing',
-    ...config,
-  } as any)
-}
+export const useReadMarketplaceV3TotalAuctions =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'totalAuctions',
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getAllOffers"`
  */
-export function usePrepareDirectListingsWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof directListingsABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: directListingsABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof directListingsABI, TFunctionName>)
-}
+export const useReadMarketplaceV3GetAllOffers =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getAllOffers',
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"approveBuyerForListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getAllValidOffers"`
  */
-export function usePrepareDirectListingsApproveBuyerForListing(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof directListingsABI,
-      'approveBuyerForListing'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: directListingsABI,
-    functionName: 'approveBuyerForListing',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof directListingsABI,
-    'approveBuyerForListing'
-  >)
-}
+export const useReadMarketplaceV3GetAllValidOffers =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getAllValidOffers',
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"approveCurrencyForListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getOffer"`
  */
-export function usePrepareDirectListingsApproveCurrencyForListing(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof directListingsABI,
-      'approveCurrencyForListing'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: directListingsABI,
-    functionName: 'approveCurrencyForListing',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof directListingsABI,
-    'approveCurrencyForListing'
-  >)
-}
+export const useReadMarketplaceV3GetOffer = /*#__PURE__*/ createUseReadContract(
+  { abi: marketplaceV3Abi, functionName: 'getOffer' },
+)
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"buyFromListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"totalOffers"`
  */
-export function usePrepareDirectListingsBuyFromListing(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof directListingsABI, 'buyFromListing'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: directListingsABI,
-    functionName: 'buyFromListing',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof directListingsABI,
-    'buyFromListing'
-  >)
-}
+export const useReadMarketplaceV3TotalOffers =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'totalOffers',
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"cancelListing"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"DEFAULT_ADMIN_ROLE"`
  */
-export function usePrepareDirectListingsCancelListing(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof directListingsABI, 'cancelListing'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: directListingsABI,
-    functionName: 'cancelListing',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof directListingsABI, 'cancelListing'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"createListing"`.
- */
-export function usePrepareDirectListingsCreateListing(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof directListingsABI, 'createListing'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: directListingsABI,
-    functionName: 'createListing',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof directListingsABI, 'createListing'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link directListingsABI}__ and `functionName` set to `"updateListing"`.
- */
-export function usePrepareDirectListingsUpdateListing(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof directListingsABI, 'updateListing'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: directListingsABI,
-    functionName: 'updateListing',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof directListingsABI, 'updateListing'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__.
- */
-export function useDirectListingsEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof directListingsABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: directListingsABI,
-    ...config,
-  } as UseContractEventConfig<typeof directListingsABI, TEventName>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"BuyerApprovedForListing"`.
- */
-export function useDirectListingsBuyerApprovedForListingEvent(
-  config: Omit<
-    UseContractEventConfig<typeof directListingsABI, 'BuyerApprovedForListing'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: directListingsABI,
-    eventName: 'BuyerApprovedForListing',
-    ...config,
-  } as UseContractEventConfig<
-    typeof directListingsABI,
-    'BuyerApprovedForListing'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"CancelledListing"`.
- */
-export function useDirectListingsCancelledListingEvent(
-  config: Omit<
-    UseContractEventConfig<typeof directListingsABI, 'CancelledListing'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: directListingsABI,
-    eventName: 'CancelledListing',
-    ...config,
-  } as UseContractEventConfig<typeof directListingsABI, 'CancelledListing'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"CurrencyApprovedForListing"`.
- */
-export function useDirectListingsCurrencyApprovedForListingEvent(
-  config: Omit<
-    UseContractEventConfig<
-      typeof directListingsABI,
-      'CurrencyApprovedForListing'
-    >,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: directListingsABI,
-    eventName: 'CurrencyApprovedForListing',
-    ...config,
-  } as UseContractEventConfig<
-    typeof directListingsABI,
-    'CurrencyApprovedForListing'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"NewListing"`.
- */
-export function useDirectListingsNewListingEvent(
-  config: Omit<
-    UseContractEventConfig<typeof directListingsABI, 'NewListing'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: directListingsABI,
-    eventName: 'NewListing',
-    ...config,
-  } as UseContractEventConfig<typeof directListingsABI, 'NewListing'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"NewSale"`.
- */
-export function useDirectListingsNewSaleEvent(
-  config: Omit<
-    UseContractEventConfig<typeof directListingsABI, 'NewSale'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: directListingsABI,
-    eventName: 'NewSale',
-    ...config,
-  } as UseContractEventConfig<typeof directListingsABI, 'NewSale'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link directListingsABI}__ and `eventName` set to `"UpdatedListing"`.
- */
-export function useDirectListingsUpdatedListingEvent(
-  config: Omit<
-    UseContractEventConfig<typeof directListingsABI, 'UpdatedListing'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: directListingsABI,
-    eventName: 'UpdatedListing',
-    ...config,
-  } as UseContractEventConfig<typeof directListingsABI, 'UpdatedListing'>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__.
- */
-export function useMarketplaceV3Read<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"DEFAULT_ADMIN_ROLE"`.
- */
-export function useMarketplaceV3DefaultAdminRole<
-  TFunctionName extends 'DEFAULT_ADMIN_ROLE',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3DefaultAdminRole =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'DEFAULT_ADMIN_ROLE',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"contractType"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"contractType"`
  */
-export function useMarketplaceV3ContractType<
-  TFunctionName extends 'contractType',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3ContractType =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'contractType',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"contractURI"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"contractURI"`
  */
-export function useMarketplaceV3ContractUri<
-  TFunctionName extends 'contractURI',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3ContractUri =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'contractURI',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"contractVersion"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"contractVersion"`
  */
-export function useMarketplaceV3ContractVersion<
-  TFunctionName extends 'contractVersion',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3ContractVersion =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'contractVersion',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getAllFunctionsOfPlugin"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"defaultExtensions"`
  */
-export function useMarketplaceV3GetAllFunctionsOfPlugin<
-  TFunctionName extends 'getAllFunctionsOfPlugin',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
-    functionName: 'getAllFunctionsOfPlugin',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadMarketplaceV3DefaultExtensions =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'defaultExtensions',
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getAllPlugins"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getAllExtensions"`
  */
-export function useMarketplaceV3GetAllPlugins<
-  TFunctionName extends 'getAllPlugins',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
-    functionName: 'getAllPlugins',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadMarketplaceV3GetAllExtensions =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getAllExtensions',
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getPlatformFeeInfo"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getExtension"`
  */
-export function useMarketplaceV3GetPlatformFeeInfo<
-  TFunctionName extends 'getPlatformFeeInfo',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3GetExtension =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getExtension',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getFlatPlatformFeeInfo"`
+ */
+export const useReadMarketplaceV3GetFlatPlatformFeeInfo =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getFlatPlatformFeeInfo',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getImplementationForFunction"`
+ */
+export const useReadMarketplaceV3GetImplementationForFunction =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getImplementationForFunction',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getMetadataForFunction"`
+ */
+export const useReadMarketplaceV3GetMetadataForFunction =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getMetadataForFunction',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getPlatformFeeInfo"`
+ */
+export const useReadMarketplaceV3GetPlatformFeeInfo =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'getPlatformFeeInfo',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getPluginForFunction"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getPlatformFeeType"`
  */
-export function useMarketplaceV3GetPluginForFunction<
-  TFunctionName extends 'getPluginForFunction',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
-    functionName: 'getPluginForFunction',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadMarketplaceV3GetPlatformFeeType =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getPlatformFeeType',
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getRoleAdmin"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getRoleAdmin"`
  */
-export function useMarketplaceV3GetRoleAdmin<
-  TFunctionName extends 'getRoleAdmin',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3GetRoleAdmin =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'getRoleAdmin',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getRoleMember"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getRoleMember"`
  */
-export function useMarketplaceV3GetRoleMember<
-  TFunctionName extends 'getRoleMember',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3GetRoleMember =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'getRoleMember',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"getRoleMemberCount"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getRoleMemberCount"`
  */
-export function useMarketplaceV3GetRoleMemberCount<
-  TFunctionName extends 'getRoleMemberCount',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3GetRoleMemberCount =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'getRoleMemberCount',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"hasRole"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getRoyaltyEngineAddress"`
  */
-export function useMarketplaceV3HasRole<
-  TFunctionName extends 'hasRole',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
-    functionName: 'hasRole',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadMarketplaceV3GetRoyaltyEngineAddress =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getRoyaltyEngineAddress',
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"hasRoleWithSwitch"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"hasRole"`
  */
-export function useMarketplaceV3HasRoleWithSwitch<
-  TFunctionName extends 'hasRoleWithSwitch',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3HasRole = /*#__PURE__*/ createUseReadContract({
+  abi: marketplaceV3Abi,
+  functionName: 'hasRole',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"hasRoleWithSwitch"`
+ */
+export const useReadMarketplaceV3HasRoleWithSwitch =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'hasRoleWithSwitch',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"isTrustedForwarder"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"isTrustedForwarder"`
  */
-export function useMarketplaceV3IsTrustedForwarder<
-  TFunctionName extends 'isTrustedForwarder',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3IsTrustedForwarder =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'isTrustedForwarder',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC721Received"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"supportsInterface"`
  */
-export function useMarketplaceV3OnErc721Received<
-  TFunctionName extends 'onERC721Received',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
-    functionName: 'onERC721Received',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"pluginMap"`.
- */
-export function useMarketplaceV3PluginMap<
-  TFunctionName extends 'pluginMap',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
-    functionName: 'pluginMap',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"supportsInterface"`.
- */
-export function useMarketplaceV3SupportsInterface<
-  TFunctionName extends 'supportsInterface',
-  TSelectData = ReadContractResult<typeof marketplaceV3ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof marketplaceV3ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: marketplaceV3ABI,
+export const useReadMarketplaceV3SupportsInterface =
+  /*#__PURE__*/ createUseReadContract({
+    abi: marketplaceV3Abi,
     functionName: 'supportsInterface',
-    ...config,
-  } as UseContractReadConfig<
-    typeof marketplaceV3ABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__
  */
-export function useMarketplaceV3Write<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof marketplaceV3ABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, TFunctionName, TMode>({
-    abi: marketplaceV3ABI,
-    ...config,
-  } as any)
-}
+export const useWriteMarketplaceV3 = /*#__PURE__*/ createUseWriteContract({
+  abi: marketplaceV3Abi,
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"addPlugin"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"approveBuyerForListing"`
  */
-export function useMarketplaceV3AddPlugin<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'addPlugin'
-        >['request']['abi'],
-        'addPlugin',
-        TMode
-      > & { functionName?: 'addPlugin' }
-    : UseContractWriteConfig<typeof marketplaceV3ABI, 'addPlugin', TMode> & {
-        abi?: never
-        functionName?: 'addPlugin'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'addPlugin', TMode>({
-    abi: marketplaceV3ABI,
-    functionName: 'addPlugin',
-    ...config,
-  } as any)
-}
+export const useWriteMarketplaceV3ApproveBuyerForListing =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'approveBuyerForListing',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"grantRole"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"approveCurrencyForListing"`
  */
-export function useMarketplaceV3GrantRole<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'grantRole'
-        >['request']['abi'],
-        'grantRole',
-        TMode
-      > & { functionName?: 'grantRole' }
-    : UseContractWriteConfig<typeof marketplaceV3ABI, 'grantRole', TMode> & {
-        abi?: never
-        functionName?: 'grantRole'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'grantRole', TMode>({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3ApproveCurrencyForListing =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'approveCurrencyForListing',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"buyFromListing"`
+ */
+export const useWriteMarketplaceV3BuyFromListing =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'buyFromListing',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"cancelListing"`
+ */
+export const useWriteMarketplaceV3CancelListing =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'cancelListing',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"createListing"`
+ */
+export const useWriteMarketplaceV3CreateListing =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'createListing',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"updateListing"`
+ */
+export const useWriteMarketplaceV3UpdateListing =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'updateListing',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"bidInAuction"`
+ */
+export const useWriteMarketplaceV3BidInAuction =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'bidInAuction',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"cancelAuction"`
+ */
+export const useWriteMarketplaceV3CancelAuction =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'cancelAuction',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"collectAuctionPayout"`
+ */
+export const useWriteMarketplaceV3CollectAuctionPayout =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'collectAuctionPayout',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"collectAuctionTokens"`
+ */
+export const useWriteMarketplaceV3CollectAuctionTokens =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'collectAuctionTokens',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"createAuction"`
+ */
+export const useWriteMarketplaceV3CreateAuction =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'createAuction',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"acceptOffer"`
+ */
+export const useWriteMarketplaceV3AcceptOffer =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'acceptOffer',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"cancelOffer"`
+ */
+export const useWriteMarketplaceV3CancelOffer =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'cancelOffer',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"makeOffer"`
+ */
+export const useWriteMarketplaceV3MakeOffer =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'makeOffer',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"addExtension"`
+ */
+export const useWriteMarketplaceV3AddExtension =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'addExtension',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"disableFunctionInExtension"`
+ */
+export const useWriteMarketplaceV3DisableFunctionInExtension =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'disableFunctionInExtension',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"enableFunctionInExtension"`
+ */
+export const useWriteMarketplaceV3EnableFunctionInExtension =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'enableFunctionInExtension',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getRoyalty"`
+ */
+export const useWriteMarketplaceV3GetRoyalty =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getRoyalty',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"grantRole"`
+ */
+export const useWriteMarketplaceV3GrantRole =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'grantRole',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"initialize"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"initialize"`
  */
-export function useMarketplaceV3Initialize<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'initialize'
-        >['request']['abi'],
-        'initialize',
-        TMode
-      > & { functionName?: 'initialize' }
-    : UseContractWriteConfig<typeof marketplaceV3ABI, 'initialize', TMode> & {
-        abi?: never
-        functionName?: 'initialize'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'initialize', TMode>({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3Initialize =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'initialize',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"multicall"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"multicall"`
  */
-export function useMarketplaceV3Multicall<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'multicall'
-        >['request']['abi'],
-        'multicall',
-        TMode
-      > & { functionName?: 'multicall' }
-    : UseContractWriteConfig<typeof marketplaceV3ABI, 'multicall', TMode> & {
-        abi?: never
-        functionName?: 'multicall'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'multicall', TMode>({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3Multicall =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'multicall',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"onERC1155BatchReceived"`
  */
-export function useMarketplaceV3OnErc1155BatchReceived<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'onERC1155BatchReceived'
-        >['request']['abi'],
-        'onERC1155BatchReceived',
-        TMode
-      > & { functionName?: 'onERC1155BatchReceived' }
-    : UseContractWriteConfig<
-        typeof marketplaceV3ABI,
-        'onERC1155BatchReceived',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'onERC1155BatchReceived'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof marketplaceV3ABI,
-    'onERC1155BatchReceived',
-    TMode
-  >({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3OnErc1155BatchReceived =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'onERC1155BatchReceived',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC1155Received"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"onERC1155Received"`
  */
-export function useMarketplaceV3OnErc1155Received<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'onERC1155Received'
-        >['request']['abi'],
-        'onERC1155Received',
-        TMode
-      > & { functionName?: 'onERC1155Received' }
-    : UseContractWriteConfig<
-        typeof marketplaceV3ABI,
-        'onERC1155Received',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'onERC1155Received'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'onERC1155Received', TMode>({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3OnErc1155Received =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'onERC1155Received',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"removePlugin"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"onERC721Received"`
  */
-export function useMarketplaceV3RemovePlugin<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'removePlugin'
-        >['request']['abi'],
-        'removePlugin',
-        TMode
-      > & { functionName?: 'removePlugin' }
-    : UseContractWriteConfig<typeof marketplaceV3ABI, 'removePlugin', TMode> & {
-        abi?: never
-        functionName?: 'removePlugin'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'removePlugin', TMode>({
-    abi: marketplaceV3ABI,
-    functionName: 'removePlugin',
-    ...config,
-  } as any)
-}
+export const useWriteMarketplaceV3OnErc721Received =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'onERC721Received',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"renounceRole"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"removeExtension"`
  */
-export function useMarketplaceV3RenounceRole<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'renounceRole'
-        >['request']['abi'],
-        'renounceRole',
-        TMode
-      > & { functionName?: 'renounceRole' }
-    : UseContractWriteConfig<typeof marketplaceV3ABI, 'renounceRole', TMode> & {
-        abi?: never
-        functionName?: 'renounceRole'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'renounceRole', TMode>({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3RemoveExtension =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'removeExtension',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"renounceRole"`
+ */
+export const useWriteMarketplaceV3RenounceRole =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'renounceRole',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"revokeRole"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"replaceExtension"`
  */
-export function useMarketplaceV3RevokeRole<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'revokeRole'
-        >['request']['abi'],
-        'revokeRole',
-        TMode
-      > & { functionName?: 'revokeRole' }
-    : UseContractWriteConfig<typeof marketplaceV3ABI, 'revokeRole', TMode> & {
-        abi?: never
-        functionName?: 'revokeRole'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'revokeRole', TMode>({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3ReplaceExtension =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'replaceExtension',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"revokeRole"`
+ */
+export const useWriteMarketplaceV3RevokeRole =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'revokeRole',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"setContractURI"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setContractURI"`
  */
-export function useMarketplaceV3SetContractUri<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'setContractURI'
-        >['request']['abi'],
-        'setContractURI',
-        TMode
-      > & { functionName?: 'setContractURI' }
-    : UseContractWriteConfig<
-        typeof marketplaceV3ABI,
-        'setContractURI',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'setContractURI'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'setContractURI', TMode>({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3SetContractUri =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'setContractURI',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"setPlatformFeeInfo"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setFlatPlatformFeeInfo"`
  */
-export function useMarketplaceV3SetPlatformFeeInfo<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'setPlatformFeeInfo'
-        >['request']['abi'],
-        'setPlatformFeeInfo',
-        TMode
-      > & { functionName?: 'setPlatformFeeInfo' }
-    : UseContractWriteConfig<
-        typeof marketplaceV3ABI,
-        'setPlatformFeeInfo',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'setPlatformFeeInfo'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'setPlatformFeeInfo', TMode>(
-    {
-      abi: marketplaceV3ABI,
-      functionName: 'setPlatformFeeInfo',
-      ...config,
-    } as any,
-  )
-}
+export const useWriteMarketplaceV3SetFlatPlatformFeeInfo =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'setFlatPlatformFeeInfo',
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"updatePlugin"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setPlatformFeeInfo"`
  */
-export function useMarketplaceV3UpdatePlugin<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof marketplaceV3ABI,
-          'updatePlugin'
-        >['request']['abi'],
-        'updatePlugin',
-        TMode
-      > & { functionName?: 'updatePlugin' }
-    : UseContractWriteConfig<typeof marketplaceV3ABI, 'updatePlugin', TMode> & {
-        abi?: never
-        functionName?: 'updatePlugin'
-      } = {} as any,
-) {
-  return useContractWrite<typeof marketplaceV3ABI, 'updatePlugin', TMode>({
-    abi: marketplaceV3ABI,
-    functionName: 'updatePlugin',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__.
- */
-export function usePrepareMarketplaceV3Write<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, TFunctionName>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"addPlugin"`.
- */
-export function usePrepareMarketplaceV3AddPlugin(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'addPlugin'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'addPlugin',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'addPlugin'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"grantRole"`.
- */
-export function usePrepareMarketplaceV3GrantRole(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'grantRole'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'grantRole',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'grantRole'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"initialize"`.
- */
-export function usePrepareMarketplaceV3Initialize(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'initialize'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'initialize',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'initialize'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"multicall"`.
- */
-export function usePrepareMarketplaceV3Multicall(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'multicall'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'multicall',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'multicall'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC1155BatchReceived"`.
- */
-export function usePrepareMarketplaceV3OnErc1155BatchReceived(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof marketplaceV3ABI,
-      'onERC1155BatchReceived'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'onERC1155BatchReceived',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof marketplaceV3ABI,
-    'onERC1155BatchReceived'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"onERC1155Received"`.
- */
-export function usePrepareMarketplaceV3OnErc1155Received(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'onERC1155Received'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'onERC1155Received',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof marketplaceV3ABI,
-    'onERC1155Received'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"removePlugin"`.
- */
-export function usePrepareMarketplaceV3RemovePlugin(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'removePlugin'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'removePlugin',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'removePlugin'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"renounceRole"`.
- */
-export function usePrepareMarketplaceV3RenounceRole(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'renounceRole'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'renounceRole',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'renounceRole'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"revokeRole"`.
- */
-export function usePrepareMarketplaceV3RevokeRole(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'revokeRole'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'revokeRole',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'revokeRole'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"setContractURI"`.
- */
-export function usePrepareMarketplaceV3SetContractUri(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'setContractURI'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'setContractURI',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'setContractURI'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"setPlatformFeeInfo"`.
- */
-export function usePrepareMarketplaceV3SetPlatformFeeInfo(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof marketplaceV3ABI,
-      'setPlatformFeeInfo'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
+export const useWriteMarketplaceV3SetPlatformFeeInfo =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
     functionName: 'setPlatformFeeInfo',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof marketplaceV3ABI,
-    'setPlatformFeeInfo'
-  >)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link marketplaceV3ABI}__ and `functionName` set to `"updatePlugin"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setPlatformFeeType"`
  */
-export function usePrepareMarketplaceV3UpdatePlugin(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'updatePlugin'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: marketplaceV3ABI,
-    functionName: 'updatePlugin',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof marketplaceV3ABI, 'updatePlugin'>)
-}
+export const useWriteMarketplaceV3SetPlatformFeeType =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'setPlatformFeeType',
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setRoyaltyEngine"`
  */
-export function useMarketplaceV3Event<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, TEventName>)
-}
+export const useWriteMarketplaceV3SetRoyaltyEngine =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: marketplaceV3Abi,
+    functionName: 'setRoyaltyEngine',
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"ContractURIUpdated"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__
  */
-export function useMarketplaceV3ContractUriUpdatedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'ContractURIUpdated'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
+export const useSimulateMarketplaceV3 = /*#__PURE__*/ createUseSimulateContract(
+  { abi: marketplaceV3Abi },
+)
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"approveBuyerForListing"`
+ */
+export const useSimulateMarketplaceV3ApproveBuyerForListing =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'approveBuyerForListing',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"approveCurrencyForListing"`
+ */
+export const useSimulateMarketplaceV3ApproveCurrencyForListing =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'approveCurrencyForListing',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"buyFromListing"`
+ */
+export const useSimulateMarketplaceV3BuyFromListing =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'buyFromListing',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"cancelListing"`
+ */
+export const useSimulateMarketplaceV3CancelListing =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'cancelListing',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"createListing"`
+ */
+export const useSimulateMarketplaceV3CreateListing =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'createListing',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"updateListing"`
+ */
+export const useSimulateMarketplaceV3UpdateListing =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'updateListing',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"bidInAuction"`
+ */
+export const useSimulateMarketplaceV3BidInAuction =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'bidInAuction',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"cancelAuction"`
+ */
+export const useSimulateMarketplaceV3CancelAuction =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'cancelAuction',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"collectAuctionPayout"`
+ */
+export const useSimulateMarketplaceV3CollectAuctionPayout =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'collectAuctionPayout',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"collectAuctionTokens"`
+ */
+export const useSimulateMarketplaceV3CollectAuctionTokens =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'collectAuctionTokens',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"createAuction"`
+ */
+export const useSimulateMarketplaceV3CreateAuction =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'createAuction',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"acceptOffer"`
+ */
+export const useSimulateMarketplaceV3AcceptOffer =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'acceptOffer',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"cancelOffer"`
+ */
+export const useSimulateMarketplaceV3CancelOffer =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'cancelOffer',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"makeOffer"`
+ */
+export const useSimulateMarketplaceV3MakeOffer =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'makeOffer',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"addExtension"`
+ */
+export const useSimulateMarketplaceV3AddExtension =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'addExtension',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"disableFunctionInExtension"`
+ */
+export const useSimulateMarketplaceV3DisableFunctionInExtension =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'disableFunctionInExtension',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"enableFunctionInExtension"`
+ */
+export const useSimulateMarketplaceV3EnableFunctionInExtension =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'enableFunctionInExtension',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"getRoyalty"`
+ */
+export const useSimulateMarketplaceV3GetRoyalty =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'getRoyalty',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"grantRole"`
+ */
+export const useSimulateMarketplaceV3GrantRole =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'grantRole',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"initialize"`
+ */
+export const useSimulateMarketplaceV3Initialize =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'initialize',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"multicall"`
+ */
+export const useSimulateMarketplaceV3Multicall =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'multicall',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"onERC1155BatchReceived"`
+ */
+export const useSimulateMarketplaceV3OnErc1155BatchReceived =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'onERC1155BatchReceived',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"onERC1155Received"`
+ */
+export const useSimulateMarketplaceV3OnErc1155Received =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'onERC1155Received',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"onERC721Received"`
+ */
+export const useSimulateMarketplaceV3OnErc721Received =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'onERC721Received',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"removeExtension"`
+ */
+export const useSimulateMarketplaceV3RemoveExtension =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'removeExtension',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"renounceRole"`
+ */
+export const useSimulateMarketplaceV3RenounceRole =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'renounceRole',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"replaceExtension"`
+ */
+export const useSimulateMarketplaceV3ReplaceExtension =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'replaceExtension',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"revokeRole"`
+ */
+export const useSimulateMarketplaceV3RevokeRole =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'revokeRole',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setContractURI"`
+ */
+export const useSimulateMarketplaceV3SetContractUri =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'setContractURI',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setFlatPlatformFeeInfo"`
+ */
+export const useSimulateMarketplaceV3SetFlatPlatformFeeInfo =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'setFlatPlatformFeeInfo',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setPlatformFeeInfo"`
+ */
+export const useSimulateMarketplaceV3SetPlatformFeeInfo =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'setPlatformFeeInfo',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setPlatformFeeType"`
+ */
+export const useSimulateMarketplaceV3SetPlatformFeeType =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'setPlatformFeeType',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link marketplaceV3Abi}__ and `functionName` set to `"setRoyaltyEngine"`
+ */
+export const useSimulateMarketplaceV3SetRoyaltyEngine =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: marketplaceV3Abi,
+    functionName: 'setRoyaltyEngine',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__
+ */
+export const useWatchMarketplaceV3Event =
+  /*#__PURE__*/ createUseWatchContractEvent({ abi: marketplaceV3Abi })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"BuyerApprovedForListing"`
+ */
+export const useWatchMarketplaceV3BuyerApprovedForListingEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'BuyerApprovedForListing',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"CancelledListing"`
+ */
+export const useWatchMarketplaceV3CancelledListingEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'CancelledListing',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"CurrencyApprovedForListing"`
+ */
+export const useWatchMarketplaceV3CurrencyApprovedForListingEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'CurrencyApprovedForListing',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"NewListing"`
+ */
+export const useWatchMarketplaceV3NewListingEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'NewListing',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"NewSale"`
+ */
+export const useWatchMarketplaceV3NewSaleEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'NewSale',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"UpdatedListing"`
+ */
+export const useWatchMarketplaceV3UpdatedListingEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'UpdatedListing',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"AuctionClosed"`
+ */
+export const useWatchMarketplaceV3AuctionClosedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'AuctionClosed',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"CancelledAuction"`
+ */
+export const useWatchMarketplaceV3CancelledAuctionEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'CancelledAuction',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"NewAuction"`
+ */
+export const useWatchMarketplaceV3NewAuctionEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'NewAuction',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"NewBid"`
+ */
+export const useWatchMarketplaceV3NewBidEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'NewBid',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"AcceptedOffer"`
+ */
+export const useWatchMarketplaceV3AcceptedOfferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'AcceptedOffer',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"CancelledOffer"`
+ */
+export const useWatchMarketplaceV3CancelledOfferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'CancelledOffer',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"NewOffer"`
+ */
+export const useWatchMarketplaceV3NewOfferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'NewOffer',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"ContractURIUpdated"`
+ */
+export const useWatchMarketplaceV3ContractUriUpdatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
     eventName: 'ContractURIUpdated',
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, 'ContractURIUpdated'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"FlatPlatformFeeUpdated"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"ExtensionAdded"`
  */
-export function useMarketplaceV3FlatPlatformFeeUpdatedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'FlatPlatformFeeUpdated'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
+export const useWatchMarketplaceV3ExtensionAddedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'ExtensionAdded',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"ExtensionRemoved"`
+ */
+export const useWatchMarketplaceV3ExtensionRemovedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'ExtensionRemoved',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"ExtensionReplaced"`
+ */
+export const useWatchMarketplaceV3ExtensionReplacedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'ExtensionReplaced',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"FlatPlatformFeeUpdated"`
+ */
+export const useWatchMarketplaceV3FlatPlatformFeeUpdatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
     eventName: 'FlatPlatformFeeUpdated',
-    ...config,
-  } as UseContractEventConfig<
-    typeof marketplaceV3ABI,
-    'FlatPlatformFeeUpdated'
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PlatformFeeInfoUpdated"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"FunctionDisabled"`
  */
-export function useMarketplaceV3PlatformFeeInfoUpdatedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'PlatformFeeInfoUpdated'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
+export const useWatchMarketplaceV3FunctionDisabledEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'FunctionDisabled',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"FunctionEnabled"`
+ */
+export const useWatchMarketplaceV3FunctionEnabledEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'FunctionEnabled',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"Initialized"`
+ */
+export const useWatchMarketplaceV3InitializedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'Initialized',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"PlatformFeeInfoUpdated"`
+ */
+export const useWatchMarketplaceV3PlatformFeeInfoUpdatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
     eventName: 'PlatformFeeInfoUpdated',
-    ...config,
-  } as UseContractEventConfig<
-    typeof marketplaceV3ABI,
-    'PlatformFeeInfoUpdated'
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PlatformFeeTypeUpdated"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"PlatformFeeTypeUpdated"`
  */
-export function useMarketplaceV3PlatformFeeTypeUpdatedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'PlatformFeeTypeUpdated'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
+export const useWatchMarketplaceV3PlatformFeeTypeUpdatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
     eventName: 'PlatformFeeTypeUpdated',
-    ...config,
-  } as UseContractEventConfig<
-    typeof marketplaceV3ABI,
-    'PlatformFeeTypeUpdated'
-  >)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PluginAdded"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"RoleAdminChanged"`
  */
-export function useMarketplaceV3PluginAddedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'PluginAdded'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
-    eventName: 'PluginAdded',
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, 'PluginAdded'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PluginRemoved"`.
- */
-export function useMarketplaceV3PluginRemovedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'PluginRemoved'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
-    eventName: 'PluginRemoved',
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, 'PluginRemoved'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PluginSet"`.
- */
-export function useMarketplaceV3PluginSetEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'PluginSet'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
-    eventName: 'PluginSet',
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, 'PluginSet'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"PluginUpdated"`.
- */
-export function useMarketplaceV3PluginUpdatedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'PluginUpdated'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
-    eventName: 'PluginUpdated',
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, 'PluginUpdated'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"RoleAdminChanged"`.
- */
-export function useMarketplaceV3RoleAdminChangedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'RoleAdminChanged'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
+export const useWatchMarketplaceV3RoleAdminChangedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
     eventName: 'RoleAdminChanged',
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, 'RoleAdminChanged'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"RoleGranted"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"RoleGranted"`
  */
-export function useMarketplaceV3RoleGrantedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'RoleGranted'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
+export const useWatchMarketplaceV3RoleGrantedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
     eventName: 'RoleGranted',
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, 'RoleGranted'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link marketplaceV3ABI}__ and `eventName` set to `"RoleRevoked"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"RoleRevoked"`
  */
-export function useMarketplaceV3RoleRevokedEvent(
-  config: Omit<
-    UseContractEventConfig<typeof marketplaceV3ABI, 'RoleRevoked'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: marketplaceV3ABI,
+export const useWatchMarketplaceV3RoleRevokedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
     eventName: 'RoleRevoked',
-    ...config,
-  } as UseContractEventConfig<typeof marketplaceV3ABI, 'RoleRevoked'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link nftMarketplaceABI}__.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link marketplaceV3Abi}__ and `eventName` set to `"RoyaltyEngineUpdated"`
  */
-export function useNftMarketplaceRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof nftMarketplaceABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof nftMarketplaceABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: nftMarketplaceABI,
-    ...config,
-  } as UseContractReadConfig<
-    typeof nftMarketplaceABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useWatchMarketplaceV3RoyaltyEngineUpdatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: marketplaceV3Abi,
+    eventName: 'RoyaltyEngineUpdated',
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"isListed"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link stake7007Abi}__
  */
-export function useNftMarketplaceIsListed<
-  TFunctionName extends 'isListed',
-  TSelectData = ReadContractResult<typeof nftMarketplaceABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof nftMarketplaceABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: nftMarketplaceABI,
-    functionName: 'isListed',
-    ...config,
-  } as UseContractReadConfig<
-    typeof nftMarketplaceABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
+export const useReadStake7007 = /*#__PURE__*/ createUseReadContract({
+  abi: stake7007Abi,
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"nftOwner"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"consumedInferencePoint"`
  */
-export function useNftMarketplaceNftOwner<
-  TFunctionName extends 'nftOwner',
-  TSelectData = ReadContractResult<typeof nftMarketplaceABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof nftMarketplaceABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: nftMarketplaceABI,
-    functionName: 'nftOwner',
-    ...config,
-  } as UseContractReadConfig<
-    typeof nftMarketplaceABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"owner"`.
- */
-export function useNftMarketplaceOwner<
-  TFunctionName extends 'owner',
-  TSelectData = ReadContractResult<typeof nftMarketplaceABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof nftMarketplaceABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: nftMarketplaceABI,
-    functionName: 'owner',
-    ...config,
-  } as UseContractReadConfig<
-    typeof nftMarketplaceABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__.
- */
-export function useNftMarketplaceWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof nftMarketplaceABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof nftMarketplaceABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof nftMarketplaceABI, TFunctionName, TMode>({
-    abi: nftMarketplaceABI,
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"buy"`.
- */
-export function useNftMarketplaceBuy<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof nftMarketplaceABI,
-          'buy'
-        >['request']['abi'],
-        'buy',
-        TMode
-      > & { functionName?: 'buy' }
-    : UseContractWriteConfig<typeof nftMarketplaceABI, 'buy', TMode> & {
-        abi?: never
-        functionName?: 'buy'
-      } = {} as any,
-) {
-  return useContractWrite<typeof nftMarketplaceABI, 'buy', TMode>({
-    abi: nftMarketplaceABI,
-    functionName: 'buy',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"list"`.
- */
-export function useNftMarketplaceList<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof nftMarketplaceABI,
-          'list'
-        >['request']['abi'],
-        'list',
-        TMode
-      > & { functionName?: 'list' }
-    : UseContractWriteConfig<typeof nftMarketplaceABI, 'list', TMode> & {
-        abi?: never
-        functionName?: 'list'
-      } = {} as any,
-) {
-  return useContractWrite<typeof nftMarketplaceABI, 'list', TMode>({
-    abi: nftMarketplaceABI,
-    functionName: 'list',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"renounceOwnership"`.
- */
-export function useNftMarketplaceRenounceOwnership<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof nftMarketplaceABI,
-          'renounceOwnership'
-        >['request']['abi'],
-        'renounceOwnership',
-        TMode
-      > & { functionName?: 'renounceOwnership' }
-    : UseContractWriteConfig<
-        typeof nftMarketplaceABI,
-        'renounceOwnership',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'renounceOwnership'
-      } = {} as any,
-) {
-  return useContractWrite<typeof nftMarketplaceABI, 'renounceOwnership', TMode>(
-    {
-      abi: nftMarketplaceABI,
-      functionName: 'renounceOwnership',
-      ...config,
-    } as any,
-  )
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"transferOwnership"`.
- */
-export function useNftMarketplaceTransferOwnership<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof nftMarketplaceABI,
-          'transferOwnership'
-        >['request']['abi'],
-        'transferOwnership',
-        TMode
-      > & { functionName?: 'transferOwnership' }
-    : UseContractWriteConfig<
-        typeof nftMarketplaceABI,
-        'transferOwnership',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'transferOwnership'
-      } = {} as any,
-) {
-  return useContractWrite<typeof nftMarketplaceABI, 'transferOwnership', TMode>(
-    {
-      abi: nftMarketplaceABI,
-      functionName: 'transferOwnership',
-      ...config,
-    } as any,
-  )
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"withdraw"`.
- */
-export function useNftMarketplaceWithdraw<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof nftMarketplaceABI,
-          'withdraw'
-        >['request']['abi'],
-        'withdraw',
-        TMode
-      > & { functionName?: 'withdraw' }
-    : UseContractWriteConfig<typeof nftMarketplaceABI, 'withdraw', TMode> & {
-        abi?: never
-        functionName?: 'withdraw'
-      } = {} as any,
-) {
-  return useContractWrite<typeof nftMarketplaceABI, 'withdraw', TMode>({
-    abi: nftMarketplaceABI,
-    functionName: 'withdraw',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__.
- */
-export function usePrepareNftMarketplaceWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof nftMarketplaceABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: nftMarketplaceABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof nftMarketplaceABI, TFunctionName>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"buy"`.
- */
-export function usePrepareNftMarketplaceBuy(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'buy'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: nftMarketplaceABI,
-    functionName: 'buy',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'buy'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"list"`.
- */
-export function usePrepareNftMarketplaceList(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'list'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: nftMarketplaceABI,
-    functionName: 'list',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'list'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"renounceOwnership"`.
- */
-export function usePrepareNftMarketplaceRenounceOwnership(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof nftMarketplaceABI,
-      'renounceOwnership'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: nftMarketplaceABI,
-    functionName: 'renounceOwnership',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nftMarketplaceABI,
-    'renounceOwnership'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"transferOwnership"`.
- */
-export function usePrepareNftMarketplaceTransferOwnership(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof nftMarketplaceABI,
-      'transferOwnership'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: nftMarketplaceABI,
-    functionName: 'transferOwnership',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof nftMarketplaceABI,
-    'transferOwnership'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link nftMarketplaceABI}__ and `functionName` set to `"withdraw"`.
- */
-export function usePrepareNftMarketplaceWithdraw(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'withdraw'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: nftMarketplaceABI,
-    functionName: 'withdraw',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof nftMarketplaceABI, 'withdraw'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link nftMarketplaceABI}__.
- */
-export function useNftMarketplaceEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof nftMarketplaceABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: nftMarketplaceABI,
-    ...config,
-  } as UseContractEventConfig<typeof nftMarketplaceABI, TEventName>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link nftMarketplaceABI}__ and `eventName` set to `"OwnershipTransferred"`.
- */
-export function useNftMarketplaceOwnershipTransferredEvent(
-  config: Omit<
-    UseContractEventConfig<typeof nftMarketplaceABI, 'OwnershipTransferred'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: nftMarketplaceABI,
-    eventName: 'OwnershipTransferred',
-    ...config,
-  } as UseContractEventConfig<typeof nftMarketplaceABI, 'OwnershipTransferred'>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__.
- */
-export function useStake7007Read<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: stake7007ABI,
-    ...config,
-  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"consumedInferencePoint"`.
- */
-export function useStake7007ConsumedInferencePoint<
-  TFunctionName extends 'consumedInferencePoint',
-  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: stake7007ABI,
+export const useReadStake7007ConsumedInferencePoint =
+  /*#__PURE__*/ createUseReadContract({
+    abi: stake7007Abi,
     functionName: 'consumedInferencePoint',
-    ...config,
-  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"getInferencePoint"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"getInferencePoint"`
  */
-export function useStake7007GetInferencePoint<
-  TFunctionName extends 'getInferencePoint',
-  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: stake7007ABI,
+export const useReadStake7007GetInferencePoint =
+  /*#__PURE__*/ createUseReadContract({
+    abi: stake7007Abi,
     functionName: 'getInferencePoint',
-    ...config,
-  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"owner"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"owner"`
  */
-export function useStake7007Owner<
-  TFunctionName extends 'owner',
-  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: stake7007ABI,
-    functionName: 'owner',
-    ...config,
-  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadStake7007Owner = /*#__PURE__*/ createUseReadContract({
+  abi: stake7007Abi,
+  functionName: 'owner',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"stakeStartTime"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"stakeStartTime"`
  */
-export function useStake7007StakeStartTime<
-  TFunctionName extends 'stakeStartTime',
-  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: stake7007ABI,
+export const useReadStake7007StakeStartTime =
+  /*#__PURE__*/ createUseReadContract({
+    abi: stake7007Abi,
     functionName: 'stakeStartTime',
-    ...config,
-  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"stakedAmount"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"stakedAmount"`
  */
-export function useStake7007StakedAmount<
-  TFunctionName extends 'stakedAmount',
-  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: stake7007ABI,
-    functionName: 'stakedAmount',
-    ...config,
-  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadStake7007StakedAmount = /*#__PURE__*/ createUseReadContract(
+  { abi: stake7007Abi, functionName: 'stakedAmount' },
+)
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"token"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"token"`
  */
-export function useStake7007Token<
-  TFunctionName extends 'token',
-  TSelectData = ReadContractResult<typeof stake7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: stake7007ABI,
-    functionName: 'token',
-    ...config,
-  } as UseContractReadConfig<typeof stake7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadStake7007Token = /*#__PURE__*/ createUseReadContract({
+  abi: stake7007Abi,
+  functionName: 'token',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stake7007Abi}__
  */
-export function useStake7007Write<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof stake7007ABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof stake7007ABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof stake7007ABI, TFunctionName, TMode>({
-    abi: stake7007ABI,
-    ...config,
-  } as any)
-}
+export const useWriteStake7007 = /*#__PURE__*/ createUseWriteContract({
+  abi: stake7007Abi,
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"consumeInferencePoint"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"consumeInferencePoint"`
  */
-export function useStake7007ConsumeInferencePoint<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof stake7007ABI,
-          'consumeInferencePoint'
-        >['request']['abi'],
-        'consumeInferencePoint',
-        TMode
-      > & { functionName?: 'consumeInferencePoint' }
-    : UseContractWriteConfig<
-        typeof stake7007ABI,
-        'consumeInferencePoint',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'consumeInferencePoint'
-      } = {} as any,
-) {
-  return useContractWrite<typeof stake7007ABI, 'consumeInferencePoint', TMode>({
-    abi: stake7007ABI,
+export const useWriteStake7007ConsumeInferencePoint =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: stake7007Abi,
     functionName: 'consumeInferencePoint',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"renounceOwnership"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"renounceOwnership"`
  */
-export function useStake7007RenounceOwnership<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof stake7007ABI,
-          'renounceOwnership'
-        >['request']['abi'],
-        'renounceOwnership',
-        TMode
-      > & { functionName?: 'renounceOwnership' }
-    : UseContractWriteConfig<
-        typeof stake7007ABI,
-        'renounceOwnership',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'renounceOwnership'
-      } = {} as any,
-) {
-  return useContractWrite<typeof stake7007ABI, 'renounceOwnership', TMode>({
-    abi: stake7007ABI,
+export const useWriteStake7007RenounceOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: stake7007Abi,
     functionName: 'renounceOwnership',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"stake"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"stake"`
  */
-export function useStake7007Stake<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof stake7007ABI,
-          'stake'
-        >['request']['abi'],
-        'stake',
-        TMode
-      > & { functionName?: 'stake' }
-    : UseContractWriteConfig<typeof stake7007ABI, 'stake', TMode> & {
-        abi?: never
-        functionName?: 'stake'
-      } = {} as any,
-) {
-  return useContractWrite<typeof stake7007ABI, 'stake', TMode>({
-    abi: stake7007ABI,
-    functionName: 'stake',
-    ...config,
-  } as any)
-}
+export const useWriteStake7007Stake = /*#__PURE__*/ createUseWriteContract({
+  abi: stake7007Abi,
+  functionName: 'stake',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"transferOwnership"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"transferOwnership"`
  */
-export function useStake7007TransferOwnership<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof stake7007ABI,
-          'transferOwnership'
-        >['request']['abi'],
-        'transferOwnership',
-        TMode
-      > & { functionName?: 'transferOwnership' }
-    : UseContractWriteConfig<
-        typeof stake7007ABI,
-        'transferOwnership',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'transferOwnership'
-      } = {} as any,
-) {
-  return useContractWrite<typeof stake7007ABI, 'transferOwnership', TMode>({
-    abi: stake7007ABI,
+export const useWriteStake7007TransferOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: stake7007Abi,
     functionName: 'transferOwnership',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stake7007Abi}__
  */
-export function usePrepareStake7007Write<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof stake7007ABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: stake7007ABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof stake7007ABI, TFunctionName>)
-}
+export const useSimulateStake7007 = /*#__PURE__*/ createUseSimulateContract({
+  abi: stake7007Abi,
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"consumeInferencePoint"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"consumeInferencePoint"`
  */
-export function usePrepareStake7007ConsumeInferencePoint(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof stake7007ABI, 'consumeInferencePoint'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: stake7007ABI,
+export const useSimulateStake7007ConsumeInferencePoint =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: stake7007Abi,
     functionName: 'consumeInferencePoint',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof stake7007ABI,
-    'consumeInferencePoint'
-  >)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"renounceOwnership"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"renounceOwnership"`
  */
-export function usePrepareStake7007RenounceOwnership(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof stake7007ABI, 'renounceOwnership'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: stake7007ABI,
+export const useSimulateStake7007RenounceOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: stake7007Abi,
     functionName: 'renounceOwnership',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof stake7007ABI, 'renounceOwnership'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"stake"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"stake"`
  */
-export function usePrepareStake7007Stake(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof stake7007ABI, 'stake'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: stake7007ABI,
+export const useSimulateStake7007Stake =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: stake7007Abi,
     functionName: 'stake',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof stake7007ABI, 'stake'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link stake7007ABI}__ and `functionName` set to `"transferOwnership"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stake7007Abi}__ and `functionName` set to `"transferOwnership"`
  */
-export function usePrepareStake7007TransferOwnership(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof stake7007ABI, 'transferOwnership'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: stake7007ABI,
+export const useSimulateStake7007TransferOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: stake7007Abi,
     functionName: 'transferOwnership',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof stake7007ABI, 'transferOwnership'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link stake7007ABI}__.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stake7007Abi}__
  */
-export function useStake7007Event<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof stake7007ABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: stake7007ABI,
-    ...config,
-  } as UseContractEventConfig<typeof stake7007ABI, TEventName>)
-}
+export const useWatchStake7007Event = /*#__PURE__*/ createUseWatchContractEvent(
+  { abi: stake7007Abi },
+)
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link stake7007ABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stake7007Abi}__ and `eventName` set to `"OwnershipTransferred"`
  */
-export function useStake7007OwnershipTransferredEvent(
-  config: Omit<
-    UseContractEventConfig<typeof stake7007ABI, 'OwnershipTransferred'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: stake7007ABI,
+export const useWatchStake7007OwnershipTransferredEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: stake7007Abi,
     eventName: 'OwnershipTransferred',
-    ...config,
-  } as UseContractEventConfig<typeof stake7007ABI, 'OwnershipTransferred'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link token7007Abi}__
  */
-export function useToken7007Read<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: token7007ABI,
-    ...config,
-  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadToken7007 = /*#__PURE__*/ createUseReadContract({
+  abi: token7007Abi,
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"allowance"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"allowance"`
  */
-export function useToken7007Allowance<
-  TFunctionName extends 'allowance',
-  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: token7007ABI,
-    functionName: 'allowance',
-    ...config,
-  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadToken7007Allowance = /*#__PURE__*/ createUseReadContract({
+  abi: token7007Abi,
+  functionName: 'allowance',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"balanceOf"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"balanceOf"`
  */
-export function useToken7007BalanceOf<
-  TFunctionName extends 'balanceOf',
-  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: token7007ABI,
-    functionName: 'balanceOf',
-    ...config,
-  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadToken7007BalanceOf = /*#__PURE__*/ createUseReadContract({
+  abi: token7007Abi,
+  functionName: 'balanceOf',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"decimals"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"decimals"`
  */
-export function useToken7007Decimals<
-  TFunctionName extends 'decimals',
-  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: token7007ABI,
-    functionName: 'decimals',
-    ...config,
-  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadToken7007Decimals = /*#__PURE__*/ createUseReadContract({
+  abi: token7007Abi,
+  functionName: 'decimals',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"name"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"name"`
  */
-export function useToken7007Name<
-  TFunctionName extends 'name',
-  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: token7007ABI,
-    functionName: 'name',
-    ...config,
-  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadToken7007Name = /*#__PURE__*/ createUseReadContract({
+  abi: token7007Abi,
+  functionName: 'name',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"owner"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"owner"`
  */
-export function useToken7007Owner<
-  TFunctionName extends 'owner',
-  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: token7007ABI,
-    functionName: 'owner',
-    ...config,
-  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadToken7007Owner = /*#__PURE__*/ createUseReadContract({
+  abi: token7007Abi,
+  functionName: 'owner',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"symbol"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"symbol"`
  */
-export function useToken7007Symbol<
-  TFunctionName extends 'symbol',
-  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: token7007ABI,
-    functionName: 'symbol',
-    ...config,
-  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadToken7007Symbol = /*#__PURE__*/ createUseReadContract({
+  abi: token7007Abi,
+  functionName: 'symbol',
+})
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"totalSupply"`.
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"totalSupply"`
  */
-export function useToken7007TotalSupply<
-  TFunctionName extends 'totalSupply',
-  TSelectData = ReadContractResult<typeof token7007ABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: token7007ABI,
-    functionName: 'totalSupply',
-    ...config,
-  } as UseContractReadConfig<typeof token7007ABI, TFunctionName, TSelectData>)
-}
+export const useReadToken7007TotalSupply = /*#__PURE__*/ createUseReadContract({
+  abi: token7007Abi,
+  functionName: 'totalSupply',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link token7007Abi}__
  */
-export function useToken7007Write<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof token7007ABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof token7007ABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof token7007ABI, TFunctionName, TMode>({
-    abi: token7007ABI,
-    ...config,
-  } as any)
-}
+export const useWriteToken7007 = /*#__PURE__*/ createUseWriteContract({
+  abi: token7007Abi,
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"approve"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"approve"`
  */
-export function useToken7007Approve<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof token7007ABI,
-          'approve'
-        >['request']['abi'],
-        'approve',
-        TMode
-      > & { functionName?: 'approve' }
-    : UseContractWriteConfig<typeof token7007ABI, 'approve', TMode> & {
-        abi?: never
-        functionName?: 'approve'
-      } = {} as any,
-) {
-  return useContractWrite<typeof token7007ABI, 'approve', TMode>({
-    abi: token7007ABI,
-    functionName: 'approve',
-    ...config,
-  } as any)
-}
+export const useWriteToken7007Approve = /*#__PURE__*/ createUseWriteContract({
+  abi: token7007Abi,
+  functionName: 'approve',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"mint"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"mint"`
  */
-export function useToken7007Mint<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof token7007ABI,
-          'mint'
-        >['request']['abi'],
-        'mint',
-        TMode
-      > & { functionName?: 'mint' }
-    : UseContractWriteConfig<typeof token7007ABI, 'mint', TMode> & {
-        abi?: never
-        functionName?: 'mint'
-      } = {} as any,
-) {
-  return useContractWrite<typeof token7007ABI, 'mint', TMode>({
-    abi: token7007ABI,
-    functionName: 'mint',
-    ...config,
-  } as any)
-}
+export const useWriteToken7007Mint = /*#__PURE__*/ createUseWriteContract({
+  abi: token7007Abi,
+  functionName: 'mint',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"renounceOwnership"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"renounceOwnership"`
  */
-export function useToken7007RenounceOwnership<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof token7007ABI,
-          'renounceOwnership'
-        >['request']['abi'],
-        'renounceOwnership',
-        TMode
-      > & { functionName?: 'renounceOwnership' }
-    : UseContractWriteConfig<
-        typeof token7007ABI,
-        'renounceOwnership',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'renounceOwnership'
-      } = {} as any,
-) {
-  return useContractWrite<typeof token7007ABI, 'renounceOwnership', TMode>({
-    abi: token7007ABI,
+export const useWriteToken7007RenounceOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: token7007Abi,
     functionName: 'renounceOwnership',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transfer"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"transfer"`
  */
-export function useToken7007Transfer<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof token7007ABI,
-          'transfer'
-        >['request']['abi'],
-        'transfer',
-        TMode
-      > & { functionName?: 'transfer' }
-    : UseContractWriteConfig<typeof token7007ABI, 'transfer', TMode> & {
-        abi?: never
-        functionName?: 'transfer'
-      } = {} as any,
-) {
-  return useContractWrite<typeof token7007ABI, 'transfer', TMode>({
-    abi: token7007ABI,
-    functionName: 'transfer',
-    ...config,
-  } as any)
-}
+export const useWriteToken7007Transfer = /*#__PURE__*/ createUseWriteContract({
+  abi: token7007Abi,
+  functionName: 'transfer',
+})
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transferFrom"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"transferFrom"`
  */
-export function useToken7007TransferFrom<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof token7007ABI,
-          'transferFrom'
-        >['request']['abi'],
-        'transferFrom',
-        TMode
-      > & { functionName?: 'transferFrom' }
-    : UseContractWriteConfig<typeof token7007ABI, 'transferFrom', TMode> & {
-        abi?: never
-        functionName?: 'transferFrom'
-      } = {} as any,
-) {
-  return useContractWrite<typeof token7007ABI, 'transferFrom', TMode>({
-    abi: token7007ABI,
+export const useWriteToken7007TransferFrom =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: token7007Abi,
     functionName: 'transferFrom',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transferOwnership"`.
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"transferOwnership"`
  */
-export function useToken7007TransferOwnership<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof token7007ABI,
-          'transferOwnership'
-        >['request']['abi'],
-        'transferOwnership',
-        TMode
-      > & { functionName?: 'transferOwnership' }
-    : UseContractWriteConfig<
-        typeof token7007ABI,
-        'transferOwnership',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'transferOwnership'
-      } = {} as any,
-) {
-  return useContractWrite<typeof token7007ABI, 'transferOwnership', TMode>({
-    abi: token7007ABI,
+export const useWriteToken7007TransferOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: token7007Abi,
     functionName: 'transferOwnership',
-    ...config,
-  } as any)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link token7007Abi}__
  */
-export function usePrepareToken7007Write<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof token7007ABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: token7007ABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof token7007ABI, TFunctionName>)
-}
+export const useSimulateToken7007 = /*#__PURE__*/ createUseSimulateContract({
+  abi: token7007Abi,
+})
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"approve"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"approve"`
  */
-export function usePrepareToken7007Approve(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof token7007ABI, 'approve'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: token7007ABI,
+export const useSimulateToken7007Approve =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: token7007Abi,
     functionName: 'approve',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'approve'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"mint"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"mint"`
  */
-export function usePrepareToken7007Mint(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof token7007ABI, 'mint'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: token7007ABI,
-    functionName: 'mint',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'mint'>)
-}
+export const useSimulateToken7007Mint = /*#__PURE__*/ createUseSimulateContract(
+  { abi: token7007Abi, functionName: 'mint' },
+)
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"renounceOwnership"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"renounceOwnership"`
  */
-export function usePrepareToken7007RenounceOwnership(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof token7007ABI, 'renounceOwnership'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: token7007ABI,
+export const useSimulateToken7007RenounceOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: token7007Abi,
     functionName: 'renounceOwnership',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'renounceOwnership'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transfer"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"transfer"`
  */
-export function usePrepareToken7007Transfer(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof token7007ABI, 'transfer'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: token7007ABI,
+export const useSimulateToken7007Transfer =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: token7007Abi,
     functionName: 'transfer',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'transfer'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transferFrom"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"transferFrom"`
  */
-export function usePrepareToken7007TransferFrom(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof token7007ABI, 'transferFrom'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: token7007ABI,
+export const useSimulateToken7007TransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: token7007Abi,
     functionName: 'transferFrom',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'transferFrom'>)
-}
+  })
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link token7007ABI}__ and `functionName` set to `"transferOwnership"`.
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link token7007Abi}__ and `functionName` set to `"transferOwnership"`
  */
-export function usePrepareToken7007TransferOwnership(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof token7007ABI, 'transferOwnership'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: token7007ABI,
+export const useSimulateToken7007TransferOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: token7007Abi,
     functionName: 'transferOwnership',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof token7007ABI, 'transferOwnership'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link token7007ABI}__.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link token7007Abi}__
  */
-export function useToken7007Event<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof token7007ABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: token7007ABI,
-    ...config,
-  } as UseContractEventConfig<typeof token7007ABI, TEventName>)
-}
+export const useWatchToken7007Event = /*#__PURE__*/ createUseWatchContractEvent(
+  { abi: token7007Abi },
+)
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link token7007ABI}__ and `eventName` set to `"Approval"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link token7007Abi}__ and `eventName` set to `"Approval"`
  */
-export function useToken7007ApprovalEvent(
-  config: Omit<
-    UseContractEventConfig<typeof token7007ABI, 'Approval'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: token7007ABI,
+export const useWatchToken7007ApprovalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: token7007Abi,
     eventName: 'Approval',
-    ...config,
-  } as UseContractEventConfig<typeof token7007ABI, 'Approval'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link token7007ABI}__ and `eventName` set to `"OwnershipTransferred"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link token7007Abi}__ and `eventName` set to `"OwnershipTransferred"`
  */
-export function useToken7007OwnershipTransferredEvent(
-  config: Omit<
-    UseContractEventConfig<typeof token7007ABI, 'OwnershipTransferred'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: token7007ABI,
+export const useWatchToken7007OwnershipTransferredEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: token7007Abi,
     eventName: 'OwnershipTransferred',
-    ...config,
-  } as UseContractEventConfig<typeof token7007ABI, 'OwnershipTransferred'>)
-}
+  })
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link token7007ABI}__ and `eventName` set to `"Transfer"`.
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link token7007Abi}__ and `eventName` set to `"Transfer"`
  */
-export function useToken7007TransferEvent(
-  config: Omit<
-    UseContractEventConfig<typeof token7007ABI, 'Transfer'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: token7007ABI,
+export const useWatchToken7007TransferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: token7007Abi,
     eventName: 'Transfer',
-    ...config,
-  } as UseContractEventConfig<typeof token7007ABI, 'Transfer'>)
-}
+  })

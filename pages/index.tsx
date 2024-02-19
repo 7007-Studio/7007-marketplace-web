@@ -1,7 +1,17 @@
-import { useMemo, useRef, useState } from "react";
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  AIGC_FACTORY_CONTRACT_ADDRESS,
+  MARKETPLACE_V3_ADDRESS,
+} from "@/constants";
 import Tabs, { TabState } from "@/components/tabs";
-import { useAigcFactoryDeployedAigCs, useAigcTokenId } from "@/generated";
+import {
+  useReadAigcFactoryDeployedAigCs,
+  useReadAigcFactoryModelIndexCurrent,
+  useReadAigcTokenId,
+  useReadMarketplaceV3GetAllListings,
+  useReadMarketplaceV3GetAllValidListings,
+  useReadMarketplaceV3TotalListings,
+} from "@/generated";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import ModelLaunchpad from "@/components/tabContent/modelLaunchpad";
 import Marketplace from "@/components/tabContent/marketplace";
@@ -14,6 +24,7 @@ import ConnectToSPModal from "@/components/modal/connectToSPModal";
 export default function Main() {
   // hard coded
   const modelIndex = 1;
+  // const { data: modelIndex } = useReadAigcFactoryModelIndexCurrent();
 
   const listingNFTModalRef = useRef<HTMLDialogElement>(null);
   const [listingNFT, setListingNFT] = useState<ListingNFT>();
@@ -21,12 +32,12 @@ export default function Main() {
   const connectToSPModalRef = useRef<HTMLDialogElement>(null);
 
   const [currentTab, setCurrentTab] = useState(TabState.ModelLaunchpad);
-  const { data: deployedAigc } = useAigcFactoryDeployedAigCs({
+  const { data: deployedAigc } = useReadAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
-    args: [BigInt(modelIndex)],
+    args: modelIndex ? [BigInt(modelIndex)] : undefined,
   });
 
-  const { data: lastTokenId } = useAigcTokenId({
+  const { data: lastTokenId } = useReadAigcTokenId({
     address: deployedAigc,
   });
 
@@ -42,6 +53,15 @@ export default function Main() {
     return ids;
   }, [lastTokenId]);
 
+  const { data: totalListings } = useReadMarketplaceV3TotalListings({
+    address: MARKETPLACE_V3_ADDRESS,
+  });
+
+  const { data: allValidListings } = useReadMarketplaceV3GetAllValidListings({
+    address: MARKETPLACE_V3_ADDRESS,
+    args: [0, totalListings ? totalListings - BigInt(1) : 0],
+  });
+
   const isMounted = useIsMounted();
   if (!isMounted) return null;
 
@@ -56,12 +76,16 @@ export default function Main() {
         )}
 
         {currentTab === TabState.Marketplace && deployedAigc && (
-          <Marketplace modelIndex={modelIndex} tokenIds={tokenIds} />
+          <Marketplace
+            aigcAddress={deployedAigc}
+            tokenIds={tokenIds}
+            allValidListings={allValidListings}
+          />
         )}
 
         {currentTab === TabState.Created && deployedAigc && (
           <Collected
-            modelIndex={modelIndex}
+            aigcAddress={deployedAigc}
             tokenIds={tokenIds}
             listingNFTModalRef={listingNFTModalRef}
             setListingNFT={setListingNFT}
@@ -71,7 +95,7 @@ export default function Main() {
 
         {currentTab === TabState.Collected && deployedAigc && (
           <Collected
-            modelIndex={modelIndex}
+            aigcAddress={deployedAigc}
             tokenIds={tokenIds}
             listingNFTModalRef={listingNFTModalRef}
             setListingNFT={setListingNFT}

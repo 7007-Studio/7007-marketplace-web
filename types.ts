@@ -1,3 +1,5 @@
+import { Address } from "viem";
+
 export interface NFT {
   nftName: string;
   modelName: string;
@@ -30,4 +32,21 @@ export interface Metadata {
   description: string;
   image: string;
   attributes: MetadataAttribute[];
+}
+
+
+
+export interface Listing {
+  assetContract: Address;
+  currency: Address;
+  endTimestamp: bigint;
+  listingCreator: Address;
+  listingId: bigint;
+  pricePerToken: bigint;
+  quantity: bigint;
+  reserved: boolean;
+  startTimestamp: bigint;
+  stats: number;
+  tokenId: bigint;
+  tokenType: number;
 }
