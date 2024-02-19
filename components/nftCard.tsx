@@ -244,7 +244,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
               <div>Contract Address</div>
               <a
                 href={`https://sepolia.etherscan.io/address/${aigcAddress}`}
-                className="text-blue-500 hover:text-blue-600 overflow-hidden"
+                className="text-primary overflow-hidden"
                 target="_blank"
               >
                 {concatAddress(aigcAddress)}
@@ -261,7 +261,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
               <div>Link</div>
               <a
                 href={openseaUrl(aigcAddress, tokenId as string)}
-                className="text-blue-500 hover:text-blue-600 overflow-hidden"
+                className="text-primary overflow-hidden"
                 target="_blank"
               >
                 View on OpenSea

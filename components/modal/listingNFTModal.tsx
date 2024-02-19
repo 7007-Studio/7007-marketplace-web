@@ -4,11 +4,12 @@ import Image from "next/image";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
+import { MARKETPLACE_V3_ADDRESS, NATIVE_TOKEN_ADDRESS } from "@/constants";
 import {
-  MARKETPLACE_V3_ADDRESS,
-  NATIVE_TOKEN_ADDRESS,
-} from "@/constants";
-import { useReadAigcGetApproved, useWriteAigcApprove, useWriteMarketplaceV3CreateListing } from "@/generated";
+  useReadAigcGetApproved,
+  useWriteAigcApprove,
+  useWriteMarketplaceV3CreateListing,
+} from "@/generated";
 import { Metadata } from "@/types";
 
 import TextInput from "../textInput";
@@ -62,15 +63,18 @@ const ListingNFTModal = React.forwardRef(
       }
 
       if (!approvedListing) {
-        approveListing({
-          address: listingNFT?.address,
-          args: [MARKETPLACE_V3_ADDRESS, BigInt(listingNFT?.tokenId)]
-        }, {
-          onError(error) {
-            console.log("approveListing onError", data);
-            setListInitialized(false);
+        approveListing(
+          {
+            address: listingNFT?.address,
+            args: [MARKETPLACE_V3_ADDRESS, BigInt(listingNFT?.tokenId)],
+          },
+          {
+            onError(error) {
+              console.log("approveListing onError", data);
+              setListInitialized(false);
+            },
           }
-        });
+        );
       } else {
         createListingWrapper();
       }
@@ -79,12 +83,13 @@ const ListingNFTModal = React.forwardRef(
     // read contracts
     const { data: approved } = useReadAigcGetApproved({
       address: listingNFT?.address,
-      args: listingNFT ? [BigInt(listingNFT?.tokenId)]: undefined,
+      args: listingNFT ? [BigInt(listingNFT?.tokenId)] : undefined,
     });
     // setApprovedListing(approved);
 
     // write contracts
-    const { writeContract: approveListing, data: approveTx } = useWriteAigcApprove();
+    const { writeContract: approveListing, data: approveTx } =
+      useWriteAigcApprove();
 
     const { writeContract: createListing, data: createListingTx } =
       useWriteMarketplaceV3CreateListing();
@@ -102,7 +107,6 @@ const ListingNFTModal = React.forwardRef(
       setListInitialized(false);
     }, [approveResult]);
 
-
     const listingResult = useWaitForTransactionReceipt({
       hash: createListingTx,
     });
@@ -118,30 +122,33 @@ const ListingNFTModal = React.forwardRef(
 
     function createListingWrapper() {
       if (!listingNFT) return;
-      const args = [{
-        assetContract: listingNFT.address,
-        tokenId: BigInt(listingNFT.tokenId),
-        quantity: BigInt(1),
-        currency: NATIVE_TOKEN_ADDRESS,
-        pricePerToken: parseEther(getValues("price")),
-        startTimestamp: BigInt(Math.round(Date.now() / 1000)),
-        endTimestamp: BigInt(
-          Math.round(Date.now() / 1000) +
-            getValues("duration") * 24 * 60 * 60
-        ),
-        reserved: false,
-      }];
-      createListing({
-        address: MARKETPLACE_V3_ADDRESS,
-        args,
-      }, {
-        onError(error) {
-          console.error(error);
-          setListInitialized(false);
+      createListing(
+        {
+          address: MARKETPLACE_V3_ADDRESS,
+          args: [
+            {
+              assetContract: listingNFT.address,
+              tokenId: BigInt(listingNFT.tokenId),
+              quantity: BigInt(1),
+              currency: NATIVE_TOKEN_ADDRESS,
+              pricePerToken: parseEther(getValues("price")),
+              startTimestamp: BigInt(Math.round(Date.now() / 1000)),
+              endTimestamp: BigInt(
+                Math.round(Date.now() / 1000) +
+                  getValues("duration") * 24 * 60 * 60
+              ),
+              reserved: false,
+            },
+          ],
         },
-      });
+        {
+          onError(error) {
+            console.error(error);
+            setListInitialized(false);
+          },
+        }
+      );
     }
-
 
     return (
       <dialog

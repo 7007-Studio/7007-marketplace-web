@@ -1,6 +1,9 @@
 import { useRouter } from "next/router";
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import { useReadAigcFactoryDeployedAigCs, useReadAigcTokenUri } from "@/generated";
+import {
+  useReadAigcFactoryDeployedAigCs,
+  useReadAigcTokenUri,
+} from "@/generated";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { useEffect, useState } from "react";
 import useAudio from "@/hooks/useAudio";
@@ -71,7 +74,7 @@ export default function Detail() {
                   <h2>Contract Address</h2>
                   <a
                     href={`https://sepolia.etherscan.io/address/${aigcAddress}`}
-                    className="text-blue-500 hover:text-blue-600 overflow-hidden"
+                    className="text-primary overflow-hidden"
                     target="_blank"
                   >
                     {concatAddress(aigcAddress)}
@@ -87,7 +90,7 @@ export default function Detail() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
                   <a
                     href={openseaUrl(aigcAddress, tokenId as string)}
-                    className="text-blue-500 hover:text-blue-600 overflow-hidden"
+                    className="text-primary overflow-hidden"
                     target="_blank"
                   >
                     View on OpenSea

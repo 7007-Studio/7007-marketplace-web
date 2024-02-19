@@ -44,10 +44,7 @@ const NFTDetail: React.FC<ModelDetailProps> = ({
         </div>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
           <h2>Opensea link</h2>
-          <a
-            href={openseaLink}
-            className="text-blue-500 hover:text-blue-600 overflow-hidden"
-          >
+          <a href={openseaLink} className="text-primary overflow-hidden">
             {openseaLink}
           </a>
         </div>
