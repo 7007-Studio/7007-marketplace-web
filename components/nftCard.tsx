@@ -156,7 +156,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
                   listing.currency,
                   listing.pricePerToken,
                 ];
-                console.log(args);
+                console.debug(args);
                 buyNft(
                   {
                     address: MARKETPLACE_V3_ADDRESS,
@@ -168,7 +168,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
                   },
                   {
                     onError(error) {
-                      console.log("buyNft error", error);
+                      console.debug("buyNft error", error);
                       setBuyInitialized(false);
                     },
                   }

@@ -7,6 +7,7 @@ import MintStep from "./mintStep";
 import { concatAddress, openseaUrl } from "@/helpers";
 import ConnectToSPModal from "../modal/connectToSPModal";
 import ListingNFTModal, { ListingNFT } from "../modal/listingNFTModal";
+import { useRouter } from "next/router";
 
 export interface AIGCContent {
   name: string;
@@ -26,6 +27,7 @@ export default function FormAIGC({
   aigtAddress,
   aigcAddress,
 }: FormAIGCProps) {
+  const router = useRouter();
   const [aigcContent, setAigcContent] = useState<AIGCContent>();
   const [isMinted, setIsMinted] = useState<string | number>();
 
@@ -144,7 +146,9 @@ export default function FormAIGC({
       <ListingNFTModal
         ref={listingNFTModalRef}
         listingNFT={listingNFT}
-        // listingSuccess={() => {TODO: refresh the card state}}
+        listingSuccess={() => {
+          router.push("/");
+        }}
       />
       <ConnectToSPModal ref={connectToSPModalRef} onConnect={() => {}} />
     </>

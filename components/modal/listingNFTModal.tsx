@@ -70,7 +70,7 @@ const ListingNFTModal = React.forwardRef(
           },
           {
             onError(error) {
-              console.log("approveListing onError", data);
+              console.debug("approveListing onError", error);
               setListInitialized(false);
             },
           }
@@ -99,10 +99,9 @@ const ListingNFTModal = React.forwardRef(
       hash: approveTx,
     });
     useEffect(() => {
-      console.log("approveResult refreshed");
+      console.debug("approveResult refreshed");
       if (!approveResult.isSuccess) return;
 
-      console.log("approveResult.isSuccess", approveResult.isSuccess);
       setApprovedListing(true);
       setListInitialized(false);
     }, [approveResult]);
@@ -111,7 +110,7 @@ const ListingNFTModal = React.forwardRef(
       hash: createListingTx,
     });
     useEffect(() => {
-      console.log("listingResult refreshed");
+      console.debug("listingResult refreshed");
       if (!listingResult.isSuccess) return;
       setIsListed(true);
       setApprovedListing(false);

@@ -66,28 +66,27 @@ export default function Token() {
 
   // write contracts
   const { writeContract: mint, data: mintTx } = useWriteToken7007Mint();
-  const { writeContract: approve, data: approveTx } = useWriteToken7007Approve();
+  const { writeContract: approve, data: approveTx } =
+    useWriteToken7007Approve();
   const { writeContract: stake, data: stakeTx } = useWriteStake7007Stake();
 
   // contract events
   useWatchToken7007TransferEvent({
     address: TOKEN7007_CONTRACT_ADDRESS,
     onLogs(log) {
-      // console.log(log);
       refetchBalance();
     },
   });
   useWatchToken7007ApprovalEvent({
     address: TOKEN7007_CONTRACT_ADDRESS,
     onLogs(log) {
-      // console.log(log);
       setStakingApproved(true);
     },
   });
 
   // wait for tx confirmation
   const mintResult = useWaitForTransactionReceipt({
-    hash: mintTx
+    hash: mintTx,
   });
   if (mintResult.isSuccess) {
     setMintInitialized(false);
@@ -164,14 +163,17 @@ export default function Token() {
                 if (!address || !decimals) return;
                 setMintInitialized(true);
 
-                mint({
-                  address: TOKEN7007_CONTRACT_ADDRESS,
-                  args: [address, parseUnits(mintAmount, decimals)],
-                }, {
-                  onError(error) {
-                    setMintInitialized(false);
+                mint(
+                  {
+                    address: TOKEN7007_CONTRACT_ADDRESS,
+                    args: [address, parseUnits(mintAmount, decimals)],
                   },
-                });
+                  {
+                    onError(error) {
+                      setMintInitialized(false);
+                    },
+                  }
+                );
               }}
             >
               {mintInitialized ? (
@@ -240,17 +242,20 @@ export default function Token() {
                   if (!decimals) return;
                   setApproveInitialized(true);
 
-                  approve({
-                    address: TOKEN7007_CONTRACT_ADDRESS,
-                    args: [
-                      STAKE7007_CONTRACT_ADDRESS,
-                      parseUnits(stakeAmount, decimals),
-                    ],
-                  }, {
-                    onError(error) {
-                      setApproveInitialized(false);
+                  approve(
+                    {
+                      address: TOKEN7007_CONTRACT_ADDRESS,
+                      args: [
+                        STAKE7007_CONTRACT_ADDRESS,
+                        parseUnits(stakeAmount, decimals),
+                      ],
                     },
-                  });
+                    {
+                      onError(error) {
+                        setApproveInitialized(false);
+                      },
+                    }
+                  );
                 }}
               >
                 {approveInitialized ? (
@@ -277,11 +282,17 @@ export default function Token() {
                   if (!decimals) return;
                   setStakeInitialized(true);
 
-                  stake({ address: STAKE7007_CONTRACT_ADDRESS, args: [parseUnits(stakeAmount, decimals)] }, {
-                    onError(error) {
-                      setStakeInitialized(false);
+                  stake(
+                    {
+                      address: STAKE7007_CONTRACT_ADDRESS,
+                      args: [parseUnits(stakeAmount, decimals)],
                     },
-                  });
+                    {
+                      onError(error) {
+                        setStakeInitialized(false);
+                      },
+                    }
+                  );
                 }}
               >
                 {stakeInitialized ? (

@@ -50,7 +50,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
   useWatchAigcFactoryAigcCreatedEvent({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     onLogs: (log) => {
-      console.log(log)
+      console.debug(log);
       // TODO: event should include model index so that we don't guess
       router.push(`/model/${Number(modelIndex) + 1}/detail`);
     },
