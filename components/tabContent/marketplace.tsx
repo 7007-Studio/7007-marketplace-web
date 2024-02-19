@@ -19,7 +19,9 @@ const Marketplace = ({
     { id: "aigc", label: "AIGC", checked: false },
     { id: "model", label: "Model", checked: false },
   ]);
-  const aigcListings = allValidListings?.filter((l) => isAddressEqual(l.assetContract, aigcAddress));
+  const aigcListings = allValidListings?.filter((l) =>
+    isAddressEqual(l.assetContract, aigcAddress)
+  );
   const listedTokenIds = aigcListings?.map((l) => l.tokenId);
 
   return (
@@ -30,16 +32,20 @@ const Marketplace = ({
       <div className="flex flex-row gap-x-11 justify-between">
         <div>
           <div className="flex flex-row flex-wrap gap-6">
-            {tokenIds?.filter((t) => (listedTokenIds?.includes(BigInt(t))))
+            {tokenIds
+              ?.filter((t) => listedTokenIds?.includes(BigInt(t)))
               .map((id) => (
                 <NFTCard
                   key={id}
                   aigcAddress={aigcAddress}
                   tokenId={id.toString()}
-                  listing={aigcListings?.find((l) => isAddressEqual(l.assetContract, aigcAddress) && l.tokenId === BigInt(id))}
+                  listing={aigcListings?.find(
+                    (l) =>
+                      isAddressEqual(l.assetContract, aigcAddress) &&
+                      l.tokenId === BigInt(id)
+                  )}
                 />
-              ))
-            }
+              ))}
           </div>
         </div>
         <div className="flex flex-col min-w-[288px] gap-y-8">

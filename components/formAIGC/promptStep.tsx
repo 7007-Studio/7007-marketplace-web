@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import { useReadAigcFactoryDeployedAigCs, useReadAigcTokenId } from "@/generated";
+import {
+  useReadAigcFactoryDeployedAigCs,
+  useReadAigcTokenId,
+} from "@/generated";
 import AigcNftCreated from "@/components/model/aigcNftCreated";
 
 import { AIGCContent } from ".";
@@ -48,7 +51,7 @@ const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
         <h2 className="heading-lg mb-12">By our community</h2>
 
         {aigcAddress && (
-          <AigcNftCreated tokenIds={tokenIds} modelIndex={modelIndex} />
+          <AigcNftCreated tokenIds={tokenIds} aigcAddress={aigcAddress} />
         )}
       </div>
     </>

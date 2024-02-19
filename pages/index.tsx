@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   AIGC_FACTORY_CONTRACT_ADDRESS,
   MARKETPLACE_V3_ADDRESS,
@@ -6,9 +6,7 @@ import {
 import Tabs, { TabState } from "@/components/tabs";
 import {
   useReadAigcFactoryDeployedAigCs,
-  useReadAigcFactoryModelIndexCurrent,
   useReadAigcTokenId,
-  useReadMarketplaceV3GetAllListings,
   useReadMarketplaceV3GetAllValidListings,
   useReadMarketplaceV3TotalListings,
 } from "@/generated";
@@ -20,6 +18,7 @@ import ListingNFTModal, {
   ListingNFT,
 } from "@/components/modal/listingNFTModal";
 import ConnectToSPModal from "@/components/modal/connectToSPModal";
+import { Listing } from "@/types";
 
 export default function Main() {
   // hard coded
@@ -59,7 +58,7 @@ export default function Main() {
 
   const { data: allValidListings } = useReadMarketplaceV3GetAllValidListings({
     address: MARKETPLACE_V3_ADDRESS,
-    args: [0, totalListings ? totalListings - BigInt(1) : 0],
+    args: [BigInt(0), totalListings ? totalListings - BigInt(1) : BigInt(0)],
   });
 
   const isMounted = useIsMounted();
@@ -79,7 +78,7 @@ export default function Main() {
           <Marketplace
             aigcAddress={deployedAigc}
             tokenIds={tokenIds}
-            allValidListings={allValidListings}
+            allValidListings={allValidListings as unknown as Listing[]}
           />
         )}
 

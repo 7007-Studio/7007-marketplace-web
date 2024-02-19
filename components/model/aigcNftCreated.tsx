@@ -1,17 +1,18 @@
 import React from "react";
 import NFTCard from "../nftCard";
+import { Address } from "viem";
 
 const AigcNftCreated = ({
   tokenIds,
-  modelIndex,
+  aigcAddress,
 }: {
   tokenIds: number[];
-  modelIndex: number;
+  aigcAddress: Address;
 }) => {
   return (
     <div className="flex flex-row flex-wrap gap-6">
       {tokenIds.map((id) => (
-        <NFTCard key={id} modelIndex={modelIndex} tokenId={id} />
+        <NFTCard key={id} tokenId={id} aigcAddress={aigcAddress} />
       ))}
     </div>
   );

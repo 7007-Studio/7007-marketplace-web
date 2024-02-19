@@ -75,10 +75,7 @@ export default function Detail() {
       <div></div>
 
       {aigcAddress && (
-        <AigcNftCreated
-          tokenIds={tokenIds}
-          modelIndex={Number(index as string)}
-        />
+        <AigcNftCreated tokenIds={tokenIds} aigcAddress={aigcAddress} />
       )}
     </div>
   );
