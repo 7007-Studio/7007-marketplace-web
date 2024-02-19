@@ -64,7 +64,7 @@ const Collected = ({
   return (
     <>
       <div className="pb-8">
-        Display {tokenIds.length} of {tokenIds.length} AIGC NFTs
+        Display {filteredTokenIds.length} of {filteredTokenIds.length} AIGC NFTs
       </div>
       <div className="flex flex-row gap-x-11 justify-between">
         <div>

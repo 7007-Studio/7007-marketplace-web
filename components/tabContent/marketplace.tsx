@@ -22,17 +22,17 @@ const Marketplace = ({
   const aigcListings = allValidListings?.filter((l) =>
     isAddressEqual(l.assetContract, aigcAddress)
   );
-  const listedTokenIds = aigcListings?.map((l) => l.tokenId);
+  const listedTokenIds = aigcListings?.map((l) => l.tokenId) || [];
 
   return (
     <>
       <div className="pb-8">
-        Display {tokenIds.length} of {tokenIds.length} AIGC NFTs
+        Display {listedTokenIds.length} of {listedTokenIds.length} AIGC NFTs
       </div>
       <div className="flex flex-row gap-x-11 justify-between">
         <div>
           <div className="flex flex-row flex-wrap gap-6">
-            {tokenIds
+            {listedTokenIds
               ?.filter((t) => listedTokenIds?.includes(BigInt(t)))
               .map((id) => (
                 <NFTCard

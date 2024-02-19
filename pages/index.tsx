@@ -19,6 +19,7 @@ import ListingNFTModal, {
 } from "@/components/modal/listingNFTModal";
 import ConnectToSPModal from "@/components/modal/connectToSPModal";
 import { Listing } from "@/types";
+import Created from "@/components/tabContent/created";
 
 export default function Main() {
   // hard coded
@@ -83,9 +84,8 @@ export default function Main() {
         )}
 
         {currentTab === TabState.Created && deployedAigc && (
-          <Collected
+          <Created
             aigcAddress={deployedAigc}
-            tokenIds={tokenIds}
             listingNFTModalRef={listingNFTModalRef}
             setListingNFT={setListingNFT}
             connectToSPModalRef={connectToSPModalRef}
