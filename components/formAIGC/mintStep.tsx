@@ -310,7 +310,7 @@ const MintStep = ({
       </div>
 
       <dialog ref={editPromptModalRef} id="" className="modal">
-        <div className="modal-box max-w-[904px] py-16 px-20">
+        <div className="modal-box max-w-[904px] py-16 px-20 bg-white">
           <h2 className="heading-lg mb-12">Edit prompt</h2>
           <PromptForm
             submitText="Generate"

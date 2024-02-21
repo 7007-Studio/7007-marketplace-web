@@ -4,7 +4,7 @@ import React from "react";
 const ConnectToSPModal = React.forwardRef(
   ({ onConnect }: { onConnect?: () => void }, ref) => (
     <dialog ref={ref as RefObject<HTMLDialogElement> | null} className="modal">
-      <div className="modal-box max-w-[604px]">
+      <div className="modal-box max-w-[604px] bg-white">
         <div className="flex flex-col justify-center items-center gap-10">
           <div className="px-10 pt-16 text-center">
             <h2 className="text-lg">

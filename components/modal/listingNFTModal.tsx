@@ -155,7 +155,7 @@ const ListingNFTModal = React.forwardRef(
         id="listingNFTModal"
         className="modal"
       >
-        <div className="modal-box max-w-[424px]">
+        <div className="modal-box max-w-[424px] bg-white">
           {!isListed ? (
             <>
               <h3 className="heading-md">Listing NFT</h3>

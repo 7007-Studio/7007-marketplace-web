@@ -1,43 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useEffect, useState } from "react";
-import { STAKE7007_CONTRACT_ADDRESS } from "@/constants";
-import {
-  useReadStake7007GetInferencePoint,
-  useReadStake7007ConsumedInferencePoint,
-} from "@/generated";
-import { Address, formatUnits } from "viem";
-import { useAccount } from "wagmi";
-import { useIsMounted } from "@/hooks/useIsMounted";
+import { useState } from "react";
 
 export default function Navbar() {
   const [isShowingMenu, setIsShowingMenu] = useState(false);
-
-  const { address } = useAccount();
-  const { data: inferencePoint, refetch: refetchInferencePoint } =
-    useReadStake7007GetInferencePoint({
-      address: STAKE7007_CONTRACT_ADDRESS as Address,
-      args: address ? [address] : undefined,
-    });
-  const {
-    data: consumedInferencePoint,
-    refetch: refetchConsumedInferencePoint,
-  } = useReadStake7007ConsumedInferencePoint({
-    address: STAKE7007_CONTRACT_ADDRESS as Address,
-    args: address ? [address] : undefined,
-  });
-
-  const isMounted = useIsMounted();
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      refetchInferencePoint();
-      refetchConsumedInferencePoint();
-    }, 10000);
-    // clearing interval
-    return () => clearInterval(timer);
-  });
 
   return (
     <>
@@ -59,22 +26,15 @@ export default function Navbar() {
           >
             Model Launchpad
           </Link>
-          <Link
+          {/* <Link
             href="#"
             className="hidden md:block hover:text-primary cursor-pointer"
           >
             Staking
-          </Link>
-          <button className="hidden md:block btn btn-primary px-6">
+          </Link> */}
+          {/* <button className="hidden md:block btn btn-primary px-6">
             Publish Model
-          </button>
-          {/* {isMounted &&
-            inferencePoint !== undefined &&
-            consumedInferencePoint !== undefined && (
-              <div className="hidden md:flex badge badge-primary text-lg font-bold p-4 mx-4">
-                {formatUnits(inferencePoint - consumedInferencePoint, 0)} IP
-              </div>
-            )} */}
+          </button> */}
           <div className="max-md:hidden">
             <ConnectButton chainStatus="none" showBalance={false} />
             <button
@@ -102,23 +62,15 @@ export default function Navbar() {
       <div
         className={`flex-col md:hidden ${isShowingMenu ? "flex" : "hidden"}`}
       >
-        {/* {isMounted &&
-          inferencePoint !== undefined &&
-          consumedInferencePoint !== undefined && (
-            <div className="badge badge-primary self-end text-lg font-bold p-4 mx-4">
-              {formatUnits(inferencePoint - consumedInferencePoint, 0)} IP
-            </div>
-          )} */}
-
         <Link href="/" className="pl-4 py-4 text-xl hover:text-primary">
           Model Launchpad
         </Link>
-        <Link href="#" className="pl-4 py-4 text-xl hover:text-primary">
+        {/* <Link href="#" className="pl-4 py-4 text-xl hover:text-primary">
           Staking
-        </Link>
-        <div className="w-full px-4">
+        </Link> */}
+        {/* <div className="w-full px-4">
           <button className="btn btn-primary w-full">Publish Model</button>
-        </div>
+        </div> */}
       </div>
     </>
   );

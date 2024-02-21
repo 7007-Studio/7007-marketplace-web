@@ -125,13 +125,13 @@ const NFTCard: React.FC<NFTCardProps> = ({
         />
       </figure>
 
-      <div className="card-body flex-grow">
+      <div className="card-body flex-grow gap-2">
         <h3 className="heading-md">{metadata.name}</h3>
-        <p className="mb-4 text-zinc-400">{metadata.description}</p>
+        <p className="pb-4">{metadata.description}</p>
 
         {listing && owner !== connectedWallet && (
           <>
-            <div className="flex flex-row justify-between items-baseline">
+            <div className="pb-2 flex flex-row justify-between items-baseline">
               <span className="heading-md">
                 {decimals
                   ? formatUnits(listing.pricePerToken, decimals)
@@ -175,7 +175,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
                 );
               }}
               disabled={buyInitialized}
-              className="btn btn-primary"
+              className="mb-8 btn btn-primary"
             >
               {buyInitialized ? (
                 <>
