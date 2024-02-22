@@ -68,7 +68,7 @@ const Collected = ({
       </div>
       <div className="flex flex-row gap-x-11 justify-between">
         <div>
-          <div className="flex flex-row flex-wrap gap-6">
+          <div className="flex flex-row flex-wrap gap-6 items-start">
             {filteredTokenIds.map((id) => (
               <NFTCard
                 key={id}
