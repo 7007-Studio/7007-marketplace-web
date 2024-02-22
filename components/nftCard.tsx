@@ -175,7 +175,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
                 );
               }}
               disabled={buyInitialized}
-              className="mb-8 btn btn-primary"
+              className="btn btn-primary"
             >
               {buyInitialized ? (
                 <>
@@ -212,7 +212,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
         )}
 
         <button
-          className="flex flex-row justify-between items-center"
+          className="pt-8 flex flex-row justify-between items-center"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           <div>{isCollapsed ? "View more" : "Collapse"}</div>
