@@ -2,9 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 export default function Navbar() {
   const [isShowingMenu, setIsShowingMenu] = useState(false);
+  const pathname = usePathname();
+  console.log(pathname);
 
   return (
     <>
@@ -22,7 +26,12 @@ export default function Navbar() {
         <div className="flex-none gap-10">
           <Link
             href="/"
-            className="hidden md:block hover:text-primary cursor-pointer"
+            className={clsx(
+              "hidden md:block hover:text-primary cursor-pointer",
+              {
+                underline: pathname === "/",
+              }
+            )}
           >
             Model Launchpad
           </Link>

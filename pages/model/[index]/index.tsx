@@ -62,21 +62,21 @@ export default function Detail() {
         </Link>
       </div>
       <Hero modelName={modelName} aigtAddress={AIGT_CONTRACT_ADDRESS} />
-      <h2 className="text-lg mt-10 mb-6">Portfolio</h2>
+      <h2 className="heading-lg mt-10 mb-6">Portfolio</h2>
       <div className="flex flex-row gap-x-10">
         <div className="flex-1">
           <ModelTimeline />
+
+          <h2 className="heading-lg mt-14 mb-6">AIGC NFT Created</h2>
+
+          {aigcAddress && (
+            <AigcNftCreated tokenIds={tokenIds} aigcAddress={aigcAddress} />
+          )}
         </div>
         <div className="flex-grow-0">
           <Launched modelIndex={index as string} />
         </div>
       </div>
-      <h2 className="text-lg mt-14 mb-6">AIGC NFT Created</h2>
-      <div></div>
-
-      {aigcAddress && (
-        <AigcNftCreated tokenIds={tokenIds} aigcAddress={aigcAddress} />
-      )}
     </div>
   );
 }

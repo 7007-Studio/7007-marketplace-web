@@ -68,7 +68,7 @@ const config: Config = {
           secondary: "#222027",
           "secondary-content": "#FFFFFF",
           "base-100": "#EAEAEB",
-          "base-content": "#4E4B55",
+          "base-content": "#141317",
           "--padding-card": "24px",
         },
       },

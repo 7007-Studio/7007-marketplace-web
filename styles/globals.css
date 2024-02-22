@@ -30,11 +30,32 @@
   }
 
   .badge {
-    @apply rounded-md;
+    @apply rounded-md h-auto;
   }
 
   .my-tooltip:before {
     white-space: pre;
+  }
+
+  .timeline {
+    &:not(.timeline-vertical) > li {
+      @apply flex-1 grid-rows-1;
+    }
+
+    &.timeline-vertical > li {
+      @apply auto-cols-max;
+    }
+  }
+  .timeline-vertical {
+    @apply flex-1;
+  }
+
+  .timeline-end {
+    @apply justify-self-start;
+  }
+
+  .timeline-vertical .timeline-end {
+    @apply justify-self-stretch;
   }
 }
 

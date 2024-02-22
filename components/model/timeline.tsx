@@ -9,9 +9,13 @@ interface TimelineProps {
 
 function Timeline({ milestones, color, vertical = false }: TimelineProps) {
   return (
-    <ul className={clsx("timeline", { "timeline-vertical": vertical })}>
+    <ul
+      className={clsx("timeline", {
+        "timeline-vertical": vertical,
+      })}
+    >
       {milestones.map((milestone, index) => (
-        <li key={`milestone-${index}`} className="flex-1">
+        <li key={`milestone-${index}`}>
           {index !== 0 && <hr className={clsx({ [`bg-${color}`]: color })} />}
           <div className="timeline-middle">
             <svg
@@ -23,7 +27,7 @@ function Timeline({ milestones, color, vertical = false }: TimelineProps) {
               <circle cx="6" cy="6" r="6" />
             </svg>
           </div>
-          <div className="timeline-end justify-self-start">{milestone}</div>
+          <div className="timeline-end">{milestone}</div>
           {index !== milestones.length - 1 && (
             <hr className={clsx({ [`bg-${color}`]: color })} />
           )}
