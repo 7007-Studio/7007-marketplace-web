@@ -1,8 +1,5 @@
 import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import {
-  useReadAigcFactoryDeployedAigTs,
-  useReadAigtName,
-} from "@/generated";
+import { useReadAigcFactoryDeployedAigTs, useReadAigtName } from "@/generated";
 import { concatAddress } from "@/helpers";
 import { useRouter } from "next/router";
 import Card from "./card";
@@ -16,7 +13,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
 
   const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
-    args: modelIndex ? [BigInt(modelIndex)]: undefined,
+    args: modelIndex ? [BigInt(modelIndex)] : undefined,
   });
 
   const { data: modelName } = useReadAigtName({
@@ -25,7 +22,10 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
 
   return (
     <Card className="max-w-[390px]">
-      <div className="p-6">
+      <div
+        className="p-6 hover:cursor-pointer"
+        onClick={() => router.push(`/model/${modelIndex}`)}
+      >
         <div className="flex justify-between items-center">
           <h2 className="text-lg mb-4">{modelName}</h2>
         </div>

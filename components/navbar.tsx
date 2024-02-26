@@ -28,7 +28,7 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="flex-none gap-10">
-          <Link
+          {/* <Link
             href="/model/1"
             className={clsx(
               "hidden md:block hover:text-primary cursor-pointer",
@@ -38,7 +38,7 @@ export default function Navbar() {
             )}
           >
             Model Launchpad
-          </Link>
+          </Link> */}
           {/* <Link
             href="#"
             className="hidden md:block hover:text-primary cursor-pointer"
@@ -80,9 +80,9 @@ export default function Navbar() {
       <div
         className={`flex-col md:hidden ${isShowingMenu ? "flex" : "hidden"}`}
       >
-        <Link href="/model/1" className="pl-4 py-4 text-xl hover:text-primary">
+        {/* <Link href="/model/1" className="pl-4 py-4 text-xl hover:text-primary">
           Model Launchpad
-        </Link>
+        </Link> */}
         {/* <Link href="#" className="pl-4 py-4 text-xl hover:text-primary">
           Staking
         </Link> */}

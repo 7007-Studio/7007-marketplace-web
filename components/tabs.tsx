@@ -37,6 +37,12 @@ export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
   return (
     <div className="tabs tabs-lg tabs-bordered gap-4">
       <Tab
+        isActive={currentTab === TabState.ModelLaunchpad}
+        onClick={() => setCurrentTab(TabState.ModelLaunchpad)}
+      >
+        Models
+      </Tab>
+      <Tab
         isActive={currentTab === TabState.Marketplace}
         onClick={() => setCurrentTab(TabState.Marketplace)}
       >

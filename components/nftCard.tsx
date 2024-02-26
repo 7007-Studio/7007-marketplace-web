@@ -20,7 +20,6 @@ import {
 export interface NFTCardProps {
   aigcAddress: Address;
   tokenId: string | number;
-  ownedOnly?: boolean;
   onListingNFT?: ({ tokenId, metadata }: ListingNFT) => void;
   onConnectToSP?: () => void;
   listing?: Listing;
@@ -29,7 +28,6 @@ export interface NFTCardProps {
 const NFTCard: React.FC<NFTCardProps> = ({
   aigcAddress,
   tokenId,
-  ownedOnly,
   onListingNFT,
   onConnectToSP,
   listing,
@@ -195,17 +193,6 @@ const NFTCard: React.FC<NFTCardProps> = ({
             disabled={!!listing}
           >
             {!!listing ? "Listed" : "List"}
-          </button>
-        )}
-
-        {aigcAddress && connectedWallet === owner && (
-          <button
-            onClick={() => {
-              onConnectToSP?.();
-            }}
-            className="btn btn-primary"
-          >
-            Connect
           </button>
         )}
 

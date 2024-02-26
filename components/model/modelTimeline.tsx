@@ -45,7 +45,7 @@ const ModelTimeline = () => {
       <div className="grid grid-cols-2 gap-x-12">
         <div>
           <h3 className="heading-md">Distribution Timeline</h3>
-          <div className="flex">
+          <div className="flex overflow-scroll">
             <Timeline
               milestones={[
                 <Distribution key="1" />,
@@ -60,7 +60,7 @@ const ModelTimeline = () => {
           <h3 className="heading-md">Distribution Allocation</h3>
           <div className="flex py-10 justify-stretch">
             <div
-              className="min-h-[200px] w-full h-full"
+              className="min-h-[240px] w-full h-full"
               style={{ height: "100%" }}
             >
               <AllocationChart />
