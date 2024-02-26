@@ -31,7 +31,7 @@ export default function Main() {
 
   const connectToSPModalRef = useRef<HTMLDialogElement>(null);
 
-  const [currentTab, setCurrentTab] = useState(TabState.ModelLaunchpad);
+  const [currentTab, setCurrentTab] = useState(TabState.Marketplace);
   const { data: deployedAigc } = useReadAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: modelIndex ? [BigInt(modelIndex)] : undefined,
