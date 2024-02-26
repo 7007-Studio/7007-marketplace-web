@@ -29,7 +29,7 @@ const Distribution = () => {
 
 const ModelTimeline = () => {
   return (
-    <div className="py-12 px-12 rounded-md bg-white">
+    <div className="py-12 px-10 2xl:px-12 rounded-md bg-white">
       <h3 className="heading-md">Model Timeline</h3>
       <div className="pt-12 pb-28">
         <Timeline
@@ -42,8 +42,8 @@ const ModelTimeline = () => {
           color="primary"
         />
       </div>
-      <div className="flex flex-row gap-x-12">
-        <div className="flex-1">
+      <div className="grid grid-cols-2 gap-x-12">
+        <div>
           <h3 className="heading-md">Distribution Timeline</h3>
           <div className="flex">
             <Timeline
@@ -56,10 +56,13 @@ const ModelTimeline = () => {
             />
           </div>
         </div>
-        <div className="flex-1">
+        <div className="flex flex-col">
           <h3 className="heading-md">Distribution Allocation</h3>
-          <div className="py-10">
-            <div className="h-[200px]">
+          <div className="flex py-10 justify-stretch">
+            <div
+              className="min-h-[200px] w-full h-full"
+              style={{ height: "100%" }}
+            >
               <AllocationChart />
             </div>
           </div>

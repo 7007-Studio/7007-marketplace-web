@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           soon.
         </div>
       </div>
-      <main className="max-lg:hidden flex min-h-screen flex-col lg:py-10 md:px-10 lg:px-24 mx-auto">
+      <main className="max-lg:hidden flex min-h-screen flex-col lg:py-10 md:px-20 2xl:px-24 mx-auto">
         {children}
       </main>
     </div>
