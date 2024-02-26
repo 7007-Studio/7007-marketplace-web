@@ -11,7 +11,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "7007.studio",
+        hostname: "alpha.7007.studio",
       },
     ],
   },
