@@ -15,8 +15,6 @@ const Marketplace = ({
     { id: "model", label: "Model", checked: false },
   ]);
 
-  console.log(allValidListings);
-
   return (
     <>
       {allValidListings && allValidListings.length > 0 && (

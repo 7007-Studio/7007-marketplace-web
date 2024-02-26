@@ -5,7 +5,6 @@ import { Listing, Metadata, MetadataAttribute } from "@/types";
 import { NATIVE_TOKEN_ADDRESS } from "@/constants";
 import { Address, formatEther, formatUnits } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import Image from "next/image";
 import Card from "./card";
 import {
   concatAddress,
@@ -23,6 +22,7 @@ import {
   useReadErc20Symbol,
   useWriteMarketplaceV3BuyFromListing,
 } from "@/generated";
+import { useRouter } from "next/router";
 export interface NFTCardProps {
   aigcAddress: Address;
   tokenId: string | number;
@@ -38,6 +38,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
   onConnectToSP,
   listing,
 }) => {
+  const router = useRouter();
   const { isConnected, address: connectedWallet, chainId } = useAccount();
   const { openConnectModal } = useConnectModal();
 
@@ -118,149 +119,155 @@ const NFTCard: React.FC<NFTCardProps> = ({
 
   return (
     <Card className="w-[258px]">
-      <div className="flex py-4 px-6 justify-between items-center">
-        {is7007Token(aigcAddress) && <span>7007 Genesis NFT</span>}
-        {!is7007Token(aigcAddress) && <span>DATE</span>}
-        {modelName && (
-          <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
-            {modelName}
-          </span>
-        )}
-      </div>
+      <div
+        className="hover:cursor-pointer"
+        onClick={() => router.push(`/assets/${aigcAddress}/${tokenId}`)}
+      >
+        <div className="flex py-4 px-6 justify-between items-center">
+          {is7007Token(aigcAddress) && <span>7007 Genesis NFT</span>}
+          {!is7007Token(aigcAddress) && <span>DATE</span>}
+          {modelName && (
+            <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
+              {modelName}
+            </span>
+          )}
+        </div>
 
-      <figure>
-        {metadataIsLoading ? (
-          <div className="flex w-full h-[258px] justify-center items-center">
-            <span className="loading loading-spinner loading-lg"></span>
-          </div>
-        ) : animationUrl ? (
-          <div className="max-h-[254px] overflow-hidden">
-            <iframe src={animationUrl} width={258} height={258} />
-          </div>
-        ) : (
-          metadata.image && (
-            <Image
-              src={metadata.image}
-              alt={metadata.name}
-              width={258}
-              height={258}
-              className="w-full object-cover aspect-square"
-            />
-          )
-        )}
-      </figure>
-
-      <div className="card-body flex-grow gap-2">
-        <h3 className="heading-md">{metadata.name}</h3>
-        <p className="pb-4">{metadata.description}</p>
-
-        {listing && owner !== connectedWallet && (
-          <>
-            <div className="pb-2 flex flex-row justify-between items-baseline">
-              <span className="heading-md">
-                {decimals
-                  ? formatUnits(listing.pricePerToken, decimals)
-                  : formatEther(listing.pricePerToken)}{" "}
-                {symbol ? symbol : "ETH"}
-              </span>
-              <span className="text-sm">
-                {formatDaysLeft(Number(listing.endTimestamp) * 1000)}
-              </span>
+        <figure>
+          {metadataIsLoading ? (
+            <div className="flex w-full h-[258px] justify-center items-center">
+              <span className="loading loading-spinner loading-lg"></span>
             </div>
-            <button
-              onClick={() => {
-                if (!isConnected || !connectedWallet || !chainId) {
-                  openConnectModal?.();
-                  return;
-                }
+          ) : animationUrl ? (
+            <div className="max-h-[254px] overflow-hidden">
+              <iframe src={animationUrl} width={258} height={258} />
+            </div>
+          ) : (
+            metadata.image && (
+              <img
+                src={metadata.image}
+                alt={metadata.name}
+                className="w-full object-cover aspect-square"
+              />
+            )
+          )}
+        </figure>
 
-                const marketplaceV3 = getContractAddress(
-                  "MarketplaceV3",
-                  chainId
-                );
-                if (!marketplaceV3) return;
+        <div className="card-body flex-grow gap-2">
+          <h3 className="heading-md">{metadata.name}</h3>
+          <p className="pb-4">{metadata.description}</p>
 
-                setBuyInitialized(true);
-                const args: [bigint, Address, bigint, Address, bigint] = [
-                  listing.listingId,
-                  connectedWallet,
-                  listing.quantity,
-                  listing.currency,
-                  listing.pricePerToken,
-                ];
-                console.debug(args);
-                buyNft(
-                  {
-                    address: marketplaceV3,
-                    value:
-                      listing.currency === NATIVE_TOKEN_ADDRESS
-                        ? listing.pricePerToken
-                        : undefined,
-                    args,
-                  },
-                  {
-                    onError(error) {
-                      console.debug("buyNft error", error);
-                      setBuyInitialized(false);
-                    },
+          {listing && owner !== connectedWallet && (
+            <>
+              <div className="pb-2 flex flex-row justify-between items-baseline">
+                <span className="heading-md">
+                  {decimals
+                    ? formatUnits(listing.pricePerToken, decimals)
+                    : formatEther(listing.pricePerToken)}{" "}
+                  {symbol ? symbol : "ETH"}
+                </span>
+                <span className="text-sm">
+                  {formatDaysLeft(Number(listing.endTimestamp) * 1000)}
+                </span>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isConnected || !connectedWallet || !chainId) {
+                    openConnectModal?.();
+                    return;
                   }
-                );
-              }}
-              disabled={buyInitialized}
-              className="btn btn-primary"
-            >
-              {buyInitialized ? (
-                <>
-                  <span className="loading loading-spinner"></span>
-                  loading
-                </>
-              ) : (
-                "Buy Now"
-              )}
-            </button>
-          </>
-        )}
-        {aigcAddress && connectedWallet === owner && (
-          <button
-            onClick={() => {
-              onListingNFT?.({ address: aigcAddress, tokenId, metadata });
-            }}
-            className="btn btn-primary"
-            disabled={!!listing}
-          >
-            {!!listing ? "Listed" : "List"}
-          </button>
-        )}
 
-        <button
-          className="pt-8 flex flex-row justify-between items-center"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
-          <div>{isCollapsed ? "View more" : "Collapse"}</div>
-          <svg
-            className="w-4 h-4 transform text-primary"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="4"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            style={{
-              transform: isCollapsed ? "rotate(0)" : "rotate(-90deg)",
-              transition: "all 0.25s ease-in-out ",
+                  const marketplaceV3 = getContractAddress(
+                    "MarketplaceV3",
+                    chainId
+                  );
+                  if (!marketplaceV3) return;
+
+                  setBuyInitialized(true);
+                  const args: [bigint, Address, bigint, Address, bigint] = [
+                    listing.listingId,
+                    connectedWallet,
+                    listing.quantity,
+                    listing.currency,
+                    listing.pricePerToken,
+                  ];
+                  console.debug(args);
+                  buyNft(
+                    {
+                      address: marketplaceV3,
+                      value:
+                        listing.currency === NATIVE_TOKEN_ADDRESS
+                          ? listing.pricePerToken
+                          : undefined,
+                      args,
+                    },
+                    {
+                      onError(error) {
+                        console.debug("buyNft error", error);
+                        setBuyInitialized(false);
+                      },
+                    }
+                  );
+                }}
+                disabled={buyInitialized}
+                className="btn btn-primary"
+              >
+                {buyInitialized ? (
+                  <>
+                    <span className="loading loading-spinner"></span>
+                    loading
+                  </>
+                ) : (
+                  "Buy Now"
+                )}
+              </button>
+            </>
+          )}
+          {connectedWallet === owner && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onListingNFT?.({ address: aigcAddress, tokenId, metadata });
+              }}
+              className="btn btn-primary"
+              disabled={!!listing}
+            >
+              {!!listing ? "Listed" : "List"}
+            </button>
+          )}
+
+          <button
+            className="pt-8 flex flex-row justify-between items-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsCollapsed(!isCollapsed);
             }}
           >
-            <path d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-        <div
-          className={`${
-            isCollapsed
-              ? "opacity-0 max-h-0 hidden"
-              : "opacity-100 transition-opacity ease-in-out duration-500"
-          } `}
-        >
-          {aigcAddress && (
+            <div>{isCollapsed ? "View more" : "Collapse"}</div>
+            <svg
+              className="w-4 h-4 transform text-primary"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="4"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              style={{
+                transform: isCollapsed ? "rotate(0)" : "rotate(-90deg)",
+                transition: "all 0.25s ease-in-out ",
+              }}
+            >
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          <div
+            className={`${
+              isCollapsed
+                ? "opacity-0 max-h-0 hidden"
+                : "opacity-100 transition-opacity ease-in-out duration-500"
+            } `}
+          >
             <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
               <div>Contract Address</div>
               <a
@@ -271,13 +278,12 @@ const NFTCard: React.FC<NFTCardProps> = ({
                 {concatAddress(aigcAddress)}
               </a>
             </div>
-          )}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
-            <div>Token ID</div>
-            <div>{tokenId}</div>
-          </div>
 
-          {aigcAddress && (
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
+              <div>Token ID</div>
+              <div>{tokenId}</div>
+            </div>
+
             <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
               <div>Link</div>
               <a
@@ -288,7 +294,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
                 View on OpenSea
               </a>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </Card>

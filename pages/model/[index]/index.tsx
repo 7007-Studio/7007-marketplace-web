@@ -57,9 +57,12 @@ export default function Detail() {
   return (
     <div>
       <div className="py-10">
-        <Link href="/" className="flex flex-row gap-2">
+        <a
+          onClick={() => router.back()}
+          className="flex flex-row gap-2 hover:cursor-pointer"
+        >
           <ArrowLeftIcon className="text-primary" /> Back
-        </Link>
+        </a>
       </div>
       <Hero modelName={modelName} aigtAddress={AIGT_CONTRACT_ADDRESS} />
       <h2 className="heading-lg mt-10 mb-6">Portfolio</h2>

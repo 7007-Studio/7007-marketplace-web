@@ -10,3 +10,7 @@ export const ethClient = createPublicClient({
   chain: mainnet,
   transport: http(),
 });
+
+export function getPublicClient(chainId: number) {
+  return chainId === mainnet.id ? ethClient : sepoliaClient;
+}

@@ -238,7 +238,7 @@ const MintStep = ({
             onClick={() => {
               setAigcContent(undefined);
             }}
-            className="flex flex-row gap-2"
+            className="flex flex-row gap-2 hover:cursor-pointer"
           >
             <ArrowLeftIcon className="text-primary" /> Back
           </span>
