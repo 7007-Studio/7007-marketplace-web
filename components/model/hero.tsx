@@ -80,12 +80,6 @@ const Hero = ({ aigtAddress, modelName }: HeroProps) => {
             ))}
           </div>
         </div>
-        <div>
-          <button className="btn btn-secondary">Contribute Data</button>
-        </div>
-        <div>
-          <button className="btn btn-primary">Collect Reward</button>
-        </div>
       </div>
     </div>
   );

@@ -116,6 +116,7 @@ const ListingNFTModal = React.forwardRef(
       setApprovedListing(false);
       setListInitialized(false);
 
+      (ref as RefObject<HTMLDialogElement>)?.current?.close();
       listingSuccess?.();
     }, [listingResult]);
 

@@ -2,11 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 
 export default function Navbar() {
+  // hard coded
+  const modelIndex = 1;
+
   const [isShowingMenu, setIsShowingMenu] = useState(false);
+  const router = useRouter();
   const pathname = usePathname();
   console.log(pathname);
 
@@ -41,9 +45,14 @@ export default function Navbar() {
           >
             Staking
           </Link> */}
-          {/* <button className="hidden md:block btn btn-primary px-6">
-            Publish Model
-          </button> */}
+          <button
+            className="hidden md:block btn btn-primary px-6"
+            onClick={() => {
+              router.push(`/model/${modelIndex}/aigc/generate`);
+            }}
+          >
+            Generate
+          </button>
           <div className="max-md:hidden">
             <ConnectButton chainStatus="none" showBalance={false} />
             <button
@@ -77,9 +86,16 @@ export default function Navbar() {
         {/* <Link href="#" className="pl-4 py-4 text-xl hover:text-primary">
           Staking
         </Link> */}
-        {/* <div className="w-full px-4">
-          <button className="btn btn-primary w-full">Publish Model</button>
-        </div> */}
+        <div className="w-full px-4">
+          <button
+            className="btn btn-primary w-full"
+            onClick={() => {
+              router.push(`/model/${modelIndex}/aigc/generate`);
+            }}
+          >
+            Generate
+          </button>
+        </div>
       </div>
     </>
   );
