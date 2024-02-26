@@ -58,17 +58,6 @@ export default function Main() {
     args: modelIndex ? [BigInt(modelIndex)] : undefined,
   });
 
-  const { data: lastTokenId } = useReadAigcTokenId({
-    address: deployedAigc,
-  });
-
-  const tokenIds = useMemo(() => {
-    const ids: number[] = [];
-    if (!lastTokenId) return ids;
-
-    return ids;
-  }, [lastTokenId]);
-
   const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
 
   const { data: totalListings } = useReadMarketplaceV3TotalListings({
@@ -116,7 +105,6 @@ export default function Main() {
         {currentTab === TabState.Collected && deployedAigc && (
           <Collected
             aigcAddress={deployedAigc}
-            tokenIds={tokenIds}
             listingNFTModalRef={listingNFTModalRef}
             setListingNFT={setListingNFT}
             connectToSPModalRef={connectToSPModalRef}

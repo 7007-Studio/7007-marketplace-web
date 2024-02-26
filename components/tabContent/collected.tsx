@@ -1,23 +1,22 @@
 import handleFilterChange from "@/helpers/handleFilterChange";
 import Filter from "@/components/filter";
 import NFTCard from "@/components/nftCard";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ListingNFT } from "../modal/listingNFTModal";
 import { Abi, Address, zeroAddress } from "viem";
 import { useAccount } from "wagmi";
 
 import AIGC from "@/abis/AIGC.json";
 import { sepoliaClient } from "@/client";
+import { useReadAigcTokenId } from "@/generated";
 
 const Collected = ({
   aigcAddress,
-  tokenIds,
   listingNFTModalRef,
   setListingNFT,
   connectToSPModalRef,
 }: {
   aigcAddress: Address;
-  tokenIds: number[];
   listingNFTModalRef: React.RefObject<HTMLDialogElement>;
   setListingNFT: (nft: ListingNFT) => void;
   connectToSPModalRef: React.RefObject<HTMLDialogElement>;
@@ -32,6 +31,23 @@ const Collected = ({
   const [filteredTokenIds, setFilteredTokenIds] = useState<string[]>([]);
 
   const { address } = useAccount();
+
+  const { data: lastTokenId } = useReadAigcTokenId({
+    address: aigcAddress,
+  });
+
+  const tokenIds = useMemo(() => {
+    const ids: number[] = [];
+    if (!lastTokenId) return ids;
+
+    for (let i = 0; i < Number(lastTokenId); i++) {
+      // skipping for now b/c a screw up NFT
+      // if (i === 1) continue;
+      ids.push(i);
+    }
+    return ids;
+  }, [lastTokenId]);
+
   useEffect(() => {
     if (!aigcAddress || !address) return;
 
@@ -60,6 +76,8 @@ const Collected = ({
 
     fetchOwner();
   }, [aigcAddress, address, tokenIds]);
+
+  console.log("tokenIds", tokenIds);
 
   return (
     <>
