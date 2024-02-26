@@ -104,8 +104,6 @@ const NFTCard: React.FC<NFTCardProps> = ({
 
   if (!metadata) return;
 
-  if (ownedOnly && owner !== connectedWallet) return null;
-
   return (
     <Card className="max-w-[258px]">
       <div className="flex py-4 px-6 justify-between items-center">
