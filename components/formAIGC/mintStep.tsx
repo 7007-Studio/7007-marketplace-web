@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ethers } from "ethers";
 import { Address } from "viem";
-import { useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { create } from "ipfs-http-client";
 
 import {
@@ -18,6 +18,7 @@ import ArrowLeftIcon from "@/components/arrowLeftIcon";
 
 import { AIGCContent } from ".";
 import PromptForm from "./promptForm";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 interface MintStepProps {
   modelIndex: number | string;
@@ -109,6 +110,9 @@ const MintStep = ({
   const [mintInitialized, setMintInitialized] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
 
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+
   const { data: modelName } = useReadAigcModelName({
     address: aigcAddress,
   });
@@ -163,6 +167,11 @@ const MintStep = ({
   }, [mintResult]);
 
   const onApprove = () => {
+    if (!isConnected) {
+      openConnectModal?.();
+      return;
+    }
+
     if (mintCostToken === undefined) {
       return;
     }
@@ -182,10 +191,16 @@ const MintStep = ({
   };
 
   const onMint = async () => {
-    setMintInitialized(true);
+    if (!isConnected) {
+      openConnectModal?.();
+      return;
+    }
+
     if (!aigcContent) {
       return;
     }
+
+    setMintInitialized(true);
 
     const { name, prompt, imageUrl, audioUrl } = aigcContent;
     const { ipfsLinkMetadata, metadata } = await getTokenURI(
