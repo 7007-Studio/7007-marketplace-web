@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, isAddressEqual } from "viem";
 import { Model, NFT } from "./types";
 import { Contracts } from "./contracts";
 
@@ -36,4 +36,11 @@ export function getContractAddress(contract: string, chainId?: number) {
   }
 
   return Contracts[chainId][contract];
+}
+
+export function is7007Token(concatAddress: Address) {
+  return isAddressEqual(
+    concatAddress,
+    "0x42537d4e19d7888d8d5a867a51911bde569d9e9d"
+  );
 }

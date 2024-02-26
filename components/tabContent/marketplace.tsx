@@ -19,7 +19,7 @@ const Marketplace = ({
 
   return (
     <>
-      {allValidListings?.length === 0 && (
+      {allValidListings && allValidListings.length > 0 && (
         <div className="pb-8">
           Display {allValidListings.length} of {allValidListings.length} AIGC
           NFTs

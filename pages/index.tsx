@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import {
   useReadAigcFactoryDeployedAigCs,
@@ -19,18 +19,38 @@ import ConnectToSPModal from "@/components/modal/connectToSPModal";
 import Created from "@/components/tabContent/created";
 import { getContractAddress } from "@/helpers";
 import { Listing } from "@/types";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 export default function Main() {
   // hard coded
   const modelIndex = 1;
   // const { data: modelIndex } = useReadAigcFactoryModelIndexCurrent();
 
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  useEffect(() => {
+    setCurrentTab(searchParams.get("tab") as TabState);
+  }, [searchParams]);
+
   const listingNFTModalRef = useRef<HTMLDialogElement>(null);
   const [listingNFT, setListingNFT] = useState<ListingNFT>();
 
   const connectToSPModalRef = useRef<HTMLDialogElement>(null);
 
-  const [currentTab, setCurrentTab] = useState(TabState.ModelLaunchpad);
+  const [currentTab, setCurrentTab] = useState(TabState.Marketplace);
 
   const { chainId } = useAccount();
   const { data: deployedAigc } = useReadAigcFactoryDeployedAigCs({
@@ -46,11 +66,6 @@ export default function Main() {
     const ids: number[] = [];
     if (!lastTokenId) return ids;
 
-    // for (let i = 0; i < Number(lastTokenId); i++) {
-    //   // skipping for now b/c a screw up NFT
-    //   if (i === 1) continue;
-    //   ids.push(i);
-    // }
     return ids;
   }, [lastTokenId]);
 
@@ -72,7 +87,12 @@ export default function Main() {
     <>
       <div>
         <div className="flex pb-20">
-          <Tabs currentTab={currentTab} setCurrentTab={setCurrentTab} />
+          <Tabs
+            currentTab={currentTab}
+            setCurrentTab={(t) => {
+              router.push(pathname + "?" + createQueryString("tab", t));
+            }}
+          />
         </div>
         {currentTab === TabState.ModelLaunchpad && (
           <ModelLaunchpad modelIndex={modelIndex} />

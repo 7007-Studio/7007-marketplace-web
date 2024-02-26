@@ -11,6 +11,7 @@ import {
   concatAddress,
   formatDaysLeft,
   getContractAddress,
+  is7007Token,
   openseaUrl,
 } from "@/helpers";
 import { ListingNFT } from "./modal/listingNFTModal";
@@ -118,7 +119,8 @@ const NFTCard: React.FC<NFTCardProps> = ({
   return (
     <Card className="w-[258px]">
       <div className="flex py-4 px-6 justify-between items-center">
-        <span>DATE</span>
+        {is7007Token(aigcAddress) && <span>7007 Genesis NFT</span>}
+        {!is7007Token(aigcAddress) && <span>DATE</span>}
         {modelName && (
           <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
             {modelName}

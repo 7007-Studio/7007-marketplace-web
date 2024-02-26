@@ -1,10 +1,10 @@
 import clsx from "clsx";
 
 export enum TabState {
-  ModelLaunchpad,
-  Marketplace,
-  Created,
-  Collected,
+  ModelLaunchpad = "model",
+  Marketplace = "marketplace",
+  Created = "created",
+  Collected = "collected",
 }
 
 interface TabsProps {
