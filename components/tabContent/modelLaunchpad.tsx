@@ -4,13 +4,13 @@ import ModelCard from "@/components/modelCard";
 import handleFilterChange from "@/helpers/handleFilterChange";
 
 const ModelLaunchpad = ({ modelIndex }: { modelIndex: number }) => {
-  // const [statusFilter, setStatusFilter] = useState([
-  //   { id: "launched", label: "Launched", checked: false },
-  //   { id: "pre-launched", label: "Pre-launched", checked: false },
-  //   { id: "launching", label: "Launching", checked: false },
-  //   { id: "token-claim", label: "Token Claim", checked: false },
-  //   { id: "owned-model", label: "Owned Model", checked: false },
-  // ]);
+  const [statusFilter, setStatusFilter] = useState([
+    { id: "launched", label: "Launched", checked: false },
+    { id: "pre-launched", label: "Pre-launched", checked: false },
+    { id: "launching", label: "Launching", checked: false },
+    // { id: "token-claim", label: "Token Claim", checked: false },
+    { id: "owned-model", label: "Owned Model", checked: false },
+  ]);
   const [modelTypeFilter, setModelTypeFilter] = useState([
     { id: "text-to-image", label: "Text-to-Image", checked: false },
     { id: "text-to-music", label: "Text-to-Music", checked: false },
@@ -33,6 +33,11 @@ const ModelLaunchpad = ({ modelIndex }: { modelIndex: number }) => {
           </div>
         </div>
         <div className="flex flex-col min-w-[288px] gap-y-8">
+          <Filter
+            title="Status"
+            options={statusFilter}
+            onChange={(id) => handleFilterChange(id, setStatusFilter)}
+          />
           <Filter
             title="Model Type"
             options={modelTypeFilter}
