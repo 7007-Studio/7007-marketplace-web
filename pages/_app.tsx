@@ -9,7 +9,7 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createConfig, http, WagmiProvider } from "wagmi";
+import { http, WagmiProvider } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 
 const queryClient = new QueryClient();
@@ -18,7 +18,7 @@ import Layout from "@/components/layout";
 
 const wagmiConfig = getDefaultConfig({
   appName: "7007 Studio",
-  projectId: "YOUR_PROJECT_ID",
+  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
   chains: [mainnet, sepolia],
   transports: {
     [mainnet.id]: http(),

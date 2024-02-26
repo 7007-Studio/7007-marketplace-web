@@ -133,15 +133,15 @@ const NFTCard: React.FC<NFTCardProps> = ({
           </div>
         ) : animationUrl ? (
           <div className="max-h-[254px] overflow-hidden">
-            <iframe src={animationUrl} width={512} height={512} />
+            <iframe src={animationUrl} width={258} height={258} />
           </div>
         ) : (
           metadata.image && (
             <Image
               src={metadata.image}
               alt={metadata.name}
-              width={512}
-              height={512}
+              width={258}
+              height={258}
               className="w-full object-cover aspect-square"
             />
           )
