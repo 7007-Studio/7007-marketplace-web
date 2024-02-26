@@ -30,7 +30,6 @@ const Launched = ({ modelIndex }: { modelIndex: number | string }) => {
         >
           Generate AIGC NFT
         </button>
-        <button className="btn btn-secondary w-full">Trade Model Tokens</button>
       </div>
     </div>
   );
