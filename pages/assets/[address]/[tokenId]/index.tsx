@@ -3,20 +3,29 @@ import {
   useReadAigcModelName,
   useReadAigcOwnerOf,
   useReadAigcTokenUri,
+  useReadErc20Decimals,
+  useReadErc20Symbol,
   useReadMarketplaceV3,
   useWriteMarketplaceV3BuyFromListing,
 } from "@/generated";
-import AIGC from "@/abis/AIGC.json";
+import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Metadata } from "@/types";
-import { concatAddress, getContractAddress, openseaUrl } from "@/helpers";
+import { Listing, Metadata } from "@/types";
+import {
+  concatAddress,
+  formatDate,
+  formatDaysLeft,
+  getContractAddress,
+  openseaUrl,
+} from "@/helpers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
-import { Abi, Address } from "viem";
+import { Abi, Address, formatEther, formatUnits } from "viem";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
 import Card from "@/components/card";
 import { getPublicClient } from "@/client";
+import { NATIVE_TOKEN_ADDRESS } from "@/constants";
 
 export default function Detail() {
   const router = useRouter();
@@ -28,6 +37,8 @@ export default function Detail() {
   const [metadataIsLoading, setMetadataIsLoading] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
   const [animationUrl, setAnimationUrl] = useState<string>();
+
+  const [listing, setListing] = useState<Listing>();
 
   const [buyInitialized, setBuyInitialized] = useState(false);
 
@@ -46,32 +57,51 @@ export default function Detail() {
     args: tokenId ? [BigInt(tokenId as string)] : undefined,
   });
 
-  // useEffect(() => {
-  //   if (!address || !chainId) return;
+  useEffect(() => {
+    if (!address || !tokenId || !chainId) return;
 
-  //   const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
-  //   const fetchCreateListingEvents = async () => {
-  //     const client = getPublicClient(chainId);
-  //     const logs = await client.getContractEvents({
-  //       address: marketplaceV3,
-  //       abi: AIGC.abi as Abi,
-  //       eventName: "NewListing",
-  //       args: {
-  //         assetContract: address,
-  //       },
-  //       fromBlock: BigInt(5079109),
-  //     });
-  //     console.log(logs);
-  //   };
-  //   fetchCreateListingEvents();
-  // }, [address, chainId]);
+    const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
+    const fetchCreateListingEvents = async () => {
+      const client = getPublicClient(chainId);
+      const logs = await client.getContractEvents({
+        address: marketplaceV3,
+        abi: MarketplaceV3Abi,
+        eventName: "NewListing",
+        args: {
+          assetContract: address,
+        },
+        fromBlock: BigInt(5079109),
+      });
+      const results = (
+        logs as unknown as { args: { listing: Listing } }[]
+      ).filter((log) => {
+        const {
+          args: { listing },
+        } = log;
 
-  // const { data: decimals } = useReadErc20Decimals({
-  //   address: listing?.currency,
-  // });
-  // const { data: symbol } = useReadErc20Symbol({
-  //   address: listing?.currency,
-  // });
+        const currentTimestamp = new Date().getTime();
+        console.log(listing);
+        return (
+          Number(listing.tokenId) === Number(tokenId as string) &&
+          Number(listing.endTimestamp) * 1000 > currentTimestamp
+        );
+      });
+
+      console.log(results);
+
+      if (results.length > 0) {
+        setListing(results[0].args.listing);
+      }
+    };
+    fetchCreateListingEvents();
+  }, [address, chainId, tokenId]);
+
+  const { data: decimals } = useReadErc20Decimals({
+    address: listing?.currency,
+  });
+  const { data: symbol } = useReadErc20Symbol({
+    address: listing?.currency,
+  });
 
   // write contracts
   const { writeContract: buyNft, data: buyNftTx } =
@@ -188,6 +218,73 @@ export default function Detail() {
           <h2 className="heading-lg">{modelName}</h2>
           <h3 className="heading-md">{metadata.name}</h3>
           {owner && <p>Owned by {concatAddress(owner)}</p>}
+          {listing && owner !== connectedWallet && (
+            <>
+              <div className="pb-2 flex flex-col">
+                <span>
+                  Sale ends {formatDate(Number(listing.endTimestamp) * 1000)}
+                </span>
+                <span className="heading-md">
+                  {decimals
+                    ? formatUnits(listing.pricePerToken, decimals)
+                    : formatEther(listing.pricePerToken)}{" "}
+                  {symbol ? symbol : "ETH"}
+                </span>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isConnected || !connectedWallet || !chainId) {
+                    openConnectModal?.();
+                    return;
+                  }
+
+                  const marketplaceV3 = getContractAddress(
+                    "MarketplaceV3",
+                    chainId
+                  );
+                  if (!marketplaceV3) return;
+
+                  setBuyInitialized(true);
+                  const args: [bigint, Address, bigint, Address, bigint] = [
+                    listing.listingId,
+                    connectedWallet,
+                    listing.quantity,
+                    listing.currency,
+                    listing.pricePerToken,
+                  ];
+                  console.debug(args);
+                  buyNft(
+                    {
+                      address: marketplaceV3,
+                      value:
+                        listing.currency === NATIVE_TOKEN_ADDRESS
+                          ? listing.pricePerToken
+                          : undefined,
+                      args,
+                    },
+                    {
+                      onError(error) {
+                        console.debug("buyNft error", error);
+                        setBuyInitialized(false);
+                      },
+                    }
+                  );
+                }}
+                disabled={buyInitialized}
+                className="btn btn-primary max-w-sm"
+              >
+                {buyInitialized ? (
+                  <>
+                    <span className="loading loading-spinner"></span>
+                    loading
+                  </>
+                ) : (
+                  "Buy Now"
+                )}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

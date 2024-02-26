@@ -44,3 +44,8 @@ export function is7007Token(concatAddress: Address) {
     "0x42537d4e19d7888d8d5a867a51911bde569d9e9d"
   );
 }
+
+export function formatDate(timestamp: number) {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString();
+}
