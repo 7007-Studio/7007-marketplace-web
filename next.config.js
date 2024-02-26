@@ -9,6 +9,10 @@ const nextConfig = {
         port: "",
         pathname: "/ipfs/**",
       },
+      {
+        protocol: "https",
+        hostname: "7007.studio",
+      },
     ],
   },
 };
