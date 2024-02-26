@@ -1,16 +1,14 @@
 import { useMemo, useRef, useState } from "react";
-import {
-  AIGC_FACTORY_CONTRACT_ADDRESS,
-  MARKETPLACE_V3_ADDRESS,
-} from "@/constants";
-import Tabs, { TabState } from "@/components/tabs";
+import { useAccount } from "wagmi";
 import {
   useReadAigcFactoryDeployedAigCs,
   useReadAigcTokenId,
   useReadMarketplaceV3GetAllValidListings,
   useReadMarketplaceV3TotalListings,
 } from "@/generated";
+import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import Tabs, { TabState } from "@/components/tabs";
 import ModelLaunchpad from "@/components/tabContent/modelLaunchpad";
 import Marketplace from "@/components/tabContent/marketplace";
 import Collected from "@/components/tabContent/collected";
@@ -18,8 +16,9 @@ import ListingNFTModal, {
   ListingNFT,
 } from "@/components/modal/listingNFTModal";
 import ConnectToSPModal from "@/components/modal/connectToSPModal";
-import { Listing } from "@/types";
 import Created from "@/components/tabContent/created";
+import { getContractAddress } from "@/helpers";
+import { Listing } from "@/types";
 
 export default function Main() {
   // hard coded
@@ -32,6 +31,8 @@ export default function Main() {
   const connectToSPModalRef = useRef<HTMLDialogElement>(null);
 
   const [currentTab, setCurrentTab] = useState(TabState.ModelLaunchpad);
+
+  const { chainId } = useAccount();
   const { data: deployedAigc } = useReadAigcFactoryDeployedAigCs({
     address: AIGC_FACTORY_CONTRACT_ADDRESS,
     args: modelIndex ? [BigInt(modelIndex)] : undefined,
@@ -45,20 +46,22 @@ export default function Main() {
     const ids: number[] = [];
     if (!lastTokenId) return ids;
 
-    for (let i = 0; i < Number(lastTokenId); i++) {
-      // skipping for now b/c a screw up NFT
-      if (i === 1) continue;
-      ids.push(i);
-    }
+    // for (let i = 0; i < Number(lastTokenId); i++) {
+    //   // skipping for now b/c a screw up NFT
+    //   if (i === 1) continue;
+    //   ids.push(i);
+    // }
     return ids;
   }, [lastTokenId]);
 
+  const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
+
   const { data: totalListings } = useReadMarketplaceV3TotalListings({
-    address: MARKETPLACE_V3_ADDRESS,
+    address: marketplaceV3,
   });
 
   const { data: allValidListings } = useReadMarketplaceV3GetAllValidListings({
-    address: MARKETPLACE_V3_ADDRESS,
+    address: marketplaceV3,
     args: [BigInt(0), totalListings ? totalListings - BigInt(1) : BigInt(0)],
   });
 
@@ -75,10 +78,8 @@ export default function Main() {
           <ModelLaunchpad modelIndex={modelIndex} />
         )}
 
-        {currentTab === TabState.Marketplace && deployedAigc && (
+        {currentTab === TabState.Marketplace && (
           <Marketplace
-            aigcAddress={deployedAigc}
-            tokenIds={tokenIds}
             allValidListings={allValidListings as unknown as Listing[]}
           />
         )}

@@ -1,10 +1,12 @@
-import { RefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { Address, parseEther } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
-import { MARKETPLACE_V3_ADDRESS, NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { getContractAddress } from "@/helpers";
 import {
   useReadAigcGetApproved,
   useWriteAigcApprove,
@@ -13,8 +15,6 @@ import {
 import { Metadata } from "@/types";
 
 import TextInput from "../textInput";
-import React from "react";
-import { Address, parseEther } from "viem";
 
 export interface ListingNFT {
   address: Address;
@@ -34,7 +34,7 @@ interface ListingNFTModalProps {
 
 const ListingNFTModal = React.forwardRef(
   ({ listingNFT, listingSuccess }: ListingNFTModalProps, ref) => {
-    const { isConnected } = useAccount();
+    const { isConnected, chainId } = useAccount();
     const { openConnectModal } = useConnectModal();
 
     const [approvedListing, setApprovedListing] = useState(false);
@@ -51,10 +51,13 @@ const ListingNFTModal = React.forwardRef(
     const { register, handleSubmit, getValues, reset } =
       useForm<IFormListNFTInput>();
     const onSubmit: SubmitHandler<IFormListNFTInput> = async (data) => {
-      if (!isConnected) {
+      if (!isConnected || !chainId) {
         openConnectModal?.();
         return;
       }
+
+      const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
+      if (!marketplaceV3) return;
 
       setListInitialized(true);
 
@@ -66,7 +69,7 @@ const ListingNFTModal = React.forwardRef(
         approveListing(
           {
             address: listingNFT?.address,
-            args: [MARKETPLACE_V3_ADDRESS, BigInt(listingNFT?.tokenId)],
+            args: [marketplaceV3, BigInt(listingNFT?.tokenId)],
           },
           {
             onError(error) {
@@ -122,9 +125,13 @@ const ListingNFTModal = React.forwardRef(
 
     function createListingWrapper() {
       if (!listingNFT) return;
+
+      const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
+      if (!marketplaceV3) return;
+
       createListing(
         {
-          address: MARKETPLACE_V3_ADDRESS,
+          address: marketplaceV3,
           args: [
             {
               assetContract: listingNFT.address,

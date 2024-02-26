@@ -4,48 +4,38 @@ import handleFilterChange from "@/helpers/handleFilterChange";
 import Filter from "@/components/filter";
 import NFTCard from "@/components/nftCard";
 import { Listing } from "@/types";
-import { Address, isAddressEqual } from "viem";
 
 const Marketplace = ({
-  aigcAddress,
-  tokenIds,
   allValidListings,
 }: {
-  aigcAddress: Address;
-  tokenIds: number[];
   allValidListings?: Listing[];
 }) => {
   const [marketplaceTypeFilter, setMarketplaceTypeFilter] = useState([
     { id: "aigc", label: "AIGC", checked: false },
     { id: "model", label: "Model", checked: false },
   ]);
-  const aigcListings = allValidListings?.filter((l) =>
-    isAddressEqual(l.assetContract, aigcAddress)
-  );
-  const listedTokenIds = aigcListings?.map((l) => l.tokenId) || [];
+
+  console.log(allValidListings);
 
   return (
     <>
-      <div className="pb-8">
-        Display {listedTokenIds.length} of {listedTokenIds.length} AIGC NFTs
-      </div>
+      {allValidListings?.length === 0 && (
+        <div className="pb-8">
+          Display {allValidListings.length} of {allValidListings.length} AIGC
+          NFTs
+        </div>
+      )}
       <div className="flex flex-row gap-x-11 justify-between">
         <div>
           <div className="flex flex-row flex-wrap gap-6 items-start">
-            {listedTokenIds
-              ?.filter((t) => listedTokenIds?.includes(BigInt(t)))
-              .map((id) => (
-                <NFTCard
-                  key={id}
-                  aigcAddress={aigcAddress}
-                  tokenId={id.toString()}
-                  listing={aigcListings?.find(
-                    (l) =>
-                      isAddressEqual(l.assetContract, aigcAddress) &&
-                      l.tokenId === BigInt(id)
-                  )}
-                />
-              ))}
+            {allValidListings?.map((l) => (
+              <NFTCard
+                key={l.listingId}
+                aigcAddress={l.assetContract}
+                tokenId={l.tokenId.toString()}
+                listing={l}
+              />
+            ))}
           </div>
         </div>
         <div className="flex flex-col min-w-[288px] gap-y-8">

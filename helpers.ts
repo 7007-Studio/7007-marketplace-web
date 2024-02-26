@@ -1,5 +1,6 @@
 import { Address } from "viem";
 import { Model, NFT } from "./types";
+import { Contracts } from "./contracts";
 
 export function isNFT(item: any): item is NFT {
   return (item as NFT).tokenID !== undefined;
@@ -23,4 +24,16 @@ export function formatDaysLeft(ms: number): string {
   const timeDifference = targetDate.getTime() - currentDate.getTime();
   const daysLeft = Math.ceil(timeDifference / (60 * 60 * 24 * 1000));
   return daysLeft > 0 ? `${daysLeft} days left` : "Ended";
+}
+
+export function getContractAddress(contract: string, chainId?: number) {
+  if (!chainId) {
+    return undefined;
+  }
+
+  if (Object.keys(Contracts).indexOf(chainId.toString()) === -1) {
+    return undefined;
+  }
+
+  return Contracts[chainId][contract];
 }

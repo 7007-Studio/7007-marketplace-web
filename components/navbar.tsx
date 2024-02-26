@@ -12,7 +12,6 @@ export default function Navbar() {
   const [isShowingMenu, setIsShowingMenu] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <>

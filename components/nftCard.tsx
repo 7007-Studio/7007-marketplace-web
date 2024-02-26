@@ -2,12 +2,17 @@ import { useEffect, useState } from "react";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import axios from "axios";
 import { Listing, Metadata, MetadataAttribute } from "@/types";
-import { MARKETPLACE_V3_ADDRESS, NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { NATIVE_TOKEN_ADDRESS } from "@/constants";
 import { Address, formatEther, formatUnits } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Card from "./card";
-import { concatAddress, formatDaysLeft, openseaUrl } from "@/helpers";
+import {
+  concatAddress,
+  formatDaysLeft,
+  getContractAddress,
+  openseaUrl,
+} from "@/helpers";
 import { ListingNFT } from "./modal/listingNFTModal";
 import {
   useReadAigcModelName,
@@ -32,11 +37,13 @@ const NFTCard: React.FC<NFTCardProps> = ({
   onConnectToSP,
   listing,
 }) => {
-  const { isConnected, address: connectedWallet } = useAccount();
+  const { isConnected, address: connectedWallet, chainId } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [metadataIsLoading, setMetadataIsLoading] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
+  const [animationUrl, setAnimationUrl] = useState<string>();
   const [audioUrl, setAudioUrl] = useState();
 
   const [buyInitialized, setBuyInitialized] = useState(false);
@@ -91,10 +98,16 @@ const NFTCard: React.FC<NFTCardProps> = ({
 
       setMetadata(res.data);
 
+      if (metadata.animation_url) {
+        setAnimationUrl(metadata.animation_url);
+      }
+
       const audioUrl = metadata.attributes.find(
         (a: MetadataAttribute) => a.trait_type === "Audio"
       )?.value;
       if (audioUrl) setAudioUrl(audioUrl);
+
+      setMetadataIsLoading(false);
     };
 
     fetchMetadata();
@@ -103,22 +116,36 @@ const NFTCard: React.FC<NFTCardProps> = ({
   if (!metadata) return;
 
   return (
-    <Card className="max-w-[258px]">
+    <Card className="w-[258px]">
       <div className="flex py-4 px-6 justify-between items-center">
-        <span>DATE {tokenId}</span>
-        <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
-          {modelName}
-        </span>
+        <span>DATE</span>
+        {modelName && (
+          <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
+            {modelName}
+          </span>
+        )}
       </div>
 
       <figure>
-        <Image
-          src={metadata.image}
-          alt={metadata.name}
-          width={512}
-          height={512}
-          className="w-full object-cover aspect-square"
-        />
+        {metadataIsLoading ? (
+          <div className="flex w-full h-[258px] justify-center items-center">
+            <span className="loading loading-spinner loading-lg"></span>
+          </div>
+        ) : animationUrl ? (
+          <div className="max-h-[254px] overflow-hidden">
+            <iframe src={animationUrl} width={512} height={512} />
+          </div>
+        ) : (
+          metadata.image && (
+            <Image
+              src={metadata.image}
+              alt={metadata.name}
+              width={512}
+              height={512}
+              className="w-full object-cover aspect-square"
+            />
+          )
+        )}
       </figure>
 
       <div className="card-body flex-grow gap-2">
@@ -140,10 +167,17 @@ const NFTCard: React.FC<NFTCardProps> = ({
             </div>
             <button
               onClick={() => {
-                if (!isConnected || !connectedWallet) {
+                if (!isConnected || !connectedWallet || !chainId) {
                   openConnectModal?.();
                   return;
                 }
+
+                const marketplaceV3 = getContractAddress(
+                  "MarketplaceV3",
+                  chainId
+                );
+                if (!marketplaceV3) return;
+
                 setBuyInitialized(true);
                 const args: [bigint, Address, bigint, Address, bigint] = [
                   listing.listingId,
@@ -155,7 +189,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
                 console.debug(args);
                 buyNft(
                   {
-                    address: MARKETPLACE_V3_ADDRESS,
+                    address: marketplaceV3,
                     value:
                       listing.currency === NATIVE_TOKEN_ADDRESS
                         ? listing.pricePerToken
