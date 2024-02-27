@@ -139,32 +139,33 @@ const MintStep = ({
 
   useWatchAigcTransferEvent({
     address: aigcAddress,
-    onLogs: async (log) => {
+    onLogs: (log) => {
+      console.log(log);
       onMintSuccess(String(tokenId));
     },
   });
 
   // wait for tx confirmation
-  const approveResult = useWaitForTransactionReceipt({
-    hash: approveTx,
-  });
-  useEffect(() => {
-    console.debug("approveResult refreshed");
-    if (approveResult.isSuccess) {
-      setApprovedSpending(true);
-      setApproveInitialized(false);
-    }
-  }, [approveResult]);
+  // const approveResult = useWaitForTransactionReceipt({
+  //   hash: approveTx,
+  // });
+  // useEffect(() => {
+  //   console.debug("approveResult refreshed");
+  //   if (approveResult.isSuccess) {
+  //     setApprovedSpending(true);
+  //     setApproveInitialized(false);
+  //   }
+  // }, [approveResult]);
 
-  const mintResult = useWaitForTransactionReceipt({
-    hash: mintTx,
-  });
-  useEffect(() => {
-    console.debug("mintResult refreshed");
-    if (mintResult.isSuccess) {
-      setMintInitialized(false);
-    }
-  }, [mintResult]);
+  // const mintResult = useWaitForTransactionReceipt({
+  //   hash: mintTx,
+  // });
+  // useEffect(() => {
+  //   console.debug("mintResult refreshed");
+  //   if (mintResult.isSuccess) {
+  //     setMintInitialized(false);
+  //   }
+  // }, [mintResult]);
 
   const onApprove = () => {
     if (!isConnected) {
@@ -316,7 +317,7 @@ const MintStep = ({
                     loading
                   </>
                 ) : (
-                  "Mint for 0.001eth"
+                  "Mint for 0.001 eth"
                 )}
               </button>
             )}

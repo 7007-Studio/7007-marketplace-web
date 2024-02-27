@@ -10,8 +10,12 @@ export function isModel(item: any): item is Model {
   return (item as Model).modelIndex !== undefined;
 }
 
-export function concatAddress(address: string | Address): string {
-  return address.slice(0, 6) + "..." + address.slice(-4);
+export function concatAddress(
+  address: string | Address,
+  head = 6,
+  tail = 4
+): string {
+  return address.slice(0, head) + "..." + address.slice(-tail);
 }
 
 export function openseaUrl(address: string, tokenId: string | number): string {

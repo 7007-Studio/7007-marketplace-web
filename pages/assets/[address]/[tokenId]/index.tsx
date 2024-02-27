@@ -80,14 +80,11 @@ export default function Detail() {
         } = log;
 
         const currentTimestamp = new Date().getTime();
-        console.log(listing);
         return (
           Number(listing.tokenId) === Number(tokenId as string) &&
           Number(listing.endTimestamp) * 1000 > currentTimestamp
         );
       });
-
-      console.log(results);
 
       if (results.length > 0) {
         setListing(results[0].args.listing);

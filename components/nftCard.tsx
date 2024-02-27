@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import axios from "axios";
 import { Listing, Metadata, MetadataAttribute } from "@/types";
-import { NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { AIGC_CONTRACT_ADDRESS, NATIVE_TOKEN_ADDRESS } from "@/constants";
 import { Address, formatEther, formatUnits } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Card from "./card";
@@ -116,6 +116,14 @@ const NFTCard: React.FC<NFTCardProps> = ({
   }, [aigcAddress, tokenUri]);
 
   if (!metadata) return;
+
+  // hiding broken AIGC NFT
+  if (
+    aigcAddress === "0x0B89f60136A91f3B36557F9414cbd157d0ada7bc" &&
+    String(tokenId) === "1"
+  ) {
+    return null;
+  }
 
   return (
     <Card className="w-[258px]">

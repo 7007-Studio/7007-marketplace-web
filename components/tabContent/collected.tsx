@@ -77,8 +77,6 @@ const Collected = ({
     fetchOwner();
   }, [aigcAddress, address, tokenIds]);
 
-  console.log("tokenIds", tokenIds);
-
   return (
     <>
       <div className="pb-8">

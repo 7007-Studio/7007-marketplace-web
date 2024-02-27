@@ -37,7 +37,7 @@ const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
 
   return (
     <>
-      <h2 className="heading-lg 2xl:mt-44 mb-12 text-center">
+      <h2 className="heading-lg 2xl:mt-24 mb-12 text-center">
         Generate your AIGC music and art with 7007 Studio
       </h2>
       <div className="py-20 px-40 max-w-[1106px] mx-auto bg-white">

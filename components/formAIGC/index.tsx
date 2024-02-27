@@ -79,7 +79,7 @@ export default function FormAIGC({
           <span>
             {isMinted && (
               <a href={openseaUrl(aigcAddress, isMinted)}>
-                {openseaUrl(concatAddress(aigcAddress), isMinted)}
+                {concatAddress(openseaUrl(aigcAddress, isMinted), 20, 6)}
               </a>
             )}
           </span>
@@ -89,7 +89,9 @@ export default function FormAIGC({
             <button
               type="button"
               className="btn btn-secondary w-full"
-              onClick={() => {}}
+              onClick={() => {
+                connectToSPModalRef.current?.showModal();
+              }}
             >
               Register NFT
             </button>
