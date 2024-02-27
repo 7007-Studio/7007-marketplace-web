@@ -42,6 +42,10 @@ export default function Main() {
     [searchParams]
   );
   useEffect(() => {
+    if (!searchParams.has("tab")) {
+      setCurrentTab(TabState.ModelLaunchpad);
+      return;
+    }
     setCurrentTab(searchParams.get("tab") as TabState);
   }, [searchParams]);
 
