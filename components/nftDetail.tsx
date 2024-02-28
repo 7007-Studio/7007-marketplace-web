@@ -1,14 +1,21 @@
 import Image from "next/image";
 import ModelDetail from "./modelDetail";
+import {
+  useAddPolicyToIp,
+  useRegisterRootIp,
+  useWatchPolicyAddedToIpId,
+  useWatchRootIpRegistered,
+} from "@story-protocol/react";
+import { Address, stringToHex } from "viem";
 
 export interface ModelDetailProps {
   imageUrl: string;
   nftName?: string;
   modelAddress: string;
-  nftAddress: string;
+  nftAddress: Address;
   totalSupply?: number;
   maxSupply?: number;
-  tokenID?: number;
+  tokenID: number;
   openseaLink?: string;
 }
 const NFTDetail: React.FC<ModelDetailProps> = ({
@@ -43,7 +50,7 @@ const NFTDetail: React.FC<ModelDetailProps> = ({
           <span>{tokenID}</span>
         </div>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between text-xs leading-5">
-          <h2>Opensea link</h2>
+          <h2>OpenSea link</h2>
           <a href={openseaLink} className="text-primary overflow-hidden">
             {openseaLink}
           </a>

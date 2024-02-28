@@ -34,7 +34,7 @@ export default function Main() {
   // searchParams with a provided key/value pair
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString());
       params.set(name, value);
 
       return params.toString();
@@ -42,7 +42,7 @@ export default function Main() {
     [searchParams]
   );
   useEffect(() => {
-    if (!searchParams.has("tab")) {
+    if (!searchParams?.has("tab")) {
       setCurrentTab(TabState.ModelLaunchpad);
       return;
     }
@@ -120,7 +120,12 @@ export default function Main() {
         listingNFT={listingNFT}
         // listingSuccess={() => {TODO: refresh the card state}}
       />
-      <ConnectToSPModal ref={connectToSPModalRef} onConnect={() => {}} />
+      {/* <ConnectToSPModal
+        ref={connectToSPModalRef}
+        onConnect={() => {}}
+        tokenId={""}
+        nftContract={"0x"}
+      /> */}
     </>
   );
 }

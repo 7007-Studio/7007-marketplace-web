@@ -22,7 +22,7 @@ import {
   useReadErc20Symbol,
   useWriteMarketplaceV3BuyFromListing,
 } from "@/generated";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 export interface NFTCardProps {
   aigcAddress: Address;
   tokenId: string | number;

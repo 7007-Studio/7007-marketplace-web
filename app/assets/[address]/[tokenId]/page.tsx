@@ -1,13 +1,6 @@
-import { useRouter } from "next/router";
-import {
-  useReadAigcModelName,
-  useReadAigcOwnerOf,
-  useReadAigcTokenUri,
-  useReadErc20Decimals,
-  useReadErc20Symbol,
-  useReadMarketplaceV3,
-  useWriteMarketplaceV3BuyFromListing,
-} from "@/generated";
+"use client";
+
+import { aigcAbi, useWriteMarketplaceV3BuyFromListing } from "@/generated";
 import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -15,21 +8,32 @@ import { Listing, Metadata } from "@/types";
 import {
   concatAddress,
   formatDate,
-  formatDaysLeft,
   getContractAddress,
   openseaUrl,
 } from "@/helpers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
-import { Abi, Address, formatEther, formatUnits } from "viem";
+import {
+  useAccount,
+  useReadContracts,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { Address, erc20Abi, formatEther, formatUnits, stringToHex } from "viem";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
 import Card from "@/components/card";
 import { getPublicClient } from "@/client";
 import { NATIVE_TOKEN_ADDRESS } from "@/constants";
+import {
+  useRegisterRootIp,
+  useWatchRootIpRegistered,
+  useMintLicense,
+  useReadIpAssetRegistryIpId,
+} from "@story-protocol/react";
+import { useParams, useRouter } from "next/navigation";
 
 export default function Detail() {
   const router = useRouter();
-  const { address, tokenId } = router.query;
+  const params = useParams<{ address: string; tokenId: string }>();
+  const { address: nftContract, tokenId } = params || {};
 
   const { isConnected, address: connectedWallet, chainId } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -43,22 +47,39 @@ export default function Detail() {
   const [buyInitialized, setBuyInitialized] = useState(false);
 
   // read contracts
-  const { data: modelName } = useReadAigcModelName({
-    address: address as Address,
+  const aigcContractConfig = { address: nftContract as Address, abi: aigcAbi };
+  const { data } = useReadContracts({
+    contracts: [
+      {
+        ...aigcContractConfig,
+        functionName: "modelName",
+      },
+      {
+        ...aigcContractConfig,
+        functionName: "ownerOf",
+        args: tokenId ? [BigInt(tokenId)] : undefined,
+      },
+      {
+        ...aigcContractConfig,
+        functionName: "tokenURI",
+        args: tokenId ? [BigInt(tokenId)] : undefined,
+      },
+      {
+        address: listing?.currency,
+        abi: erc20Abi,
+        functionName: "decimals",
+      },
+      {
+        address: listing?.currency,
+        abi: erc20Abi,
+        functionName: "symbol",
+      },
+    ],
   });
-
-  const { data: owner, refetch: refetchOwner } = useReadAigcOwnerOf({
-    address: address as Address,
-    args: tokenId ? [BigInt(tokenId as string)] : undefined,
-  });
-
-  const { data: tokenUri } = useReadAigcTokenUri({
-    address: address as Address,
-    args: tokenId ? [BigInt(tokenId as string)] : undefined,
-  });
+  const [modelName, owner, tokenUri, decimals, symbol] = data || [];
 
   useEffect(() => {
-    if (!address || !tokenId || !chainId) return;
+    if (!nftContract || !tokenId || !chainId) return;
 
     const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
     const fetchCreateListingEvents = async () => {
@@ -68,7 +89,7 @@ export default function Detail() {
         abi: MarketplaceV3Abi,
         eventName: "NewListing",
         args: {
-          assetContract: address,
+          assetContract: nftContract,
         },
         fromBlock: BigInt(5079109),
       });
@@ -81,7 +102,7 @@ export default function Detail() {
 
         const currentTimestamp = new Date().getTime();
         return (
-          Number(listing.tokenId) === Number(tokenId as string) &&
+          Number(listing.tokenId) === Number(tokenId) &&
           Number(listing.endTimestamp) * 1000 > currentTimestamp
         );
       });
@@ -91,14 +112,7 @@ export default function Detail() {
       }
     };
     fetchCreateListingEvents();
-  }, [address, chainId, tokenId]);
-
-  const { data: decimals } = useReadErc20Decimals({
-    address: listing?.currency,
-  });
-  const { data: symbol } = useReadErc20Symbol({
-    address: listing?.currency,
-  });
+  }, [nftContract, tokenId, chainId]);
 
   // write contracts
   const { writeContract: buyNft, data: buyNftTx } =
@@ -107,23 +121,21 @@ export default function Detail() {
   const buyResult = useWaitForTransactionReceipt({
     hash: buyNftTx,
   });
+
   useEffect(() => {
     console.debug("buyResult changed");
     if (buyResult.isSuccess) {
-      // refetchOwner();
-      // refetchIsListed();
-
       setBuyInitialized(false);
     }
-  }, [buyResult]);
+  }, [buyResult.isSuccess]);
 
   // TODO: find creator of the token
 
   useEffect(() => {
-    if (!tokenUri) return;
+    if (!tokenUri?.result) return;
 
     const fetchMetadata = async () => {
-      const res = await axios.get(tokenUri);
+      const res = await axios.get(tokenUri.result);
       const metadata = res.data;
 
       setMetadata(res.data);
@@ -137,6 +149,39 @@ export default function Detail() {
 
     fetchMetadata();
   }, [tokenUri]);
+
+  // story protocol integration
+  const policyId = BigInt(3);
+  const [ipId, setIpId] = useState<Address>();
+
+  const { writeContract: registerRootIp } = useRegisterRootIp();
+
+  useWatchRootIpRegistered({
+    onLogs(logs) {
+      console.log("Root IP registered", logs);
+      const events = logs as unknown as {
+        args: { caller: Address; ipId: Address; policyId: bigint };
+      }[];
+      setIpId(events[0].args.ipId);
+    },
+  });
+
+  const { writeContract: mintLicense } = useMintLicense();
+
+  // TODO: need to figure out if this NFT is already registered an IP
+  const { data: _ipId } = useReadIpAssetRegistryIpId({
+    args:
+      chainId === undefined || tokenId === undefined
+        ? undefined
+        : [BigInt(chainId), nftContract as Address, BigInt(tokenId)],
+  });
+
+  useEffect(() => {
+    if (_ipId) {
+      setIpId(_ipId);
+    }
+  }, [_ipId]);
+  // TODO: add "remix" functionality (mintLicense, linkIpToParent)
 
   if (!metadata) return;
 
@@ -183,13 +228,15 @@ export default function Detail() {
                 <div className="opacity-100 transition-opacity ease-in-out duration-500">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>Contract Address</div>
-                    <a
-                      href={`https://sepolia.etherscan.io/address/${address}`}
-                      className="text-primary overflow-hidden"
-                      target="_blank"
-                    >
-                      {concatAddress(address as Address)}
-                    </a>
+                    {nftContract && (
+                      <a
+                        href={`https://sepolia.etherscan.io/address/${nftContract}`}
+                        className="text-primary overflow-hidden"
+                        target="_blank"
+                      >
+                        {concatAddress(nftContract)}
+                      </a>
+                    )}
                   </div>
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>Token ID</div>
@@ -198,13 +245,15 @@ export default function Detail() {
 
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>Link</div>
-                    <a
-                      href={openseaUrl(address as Address, tokenId as string)}
-                      className="text-primary overflow-hidden"
-                      target="_blank"
-                    >
-                      View on OpenSea
-                    </a>
+                    {nftContract && (
+                      <a
+                        href={openseaUrl(nftContract, tokenId as string)}
+                        className="text-primary overflow-hidden"
+                        target="_blank"
+                      >
+                        View on OpenSea
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
@@ -212,20 +261,22 @@ export default function Detail() {
           </Card>
         </div>
         <div className="grid-cols-subgrid col-span-2 flex flex-col gap-y-2">
-          <h2 className="heading-lg">{modelName}</h2>
+          {modelName?.result && (
+            <h2 className="heading-lg">{modelName.result}</h2>
+          )}
           <h3 className="heading-md">{metadata.name}</h3>
-          {owner && <p>Owned by {concatAddress(owner)}</p>}
-          {listing && owner !== connectedWallet && (
+          {owner?.result && <p>Owned by {concatAddress(owner.result)}</p>}
+          {listing && owner?.result !== connectedWallet && (
             <>
               <div className="pb-2 flex flex-col">
                 <span>
                   Sale ends {formatDate(Number(listing.endTimestamp) * 1000)}
                 </span>
                 <span className="heading-md">
-                  {decimals
-                    ? formatUnits(listing.pricePerToken, decimals)
+                  {decimals?.result
+                    ? formatUnits(listing.pricePerToken, decimals.result)
                     : formatEther(listing.pricePerToken)}{" "}
-                  {symbol ? symbol : "ETH"}
+                  {symbol?.result ? symbol.result : "ETH"}
                 </span>
               </div>
               <button
@@ -281,6 +332,44 @@ export default function Detail() {
                 )}
               </button>
             </>
+          )}
+
+          {!ipId && nftContract && tokenId && (
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                registerRootIp({
+                  args: [
+                    policyId,
+                    nftContract as Address, // nftContract
+                    BigInt(tokenId),
+                    "", //ipName,
+                    stringToHex("0x", { size: 32 }), //contentHash,
+                    "", //externalURL,
+                  ],
+                });
+              }}
+            >
+              Register IP
+            </button>
+          )}
+          {nftContract && tokenId && connectedWallet && ipId && (
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                mintLicense({
+                  args: [
+                    policyId,
+                    ipId,
+                    BigInt(1), // amount,
+                    connectedWallet, // minter,
+                    "0x", // royaltyContext
+                  ],
+                });
+              }}
+            >
+              Mint license
+            </button>
           )}
         </div>
       </div>

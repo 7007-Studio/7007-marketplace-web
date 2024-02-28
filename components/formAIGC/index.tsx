@@ -7,7 +7,7 @@ import MintStep from "./mintStep";
 import { concatAddress, openseaUrl } from "@/helpers";
 import ConnectToSPModal from "../modal/connectToSPModal";
 import ListingNFTModal, { ListingNFT } from "../modal/listingNFTModal";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export interface AIGCContent {
   name: string;
@@ -29,7 +29,7 @@ export default function FormAIGC({
 }: FormAIGCProps) {
   const router = useRouter();
   const [aigcContent, setAigcContent] = useState<AIGCContent>();
-  const [isMinted, setIsMinted] = useState<string | number>();
+  const [mintedTokenId, setMintedTokenId] = useState<string | number>();
 
   const listingNFTModalRef = useRef<HTMLDialogElement>(null);
   const [listingNFT, setListingNFT] = useState<ListingNFT>();
@@ -47,7 +47,7 @@ export default function FormAIGC({
     );
   }
 
-  if (!isMinted) {
+  if (!mintedTokenId) {
     return (
       <MintStep
         modelIndex={modelIndex}
@@ -56,7 +56,7 @@ export default function FormAIGC({
         aigcContent={aigcContent}
         setAigcContent={setAigcContent}
         onMintSuccess={(tokenId) => {
-          setIsMinted(tokenId);
+          setMintedTokenId(tokenId);
         }}
       />
     );
@@ -75,11 +75,11 @@ export default function FormAIGC({
         </div>
 
         <div className="flex flex-row px-12 w-full justify-between">
-          <span>Opensea link</span>
+          <span>Link</span>
           <span>
-            {isMinted && (
-              <a href={openseaUrl(aigcAddress, isMinted)}>
-                {concatAddress(openseaUrl(aigcAddress, isMinted), 20, 6)}
+            {mintedTokenId && (
+              <a href={openseaUrl(aigcAddress, mintedTokenId)}>
+                View on OpenSea
               </a>
             )}
           </span>
@@ -121,7 +121,7 @@ export default function FormAIGC({
               onClick={() => {
                 setListingNFT({
                   address: aigcAddress,
-                  tokenId: isMinted,
+                  tokenId: mintedTokenId,
                   metadata: { name: aigcContent.name },
                 });
                 listingNFTModalRef.current?.showModal();
@@ -136,7 +136,7 @@ export default function FormAIGC({
               className="btn btn-primary w-full"
               onClick={() => {
                 setAigcContent(undefined);
-                setIsMinted(undefined);
+                setMintedTokenId(undefined);
               }}
             >
               Generate again
@@ -152,7 +152,12 @@ export default function FormAIGC({
           router.push("/");
         }}
       />
-      <ConnectToSPModal ref={connectToSPModalRef} onConnect={() => {}} />
+      <ConnectToSPModal
+        ref={connectToSPModalRef}
+        onConnect={() => {}}
+        tokenId={mintedTokenId}
+        nftContract={aigcAddress}
+      />
     </>
   );
 }

@@ -129,33 +129,32 @@ const MintStep = ({
   const { writeContract: mintAIGC, data: mintTx } = useWriteAigcMint();
 
   // contract events
-  useWatchAigtApprovalEvent({
-    address: aigtAddress,
-    onLogs: (log) => {
-      setApprovedSpending(true);
-      onMint();
-    },
-  });
+  // useWatchAigtApprovalEvent({
+  //   address: aigtAddress,
+  //   onLogs: (log) => {
+  //     setApprovedSpending(true);
+  //     onMint();
+  //   },
+  // });
 
   useWatchAigcTransferEvent({
     address: aigcAddress,
     onLogs: (log) => {
-      console.log(log);
       onMintSuccess(String(tokenId));
     },
   });
 
   // wait for tx confirmation
-  // const approveResult = useWaitForTransactionReceipt({
-  //   hash: approveTx,
-  // });
-  // useEffect(() => {
-  //   console.debug("approveResult refreshed");
-  //   if (approveResult.isSuccess) {
-  //     setApprovedSpending(true);
-  //     setApproveInitialized(false);
-  //   }
-  // }, [approveResult]);
+  const approveResult = useWaitForTransactionReceipt({
+    hash: approveTx,
+  });
+  useEffect(() => {
+    console.debug("approveResult refreshed");
+    if (approveResult.isSuccess) {
+      setApprovedSpending(true);
+      setApproveInitialized(false);
+    }
+  }, [approveResult]);
 
   // const mintResult = useWaitForTransactionReceipt({
   //   hash: mintTx,
@@ -307,6 +306,8 @@ const MintStep = ({
             {approvedSpending && (
               <button
                 className="btn btn-primary"
+                type="button"
+                disabled={approveInitialized}
                 onClick={() => {
                   onMint();
                 }}
