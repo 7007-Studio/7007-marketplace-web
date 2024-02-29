@@ -167,28 +167,6 @@ export default function Detail() {
   const policyId = BigInt(3);
   const [ipId, setIpId] = useState<Address>();
 
-  const { writeContract: registerRootIp } = useRegisterRootIp();
-
-  useWatchRootIpRegistered({
-    onLogs(logs) {
-      const events = logs as unknown as {
-        args: { caller: Address; ipId: Address; policyId: bigint };
-      }[];
-      setIpId(events[0].args.ipId);
-    },
-  });
-
-  const { writeContract: mintLicense } = useMintLicense();
-
-  const { data: isRegistered, refetch: refetchIsRegistered } =
-    useReadIpAssetRegistryIsRegistered({
-      args: [ipId as Address],
-    });
-  useEffect(() => {
-    console.debug("refetchIsRegistered ipId", ipId);
-    refetchIsRegistered();
-  }, [ipId, refetchIsRegistered]);
-
   const { data: _ipId } = useReadIpAssetRegistryIpId({
     args:
       chainId === undefined || tokenId === undefined
@@ -202,6 +180,33 @@ export default function Detail() {
       setIpId(_ipId);
     }
   }, [_ipId]);
+
+
+  const { data: isRegistered, refetch: refetchIsRegistered } =
+    useReadIpAssetRegistryIsRegistered({
+      args: [ipId as Address],
+    });
+  useEffect(() => {
+    console.debug("refetchIsRegistered ipId", ipId);
+    refetchIsRegistered();
+  }, [ipId, refetchIsRegistered]);
+
+
+
+  useWatchRootIpRegistered({
+    onLogs(logs) {
+      const events = logs as unknown as {
+        args: { caller: Address; ipId: Address; policyId: bigint };
+      }[];
+      setIpId(events[0].args.ipId);
+    },
+  });
+
+
+
+
+  const { writeContract: registerRootIp } = useRegisterRootIp();
+  const { writeContract: mintLicense } = useMintLicense();
 
   // Check if the token has licenses minted
   // const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
