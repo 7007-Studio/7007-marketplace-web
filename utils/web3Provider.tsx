@@ -12,6 +12,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 
 const wagmiConfig = getDefaultConfig({
+  ssr: true,
   appName: "7007 Studio",
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
   chains: [mainnet, sepolia],
