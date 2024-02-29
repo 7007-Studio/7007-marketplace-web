@@ -155,7 +155,7 @@ export default function FormAIGC({
       <ConnectToSPModal
         ref={connectToSPModalRef}
         onConnect={() => {}}
-        tokenId={mintedTokenId}
+        tokenId={BigInt(mintedTokenId)}
         nftContract={aigcAddress}
       />
     </>
