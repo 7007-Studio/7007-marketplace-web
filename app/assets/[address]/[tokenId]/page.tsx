@@ -50,7 +50,7 @@ export default function Detail() {
 
   // read contracts
   const aigcContractConfig = { address: nftContract as Address, abi: aigcAbi };
-  const { data, status } = useReadContracts({
+  const { data } = useReadContracts({
     contracts: [
       {
         ...aigcContractConfig,
@@ -66,6 +66,13 @@ export default function Detail() {
         functionName: "tokenURI",
         args: tokenId ? [BigInt(tokenId)] : undefined,
       },
+    ],
+  });
+
+  const [modelName, owner, tokenUri] = data || [];
+
+  const { data: listingData } = useReadContracts({
+    contracts: [
       {
         address: listing?.currency,
         abi: erc20Abi,
@@ -78,8 +85,7 @@ export default function Detail() {
       },
     ],
   });
-  const [modelName, owner, tokenUri, decimals, symbol] = data || [];
-  console.log(data, status);
+  const [decimals, symbol] = listingData || [];
 
   useEffect(() => {
     if (!nftContract || !tokenId || !chainId) return;
