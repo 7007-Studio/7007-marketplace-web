@@ -204,52 +204,52 @@ export default function Detail() {
   }, [_ipId]);
 
   // Check if the token has licenses minted
-  const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
-  useEffect(() => {
-    if (!connectedWallet || !chainId) return;
+  // const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
+  // useEffect(() => {
+  //   if (!connectedWallet || !chainId) return;
 
-    const licenseRegistry = getContractAddress("SPLicenseRegistry", chainId);
-    const fetchTransferBatchEvents = async () => {
-      const client = getPublicClient(chainId);
-      const logs = await client.getContractEvents({
-        address: licenseRegistry,
-        abi: SPLicenseRegistryAbi,
-        eventName: "TransferSingle",
-        args: {
-          from: zeroAddress,
-          to: connectedWallet,
-        },
-        fromBlock: BigInt(5079109),
-      });
-      console.debug(logs);
+  //   const licenseRegistry = getContractAddress("SPLicenseRegistry", chainId);
+  //   const fetchTransferBatchEvents = async () => {
+  //     const client = getPublicClient(chainId);
+  //     const logs = await client.getContractEvents({
+  //       address: licenseRegistry,
+  //       abi: SPLicenseRegistryAbi,
+  //       eventName: "TransferSingle",
+  //       args: {
+  //         from: zeroAddress,
+  //         to: connectedWallet,
+  //       },
+  //       fromBlock: BigInt(5079109),
+  //     });
+  //     console.debug(logs);
 
-      const results = (
-        logs as unknown as { args: { id: bigint; value: bigint } }[]
-      ).reduce((cur: { id: string; value: number }[], log) => {
-        const {
-          args: { id, value },
-        } = log;
+  //     const results = (
+  //       logs as unknown as { args: { id: bigint; value: bigint } }[]
+  //     ).reduce((cur: { id: string; value: number }[], log) => {
+  //       const {
+  //         args: { id, value },
+  //       } = log;
 
-        const exist = cur.find((l) => {
-          return l.id === String(id);
-        });
-        if (exist) {
-          exist.value += Number(value);
-        } else {
-          cur.push({ id: String(id), value: Number(value) });
-        }
+  //       const exist = cur.find((l) => {
+  //         return l.id === String(id);
+  //       });
+  //       if (exist) {
+  //         exist.value += Number(value);
+  //       } else {
+  //         cur.push({ id: String(id), value: Number(value) });
+  //       }
 
-        return cur;
-      }, []);
+  //       return cur;
+  //     }, []);
 
-      setLicenses(results);
+  //     setLicenses(results);
 
-      // if (results.length > 0) {
-      //   setListing(results[0].args.listing);
-      // }
-    };
-    fetchTransferBatchEvents();
-  }, [connectedWallet, chainId]);
+  //     // if (results.length > 0) {
+  //     //   setListing(results[0].args.listing);
+  //     // }
+  //   };
+  //   fetchTransferBatchEvents();
+  // }, [connectedWallet, chainId]);
 
   // TODO: add "remix" functionality (mintLicense, linkIpToParent)
 
@@ -462,7 +462,7 @@ export default function Detail() {
               )
             ))}
 
-          {licenses && (
+          {/* {licenses && (
             <div>
               <h3 className="heading-md">Licenses</h3>
               {licenses.map((l) => (
@@ -471,7 +471,7 @@ export default function Detail() {
                 </div>
               ))}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
