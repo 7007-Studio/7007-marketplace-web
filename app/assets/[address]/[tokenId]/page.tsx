@@ -3,7 +3,7 @@
 import { aigcAbi, useWriteMarketplaceV3BuyFromListing } from "@/generated";
 import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
 // import SPLicenseRegistryAbi from "@/abis/SPLicenseRegistry.json";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import axios from "axios";
 import { Listing, Metadata } from "@/types";
 import {
@@ -261,6 +261,7 @@ export default function Detail() {
   const isOwner = ownerOf?.result === connectedWallet;
 
   return (
+    <Suspense>
     <div>
       <div className="py-10">
         <a
@@ -480,5 +481,6 @@ export default function Detail() {
         </div>
       </div>
     </div>
+    </Suspense>
   );
 }
