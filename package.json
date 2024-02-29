@@ -14,7 +14,7 @@
     "@noble/hashes": "^1.3.3",
     "@rainbow-me/rainbowkit": "^2.0.0",
     "@story-protocol/core-sdk": "0.0.1-beta-rc.9",
-    "@story-protocol/react": "0.0.1-beta.8",
+    "@story-protocol/react": "0.0.1-beta.9",
     "@tanstack/react-query": "^5.21.2",
     "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.6.7",

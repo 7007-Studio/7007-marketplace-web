@@ -38,7 +38,6 @@ import {
   useReadIpAssetRegistryIsRegistered,
 } from "@story-protocol/react";
 import { useParams, useRouter } from "next/navigation";
-import { ZeroAddress } from "ethers";
 
 export default function Detail() {
   const router = useRouter();
@@ -48,7 +47,6 @@ export default function Detail() {
   const { isConnected, address: connectedWallet, chainId } = useAccount();
   const { openConnectModal } = useConnectModal();
 
-  const [metadataIsLoading, setMetadataIsLoading] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
   const [animationUrl, setAnimationUrl] = useState<string>();
 
@@ -160,8 +158,6 @@ export default function Detail() {
       if (metadata.animation_url) {
         setAnimationUrl(metadata.animation_url);
       }
-
-      setMetadataIsLoading(false);
     };
 
     fetchMetadata();
@@ -295,7 +291,20 @@ export default function Detail() {
             <div className="card-body">
               <div>
                 <h3 className="text-lg pb-2">Description</h3>
-                {metadata && <p className="pb-4">{metadata.description}</p>}
+                {metadata && (
+                  <div>
+                    <p className="pb-4">{metadata.description}</p>
+                    {metadata.attributes.map((attr) => (
+                      <div
+                        key={attr.trait_type}
+                        className="grid grid-flow-col grid-cols-2 border-b-1"
+                      >
+                        <div>Trait Type: {attr.trait_type}</div>
+                        <div>Value: {attr.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               <div>
                 <h3 className="text-lg pb-2">Details</h3>
