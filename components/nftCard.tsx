@@ -129,7 +129,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
     <Card className="w-[258px]">
       <div
         className="hover:cursor-pointer"
-        onClick={() => router.push(`/assets/${aigcAddress}/${tokenId}`)}
+        onClick={() => router.push(`/assets/${aigcAddress}/${tokenId}/new`)}
       >
         <div className="flex py-4 px-6 justify-between items-center">
           {is7007Token(aigcAddress) && <span>7007 Genesis NFT</span>}

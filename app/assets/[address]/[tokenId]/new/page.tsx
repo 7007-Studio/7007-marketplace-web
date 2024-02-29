@@ -165,7 +165,7 @@ export default function Detail() {
           {ownerOf?.result && (
             <p>Owned by {isOwner ? "You" : concatAddress(ownerOf.result)}</p>
           )}
-          {isOwner && nftContract && tokenId && (
+          {!isOwner && nftContract && tokenId && (
             <Buy nftContract={nftContract as Address} tokenId={tokenId} />
           )}
           {chainId && isOwner && nftContract && tokenId && connectedWallet && (
