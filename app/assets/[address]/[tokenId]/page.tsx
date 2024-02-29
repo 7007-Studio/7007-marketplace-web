@@ -27,8 +27,10 @@ import {
   useWatchRootIpRegistered,
   useMintLicense,
   useReadIpAssetRegistryIpId,
+  useReadIpAssetRegistryIsRegistered,
 } from "@story-protocol/react";
 import { useParams, useRouter } from "next/navigation";
+import { getMetadataAvatarUri } from "viem/_types/utils/ens/avatar/utils";
 
 export default function Detail() {
   const router = useRouter();
@@ -48,7 +50,7 @@ export default function Detail() {
 
   // read contracts
   const aigcContractConfig = { address: nftContract as Address, abi: aigcAbi };
-  const { data } = useReadContracts({
+  const { data, status } = useReadContracts({
     contracts: [
       {
         ...aigcContractConfig,
@@ -77,6 +79,7 @@ export default function Detail() {
     ],
   });
   const [modelName, owner, tokenUri, decimals, symbol] = data || [];
+  console.log(data, status);
 
   useEffect(() => {
     if (!nftContract || !tokenId || !chainId) return;
@@ -138,7 +141,7 @@ export default function Detail() {
       const res = await axios.get(tokenUri.result);
       const metadata = res.data;
 
-      setMetadata(res.data);
+      setMetadata(metadata);
 
       if (metadata.animation_url) {
         setAnimationUrl(metadata.animation_url);
@@ -158,7 +161,6 @@ export default function Detail() {
 
   useWatchRootIpRegistered({
     onLogs(logs) {
-      console.log("Root IP registered", logs);
       const events = logs as unknown as {
         args: { caller: Address; ipId: Address; policyId: bigint };
       }[];
@@ -168,7 +170,11 @@ export default function Detail() {
 
   const { writeContract: mintLicense } = useMintLicense();
 
-  // TODO: need to figure out if this NFT is already registered an IP
+  // const { data: isRegistered, refetch: refetchIsRegistered } =
+  //   useReadIpAssetRegistryIsRegistered({
+  //     args: [ipId as Address],
+  //   });
+
   const { data: _ipId } = useReadIpAssetRegistryIpId({
     args:
       chainId === undefined || tokenId === undefined
@@ -176,14 +182,15 @@ export default function Detail() {
         : [BigInt(chainId), nftContract as Address, BigInt(tokenId)],
   });
 
-  useEffect(() => {
-    if (_ipId) {
-      setIpId(_ipId);
-    }
-  }, [_ipId]);
-  // TODO: add "remix" functionality (mintLicense, linkIpToParent)
+  // useEffect(() => {
+  //   console.debug("_idId fetched");
+  //   if (_ipId) {
+  //     setIpId(_ipId);
+  //     refetchIsRegistered();
+  //   }
+  // }, [_ipId, refetchIsRegistered]);
 
-  if (!metadata) return;
+  // TODO: add "remix" functionality (mintLicense, linkIpToParent)
 
   return (
     <div>
@@ -199,7 +206,7 @@ export default function Detail() {
         <div className="flex flex-col gap-y-2">
           <Card>
             <figure>
-              {metadataIsLoading ? (
+              {!metadata ? (
                 <div className="flex w-full h-[258px] justify-center items-center">
                   <span className="loading loading-spinner loading-lg"></span>
                 </div>
@@ -221,7 +228,7 @@ export default function Detail() {
             <div className="card-body">
               <div>
                 <h3 className="text-lg pb-2">Description</h3>
-                <p className="pb-4">{metadata.description}</p>
+                {metadata && <p className="pb-4">{metadata.description}</p>}
               </div>
               <div>
                 <h3 className="text-lg pb-2">Details</h3>
@@ -264,7 +271,7 @@ export default function Detail() {
           {modelName?.result && (
             <h2 className="heading-lg">{modelName.result}</h2>
           )}
-          <h3 className="heading-md">{metadata.name}</h3>
+          {metadata && <h3 className="heading-md">{metadata.name}</h3>}
           {owner?.result && <p>Owned by {concatAddress(owner.result)}</p>}
           {listing && owner?.result !== connectedWallet && (
             <>
@@ -334,9 +341,9 @@ export default function Detail() {
             </>
           )}
 
-          {!ipId && nftContract && tokenId && (
+          {nftContract && tokenId && (
             <button
-              className="btn btn-primary"
+              className="btn btn-primary max-w-sm"
               onClick={() => {
                 registerRootIp({
                   args: [
@@ -355,7 +362,7 @@ export default function Detail() {
           )}
           {nftContract && tokenId && connectedWallet && ipId && (
             <button
-              className="btn btn-primary"
+              className="btn btn-primary max-w-sm"
               onClick={() => {
                 mintLicense({
                   args: [
