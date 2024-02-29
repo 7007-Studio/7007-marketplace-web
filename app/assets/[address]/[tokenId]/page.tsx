@@ -170,10 +170,10 @@ export default function Detail() {
 
   const { writeContract: mintLicense } = useMintLicense();
 
-  // const { data: isRegistered, refetch: refetchIsRegistered } =
-  //   useReadIpAssetRegistryIsRegistered({
-  //     args: [ipId as Address],
-  //   });
+  const { data: isRegistered, refetch: refetchIsRegistered } =
+    useReadIpAssetRegistryIsRegistered({
+      args: [ipId as Address],
+    });
 
   const { data: _ipId } = useReadIpAssetRegistryIpId({
     args:
@@ -182,13 +182,13 @@ export default function Detail() {
         : [BigInt(chainId), nftContract as Address, BigInt(tokenId)],
   });
 
-  // useEffect(() => {
-  //   console.debug("_idId fetched");
-  //   if (_ipId) {
-  //     setIpId(_ipId);
-  //     refetchIsRegistered();
-  //   }
-  // }, [_ipId, refetchIsRegistered]);
+  useEffect(() => {
+    console.debug("_idId fetched");
+    if (_ipId) {
+      setIpId(_ipId);
+      refetchIsRegistered();
+    }
+  }, [_ipId, refetchIsRegistered]);
 
   // TODO: add "remix" functionality (mintLicense, linkIpToParent)
 
@@ -340,44 +340,48 @@ export default function Detail() {
               </button>
             </>
           )}
-
-          {nftContract && tokenId && (
-            <button
-              className="btn btn-primary max-w-sm"
-              onClick={() => {
-                registerRootIp({
-                  args: [
-                    policyId,
-                    nftContract as Address, // nftContract
-                    BigInt(tokenId),
-                    "", //ipName,
-                    stringToHex("0x", { size: 32 }), //contentHash,
-                    "", //externalURL,
-                  ],
-                });
-              }}
-            >
-              Register IP
-            </button>
-          )}
-          {nftContract && tokenId && connectedWallet && ipId && (
-            <button
-              className="btn btn-primary max-w-sm"
-              onClick={() => {
-                mintLicense({
-                  args: [
-                    policyId,
-                    ipId,
-                    BigInt(1), // amount,
-                    connectedWallet, // minter,
-                    "0x", // royaltyContext
-                  ],
-                });
-              }}
-            >
-              Mint license
-            </button>
-          )}
+          {isRegistered !== undefined &&
+            nftContract &&
+            tokenId &&
+            connectedWallet &&
+            (!isRegistered ? (
+              <button
+                className="btn btn-primary max-w-sm"
+                onClick={() => {
+                  registerRootIp({
+                    args: [
+                      policyId,
+                      nftContract as Address, // nftContract
+                      BigInt(tokenId),
+                      "", //ipName,
+                      stringToHex("0x", { size: 32 }), //contentHash,
+                      "", //externalURL,
+                    ],
+                  });
+                }}
+              >
+                Register IP
+              </button>
+            ) : (
+              ipId && (
+                <button
+                  className="btn btn-primary max-w-sm"
+                  onClick={() => {
+                    mintLicense({
+                      args: [
+                        policyId,
+                        ipId,
+                        BigInt(1), // amount,
+                        connectedWallet, // minter,
+                        "0x", // royaltyContext
+                      ],
+                    });
+                  }}
+                >
+                  Mint license
+                </button>
+              )
+            ))}
         </div>
       </div>
     </div>
