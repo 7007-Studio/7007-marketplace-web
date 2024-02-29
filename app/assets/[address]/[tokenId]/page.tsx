@@ -2,6 +2,7 @@
 
 import { aigcAbi, useWriteMarketplaceV3BuyFromListing } from "@/generated";
 import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
+import SPLicenseRegistryAbi from "@/abis/SPLicenseRegistry.json";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Listing, Metadata } from "@/types";
@@ -17,7 +18,14 @@ import {
   useReadContracts,
   useWaitForTransactionReceipt,
 } from "wagmi";
-import { Address, erc20Abi, formatEther, formatUnits, stringToHex } from "viem";
+import {
+  Address,
+  erc20Abi,
+  formatEther,
+  formatUnits,
+  stringToHex,
+  zeroAddress,
+} from "viem";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
 import Card from "@/components/card";
 import { getPublicClient } from "@/client";
@@ -30,7 +38,7 @@ import {
   useReadIpAssetRegistryIsRegistered,
 } from "@story-protocol/react";
 import { useParams, useRouter } from "next/navigation";
-import { getMetadataAvatarUri } from "viem/_types/utils/ens/avatar/utils";
+import { ZeroAddress } from "ethers";
 
 export default function Detail() {
   const router = useRouter();
@@ -50,7 +58,7 @@ export default function Detail() {
 
   // read contracts
   const aigcContractConfig = { address: nftContract as Address, abi: aigcAbi };
-  const { data } = useReadContracts({
+  const { data: aigcData } = useReadContracts({
     contracts: [
       {
         ...aigcContractConfig,
@@ -69,7 +77,7 @@ export default function Detail() {
     ],
   });
 
-  const [modelName, owner, tokenUri] = data || [];
+  const [modelName, ownerOf, tokenUri] = aigcData || [];
 
   const { data: listingData } = useReadContracts({
     contracts: [
@@ -180,6 +188,10 @@ export default function Detail() {
     useReadIpAssetRegistryIsRegistered({
       args: [ipId as Address],
     });
+  useEffect(() => {
+    console.debug("refetchIsRegistered ipId", ipId);
+    refetchIsRegistered();
+  }, [ipId, refetchIsRegistered]);
 
   const { data: _ipId } = useReadIpAssetRegistryIpId({
     args:
@@ -189,14 +201,63 @@ export default function Detail() {
   });
 
   useEffect(() => {
-    console.debug("_idId fetched");
+    console.debug("_idId fetched", _ipId);
     if (_ipId) {
       setIpId(_ipId);
-      refetchIsRegistered();
     }
-  }, [_ipId, refetchIsRegistered]);
+  }, [_ipId]);
+
+  // Check if the token has licenses minted
+  const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
+  useEffect(() => {
+    if (!connectedWallet || !chainId) return;
+
+    const licenseRegistry = getContractAddress("SPLicenseRegistry", chainId);
+    const fetchTransferBatchEvents = async () => {
+      const client = getPublicClient(chainId);
+      const logs = await client.getContractEvents({
+        address: licenseRegistry,
+        abi: SPLicenseRegistryAbi,
+        eventName: "TransferSingle",
+        args: {
+          from: zeroAddress,
+          to: connectedWallet,
+        },
+        fromBlock: BigInt(5079109),
+      });
+      console.debug(logs);
+
+      const results = (
+        logs as unknown as { args: { id: bigint; value: bigint } }[]
+      ).reduce((cur: { id: string; value: number }[], log) => {
+        const {
+          args: { id, value },
+        } = log;
+
+        const exist = cur.find((l) => {
+          return l.id === String(id);
+        });
+        if (exist) {
+          exist.value += Number(value);
+        } else {
+          cur.push({ id: String(id), value: Number(value) });
+        }
+
+        return cur;
+      }, []);
+
+      setLicenses(results);
+
+      // if (results.length > 0) {
+      //   setListing(results[0].args.listing);
+      // }
+    };
+    fetchTransferBatchEvents();
+  }, [connectedWallet, chainId]);
 
   // TODO: add "remix" functionality (mintLicense, linkIpToParent)
+
+  const isOwner = ownerOf?.result === connectedWallet;
 
   return (
     <div>
@@ -278,8 +339,10 @@ export default function Detail() {
             <h2 className="heading-lg">{modelName.result}</h2>
           )}
           {metadata && <h3 className="heading-md">{metadata.name}</h3>}
-          {owner?.result && <p>Owned by {concatAddress(owner.result)}</p>}
-          {listing && owner?.result !== connectedWallet && (
+          {ownerOf?.result && (
+            <p>Owned by {isOwner ? "You" : concatAddress(ownerOf.result)}</p>
+          )}
+          {listing && !isOwner && (
             <>
               <div className="pb-2 flex flex-col">
                 <span>
@@ -346,7 +409,8 @@ export default function Detail() {
               </button>
             </>
           )}
-          {isRegistered !== undefined &&
+          {isOwner &&
+            isRegistered !== undefined &&
             nftContract &&
             tokenId &&
             connectedWallet &&
@@ -388,6 +452,17 @@ export default function Detail() {
                 </button>
               )
             ))}
+
+          {licenses && (
+            <div>
+              <h3 className="heading-md">Licenses</h3>
+              {licenses.map((l) => (
+                <div key={l.id}>
+                  License {l.id}: {l.value}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

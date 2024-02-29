@@ -18,8 +18,8 @@ dependencies:
     specifier: ^2.0.0
     version: 2.0.0(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)(viem@2.7.15)(wagmi@2.5.7)
   '@story-protocol/core-sdk':
-    specifier: 0.0.1-beta-rc.8
-    version: 0.0.1-beta-rc.8(typescript@5.3.3)
+    specifier: 0.0.1-beta-rc.9
+    version: 0.0.1-beta-rc.9(typescript@5.3.3)
   '@story-protocol/react':
     specifier: 0.0.1-beta.8
     version: 0.0.1-beta.8(@tanstack/react-query@5.21.2)(@types/react@18.2.56)(react-dom@18.2.0)(react-native@0.73.4)(react@18.2.0)(typescript@5.3.3)(viem@2.7.15)
@@ -3704,8 +3704,8 @@ packages:
       '@stablelib/wipe': 1.0.1
     dev: false
 
-  /@story-protocol/core-sdk@0.0.1-beta-rc.8(typescript@5.3.3):
-    resolution: {integrity: sha512-MskzA9gi4w3tG4uiBNXxBBkehLkmDwjjdBVaT8a59hkoDYrluxNbUb70kLOheiM6KkPvY3Fcg0IgnwXgcqiQVw==}
+  /@story-protocol/core-sdk@0.0.1-beta-rc.9(typescript@5.3.3):
+    resolution: {integrity: sha512-HcP3U8pp6n2VjeJRt3mkymy9BQfV1VD1TPvoTafTomgCqRH5Q5EC8QQSuvAgX5UX9TDXyx+xl+Vhmtpdq8ZEsA==}
     dependencies:
       abitype: 0.10.3(typescript@5.3.3)
       axios: 1.6.7
