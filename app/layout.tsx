@@ -7,6 +7,7 @@ import { Barlow } from "next/font/google";
 import { Web3Provider } from "@/utils/web3Provider";
 
 import Navbar from "@/components/navbar";
+import { Suspense } from "react";
 
 const barlow = Barlow({
   subsets: ["latin"],
@@ -33,9 +34,11 @@ export default function RootLayout({
       >
         <Web3Provider>
           <Navbar />
-          <main className="max-lg:hidden flex min-h-screen flex-col lg:py-10 md:px-20 2xl:px-24 mx-auto">
-            {children}
-          </main>
+          <Suspense>
+            <main className="max-lg:hidden flex min-h-screen flex-col lg:py-10 md:px-20 2xl:px-24 mx-auto">
+              {children}
+            </main>
+          </Suspense>
         </Web3Provider>
       </body>
     </html>
