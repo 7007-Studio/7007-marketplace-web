@@ -2,7 +2,7 @@
 
 import { aigcAbi, useWriteMarketplaceV3BuyFromListing } from "@/generated";
 import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
-import SPLicenseRegistryAbi from "@/abis/SPLicenseRegistry.json";
+// import SPLicenseRegistryAbi from "@/abis/SPLicenseRegistry.json";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Listing, Metadata } from "@/types";
@@ -30,13 +30,13 @@ import ArrowLeftIcon from "@/components/arrowLeftIcon";
 import Card from "@/components/card";
 import { getPublicClient } from "@/client";
 import { NATIVE_TOKEN_ADDRESS } from "@/constants";
-import {
-  useRegisterRootIp,
-  useWatchRootIpRegistered,
-  useMintLicense,
-  useReadIpAssetRegistryIpId,
-  useReadIpAssetRegistryIsRegistered,
-} from "@story-protocol/react";
+// import {
+//   useRegisterRootIp,
+//   useWatchRootIpRegistered,
+//   useMintLicense,
+//   useReadIpAssetRegistryIpId,
+//   useReadIpAssetRegistryIsRegistered,
+// } from "@story-protocol/react";
 import { useParams, useRouter } from "next/navigation";
 
 export default function Detail() {
@@ -164,49 +164,49 @@ export default function Detail() {
   }, [tokenUri]);
 
   // story protocol integration
-  const policyId = BigInt(3);
-  const [ipId, setIpId] = useState<Address>();
+  // const policyId = BigInt(3);
+  // const [ipId, setIpId] = useState<Address>();
 
-  const { data: _ipId } = useReadIpAssetRegistryIpId({
-    args:
-      chainId === undefined || tokenId === undefined
-        ? undefined
-        : [BigInt(chainId), nftContract as Address, BigInt(tokenId)],
-  });
+  // const { data: _ipId } = useReadIpAssetRegistryIpId({
+  //   args:
+  //     chainId === undefined || tokenId === undefined
+  //       ? undefined
+  //       : [BigInt(chainId), nftContract as Address, BigInt(tokenId)],
+  // });
 
-  useEffect(() => {
-    console.debug("_idId fetched", _ipId);
-    if (_ipId) {
-      setIpId(_ipId);
-    }
-  }, [_ipId]);
-
-
-  const { data: isRegistered, refetch: refetchIsRegistered } =
-    useReadIpAssetRegistryIsRegistered({
-      args: [ipId as Address],
-    });
-  useEffect(() => {
-    console.debug("refetchIsRegistered ipId", ipId);
-    refetchIsRegistered();
-  }, [ipId, refetchIsRegistered]);
+  // useEffect(() => {
+  //   console.debug("_idId fetched", _ipId);
+  //   if (_ipId) {
+  //     setIpId(_ipId);
+  //   }
+  // }, [_ipId]);
 
 
-
-  useWatchRootIpRegistered({
-    onLogs(logs) {
-      const events = logs as unknown as {
-        args: { caller: Address; ipId: Address; policyId: bigint };
-      }[];
-      setIpId(events[0].args.ipId);
-    },
-  });
+  // const { data: isRegistered, refetch: refetchIsRegistered } =
+  //   useReadIpAssetRegistryIsRegistered({
+  //     args: [ipId as Address],
+  //   });
+  // useEffect(() => {
+  //   console.debug("refetchIsRegistered ipId", ipId);
+  //   refetchIsRegistered();
+  // }, [ipId, refetchIsRegistered]);
 
 
 
+  // useWatchRootIpRegistered({
+  //   onLogs(logs) {
+  //     const events = logs as unknown as {
+  //       args: { caller: Address; ipId: Address; policyId: bigint };
+  //     }[];
+  //     setIpId(events[0].args.ipId);
+  //   },
+  // });
 
-  const { writeContract: registerRootIp } = useRegisterRootIp();
-  const { writeContract: mintLicense } = useMintLicense();
+
+
+
+  // const { writeContract: registerRootIp } = useRegisterRootIp();
+  // const { writeContract: mintLicense } = useMintLicense();
 
   // Check if the token has licenses minted
   // const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
@@ -423,7 +423,7 @@ export default function Detail() {
               </button>
             </>
           )}
-          {isOwner &&
+          {/* {isOwner &&
             isRegistered !== undefined &&
             nftContract &&
             tokenId &&
@@ -432,16 +432,16 @@ export default function Detail() {
               <button
                 className="btn btn-primary max-w-sm"
                 onClick={() => {
-                  registerRootIp({
-                    args: [
-                      policyId,
-                      nftContract as Address, // nftContract
-                      BigInt(tokenId),
-                      "", //ipName,
-                      stringToHex("0x", { size: 32 }), //contentHash,
-                      "", //externalURL,
-                    ],
-                  });
+                  // registerRootIp({
+                  //   args: [
+                  //     policyId,
+                  //     nftContract as Address, // nftContract
+                  //     BigInt(tokenId),
+                  //     "", //ipName,
+                  //     stringToHex("0x", { size: 32 }), //contentHash,
+                  //     "", //externalURL,
+                  //   ],
+                  // });
                 }}
               >
                 Register IP
@@ -465,7 +465,7 @@ export default function Detail() {
                   Mint license
                 </button>
               )
-            ))}
+            ))} */}
 
           {/* {licenses && (
             <div>

@@ -1,14 +1,12 @@
 import { RefObject } from "react";
 import React from "react";
 import { Address, Hash, Hex, http, stringToHex } from "viem";
-import {
-  useAddPolicyToIp,
-  useRegisterRootIp,
-  useWatchPolicyAddedToIpId,
-  useWatchRootIpRegistered,
-} from "@story-protocol/react";
-// import { StoryClient, StoryConfig } from "@story-protocol/core-sdk";
-// import { useAccount } from "wagmi";
+// import {
+//   useAddPolicyToIp,
+//   useRegisterRootIp,
+//   useWatchPolicyAddedToIpId,
+//   useWatchRootIpRegistered,
+// } from "@story-protocol/react";
 
 interface ConnectToSPModalProps {
   tokenId: bigint;
@@ -33,54 +31,54 @@ const ConnectToSPModal = React.forwardRef(
   ) => {
     const policyId = BigInt(3);
 
-    const { writeContract: registerRootIp } = useRegisterRootIp();
+    // const { writeContract: registerRootIp } = useRegisterRootIp();
 
-    useWatchRootIpRegistered({
-      onLogs(logs) {
-        console.log("Root IP registered", logs);
-        registerRootIp({
-          args: [
-            policyId,
-            nftContract,
-            tokenId,
-            ipName,
-            contentHash,
-            externalURL,
-          ],
-        });
-      },
-    });
+    // useWatchRootIpRegistered({
+    //   onLogs(logs) {
+    //     console.log("Root IP registered", logs);
+    //     registerRootIp({
+    //       args: [
+    //         policyId,
+    //         nftContract,
+    //         tokenId,
+    //         ipName,
+    //         contentHash,
+    //         externalURL,
+    //       ],
+    //     });
+    //   },
+    // });
 
-    const { writeContract: addPolicyToIp } = useAddPolicyToIp();
+    // const { writeContract: addPolicyToIp } = useAddPolicyToIp();
 
-    useWatchPolicyAddedToIpId({
-      onLogs(logs) {
-        console.log("Root IP registered", logs);
-        const events = logs as unknown as {
-          args: { caller: Address; ipId: Address; policyId: bigint };
-        }[];
+    // useWatchPolicyAddedToIpId({
+    //   onLogs(logs) {
+    //     console.log("Root IP registered", logs);
+    //     const events = logs as unknown as {
+    //       args: { caller: Address; ipId: Address; policyId: bigint };
+    //     }[];
 
-        addPolicyToIp({
-          args: [events[0].args.ipId, events[0].args.policyId],
-        });
-      },
-    });
+    //     addPolicyToIp({
+    //       args: [events[0].args.ipId, events[0].args.policyId],
+    //     });
+    //   },
+    // });
 
     // const {
     //   writeContract: registerRootIp,
     // } = use();
 
     const handleOnConnect = () => {
-      registerRootIp({
-        args: [
-          policyId,
-          nftContract,
-          tokenId,
-          ipName,
-          contentHash,
-          externalURL,
-        ],
-      });
+      // registerRootIp({
+      //   args: [
+      //     policyId,
+      //     nftContract,
+      //     tokenId,
+      //     ipName,
+      //     contentHash,
+      //     externalURL,
+      //   ],
+      // });
     };
 
     return (
