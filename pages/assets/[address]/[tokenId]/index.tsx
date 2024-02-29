@@ -41,7 +41,7 @@ import { useRouter } from "next/router";
 
 export default function Detail() {
   const router = useRouter();
-  const { address, tokenId } = router.query;
+  const { address: nftContract, tokenId } = router.query;
 
   const { isConnected, address: connectedWallet, chainId } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -64,12 +64,12 @@ export default function Detail() {
       {
         ...aigcContractConfig,
         functionName: "ownerOf",
-        args: tokenId ? [BigInt(tokenId)] : undefined,
+        args: tokenId ? [BigInt(tokenId as string)] : undefined,
       },
       {
         ...aigcContractConfig,
         functionName: "tokenURI",
-        args: tokenId ? [BigInt(tokenId)] : undefined,
+        args: tokenId ? [BigInt(tokenId as string)] : undefined,
       },
     ],
   });
@@ -321,7 +321,7 @@ export default function Detail() {
                         className="text-primary overflow-hidden"
                         target="_blank"
                       >
-                        {concatAddress(nftContract)}
+                        {concatAddress(nftContract as Address)}
                       </a>
                     )}
                   </div>
@@ -334,7 +334,7 @@ export default function Detail() {
                     <div>Link</div>
                     {nftContract && (
                       <a
-                        href={openseaUrl(nftContract, tokenId as string)}
+                        href={openseaUrl(nftContract as Address, tokenId as string)}
                         className="text-primary overflow-hidden"
                         target="_blank"
                       >
