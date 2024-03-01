@@ -18,6 +18,6 @@ export const Contracts: IContracts = {
   [sepolia.id]: {
     MarketplaceV3: "0x29e5E223074daD39D33327f1655f38BDD04Ba2f6",
     SPRegistrationModule: "0x8b3f6b736b520f69c37a575293d3c1ff6383d495",
-    SPLicenseRegistry: "0x176d33Cc80ed3390256033bbf7Fd651c9C5A364F",
+    SPLicenseRegistry: "0xc2BC7a2d5784768BDEd98436f2522A4931e2FBb4",
   },
 };

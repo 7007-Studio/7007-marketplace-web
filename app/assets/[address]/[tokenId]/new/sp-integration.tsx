@@ -13,12 +13,14 @@ import {
   useMintLicense,
 } from "@story-protocol/react";
 import { getContractAddress } from "@/helpers";
+import { ListingNFT } from "@/components/modal/listingNFTModal";
 
 interface SPIntegrationProps {
   chainId: number;
   connectedWallet: Address;
   nftContract: Address;
   tokenId: string;
+  setListingLicense?: (license: ListingNFT) => void;
 }
 
 export default function SPIntegration({
@@ -26,6 +28,7 @@ export default function SPIntegration({
   connectedWallet,
   nftContract,
   tokenId,
+  setListingLicense,
 }: SPIntegrationProps) {
   // story protocol integration
   const policyId = BigInt(3);
@@ -106,10 +109,6 @@ export default function SPIntegration({
       }, []);
 
       setLicenses(results);
-
-      // if (results.length > 0) {
-      //   setListing(results[0].args.listing);
-      // }
     };
     fetchTransferBatchEvents();
   }, [connectedWallet, chainId]);
@@ -118,59 +117,81 @@ export default function SPIntegration({
     return null;
   }
 
-  if (!isRegistered) {
-    return (
-      <button
-        className="btn btn-primary max-w-sm"
-        onClick={() => {
-          registerRootIp({
-            args: [
-              policyId,
-              nftContract as Address, // nftContract
-              BigInt(tokenId),
-              "", //ipName,
-              stringToHex("0x", { size: 32 }), //contentHash,
-              "", //externalURL,
-            ],
-          });
-        }}
-      >
-        Register IP
-      </button>
-    );
-  }
+  return (
+    <div>
+      {!isRegistered ? (
+        <button
+          className="btn btn-primary max-w-sm"
+          onClick={() => {
+            registerRootIp({
+              args: [
+                policyId,
+                nftContract as Address, // nftContract
+                BigInt(tokenId),
+                "7007 AIGC", //ipName,
+                stringToHex("0x", { size: 32 }), //contentHash,
+                "https://www.7007.studio/", //externalURL,
+              ],
+            });
+          }}
+        >
+          Register IP
+        </button>
+      ) : (
+        ipId && (
+          <button
+            className="btn btn-primary max-w-sm"
+            onClick={() => {
+              mintLicense({
+                args: [
+                  policyId,
+                  ipId,
+                  BigInt(1), // amount,
+                  connectedWallet, // minter,
+                  "0x", // royaltyContext
+                ],
+              });
+            }}
+          >
+            Mint license
+          </button>
+        )
+      )}
 
-  if (isRegistered && ipId) {
-    return (
-      <button
-        className="btn btn-primary max-w-sm"
-        onClick={() => {
-          mintLicense({
-            args: [
-              policyId,
-              ipId,
-              BigInt(1), // amount,
-              connectedWallet, // minter,
-              "0x", // royaltyContext
-            ],
-          });
-        }}
-      >
-        Mint license
-      </button>
-    );
-  }
+      {licenses && (
+        <div>
+          <h3 className="heading-md">Licenses</h3>
+          <div className="flex flex-col gap-4">
+            {licenses.map((l) => (
+              <div key={l.id} className="flex flex-row items-baseline">
+                <div>
+                  License {l.id}: {l.value}
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
 
-  // {licenses && (
-  //   <div>
-  //     <h3 className="heading-md">Licenses</h3>
-  //     {licenses.map((l) => (
-  //       <div key={l.id}>
-  //         License {l.id}: {l.value}
-  //       </div>
-  //     ))}
-  //   </div>
-  // )}
+                    const licenseRegistry = getContractAddress(
+                      "SPLicenseRegistry",
+                      chainId
+                    );
+
+                    if (!licenseRegistry) {
+                      return;
+                    }
+                    setListingLicense?.({ address: licenseRegistry, tokenId });
+                  }}
+                  className="btn btn-primary"
+                >
+                  List License
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return null;
 }

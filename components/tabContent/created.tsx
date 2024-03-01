@@ -11,12 +11,10 @@ import { sepoliaClient } from "@/client";
 
 const Collected = ({
   aigcAddress,
-  listingNFTModalRef,
   setListingNFT,
   connectToSPModalRef,
 }: {
   aigcAddress: Address;
-  listingNFTModalRef: React.RefObject<HTMLDialogElement>;
   setListingNFT: (nft: ListingNFT) => void;
   connectToSPModalRef: React.RefObject<HTMLDialogElement>;
 }) => {
@@ -71,10 +69,7 @@ const Collected = ({
                 key={id}
                 aigcAddress={aigcAddress}
                 tokenId={id.toString()}
-                onListingNFT={(nft) => {
-                  setListingNFT(nft);
-                  listingNFTModalRef.current?.showModal();
-                }}
+                onListingNFT={setListingNFT}
                 onConnectToSP={() => {
                   connectToSPModalRef.current?.showModal();
                 }}

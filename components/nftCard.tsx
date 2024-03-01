@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import axios from "axios";
 import { Listing, Metadata, MetadataAttribute } from "@/types";
-import { AIGC_CONTRACT_ADDRESS, NATIVE_TOKEN_ADDRESS } from "@/constants";
-import { Address, formatEther, formatUnits } from "viem";
+import { NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { Address, formatEther, formatUnits, isAddressEqual } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Card from "./card";
 import {
@@ -91,6 +91,9 @@ const NFTCard: React.FC<NFTCardProps> = ({
 
   // TODO: find creator of the token
 
+  const isOwner =
+    owner && connectedWallet && isAddressEqual(owner, connectedWallet);
+
   useEffect(() => {
     if (!aigcAddress || !tokenUri) return;
 
@@ -165,7 +168,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
           <h3 className="heading-md">{metadata.name}</h3>
           <p className="pb-4">{metadata.description}</p>
 
-          {listing && owner !== connectedWallet && (
+          {listing && !isOwner && (
             <>
               <div className="pb-2 flex flex-row justify-between items-baseline">
                 <span className="heading-md">
@@ -232,7 +235,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
               </button>
             </>
           )}
-          {connectedWallet === owner && (
+          {isOwner && (
             <button
               onClick={(e) => {
                 e.stopPropagation();

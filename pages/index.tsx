@@ -101,7 +101,10 @@ export default function Main() {
           <Created
             aigcAddress={deployedAigc}
             listingNFTModalRef={listingNFTModalRef}
-            setListingNFT={setListingNFT}
+            setListingNFT={(nft) => {
+              setListingNFT(nft);
+              listingNFTModalRef.current?.showModal();
+            }}
             connectToSPModalRef={connectToSPModalRef}
           />
         )}
@@ -110,7 +113,10 @@ export default function Main() {
           <Collected
             aigcAddress={deployedAigc}
             listingNFTModalRef={listingNFTModalRef}
-            setListingNFT={setListingNFT}
+            setListingNFT={(nft) => {
+              setListingNFT(nft);
+              listingNFTModalRef.current?.showModal();
+            }}
             connectToSPModalRef={connectToSPModalRef}
           />
         )}

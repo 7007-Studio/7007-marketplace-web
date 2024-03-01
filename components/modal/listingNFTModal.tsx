@@ -19,12 +19,14 @@ import TextInput from "../textInput";
 export interface ListingNFT {
   address: Address;
   tokenId: string | number;
-  metadata: Partial<Metadata>;
+  maxQuantity?: number;
+  metadata?: Partial<Metadata>;
 }
 
 interface IFormListNFTInput {
   price: string;
   duration: number;
+  quantity: number;
 }
 
 interface ListingNFTModalProps {
@@ -51,6 +53,8 @@ const ListingNFTModal = React.forwardRef(
     const { register, handleSubmit, getValues, reset } =
       useForm<IFormListNFTInput>();
     const onSubmit: SubmitHandler<IFormListNFTInput> = async (data) => {
+      console.debug("submit data", data);
+
       if (!isConnected || !chainId) {
         openConnectModal?.();
         return;
@@ -66,20 +70,19 @@ const ListingNFTModal = React.forwardRef(
       }
 
       if (!approvedListing) {
-        approveListing(
-          {
-            address: listingNFT?.address,
-            args: [marketplaceV3, BigInt(listingNFT?.tokenId)],
+        console.debug("submit data", data);
+        const approveData = {
+          address: listingNFT?.address,
+          args: [marketplaceV3, BigInt(listingNFT?.tokenId)],
+        };
+        approveListing(approveData, {
+          onError(error) {
+            console.debug("approveListing onError", error);
+            setListInitialized(false);
           },
-          {
-            onError(error) {
-              console.debug("approveListing onError", error);
-              setListInitialized(false);
-            },
-          }
-        );
+        });
       } else {
-        createListingWrapper();
+        createListingWrapper(data);
       }
     };
 
@@ -123,7 +126,7 @@ const ListingNFTModal = React.forwardRef(
       listingSuccess?.();
     }, [listingResult]);
 
-    function createListingWrapper() {
+    function createListingWrapper(data: IFormListNFTInput) {
       if (!listingNFT) return;
 
       const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
@@ -136,13 +139,12 @@ const ListingNFTModal = React.forwardRef(
             {
               assetContract: listingNFT.address,
               tokenId: BigInt(listingNFT.tokenId),
-              quantity: BigInt(1),
+              quantity: BigInt(data.quantity || 1),
               currency: NATIVE_TOKEN_ADDRESS,
-              pricePerToken: parseEther(getValues("price")),
+              pricePerToken: parseEther(data.price),
               startTimestamp: BigInt(Math.round(Date.now() / 1000)),
               endTimestamp: BigInt(
-                Math.round(Date.now() / 1000) +
-                  getValues("duration") * 24 * 60 * 60
+                Math.round(Date.now() / 1000) + data.duration * 24 * 60 * 60
               ),
               reserved: false,
             },
@@ -175,7 +177,7 @@ const ListingNFTModal = React.forwardRef(
                   <div className="label">
                     <span className="label-text">Name</span>
                   </div>
-                  <div className="text-lg">{listingNFT?.metadata.name}</div>
+                  <div className="text-lg">{listingNFT?.metadata?.name}</div>
                 </div>
                 <TextInput
                   label="Price"
@@ -192,6 +194,15 @@ const ListingNFTModal = React.forwardRef(
                   placeholder="0"
                   min={1}
                   max={7}
+                  required
+                  register={register}
+                />
+                <TextInput
+                  label="Quantity"
+                  name="quantity"
+                  placeholder="1"
+                  min={1}
+                  max={listingNFT?.maxQuantity || 1}
                   required
                   register={register}
                 />
