@@ -12,7 +12,7 @@ const AigcNftCreated = ({
   return (
     <div className="flex flex-row flex-wrap gap-6 items-start">
       {tokenIds.map((id) => (
-        <NFTCard key={id} tokenId={id} aigcAddress={aigcAddress} />
+        <NFTCard key={id} tokenId={id} nftContract={aigcAddress} />
       ))}
     </div>
   );

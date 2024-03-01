@@ -31,10 +31,9 @@ export interface Metadata {
   name: string;
   description: string;
   image: string;
+  animation_url?: string;
   attributes: MetadataAttribute[];
 }
-
-
 
 export interface Listing {
   assetContract: Address;

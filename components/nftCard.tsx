@@ -1,128 +1,207 @@
-import { useEffect, useState } from "react";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAccount, useReadContracts } from "wagmi";
 import axios from "axios";
-import { Listing, Metadata, MetadataAttribute } from "@/types";
-import { NATIVE_TOKEN_ADDRESS } from "@/constants";
-import { Address, formatEther, formatUnits, isAddressEqual } from "viem";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { Listing, Metadata } from "@/types";
+import {
+  Address,
+  erc20Abi,
+  erc721Abi,
+  formatEther,
+  formatUnits,
+  isAddressEqual,
+  walletActions,
+} from "viem";
+import SPLicenseRegistry from "@/abis/SPLicenseRegistry.json";
 import Card from "./card";
 import {
   concatAddress,
   formatDaysLeft,
-  getContractAddress,
   is7007Token,
   openseaUrl,
 } from "@/helpers";
 import { ListingNFT } from "./modal/listingNFTModal";
-import {
-  useReadAigcModelName,
-  useReadAigcOwnerOf,
-  useReadAigcTokenUri,
-  useReadErc20Decimals,
-  useReadErc20Symbol,
-  useWriteMarketplaceV3BuyFromListing,
-} from "@/generated";
+import { useReadAigcModelName } from "@/generated";
 import { useRouter } from "next/navigation";
+import BuyButton from "./buy-button";
+
+function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
+  if (!metadata) {
+    return (
+      <div className="flex w-full h-[258px] justify-center items-center">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (metadata?.animation_url) {
+    return (
+      <div className="max-h-[258px] overflow-hidden">
+        <iframe src={metadata.animation_url} width={258} height={258} />
+      </div>
+    );
+  }
+
+  if (metadata?.image) {
+    return (
+      <img
+        src={metadata.image}
+        alt={metadata?.name}
+        className="w-full object-cover aspect-square"
+      />
+    );
+  }
+
+  return <div className="flex w-[258px] h-[258px]"></div>;
+}
 export interface NFTCardProps {
-  aigcAddress: Address;
-  tokenId: string | number;
+  nftContract: Address;
+  tokenId: bigint;
+  listing?: Listing;
   onListingNFT?: ({ tokenId, metadata }: ListingNFT) => void;
   onConnectToSP?: () => void;
-  listing?: Listing;
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({
-  aigcAddress,
+  nftContract,
   tokenId,
+  listing,
   onListingNFT,
   onConnectToSP,
-  listing,
 }) => {
   const router = useRouter();
-  const { isConnected, address: connectedWallet, chainId } = useAccount();
-  const { openConnectModal } = useConnectModal();
+  const { address: connectedWallet } = useAccount();
 
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [metadataIsLoading, setMetadataIsLoading] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
   const [animationUrl, setAnimationUrl] = useState<string>();
-  const [audioUrl, setAudioUrl] = useState();
 
-  const [buyInitialized, setBuyInitialized] = useState(false);
-
-  // read contracts
   const { data: modelName } = useReadAigcModelName({
-    address: aigcAddress,
+    address: nftContract,
   });
 
-  const { data: owner, refetch: refetchOwner } = useReadAigcOwnerOf({
-    address: aigcAddress,
-    args: [BigInt(tokenId)],
+  const erc721Results = useReadContracts({
+    contracts: [
+      {
+        address: nftContract,
+        abi: erc721Abi,
+        functionName: "ownerOf",
+        args: [tokenId],
+      },
+      {
+        address: nftContract,
+        abi: erc721Abi,
+        functionName: "tokenURI",
+        args: [tokenId],
+      },
+    ],
   });
-
-  const { data: tokenUri } = useReadAigcTokenUri({
-    address: aigcAddress,
-    args: [BigInt(tokenId)],
-  });
-
-  const { data: decimals } = useReadErc20Decimals({
-    address: listing?.currency,
-  });
-  const { data: symbol } = useReadErc20Symbol({
-    address: listing?.currency,
-  });
-
-  // write contracts
-  const { writeContract: buyNft, data: buyNftTx } =
-    useWriteMarketplaceV3BuyFromListing();
-
-  const buyResult = useWaitForTransactionReceipt({
-    hash: buyNftTx,
-  });
-  useEffect(() => {
-    console.debug("buyResult changed");
-    if (buyResult.isSuccess) {
-      // refetchOwner();
-      // refetchIsListed();
-
-      setBuyInitialized(false);
+  const [isErc721, ownerOf, tokenURI] = useMemo(() => {
+    if (!erc721Results?.isFetched || !erc721Results?.data) {
+      return [];
     }
-  }, [buyResult]);
 
-  // TODO: find creator of the token
+    return (
+      [
+        !erc721Results.data[0].error,
+        ...(erc721Results.data.map((d) => d.result) as [Address, string]),
+      ] || []
+    );
+  }, [erc721Results.isFetched, erc721Results.data]);
+
+  const erc1155Results = useReadContracts({
+    contracts: [
+      {
+        address: nftContract,
+        abi: SPLicenseRegistry,
+        functionName: "name",
+      },
+      {
+        address: nftContract,
+        abi: SPLicenseRegistry,
+        functionName: "balanceOf",
+        args: [connectedWallet, tokenId],
+      },
+      {
+        address: nftContract,
+        abi: SPLicenseRegistry,
+        functionName: "imageUrl",
+      },
+      {
+        address: nftContract,
+        abi: SPLicenseRegistry,
+        functionName: "uri",
+        args: [tokenId],
+      },
+    ],
+  });
+  const [isErc1155, erc1155Name, balanceOf, imageUrl, uri] = useMemo(() => {
+    if (!erc1155Results?.isFetched || !erc1155Results?.data) {
+      return [];
+    }
+    return (
+      [
+        !erc1155Results.data[0].error,
+        ...(erc1155Results.data.map((d) => d.result) as [
+          string,
+          bigint,
+          string,
+          string,
+        ]),
+      ] || []
+    );
+  }, [erc1155Results.isFetched, erc1155Results.data]);
+
+  const { data: listingData } = useReadContracts({
+    contracts: [
+      {
+        address: listing?.currency,
+        abi: erc20Abi,
+        functionName: "decimals",
+      },
+      {
+        address: listing?.currency,
+        abi: erc20Abi,
+        functionName: "symbol",
+      },
+    ],
+  });
+  const [decimals, symbol] = listingData || [];
 
   const isOwner =
-    owner && connectedWallet && isAddressEqual(owner, connectedWallet);
+    ownerOf && connectedWallet && isAddressEqual(ownerOf, connectedWallet);
 
   useEffect(() => {
-    if (!aigcAddress || !tokenUri) return;
+    if (!nftContract) return;
 
-    const fetchMetadata = async () => {
-      const res = await axios.get(tokenUri);
-      const metadata = res.data;
+    if (isErc721 && tokenURI) {
+      const fetchMetadata = async () => {
+        const res = await axios.get(tokenURI);
+        setMetadata(res.data);
+      };
 
-      setMetadata(res.data);
+      fetchMetadata();
+    }
 
-      if (metadata.animation_url) {
-        setAnimationUrl(metadata.animation_url);
-      }
+    if (isErc1155 && uri) {
+      const parseURI = () => {
+        try {
+          const decodedURI = atob(
+            uri.replace("data:application/json;base64,", "")
+          );
+          const parsedMetadata = JSON.parse(decodedURI);
+          setMetadata(parsedMetadata);
+        } catch (error) {
+          console.error("Error parsing URI:", error);
+        }
+      };
 
-      const audioUrl = metadata.attributes.find(
-        (a: MetadataAttribute) => a.trait_type === "Audio"
-      )?.value;
-      if (audioUrl) setAudioUrl(audioUrl);
-
-      setMetadataIsLoading(false);
-    };
-
-    fetchMetadata();
-  }, [aigcAddress, tokenUri]);
-
-  if (!metadata) return;
+      parseURI();
+    }
+  }, [nftContract, isErc721, tokenURI, isErc1155, uri]);
 
   // hiding broken AIGC NFT
   if (
-    aigcAddress === "0x0B89f60136A91f3B36557F9414cbd157d0ada7bc" &&
+    nftContract === "0x0B89f60136A91f3B36557F9414cbd157d0ada7bc" &&
     String(tokenId) === "1"
   ) {
     return null;
@@ -132,11 +211,11 @@ const NFTCard: React.FC<NFTCardProps> = ({
     <Card className="w-[258px]">
       <div
         className="hover:cursor-pointer"
-        onClick={() => router.push(`/assets/${aigcAddress}/${tokenId}/new`)}
+        onClick={() => router.push(`/assets/${nftContract}/${tokenId}/new`)}
       >
         <div className="flex py-4 px-6 justify-between items-center">
-          {is7007Token(aigcAddress) && <span>7007 Genesis NFT</span>}
-          {!is7007Token(aigcAddress) && <span>DATE</span>}
+          {is7007Token(nftContract) && <span>7007 Genesis NFT</span>}
+          {!is7007Token(nftContract) && <span>DATE</span>}
           {modelName && (
             <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
               {modelName}
@@ -145,101 +224,34 @@ const NFTCard: React.FC<NFTCardProps> = ({
         </div>
 
         <figure>
-          {metadataIsLoading ? (
-            <div className="flex w-full h-[258px] justify-center items-center">
-              <span className="loading loading-spinner loading-lg"></span>
-            </div>
-          ) : animationUrl ? (
-            <div className="max-h-[254px] overflow-hidden">
-              <iframe src={animationUrl} width={258} height={258} />
-            </div>
-          ) : (
-            metadata.image && (
-              <img
-                src={metadata.image}
-                alt={metadata.name}
-                className="w-full object-cover aspect-square"
-              />
-            )
-          )}
+          <NFTCoverAsset metadata={metadata} />
         </figure>
 
         <div className="card-body flex-grow gap-2">
-          <h3 className="heading-md">{metadata.name}</h3>
-          <p className="pb-4">{metadata.description}</p>
+          <h3 className="heading-md">{metadata?.name}</h3>
+          <p className="pb-4">{metadata?.description}</p>
 
           {listing && !isOwner && (
             <>
               <div className="pb-2 flex flex-row justify-between items-baseline">
                 <span className="heading-md">
-                  {decimals
-                    ? formatUnits(listing.pricePerToken, decimals)
+                  {decimals?.result
+                    ? formatUnits(listing.pricePerToken, decimals.result)
                     : formatEther(listing.pricePerToken)}{" "}
-                  {symbol ? symbol : "ETH"}
+                  {symbol?.result ? symbol.result : "ETH"}
                 </span>
                 <span className="text-sm">
                   {formatDaysLeft(Number(listing.endTimestamp) * 1000)}
                 </span>
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (!isConnected || !connectedWallet || !chainId) {
-                    openConnectModal?.();
-                    return;
-                  }
-
-                  const marketplaceV3 = getContractAddress(
-                    "MarketplaceV3",
-                    chainId
-                  );
-                  if (!marketplaceV3) return;
-
-                  setBuyInitialized(true);
-                  const args: [bigint, Address, bigint, Address, bigint] = [
-                    listing.listingId,
-                    connectedWallet,
-                    listing.quantity,
-                    listing.currency,
-                    listing.pricePerToken,
-                  ];
-                  console.debug(args);
-                  buyNft(
-                    {
-                      address: marketplaceV3,
-                      value:
-                        listing.currency === NATIVE_TOKEN_ADDRESS
-                          ? listing.pricePerToken
-                          : undefined,
-                      args,
-                    },
-                    {
-                      onError(error) {
-                        console.debug("buyNft error", error);
-                        setBuyInitialized(false);
-                      },
-                    }
-                  );
-                }}
-                disabled={buyInitialized}
-                className="btn btn-primary"
-              >
-                {buyInitialized ? (
-                  <>
-                    <span className="loading loading-spinner"></span>
-                    loading
-                  </>
-                ) : (
-                  "Buy Now"
-                )}
-              </button>
+              <BuyButton listing={listing} />
             </>
           )}
           {isOwner && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onListingNFT?.({ address: aigcAddress, tokenId, metadata });
+                onListingNFT?.({ address: nftContract, tokenId, metadata });
               }}
               className="btn btn-primary"
               disabled={!!listing}
@@ -282,23 +294,23 @@ const NFTCard: React.FC<NFTCardProps> = ({
             <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
               <div>Contract Address</div>
               <a
-                href={`https://sepolia.etherscan.io/address/${aigcAddress}`}
+                href={`https://sepolia.etherscan.io/address/${nftContract}`}
                 className="text-primary overflow-hidden"
                 target="_blank"
               >
-                {concatAddress(aigcAddress)}
+                {concatAddress(nftContract)}
               </a>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
               <div>Token ID</div>
-              <div>{tokenId}</div>
+              <div>{tokenId.toString()}</div>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
               <div>Link</div>
               <a
-                href={openseaUrl(aigcAddress, tokenId as string)}
+                href={openseaUrl(nftContract, tokenId.toString())}
                 className="text-primary overflow-hidden"
                 target="_blank"
               >

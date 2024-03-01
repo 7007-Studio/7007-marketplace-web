@@ -52,8 +52,6 @@ export default function Detail() {
 
   const [modelName, ownerOf, tokenUri] = aigcData || [];
 
-  // TODO: find creator of the token
-
   useEffect(() => {
     if (!tokenUri?.result) return;
 

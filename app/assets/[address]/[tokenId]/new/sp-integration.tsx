@@ -118,6 +118,8 @@ export default function SPIntegration({
     return null;
   }
 
+  console.debug("ipId", ipId);
+
   return (
     <div>
       {!isRegistered ? (
@@ -180,7 +182,10 @@ export default function SPIntegration({
                     if (!licenseRegistry) {
                       return;
                     }
-                    setListingLicense?.({ address: licenseRegistry, tokenId });
+                    setListingLicense?.({
+                      address: licenseRegistry,
+                      tokenId: BigInt(l.id),
+                    });
                   }}
                   className="btn btn-primary"
                 >

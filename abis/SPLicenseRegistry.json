@@ -345,6 +345,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "imageUrl",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       { "internalType": "address", "name": "account", "type": "address" },
       { "internalType": "address", "name": "operator", "type": "address" }

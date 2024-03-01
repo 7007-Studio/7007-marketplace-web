@@ -29,8 +29,8 @@ const Marketplace = ({
             {allValidListings?.map((l) => (
               <NFTCard
                 key={l.listingId}
-                aigcAddress={l.assetContract}
-                tokenId={l.tokenId.toString()}
+                nftContract={l.assetContract}
+                tokenId={l.tokenId}
                 listing={l}
               />
             ))}

@@ -67,7 +67,7 @@ const Collected = ({
             {tokenIds.map((id) => (
               <NFTCard
                 key={id}
-                aigcAddress={aigcAddress}
+                nftContract={aigcAddress}
                 tokenId={id.toString()}
                 onListingNFT={setListingNFT}
                 onConnectToSP={() => {

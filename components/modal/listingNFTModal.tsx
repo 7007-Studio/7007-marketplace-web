@@ -1,8 +1,13 @@
 import React, { RefObject, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
-import { Address, parseEther } from "viem";
+import {
+  UseWriteContractParameters,
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
+import { Abi, Address, erc721Abi, parseEther } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 import { NATIVE_TOKEN_ADDRESS } from "@/constants";
@@ -10,15 +15,17 @@ import { getContractAddress } from "@/helpers";
 import {
   useReadAigcGetApproved,
   useWriteAigcApprove,
+  useWriteAigcSetApprovalForAll,
   useWriteMarketplaceV3CreateListing,
 } from "@/generated";
 import { Metadata } from "@/types";
 
 import TextInput from "../textInput";
+import { WriteContractVariables } from "wagmi/query";
 
 export interface ListingNFT {
   address: Address;
-  tokenId: string | number;
+  tokenId: bigint;
   maxQuantity?: number;
   metadata?: Partial<Metadata>;
 }
@@ -71,11 +78,12 @@ const ListingNFTModal = React.forwardRef(
 
       if (!approvedListing) {
         console.debug("submit data", data);
-        // const approveData = ;
         approveListing(
           {
-            address: listingNFT?.address,
-            args: [marketplaceV3, BigInt(listingNFT?.tokenId)],
+            address: listingNFT?.address as Address,
+            abi: erc721Abi,
+            functionName: "setApprovalForAll",
+            args: [marketplaceV3, true],
           },
           {
             onError(error) {
@@ -98,7 +106,8 @@ const ListingNFTModal = React.forwardRef(
 
     // write contracts
     const { writeContract: approveListing, data: approveTx } =
-      useWriteAigcApprove();
+      useWriteContract();
+    // useWriteAigcSetApprovalForAll();
 
     const { writeContract: createListing, data: createListingTx } =
       useWriteMarketplaceV3CreateListing();
@@ -131,27 +140,38 @@ const ListingNFTModal = React.forwardRef(
 
     function createListingWrapper(data: IFormListNFTInput) {
       if (!listingNFT) return;
+      console.debug("listingNFT", listingNFT);
 
       const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
       if (!marketplaceV3) return;
 
+      const createListingArgsTuple: {
+        assetContract: Address;
+        tokenId: bigint;
+        quantity: bigint;
+        currency: Address;
+        pricePerToken: bigint;
+        startTimestamp: bigint;
+        endTimestamp: bigint;
+        reserved: boolean;
+      } = {
+        assetContract: listingNFT.address,
+        tokenId: BigInt(listingNFT.tokenId),
+        quantity: BigInt(data.quantity || 1),
+        currency: NATIVE_TOKEN_ADDRESS,
+        pricePerToken: parseEther(data.price),
+        startTimestamp: BigInt(Math.round(Date.now() / 1000)),
+        endTimestamp: BigInt(
+          Math.round(Date.now() / 1000) + data.duration * 24 * 60 * 60
+        ),
+        reserved: false,
+      };
+
+      console.debug("createListingArgsTuple", createListingArgsTuple);
       createListing(
         {
           address: marketplaceV3,
-          args: [
-            {
-              assetContract: listingNFT.address,
-              tokenId: BigInt(listingNFT.tokenId),
-              quantity: BigInt(data.quantity || 1),
-              currency: NATIVE_TOKEN_ADDRESS,
-              pricePerToken: parseEther(data.price),
-              startTimestamp: BigInt(Math.round(Date.now() / 1000)),
-              endTimestamp: BigInt(
-                Math.round(Date.now() / 1000) + data.duration * 24 * 60 * 60
-              ),
-              reserved: false,
-            },
-          ],
+          args: [createListingArgsTuple],
         },
         {
           onError(error) {
