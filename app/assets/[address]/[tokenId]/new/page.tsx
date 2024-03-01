@@ -6,7 +6,7 @@ import axios from "axios";
 import { Metadata } from "@/types";
 import { concatAddress, openseaUrl } from "@/helpers";
 import { useAccount, useReadContracts } from "wagmi";
-import { Address, isAddressEqual, isAddressEqual } from "viem";
+import { Address, isAddressEqual } from "viem";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
 import Card from "@/components/card";
 import { useParams, useRouter } from "next/navigation";
