@@ -71,16 +71,19 @@ const ListingNFTModal = React.forwardRef(
 
       if (!approvedListing) {
         console.debug("submit data", data);
-        const approveData = {
-          address: listingNFT?.address,
-          args: [marketplaceV3, BigInt(listingNFT?.tokenId)],
-        };
-        approveListing(approveData, {
-          onError(error) {
-            console.debug("approveListing onError", error);
-            setListInitialized(false);
+        // const approveData = ;
+        approveListing(
+          {
+            address: listingNFT?.address,
+            args: [marketplaceV3, BigInt(listingNFT?.tokenId)],
           },
-        });
+          {
+            onError(error) {
+              console.debug("approveListing onError", error);
+              setListInitialized(false);
+            },
+          }
+        );
       } else {
         createListingWrapper(data);
       }

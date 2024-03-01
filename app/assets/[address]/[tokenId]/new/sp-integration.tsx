@@ -113,6 +113,7 @@ export default function SPIntegration({
     fetchTransferBatchEvents();
   }, [connectedWallet, chainId]);
 
+  console.debug("SPIntegration");
   if (isRegistered === undefined) {
     return null;
   }
