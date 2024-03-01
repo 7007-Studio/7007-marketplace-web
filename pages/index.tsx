@@ -100,7 +100,6 @@ export default function Main() {
         {currentTab === TabState.Created && deployedAigc && (
           <Created
             aigcAddress={deployedAigc}
-            listingNFTModalRef={listingNFTModalRef}
             setListingNFT={(nft) => {
               setListingNFT(nft);
               listingNFTModalRef.current?.showModal();
@@ -112,7 +111,6 @@ export default function Main() {
         {currentTab === TabState.Collected && deployedAigc && (
           <Collected
             aigcAddress={deployedAigc}
-            listingNFTModalRef={listingNFTModalRef}
             setListingNFT={(nft) => {
               setListingNFT(nft);
               listingNFTModalRef.current?.showModal();
