@@ -87,7 +87,6 @@ export default function SPIntegration({
         },
         fromBlock: BigInt(5079109),
       });
-      console.debug(logs);
 
       const results = (
         logs as unknown as { args: { id: bigint; value: bigint } }[]

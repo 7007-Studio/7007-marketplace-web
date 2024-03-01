@@ -87,7 +87,7 @@ const Collected = ({
               <NFTCard
                 key={id}
                 nftContract={aigcAddress}
-                tokenId={id.toString()}
+                tokenId={BigInt(id)}
                 onListingNFT={setListingNFT}
                 onConnectToSP={() => {
                   connectToSPModalRef.current?.showModal();

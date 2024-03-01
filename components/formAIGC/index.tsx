@@ -121,7 +121,7 @@ export default function FormAIGC({
               onClick={() => {
                 setListingNFT({
                   address: aigcAddress,
-                  tokenId: mintedTokenId,
+                  tokenId: BigInt(mintedTokenId),
                   metadata: { name: aigcContent.name },
                 });
                 listingNFTModalRef.current?.showModal();
