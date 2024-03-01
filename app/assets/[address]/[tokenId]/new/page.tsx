@@ -115,7 +115,7 @@ export default function Detail() {
                   {metadata && (
                     <div>
                       <p className="pb-4">{metadata.description}</p>
-                      {metadata?.attributes.map((attr) => (
+                      {metadata?.attributes?.map((attr) => (
                         <div
                           key={attr.trait_type}
                           className="grid grid-flow-col grid-cols-2 border-b-1"
