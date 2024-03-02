@@ -39,7 +39,7 @@ const MintStep = ({
   const [mintInitialized, setMintInitialized] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
 
-  const { isConnected } = useAccount();
+  const { address: connectedWallet, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   const { data: modelName } = useReadAigcModelName({
@@ -50,13 +50,12 @@ const MintStep = ({
   });
 
   // write contracts
-
-  const { writeContract: mintAIGC, data: mintTx } = useWriteAigcMint();
+  const { writeContract: mintAIGC } = useWriteAigcMint();
 
   // contract events
   useWatchAigcTransferEvent({
     address: aigcAddress,
-    args: { to: aigtAddress },
+    args: { to: connectedWallet },
     onLogs: () => {
       onMintSuccess(String(tokenId));
     },
