@@ -22,7 +22,6 @@ import {
 } from "@story-protocol/react";
 import { getContractAddress } from "@/helpers";
 import { ListingNFT } from "@/components/modal/listingNFTModal";
-import { useReadContract } from "wagmi";
 
 async function getLicensesBelongToIpId(
   client: PublicClient,
@@ -218,7 +217,7 @@ export default function SPIntegration({
       ) : (
         ipId && (
           <button
-            className="btn btn-primary max-w-sm"
+            className="btn btn-primary max-w-sm my-2"
             onClick={() => {
               mintLicense({
                 args: [
@@ -239,11 +238,11 @@ export default function SPIntegration({
       {licenses && (
         <div>
           <h3 className="heading-md">Licenses</h3>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-y-4">
             {licenses.map((l) => (
-              <div key={l.id} className="flex flex-row items-baseline">
+              <div key={l.id} className="flex flex-row items-baseline gap-x-2">
                 <div>
-                  License {l.id}: {l.value}
+                  License #{l.id}: {l.value}
                 </div>
                 <button
                   onClick={(e) => {

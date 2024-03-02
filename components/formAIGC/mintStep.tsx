@@ -34,7 +34,6 @@ const MintStep = ({
   setAigcContent,
   onMintSuccess,
 }: MintStepProps) => {
-  console.log(aigcContent);
   const editPromptModalRef = useRef<HTMLDialogElement>(null);
 
   const [mintInitialized, setMintInitialized] = useState(false);
