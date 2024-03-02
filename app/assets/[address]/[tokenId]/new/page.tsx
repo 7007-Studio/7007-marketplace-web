@@ -18,6 +18,8 @@ import Buy from "./buy";
 import SPIntegration from "./sp-integration";
 import RemixModal from "@/components/modal/remixModal";
 import { AIGCContent } from "@/components/formAIGC";
+import { getSrc } from "@livepeer/react/external";
+import * as Player from "@livepeer/react/player";
 
 export default function Detail() {
   const router = useRouter();
@@ -110,6 +112,31 @@ export default function Detail() {
                   <div className="flex w-full h-[258px] justify-center items-center">
                     <span className="loading loading-spinner loading-lg"></span>
                   </div>
+                ) : animationUrl?.startsWith("https://vod") ? (
+                  <Player.Root
+                    src={getSrc({
+                      type: "vod",
+                      meta: {
+                        playbackPolicy: null,
+                        source: [
+                          {
+                            hrn: "HLS (TS)",
+                            type: "html5/application/vnd.apple.mpegurl",
+                            url: animationUrl,
+                          },
+                        ],
+                      },
+                    })}
+                    autoPlay
+                    volume={0}
+                  >
+                    <Player.Container>
+                      <Player.Video
+                        title="Agent 327"
+                        style={{ height: "100%", width: "100%" }}
+                      />
+                    </Player.Container>
+                  </Player.Root>
                 ) : animationUrl ? (
                   <div className="max-h-[254px] overflow-hidden">
                     <iframe src={animationUrl} width={258} height={258} />

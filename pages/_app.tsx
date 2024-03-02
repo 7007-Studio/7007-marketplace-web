@@ -20,6 +20,7 @@ import {
   sepolia,
 } from "wagmi/chains";
 
+
 const queryClient = new QueryClient();
 
 import Layout from "@/components/layout";

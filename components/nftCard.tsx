@@ -24,6 +24,10 @@ import { useReadAigcModelName } from "@/generated";
 import { useRouter } from "next/navigation";
 import BuyButton from "./buy-button";
 
+// livepeer
+import { getSrc } from "@livepeer/react/external";
+import * as Player from "@livepeer/react/player";
+
 function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
   if (!metadata) {
     return (
@@ -34,10 +38,36 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
   }
 
   if (metadata?.animation_url) {
+    // if animation url starts with https:// do the following
+    if (!metadata.animation_url.startsWith("https://vod")) {
+      return (
+        <div className="max-h-[258px] overflow-hidden">
+          <iframe src={metadata.animation_url} width={258} height={258} />
+        </div>
+      );
+    }
+    const vodSource = {
+      type: "vod",
+      meta: {
+        playbackPolicy: null,
+        source: [
+          {
+            hrn: "HLS (TS)",
+            type: "html5/application/vnd.apple.mpegurl",
+            url: metadata.animation_url,
+          },
+        ],
+      },
+    };
     return (
-      <div className="max-h-[258px] overflow-hidden">
-        <iframe src={metadata.animation_url} width={258} height={258} />
-      </div>
+      <Player.Root src={getSrc(vodSource)} autoPlay volume={0}>
+        <Player.Container>
+          <Player.Video
+            title="Agent 327"
+            style={{ height: "100%", width: "100%" }}
+          />
+        </Player.Container>
+      </Player.Root>
     );
   }
 
