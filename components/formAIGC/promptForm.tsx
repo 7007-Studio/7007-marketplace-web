@@ -14,10 +14,12 @@ export interface IFormAIGCInput {
 }
 const PromptForm = ({
   submitText = "Generate",
+  modelName = "Genesis Model",
   defaultValues,
   onArtGenerated,
 }: {
   submitText?: string;
+  modelName?: string;
   defaultValues?: DefaultValues<IFormAIGCInput>;
   onArtGenerated: (aigcContent: AIGCContent) => void;
 }) => {
@@ -89,7 +91,7 @@ const PromptForm = ({
               <span className="label-text">Model</span>
             </div>
             <select className="select w-full" value={1} onChange={(e) => {}}>
-              <option value={1}>Genesis Model</option>
+              <option value={1}>{modelName}</option>
             </select>
           </label>
         </div>

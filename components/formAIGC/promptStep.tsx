@@ -3,6 +3,7 @@ import { useAccount } from "wagmi";
 
 import {
   useReadAigcFactoryDeployedAigCs,
+  useReadAigcModelName,
   useReadAigcTokenId,
 } from "@/generated";
 import AigcNftCreated from "@/components/model/aigcNftCreated";
@@ -23,6 +24,10 @@ const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
   const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
     address: aigcFactory,
     args: modelIndex ? [BigInt(modelIndex)] : undefined,
+  });
+
+  const { data: modelName } = useReadAigcModelName({
+    address: aigcAddress,
   });
 
   const { data: lastTokenId } = useReadAigcTokenId({
@@ -47,6 +52,7 @@ const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
       <div className="py-20 px-40 max-w-[1106px] mx-auto bg-white">
         <PromptForm
           submitText="Prompt for free"
+          modelName={modelName || "Genesis Model"}
           onArtGenerated={onArtGenerated}
         />
       </div>

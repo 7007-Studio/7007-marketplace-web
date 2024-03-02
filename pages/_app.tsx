@@ -10,7 +10,15 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, WagmiProvider } from "wagmi";
-import { mainnet, sepolia } from "wagmi/chains";
+import {
+  arbitrumSepolia,
+  auroraTestnet,
+  baseSepolia,
+  bscTestnet,
+  lineaTestnet,
+  mainnet,
+  sepolia,
+} from "wagmi/chains";
 
 const queryClient = new QueryClient();
 
@@ -19,12 +27,29 @@ import Layout from "@/components/layout";
 const wagmiConfig = getDefaultConfig({
   appName: "7007 Studio",
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
-  chains: [mainnet, sepolia],
+  chains: [
+    sepolia,
+    mainnet,
+    arbitrumSepolia,
+    baseSepolia,
+    bscTestnet,
+    auroraTestnet,
+    lineaTestnet,
+  ],
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(
-      `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+    [mainnet.id]: http(
+      `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
     ),
+    [sepolia.id]: http(
+      `https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
+    ),
+    [baseSepolia.id]: http(),
+    [lineaTestnet.id]: http(
+      `https://linea-goerli.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
+    ),
+    [arbitrumSepolia.id]: http(),
+    [auroraTestnet.id]: http(),
+    [bscTestnet.id]: http(),
   },
 });
 

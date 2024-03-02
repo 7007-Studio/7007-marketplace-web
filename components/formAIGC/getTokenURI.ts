@@ -15,6 +15,7 @@ const ipfsClient = create({
 });
 
 export default async function getTokenURI(
+  modelName: string,
   name: string,
   prompt: string,
   imageUrl?: string,
@@ -45,7 +46,7 @@ export default async function getTokenURI(
       },
       {
         trait_type: "model",
-        value: "Genesis Model",
+        value: modelName,
       },
     ],
   };

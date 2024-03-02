@@ -1,15 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ethers } from "ethers";
 import { Address } from "viem";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount } from "wagmi";
 
 import {
-  useReadAigcCostToken,
   useReadAigcModelName,
   useReadAigcTokenId,
   useWatchAigcTransferEvent,
   useWriteAigcMint,
-  useWriteAigtApprove,
 } from "@/generated";
 import generateAigcContent from "@/helpers/generateAigcContent";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
@@ -38,8 +36,6 @@ const MintStep = ({
 }: MintStepProps) => {
   const editPromptModalRef = useRef<HTMLDialogElement>(null);
 
-  const [approvedSpending, setApprovedSpending] = useState(true);
-  const [approveInitialized, setApproveInitialized] = useState(false);
   const [mintInitialized, setMintInitialized] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
 
@@ -52,68 +48,19 @@ const MintStep = ({
   const { data: tokenId } = useReadAigcTokenId({
     address: aigcAddress,
   });
-  const { data: mintCostToken } = useReadAigcCostToken({
-    address: aigcAddress,
-  });
 
   // write contracts
-  const { writeContract: approveSpendingAIGT, data: approveTx } =
-    useWriteAigtApprove();
+
   const { writeContract: mintAIGC, data: mintTx } = useWriteAigcMint();
 
   // contract events
   useWatchAigcTransferEvent({
     address: aigcAddress,
-    onLogs: (log) => {
+    args: { to: aigtAddress },
+    onLogs: () => {
       onMintSuccess(String(tokenId));
     },
   });
-
-  // wait for tx confirmation
-  const approveResult = useWaitForTransactionReceipt({
-    hash: approveTx,
-  });
-  useEffect(() => {
-    console.debug("approveResult refreshed");
-    if (approveResult.isSuccess) {
-      setApprovedSpending(true);
-      setApproveInitialized(false);
-    }
-  }, [approveResult]);
-
-  // const mintResult = useWaitForTransactionReceipt({
-  //   hash: mintTx,
-  // });
-  // useEffect(() => {
-  //   console.debug("mintResult refreshed");
-  //   if (mintResult.isSuccess) {
-  //     setMintInitialized(false);
-  //   }
-  // }, [mintResult]);
-
-  const onApprove = () => {
-    if (!isConnected) {
-      openConnectModal?.();
-      return;
-    }
-
-    if (mintCostToken === undefined) {
-      return;
-    }
-
-    setApproveInitialized(true);
-    approveSpendingAIGT(
-      {
-        address: aigtAddress,
-        args: [aigcAddress, mintCostToken],
-      },
-      {
-        onError(error) {
-          setApproveInitialized(false);
-        },
-      }
-    );
-  };
 
   const onMint = async () => {
     if (!isConnected) {
@@ -129,6 +76,7 @@ const MintStep = ({
 
     const { name, prompt, imageUrl, audioUrl } = aigcContent;
     const { ipfsLinkMetadata, metadata } = await getTokenURI(
+      modelName,
       name,
       prompt,
       imageUrl,
@@ -209,30 +157,12 @@ const MintStep = ({
             >
               Regenerate
             </button>
-            {!approvedSpending && (
+
+            {
               <button
                 className="btn btn-primary"
                 type="button"
-                disabled={approveInitialized}
-                onClick={() => {
-                  onApprove();
-                }}
-              >
-                {approveInitialized ? (
-                  <>
-                    <span className="loading loading-spinner"></span>
-                    loading
-                  </>
-                ) : (
-                  "Approve"
-                )}
-              </button>
-            )}
-            {approvedSpending && (
-              <button
-                className="btn btn-primary"
-                type="button"
-                disabled={approveInitialized}
+                disabled={mintInitialized}
                 onClick={() => {
                   onMint();
                 }}
@@ -246,7 +176,7 @@ const MintStep = ({
                   "Mint"
                 )}
               </button>
-            )}
+            }
           </div>
         </div>
       </div>

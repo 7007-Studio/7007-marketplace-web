@@ -54,7 +54,7 @@ export default function Navbar() {
             Generate
           </button>
           <div className="max-md:hidden">
-            <ConnectButton chainStatus="none" showBalance={false} />
+            <ConnectButton showBalance={false} />
             <button
               className="md:hidden btn btn-square btn-ghost hover:text-black"
               onClick={() => setIsShowingMenu(!isShowingMenu)}
