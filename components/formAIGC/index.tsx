@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 export interface AIGCContent {
   name: string;
   prompt: string;
+  seed?: number;
   imageUrl?: string;
   audioUrl?: string;
 }

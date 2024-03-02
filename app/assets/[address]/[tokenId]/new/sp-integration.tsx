@@ -73,6 +73,7 @@ interface SPIntegrationProps {
   nftContract: Address;
   tokenId: string;
   setListingLicense?: (license: ListingNFT) => void;
+  onRemixClicked?: () => void;
 }
 
 export default function SPIntegration({
@@ -81,6 +82,7 @@ export default function SPIntegration({
   nftContract,
   tokenId,
   setListingLicense,
+  onRemixClicked,
 }: SPIntegrationProps) {
   // story protocol integration
   const [ipId, setIpId] = useState<Address>();
@@ -267,6 +269,7 @@ export default function SPIntegration({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    onRemixClicked();
                   }}
                   className="btn btn-secondary"
                 >

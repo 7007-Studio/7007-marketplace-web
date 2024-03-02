@@ -21,6 +21,7 @@ const generateAigcContent = async (
     name,
     prompt,
     imageUrl,
+    seed,
     // audioUrl
   };
 };

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useReadContracts } from "wagmi";
-import { Address, isAddressEqual } from "viem";
+import { Address, isAddressEqual, zeroAddress } from "viem";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 
@@ -16,6 +16,8 @@ import ListingNFTModal, {
 } from "@/components/modal/listingNFTModal";
 import Buy from "./buy";
 import SPIntegration from "./sp-integration";
+import RemixModal from "@/components/modal/remixModal";
+import { AIGCContent } from "@/components/formAIGC";
 
 export default function Detail() {
   const router = useRouter();
@@ -24,6 +26,9 @@ export default function Detail() {
 
   const listingNFTModalRef = useRef<HTMLDialogElement>(null);
   const [listingNFT, setListingNFT] = useState<ListingNFT>();
+
+  const remixModalRef = useRef<HTMLDialogElement>(null);
+  const [original, setOriginal] = useState<AIGCContent>();
 
   const { address: connectedWallet, chain } = useAccount();
 
@@ -65,12 +70,20 @@ export default function Detail() {
       if (metadata.animation_url) {
         setAnimationUrl(metadata.animation_url);
       }
+
+      setOriginal({
+        name: metadata?.name || "",
+        prompt:
+          metadata?.attributes?.find(
+            (a: { trait_type: string; value: string }) =>
+              a.trait_type === "prompt"
+          )?.value || "",
+        imageUrl: metadata?.image,
+      });
     };
 
     fetchMetadata();
   }, [tokenUri]);
-
-  // TODO: add "remix" functionality (mintLicense, linkIpToParent)
 
   const isOwner =
     ownerOf?.result &&
@@ -187,6 +200,9 @@ export default function Detail() {
                   setListingNFT(license);
                   listingNFTModalRef.current?.showModal();
                 }}
+                onRemixClicked={() => {
+                  remixModalRef?.current?.showModal();
+                }}
               />
             )}
           </div>
@@ -197,6 +213,15 @@ export default function Detail() {
         listingNFT={listingNFT}
         // listingSuccess={() => {TODO: refresh the card state}}
       />
+      {original && (
+        <RemixModal
+          ref={remixModalRef}
+          modelIndex={1}
+          aigtAddress={zeroAddress}
+          aigcAddress={nftContract as Address}
+          original={original}
+        />
+      )}
     </>
   );
 }

@@ -18,6 +18,7 @@ export async function getTokenURI(
   modelName: string,
   name: string,
   prompt: string,
+  seed?: number,
   imageUrl?: string,
   audio?: string
 ) {
@@ -47,6 +48,10 @@ export async function getTokenURI(
       {
         trait_type: "model",
         value: modelName,
+      },
+      typeof seed === "number" && {
+        trait_type: "seed",
+        value: seed,
       },
     ],
   };

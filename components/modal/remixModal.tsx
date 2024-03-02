@@ -7,23 +7,12 @@ export interface RemixModalProp {
   modelIndex: number | string;
   aigtAddress: Address;
   aigcAddress: Address;
-  aigcContent: AIGCContent;
-  setAigcContent: (aigcContent?: AIGCContent) => void;
-  onMintSuccess: (tokenId: string | number) => void;
+  original: AIGCContent;
 }
 
 const RemixModal = React.forwardRef(
-  (
-    {
-      modelIndex,
-      aigtAddress,
-      aigcAddress,
-      aigcContent,
-      setAigcContent,
-      onMintSuccess,
-    }: RemixModalProp,
-    ref
-  ) => {
+  ({ modelIndex, aigtAddress, aigcAddress, original }: RemixModalProp, ref) => {
+    const [aigcContent, setAigcContent] = useState<AIGCContent>(original);
     const [mintedTokenId, setMintedTokenId] = useState<string | number>();
 
     return (
@@ -36,7 +25,9 @@ const RemixModal = React.forwardRef(
           aigtAddress={aigtAddress}
           aigcAddress={aigcAddress}
           aigcContent={aigcContent}
-          setAigcContent={setAigcContent}
+          setAigcContent={(a) => {
+            if (a) setAigcContent(a);
+          }}
           onMintSuccess={(tokenId) => {
             setMintedTokenId(tokenId);
           }}

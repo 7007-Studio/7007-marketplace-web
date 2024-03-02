@@ -34,6 +34,7 @@ const MintStep = ({
   setAigcContent,
   onMintSuccess,
 }: MintStepProps) => {
+  console.log(aigcContent);
   const editPromptModalRef = useRef<HTMLDialogElement>(null);
 
   const [mintInitialized, setMintInitialized] = useState(false);
@@ -73,11 +74,12 @@ const MintStep = ({
 
     setMintInitialized(true);
 
-    const { name, prompt, imageUrl, audioUrl } = aigcContent;
+    const { name, prompt, seed, imageUrl, audioUrl } = aigcContent;
     const { ipfsLinkMetadata, metadata } = await getTokenURI(
       modelName || "Genesis Model",
       name,
       prompt,
+      seed,
       imageUrl,
       audioUrl
     );
