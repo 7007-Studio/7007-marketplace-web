@@ -31,7 +31,6 @@ export default function Detail() {
 
   const remixModalRef = useRef<HTMLDialogElement>(null);
   const [original, setOriginal] = useState<AIGCContent>();
-  const [licenseId, setLicenseId] = useState<bigint>();
 
   const { address: connectedWallet, chain } = useAccount();
 
@@ -116,6 +115,7 @@ export default function Detail() {
                   <Player.Root
                     src={getSrc({
                       type: "vod",
+                      // @ts-ignore
                       meta: {
                         playbackPolicy: null,
                         source: [
@@ -228,8 +228,7 @@ export default function Detail() {
                   setListingNFT(license);
                   listingNFTModalRef.current?.showModal();
                 }}
-                onRemixClicked={(lId) => {
-                  setLicenseId(lId);
+                onRemixClicked={() => {
                   remixModalRef?.current?.showModal();
                 }}
               />
@@ -247,9 +246,8 @@ export default function Detail() {
           ref={remixModalRef}
           modelIndex={1}
           aigtAddress={zeroAddress}
-          nftContract={nftContract as Address}
+          aigcAddress={nftContract as Address}
           original={original}
-          licenseId={licenseId}
         />
       )}
     </>
