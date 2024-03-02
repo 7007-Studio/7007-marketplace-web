@@ -76,7 +76,7 @@ const MintStep = ({
 
     const { name, prompt, imageUrl, audioUrl } = aigcContent;
     const { ipfsLinkMetadata, metadata } = await getTokenURI(
-      modelName,
+      modelName || "Genesis Model",
       name,
       prompt,
       imageUrl,
