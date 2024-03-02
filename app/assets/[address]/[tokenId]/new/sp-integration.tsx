@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Address, stringToHex, zeroAddress } from "viem";
+import {
+  Address,
+  PublicClient,
+  isAddress,
+  isAddressEqual,
+  stringToHex,
+  zeroAddress,
+} from "viem";
 import SPLicenseRegistryAbi from "@/abis/SPLicenseRegistry.json";
 
 import { getPublicClient } from "@/client";
@@ -14,6 +21,50 @@ import {
 } from "@story-protocol/react";
 import { getContractAddress } from "@/helpers";
 import { ListingNFT } from "@/components/modal/listingNFTModal";
+import { useReadContract } from "wagmi";
+
+async function getLicensesBelongToIpId(
+  client: PublicClient,
+  licenseRegistry: Address,
+  ipId: Address,
+  licensesOwned: { id: string; value: number }[]
+) {
+  return await Promise.allSettled(
+    licensesOwned.map(async (l: { id: string; value: number }) => {
+      const licensorIpId = await client.readContract({
+        address: licenseRegistry,
+        abi: SPLicenseRegistryAbi,
+        functionName: "licensorIpId",
+        args: [BigInt(l.id)],
+      });
+
+      return {
+        ...l,
+        isValid:
+          typeof licensorIpId === "string" &&
+          isAddress(licensorIpId) &&
+          isAddressEqual(ipId, licensorIpId),
+      };
+    })
+  ).then((results) => {
+    const isFulfilled = (
+      input: PromiseSettledResult<{
+        id: string;
+        value: number;
+        isValid: boolean;
+      }>
+    ): input is PromiseFulfilledResult<{
+      id: string;
+      value: number;
+      isValid: boolean;
+    }> => input.status === "fulfilled";
+
+    return results
+      .filter(isFulfilled)
+      .map((result) => result.value)
+      .filter((l) => l.isValid);
+  });
+}
 
 interface SPIntegrationProps {
   chainId: number;
@@ -31,7 +82,6 @@ export default function SPIntegration({
   setListingLicense,
 }: SPIntegrationProps) {
   // story protocol integration
-  const policyId = BigInt(3);
   const [ipId, setIpId] = useState<Address>();
 
   const { data: _ipId } = useReadIpAssetRegistryIpId({
@@ -42,8 +92,8 @@ export default function SPIntegration({
   });
 
   useEffect(() => {
-    console.debug("_idId fetched", _ipId);
     if (_ipId) {
+      console.debug("_idId fetched", _ipId);
       setIpId(_ipId);
     }
   }, [_ipId]);
@@ -53,10 +103,12 @@ export default function SPIntegration({
       args: [ipId as Address],
     });
   useEffect(() => {
-    console.debug("refetchIsRegistered ipId", ipId);
+    if (!ipId) return;
+    console.debug("refetchIsRegistered using ipId:", ipId);
     refetchIsRegistered();
   }, [ipId, refetchIsRegistered]);
 
+  const { writeContract: registerRootIp } = useRegisterRootIp();
   useWatchRootIpRegistered({
     onLogs(logs) {
       const events = logs as unknown as {
@@ -66,17 +118,41 @@ export default function SPIntegration({
     },
   });
 
-  const { writeContract: registerRootIp } = useRegisterRootIp();
-  const { writeContract: mintLicense } = useMintLicense();
+  // const { writeContract: mintLicense } = useMintLicense();
+  // useWatchLicenseMinted({
+  //   onLogs(logs) {
+  //     const licensesBelongToIpId = await getLicensesBelongToIpId(
+  //       client,
+  //       licenseRegistry,
+  //       ipId,
+  //       licensesOwned
+  //     );
+
+  //     setLicenses(licensesBelongToIpId);
+  //   }
+  // })
 
   // Check if the token has licenses minted
   const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
-  useEffect(() => {
-    if (!connectedWallet || !chainId) return;
 
-    const licenseRegistry = getContractAddress("SPLicenseRegistry", chainId);
+  useReadContract({
+    address: getContractAddress("SPLicenseRegistry", chainId),
+    abi: SPLicenseRegistryAbi,
+    functionName: "licensorIpId",
+    args: [connectedWallet],
+  });
+
+  useEffect(() => {
+    if (!connectedWallet || !chainId || !ipId) return;
+
     const fetchTransferBatchEvents = async () => {
-      const client = getPublicClient(chainId);
+      const client: PublicClient = getPublicClient(chainId);
+      const licenseRegistry = getContractAddress("SPLicenseRegistry", chainId);
+
+      if (!client || !licenseRegistry) {
+        return;
+      }
+
       const logs = await client.getContractEvents({
         address: licenseRegistry,
         abi: SPLicenseRegistryAbi,
@@ -85,10 +161,10 @@ export default function SPIntegration({
           from: zeroAddress,
           to: connectedWallet,
         },
-        fromBlock: BigInt(5079109),
+        fromBlock: 5079109n,
       });
 
-      const results = (
+      const licensesOwned = (
         logs as unknown as { args: { id: bigint; value: bigint } }[]
       ).reduce((cur: { id: string; value: number }[], log) => {
         const {
@@ -107,17 +183,21 @@ export default function SPIntegration({
         return cur;
       }, []);
 
-      setLicenses(results);
+      const licensesBelongToIpId = await getLicensesBelongToIpId(
+        client,
+        licenseRegistry,
+        ipId,
+        licensesOwned
+      );
+
+      setLicenses(licensesBelongToIpId);
     };
     fetchTransferBatchEvents();
-  }, [connectedWallet, chainId]);
+  }, [connectedWallet, chainId, ipId]);
 
-  console.debug("SPIntegration");
   if (isRegistered === undefined) {
     return null;
   }
-
-  console.debug("ipId", ipId);
 
   return (
     <div>
@@ -127,7 +207,7 @@ export default function SPIntegration({
           onClick={() => {
             registerRootIp({
               args: [
-                policyId,
+                3n, // policyId
                 nftContract as Address, // nftContract
                 BigInt(tokenId),
                 "7007 AIGC", //ipName,
@@ -146,9 +226,9 @@ export default function SPIntegration({
             onClick={() => {
               mintLicense({
                 args: [
-                  policyId,
+                  8n, // policyId,
                   ipId,
-                  BigInt(1), // amount,
+                  1n, // amount,
                   connectedWallet, // minter,
                   "0x", // royaltyContext
                 ],
@@ -197,6 +277,4 @@ export default function SPIntegration({
       )}
     </div>
   );
-
-  return null;
 }

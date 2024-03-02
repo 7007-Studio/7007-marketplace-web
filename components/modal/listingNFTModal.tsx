@@ -70,14 +70,14 @@ const ListingNFTModal = React.forwardRef(
       const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
       if (!marketplaceV3) return;
 
-      setListInitialized(true);
-
       if (!listingNFT) {
         return;
       }
 
       if (!approvedListing) {
         console.debug("submit data", data);
+
+        setListInitialized(true);
         approveListing(
           {
             address: listingNFT?.address as Address,
@@ -145,6 +145,8 @@ const ListingNFTModal = React.forwardRef(
       const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
       if (!marketplaceV3) return;
 
+      setListInitialized(true);
+
       const createListingArgsTuple: {
         assetContract: Address;
         tokenId: bigint;
@@ -157,7 +159,7 @@ const ListingNFTModal = React.forwardRef(
       } = {
         assetContract: listingNFT.address,
         tokenId: BigInt(listingNFT.tokenId),
-        quantity: BigInt(data.quantity || 1),
+        quantity: BigInt(data.quantity) || 1n,
         currency: NATIVE_TOKEN_ADDRESS,
         pricePerToken: parseEther(data.price),
         startTimestamp: BigInt(Math.round(Date.now() / 1000)),

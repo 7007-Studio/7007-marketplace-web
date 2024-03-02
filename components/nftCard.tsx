@@ -175,8 +175,12 @@ const NFTCard: React.FC<NFTCardProps> = ({
 
     if (isErc721 && tokenURI) {
       const fetchMetadata = async () => {
-        const res = await axios.get(tokenURI);
-        setMetadata(res.data);
+        try {
+          const res = await axios.get(tokenURI);
+          setMetadata(res.data);
+        } catch (error) {
+          console.error("Error fetching metadata via:", tokenId, tokenURI);
+        }
       };
 
       fetchMetadata();
@@ -215,7 +219,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
       >
         <div className="flex py-4 px-6 justify-between items-center">
           {is7007Token(nftContract) && <span>7007 Genesis NFT</span>}
-          {!is7007Token(nftContract) && <span>DATE</span>}
+          {!is7007Token(nftContract) && <span>&nbsp;</span>}
           {modelName && (
             <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
               {modelName}

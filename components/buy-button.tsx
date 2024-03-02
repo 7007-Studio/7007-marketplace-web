@@ -32,6 +32,7 @@ export default function BuyButton({ listing }: { listing: Listing }) {
   return (
     <button
       onClick={(e) => {
+        console.debug("buy button clicked");
         e.stopPropagation();
         if (!connectedWallet) {
           openConnectModal?.();

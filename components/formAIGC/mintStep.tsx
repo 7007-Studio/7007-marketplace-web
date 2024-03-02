@@ -105,7 +105,7 @@ const MintStep = ({
 }: MintStepProps) => {
   const editPromptModalRef = useRef<HTMLDialogElement>(null);
 
-  const [approvedSpending, setApprovedSpending] = useState(false);
+  const [approvedSpending, setApprovedSpending] = useState(true);
   const [approveInitialized, setApproveInitialized] = useState(false);
   const [mintInitialized, setMintInitialized] = useState(false);
   const [regenerating, setRegenerating] = useState(false);

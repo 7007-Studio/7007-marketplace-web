@@ -76,8 +76,6 @@ export default function Detail() {
     connectedWallet &&
     isAddressEqual(ownerOf?.result, connectedWallet as Address);
 
-  console.debug({ isOwner, chainId, nftContract, tokenId, connectedWallet });
-
   return (
     <>
       <div>
