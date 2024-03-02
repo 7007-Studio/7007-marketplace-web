@@ -1,6 +1,7 @@
-import { Address, isAddressEqual } from "viem";
+import { Address, isAddress, isAddressEqual } from "viem";
 import { Model, NFT } from "./types";
 import { Contracts } from "./contracts";
+import { SP } from "next/dist/shared/lib/utils";
 
 export function isNFT(item: any): item is NFT {
   return (item as NFT).tokenID !== undefined;
@@ -46,6 +47,16 @@ export function is7007Token(concatAddress: Address) {
   return isAddressEqual(
     concatAddress,
     "0x42537d4e19d7888d8d5a867a51911bde569d9e9d"
+  );
+}
+
+export function isSPLicenseRegistry(concatAddress: Address, chainId?: number) {
+  const SPLicenseRegistry = getContractAddress("SPLicenseRegistry", chainId);
+
+  return (
+    typeof SPLicenseRegistry === "string" &&
+    isAddress(SPLicenseRegistry) &&
+    isAddressEqual(concatAddress, SPLicenseRegistry)
   );
 }
 

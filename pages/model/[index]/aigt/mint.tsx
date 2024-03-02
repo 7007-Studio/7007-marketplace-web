@@ -12,11 +12,11 @@ import {
 } from "@/generated";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
+import { getContractAddress } from "@/helpers";
 
 export default function MintModelToken() {
   const router = useRouter();
-  const { isConnected } = useAccount();
+  const { isConnected, chainId } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { index } = router.query;
 
@@ -25,8 +25,9 @@ export default function MintModelToken() {
 
   const isMounted = useIsMounted();
 
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
   const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: index ? [BigInt(index as string)] : undefined,
   });
 

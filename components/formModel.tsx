@@ -3,16 +3,17 @@
 import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import { parseEther } from "viem";
+import { useAccount } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+
 import {
   useWatchAigcFactoryAigcCreatedEvent,
   useWriteAigcFactoryCreateAigc,
   useReadAigcFactoryModelIndexCurrent,
 } from "@/generated";
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import TextInput from "./textInput";
-import { parseEther } from "viem";
-import { useAccount } from "wagmi";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { getContractAddress } from "@/helpers";
 
 export interface IFormModelInput {
   name: string;
@@ -31,13 +32,14 @@ interface FormModelProps {
 
 export default function FormModel({ setIsGenerating }: FormModelProps) {
   const router = useRouter();
-  const { isConnected } = useAccount();
+  const { isConnected, chainId } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
   const { data: modelIndex } = useReadAigcFactoryModelIndexCurrent({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
   });
 
   const {
@@ -48,7 +50,7 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
   } = useWriteAigcFactoryCreateAigc();
 
   useWatchAigcFactoryAigcCreatedEvent({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     onLogs: (log) => {
       console.debug(log);
       // TODO: event should include model index so that we don't guess
@@ -65,11 +67,16 @@ export default function FormModel({ setIsGenerating }: FormModelProps) {
       return;
     }
 
+    if (!aigcFactory) {
+      console.error("AIGCFactory address not found");
+      return;
+    }
+
     setIsSubmitting(true);
     setIsGenerating(true);
 
     createAigc({
-      address: AIGC_FACTORY_CONTRACT_ADDRESS,
+      address: aigcFactory,
       // string memory _modelName, string memory _modelSymbol, uint256 _tokenPrice, uint256 _costToken, bytes32 _aiModelVm, uint256 _ownerReservePercent, uint96 _royalty
       args: [
         data.name,

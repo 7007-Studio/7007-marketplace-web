@@ -6,7 +6,6 @@ import {
   useReadMarketplaceV3GetAllValidListings,
   useReadMarketplaceV3TotalListings,
 } from "@/generated";
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import Tabs, { TabState } from "@/components/tabs";
 import ModelLaunchpad from "@/components/tabContent/modelLaunchpad";
@@ -57,8 +56,9 @@ export default function Main() {
   const [currentTab, setCurrentTab] = useState(TabState.Marketplace);
 
   const { chainId } = useAccount();
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
   const { data: deployedAigc } = useReadAigcFactoryDeployedAigCs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: modelIndex ? [BigInt(modelIndex)] : undefined,
   });
 

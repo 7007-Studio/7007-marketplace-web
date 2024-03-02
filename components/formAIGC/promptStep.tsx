@@ -1,11 +1,12 @@
 import { useMemo } from "react";
+import { useAccount } from "wagmi";
 
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import {
   useReadAigcFactoryDeployedAigCs,
   useReadAigcTokenId,
 } from "@/generated";
 import AigcNftCreated from "@/components/model/aigcNftCreated";
+import { getContractAddress } from "@/helpers";
 
 import { AIGCContent } from ".";
 import PromptForm from "./promptForm";
@@ -16,8 +17,11 @@ interface PromptStepProps {
 }
 
 const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
+  const { chainId } = useAccount();
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
+
   const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: modelIndex ? [BigInt(modelIndex)] : undefined,
   });
 

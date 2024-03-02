@@ -118,7 +118,7 @@ export default function SPIntegration({
     },
   });
 
-  // const { writeContract: mintLicense } = useMintLicense();
+  const { writeContract: mintLicense } = useMintLicense();
   // useWatchLicenseMinted({
   //   onLogs(logs) {
   //     const licensesBelongToIpId = await getLicensesBelongToIpId(
@@ -134,13 +134,6 @@ export default function SPIntegration({
 
   // Check if the token has licenses minted
   const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
-
-  useReadContract({
-    address: getContractAddress("SPLicenseRegistry", chainId),
-    abi: SPLicenseRegistryAbi,
-    functionName: "licensorIpId",
-    args: [connectedWallet],
-  });
 
   useEffect(() => {
     if (!connectedWallet || !chainId || !ipId) return;
@@ -158,7 +151,6 @@ export default function SPIntegration({
         abi: SPLicenseRegistryAbi,
         eventName: "TransferSingle",
         args: {
-          from: zeroAddress,
           to: connectedWallet,
         },
         fromBlock: 5079109n,
@@ -190,6 +182,7 @@ export default function SPIntegration({
         licensesOwned
       );
 
+      console.debug("licensesBelongToIpId", licensesBelongToIpId);
       setLicenses(licensesBelongToIpId);
     };
     fetchTransferBatchEvents();
@@ -207,7 +200,7 @@ export default function SPIntegration({
           onClick={() => {
             registerRootIp({
               args: [
-                3n, // policyId
+                8n, // policyId
                 nftContract as Address, // nftContract
                 BigInt(tokenId),
                 "7007 AIGC", //ipName,
@@ -269,6 +262,14 @@ export default function SPIntegration({
                   className="btn btn-primary"
                 >
                   List License
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="btn btn-secondary"
+                >
+                  Remix
                 </button>
               </div>
             ))}

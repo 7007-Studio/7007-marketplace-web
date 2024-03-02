@@ -1,7 +1,9 @@
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import { useReadAigcFactoryDeployedAigTs, useReadAigtName } from "@/generated";
-import { useRouter } from "next/router";
 import React from "react";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
+
+import { useReadAigcFactoryDeployedAigTs, useReadAigtName } from "@/generated";
+import { getContractAddress } from "@/helpers";
 
 interface TableRowProps {
   modelIndex: number;
@@ -10,8 +12,11 @@ interface TableRowProps {
 const AIGTEntry: React.FC<TableRowProps> = ({ modelIndex }) => {
   const router = useRouter();
 
+  const { chainId } = useAccount();
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
+
   const { data: deployedAigt } = useReadAigcFactoryDeployedAigTs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: [BigInt(modelIndex)],
   });
 

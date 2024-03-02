@@ -1,7 +1,9 @@
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
-import { useReadAigcFactoryDeployedAigTs, useReadAigtName } from "@/generated";
-import { concatAddress } from "@/helpers";
 import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
+
+import { useReadAigcFactoryDeployedAigTs, useReadAigtName } from "@/generated";
+import { concatAddress, getContractAddress } from "@/helpers";
+
 import Card from "./card";
 
 export interface ModelCardProps {
@@ -11,8 +13,10 @@ export interface ModelCardProps {
 const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
   const router = useRouter();
 
+  const { chainId } = useAccount();
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
   const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: modelIndex ? [BigInt(modelIndex)] : undefined,
   });
 

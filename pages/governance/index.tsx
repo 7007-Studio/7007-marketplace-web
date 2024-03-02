@@ -1,12 +1,16 @@
 import { useMemo } from "react";
+import { useAccount } from "wagmi";
 
-import AIGTEntry from "@/components/aigtEntry";
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
 import { useReadAigcFactoryModelIndexCurrent } from "@/generated";
+import AIGTEntry from "@/components/aigtEntry";
+import { getContractAddress } from "@/helpers";
 
 export default function MarketPlace() {
+  const { chainId } = useAccount();
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
+
   const { data: modelIndex } = useReadAigcFactoryModelIndexCurrent({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
   });
 
   const modelIndexList = useMemo(() => {

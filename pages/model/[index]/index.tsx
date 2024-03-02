@@ -1,20 +1,18 @@
+import { useMemo } from "react";
 import { useRouter } from "next/router";
-import {
-  AIGC_FACTORY_CONTRACT_ADDRESS,
-  AIGT_CONTRACT_ADDRESS,
-} from "@/constants";
+import { Address } from "viem";
+import { useAccount } from "wagmi";
+
 import {
   useReadAigcFactoryDeployedAigCs,
   useReadAigcFactoryDeployedAigTs,
   useReadAigcTokenId,
   useReadAigtName,
 } from "@/generated";
-import { Address } from "viem";
+import { getContractAddress } from "@/helpers";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { useMemo } from "react";
 import Hero from "@/components/model/hero";
 import AigcNftCreated from "@/components/model/aigcNftCreated";
-import Link from "next/link";
 import ModelTimeline from "@/components/model/modelTimeline";
 import Launched from "@/components/model/launched";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
@@ -22,16 +20,20 @@ import ArrowLeftIcon from "@/components/arrowLeftIcon";
 export default function Detail() {
   const router = useRouter();
   const { index } = router.query;
+
+  const { chainId } = useAccount();
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
+
   const isMounted = useIsMounted();
   const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: index ? [BigInt(index as string)] : undefined,
   });
   const { data: modelName } = useReadAigtName({
     address: aigtAddress,
   });
   const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: index ? [BigInt(index as string)] : undefined,
   });
   const { data: totalNFTMinted } = useReadAigcTokenId({
@@ -64,7 +66,7 @@ export default function Detail() {
           <ArrowLeftIcon className="text-primary" /> Back
         </a>
       </div>
-      <Hero modelName={modelName} aigtAddress={AIGT_CONTRACT_ADDRESS} />
+      <Hero modelName={modelName} aigtAddress={aigtAddress} />
       <h2 className="heading-lg mt-10 mb-6">Portfolio</h2>
       <div className="flex flex-row gap-x-10">
         <div className="flex-1">

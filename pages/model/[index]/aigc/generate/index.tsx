@@ -1,27 +1,32 @@
 "use client";
 
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
+
 import {
   useReadAigcFactoryDeployedAigTs,
   useReadAigcFactoryDeployedAigCs,
 } from "@/generated";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import FormAIGC from "@/components/formAIGC";
-import { useRouter } from "next/router";
+import { getContractAddress } from "@/helpers";
 
 export default function GenerateAIGC() {
   const router = useRouter();
   const { index } = router.query;
 
+  const { chainId } = useAccount();
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
+
   const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: index ? [BigInt(index as string)] : undefined,
     query: {
       enabled: !!index,
     },
   });
   const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: index ? [BigInt(index as string)] : undefined,
     query: {
       enabled: !!index,

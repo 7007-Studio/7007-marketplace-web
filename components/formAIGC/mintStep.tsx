@@ -2,23 +2,22 @@ import { useEffect, useRef, useState } from "react";
 import { ethers } from "ethers";
 import { Address } from "viem";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
-import { create } from "ipfs-http-client";
 
 import {
   useReadAigcCostToken,
   useReadAigcModelName,
   useReadAigcTokenId,
   useWatchAigcTransferEvent,
-  useWatchAigtApprovalEvent,
   useWriteAigcMint,
   useWriteAigtApprove,
 } from "@/generated";
 import generateAigcContent from "@/helpers/generateAigcContent";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
 
-import { AIGCContent } from ".";
 import PromptForm from "./promptForm";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { AIGCContent } from ".";
+import getTokenURI from "./getTokenURI";
 
 interface MintStepProps {
   modelIndex: number | string;
@@ -28,72 +27,6 @@ interface MintStepProps {
   setAigcContent: (aigcContent?: AIGCContent) => void;
   onMintSuccess: (tokenId: string | number) => void;
 }
-
-const projectId = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
-const projectSecret = process.env.NEXT_PUBLIC_INFURA_PROJECT_SECRET;
-const auth =
-  "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
-const client = create({
-  host: "ipfs.infura.io",
-  port: 5001,
-  protocol: "https",
-  headers: {
-    authorization: auth,
-  },
-});
-
-const getTokenURI = async (
-  name: string,
-  prompt: string,
-  imageUrl?: string,
-  audio?: string
-) => {
-  // make an mp4 with the photo and audio
-  let ipfsLinkImg;
-  let result;
-  if (imageUrl) {
-    let response = await fetch(imageUrl);
-    let blob = await response.blob();
-    let file = new File([blob], "file.png", { type: "image/png" });
-    result = await client.add(file);
-    ipfsLinkImg = "https://cloudflare-ipfs.com/ipfs/" + result.path;
-  }
-  // response = await fetch(audio);
-  // blob = await response.blob();
-  // file = new File([blob], "file.mp3", { type: "audio/mp3" });
-  // result = await client.add(file);
-  // const ipfsLinkAudio = "https://cloudflare-ipfs.com/ipfs/" + result.path;
-
-  // upload the mp4 to ipfs
-  const metadata = {
-    name,
-    description:
-      "This NFT is generated and verified with OPML on https://demo.7007.studio/. The model used is Stable Diffusion and MusicGen. The original prompt is: " +
-      prompt,
-    image: ipfsLinkImg,
-    external_url: "https://alpha.7007.studio/",
-    attributes: [
-      {
-        trait_type: "prompt",
-        value: prompt,
-      },
-      // {
-      //   trait_type: "music",
-      //   value: ipfsLinkAudio,
-      // },
-      {
-        trait_type: "model",
-        value: "Genesis Model",
-      },
-    ],
-  };
-
-  let buffer = Buffer.from(JSON.stringify(metadata));
-  result = await client.add(buffer);
-
-  const ipfsLinkMetadata = "https://cloudflare-ipfs.com/ipfs/" + result.path;
-  return { ipfsLinkMetadata, metadata };
-};
 
 const MintStep = ({
   modelIndex,
@@ -129,14 +62,6 @@ const MintStep = ({
   const { writeContract: mintAIGC, data: mintTx } = useWriteAigcMint();
 
   // contract events
-  // useWatchAigtApprovalEvent({
-  //   address: aigtAddress,
-  //   onLogs: (log) => {
-  //     setApprovedSpending(true);
-  //     onMint();
-  //   },
-  // });
-
   useWatchAigcTransferEvent({
     address: aigcAddress,
     onLogs: (log) => {
@@ -318,7 +243,7 @@ const MintStep = ({
                     loading
                   </>
                 ) : (
-                  "Mint for 0.001 eth"
+                  "Mint"
                 )}
               </button>
             )}

@@ -1,20 +1,21 @@
 "use client";
 
-import { aigcAbi } from "@/generated";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { Metadata } from "@/types";
-import { concatAddress, openseaUrl } from "@/helpers";
 import { useAccount, useReadContracts } from "wagmi";
 import { Address, isAddressEqual } from "viem";
+import axios from "axios";
+import { useParams, useRouter } from "next/navigation";
+
+import { aigcAbi } from "@/generated";
+import { Metadata } from "@/types";
+import { concatAddress, openseaUrl } from "@/helpers";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
 import Card from "@/components/card";
-import { useParams, useRouter } from "next/navigation";
-import SPIntegration from "./sp-integration";
-import Buy from "./buy";
 import ListingNFTModal, {
   ListingNFT,
 } from "@/components/modal/listingNFTModal";
+import Buy from "./buy";
+import SPIntegration from "./sp-integration";
 
 export default function Detail() {
   const router = useRouter();
@@ -176,22 +177,18 @@ export default function Detail() {
             {!isOwner && nftContract && tokenId && (
               <Buy nftContract={nftContract as Address} tokenId={tokenId} />
             )}
-            {isOwner &&
-              chainId &&
-              nftContract &&
-              tokenId &&
-              connectedWallet && (
-                <SPIntegration
-                  chainId={chainId}
-                  connectedWallet={connectedWallet}
-                  nftContract={nftContract as Address}
-                  tokenId={tokenId}
-                  setListingLicense={(license: ListingNFT) => {
-                    setListingNFT(license);
-                    listingNFTModalRef.current?.showModal();
-                  }}
-                />
-              )}
+            {chainId && nftContract && tokenId && connectedWallet && (
+              <SPIntegration
+                chainId={chainId}
+                connectedWallet={connectedWallet}
+                nftContract={nftContract as Address}
+                tokenId={tokenId}
+                setListingLicense={(license: ListingNFT) => {
+                  setListingNFT(license);
+                  listingNFTModalRef.current?.showModal();
+                }}
+              />
+            )}
           </div>
         </div>
       </div>

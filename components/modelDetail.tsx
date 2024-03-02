@@ -1,20 +1,25 @@
-import { AIGC_FACTORY_CONTRACT_ADDRESS } from "@/constants";
+import Link from "next/link";
+import { useAccount } from "wagmi";
+
 import {
   useReadAigcFactoryDeployedAigCs,
   useReadAigcFactoryDeployedAigTs,
   useReadAigtName,
 } from "@/generated";
-import Link from "next/link";
+import { getContractAddress } from "@/helpers";
 export interface ModelDetailProps {
   modelIndex: number;
 }
 const ModelDetail: React.FC<ModelDetailProps> = ({ modelIndex }) => {
+  const { chainId } = useAccount();
+  const aigcFactory = getContractAddress("AIGCFactory", chainId);
+
   const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: [BigInt(modelIndex)],
   });
   const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
-    address: AIGC_FACTORY_CONTRACT_ADDRESS,
+    address: aigcFactory,
     args: [BigInt(modelIndex)],
   });
 

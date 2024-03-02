@@ -9,7 +9,6 @@ import {
   formatEther,
   formatUnits,
   isAddressEqual,
-  walletActions,
 } from "viem";
 import SPLicenseRegistry from "@/abis/SPLicenseRegistry.json";
 import Card from "./card";
@@ -17,6 +16,7 @@ import {
   concatAddress,
   formatDaysLeft,
   is7007Token,
+  isSPLicenseRegistry,
   openseaUrl,
 } from "@/helpers";
 import { ListingNFT } from "./modal/listingNFTModal";
@@ -69,11 +69,10 @@ const NFTCard: React.FC<NFTCardProps> = ({
   onConnectToSP,
 }) => {
   const router = useRouter();
-  const { address: connectedWallet } = useAccount();
+  const { address: connectedWallet, chainId } = useAccount();
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
-  const [animationUrl, setAnimationUrl] = useState<string>();
 
   const { data: modelName } = useReadAigcModelName({
     address: nftContract,
@@ -179,7 +178,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
           const res = await axios.get(tokenURI);
           setMetadata(res.data);
         } catch (error) {
-          console.error("Error fetching metadata via:", tokenId, tokenURI);
+          console.error("Error fetching metadata via:", tokenURI);
         }
       };
 
@@ -223,6 +222,11 @@ const NFTCard: React.FC<NFTCardProps> = ({
           {modelName && (
             <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
               {modelName}
+            </span>
+          )}
+          {isSPLicenseRegistry(nftContract, chainId) && (
+            <span className="badge badge-lg text-[#CC33CC] bg-[#CC33CC]/[0.12]">
+              License
             </span>
           )}
         </div>
