@@ -73,7 +73,7 @@ interface SPIntegrationProps {
   nftContract: Address;
   tokenId: string;
   setListingLicense?: (license: ListingNFT) => void;
-  onRemixClicked?: () => void;
+  onRemixClicked?: (licenseId: bigint) => void;
 }
 
 export default function SPIntegration({
@@ -269,7 +269,7 @@ export default function SPIntegration({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    onRemixClicked();
+                    onRemixClicked?.(BigInt(l.id));
                   }}
                   className="btn btn-secondary"
                 >
