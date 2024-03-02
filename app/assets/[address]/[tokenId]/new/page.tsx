@@ -246,7 +246,7 @@ export default function Detail() {
           ref={remixModalRef}
           modelIndex={1}
           aigtAddress={zeroAddress}
-          aigcAddress={nftContract as Address}
+          nftContract={nftContract as Address}
           original={original}
         />
       )}
