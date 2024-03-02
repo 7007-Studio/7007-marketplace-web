@@ -4,10 +4,11 @@ import initOPML, { GenerateType } from "./initOPML";
 
 const generateAigcContent = async (
   name: string,
-  prompt: string
+  prompt: string,
+  seed: number
 ): Promise<AIGCContent> => {
-  let contractAddr = await initOPML(GenerateType.Image, prompt);
-  const imageUrl = await generateImage(contractAddr, prompt, 1231);
+  // let contractAddr = await initOPML(GenerateType.Image, prompt);
+  const imageUrl = `https://gateway.pinata.cloud/ipfs/${await generateImage("", prompt, seed)}`;
 
   // audio generation takes too long, pause for now
   // contractAddr = await initOPML(GenerateType.Music, data.prompt);

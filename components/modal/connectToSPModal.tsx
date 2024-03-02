@@ -29,8 +29,6 @@ const ConnectToSPModal = React.forwardRef(
     }: ConnectToSPModalProps,
     ref
   ) => {
-    const policyId = BigInt(3);
-
     // const { writeContract: registerRootIp } = useRegisterRootIp();
 
     // useWatchRootIpRegistered({

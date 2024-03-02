@@ -14,7 +14,7 @@ const ipfsClient = create({
   },
 });
 
-export default async function getTokenURI(
+export async function getTokenURI(
   modelName: string,
   name: string,
   prompt: string,
@@ -56,4 +56,14 @@ export default async function getTokenURI(
 
   const ipfsLinkMetadata = "https://cloudflare-ipfs.com/ipfs/" + result.path;
   return { ipfsLinkMetadata, metadata };
+}
+
+export async function fetchData(hash: string) {
+  const data = [];
+  for await (const file of ipfsClient.get(hash)) {
+    data.push(file);
+  }
+  const buffer = Buffer.concat(data);
+  const base64String = buffer.toString("base64");
+  return `data:image/png;base64,${base64String}`;
 }

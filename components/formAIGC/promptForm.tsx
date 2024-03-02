@@ -35,7 +35,11 @@ const PromptForm = ({
     setErrorMessage("");
     setIsSubmitting(true);
 
-    const aigcContent = await generateAigcContent(data.name, data.prompt);
+    const aigcContent = await generateAigcContent(
+      data.name,
+      data.prompt,
+      Math.floor(Math.random() * 9999999)
+    );
     onArtGenerated(aigcContent);
     setIsSubmitting(false);
   };

@@ -12,10 +12,10 @@ import {
 import generateAigcContent from "@/helpers/generateAigcContent";
 import ArrowLeftIcon from "@/components/arrowLeftIcon";
 
-import PromptForm from "./promptForm";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { AIGCContent } from ".";
-import getTokenURI from "./getTokenURI";
+import { getTokenURI } from "./ipfsHelper";
+import EditPromptModal from "../modal/editPromptModal";
 
 interface MintStepProps {
   modelIndex: number | string;
@@ -147,7 +147,8 @@ const MintStep = ({
                 setRegenerating(true);
                 const newAigcContent = await generateAigcContent(
                   aigcContent.name,
-                  aigcContent.prompt
+                  aigcContent.prompt,
+                  Math.floor(Math.random() * 9999999)
                 );
                 setAigcContent(newAigcContent);
 
@@ -180,22 +181,11 @@ const MintStep = ({
         </div>
       </div>
 
-      <dialog ref={editPromptModalRef} id="" className="modal">
-        <div className="modal-box max-w-[904px] py-16 px-20 bg-white">
-          <h2 className="heading-lg mb-12">Edit prompt</h2>
-          <PromptForm
-            submitText="Generate"
-            defaultValues={{
-              name: aigcContent.name,
-              prompt: aigcContent.prompt,
-            }}
-            onArtGenerated={(_aigcContent) => {
-              setAigcContent(_aigcContent);
-              editPromptModalRef.current?.close();
-            }}
-          />
-        </div>
-      </dialog>
+      <EditPromptModal
+        ref={editPromptModalRef}
+        aigcContent={aigcContent}
+        setAigcContent={setAigcContent}
+      />
     </>
   );
 };
