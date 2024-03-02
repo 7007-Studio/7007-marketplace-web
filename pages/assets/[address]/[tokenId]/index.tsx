@@ -43,7 +43,7 @@ export default function Detail() {
   const router = useRouter();
   const { address: nftContract, tokenId } = router.query;
 
-  const { isConnected, address: connectedWallet, chainId } = useAccount();
+  const { isConnected, address: connectedWallet, chain } = useAccount();
   const { openConnectModal } = useConnectModal();
 
   const [metadata, setMetadata] = useState<Metadata>();
@@ -93,11 +93,11 @@ export default function Detail() {
   const [decimals, symbol] = listingData || [];
 
   useEffect(() => {
-    if (!nftContract || !tokenId || !chainId) return;
+    if (!nftContract || !tokenId || !chain) return;
 
-    const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
+    const marketplaceV3 = getContractAddress("MarketplaceV3", chain.id);
     const fetchCreateListingEvents = async () => {
-      const client = getPublicClient(chainId);
+      const client = getPublicClient(chain);
       const logs = await client.getContractEvents({
         address: marketplaceV3,
         abi: MarketplaceV3Abi,
@@ -126,7 +126,7 @@ export default function Detail() {
       }
     };
     fetchCreateListingEvents();
-  }, [nftContract, tokenId, chainId]);
+  }, [nftContract, tokenId, chain]);
 
   // write contracts
   const { writeContract: buyNft, data: buyNftTx } =
@@ -180,7 +180,6 @@ export default function Detail() {
   //   }
   // }, [_ipId]);
 
-
   // const { data: isRegistered, refetch: refetchIsRegistered } =
   //   useReadIpAssetRegistryIsRegistered({
   //     args: [ipId as Address],
@@ -189,8 +188,6 @@ export default function Detail() {
   //   console.debug("refetchIsRegistered ipId", ipId);
   //   refetchIsRegistered();
   // }, [ipId, refetchIsRegistered]);
-
-
 
   // useWatchRootIpRegistered({
   //   onLogs(logs) {
@@ -201,20 +198,17 @@ export default function Detail() {
   //   },
   // });
 
-
-
-
   // const { writeContract: registerRootIp } = useRegisterRootIp();
   // const { writeContract: mintLicense } = useMintLicense();
 
   // Check if the token has licenses minted
   // const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
   // useEffect(() => {
-  //   if (!connectedWallet || !chainId) return;
+  //   if (!connectedWallet || !chain) return;
 
-  //   const licenseRegistry = getContractAddress("SPLicenseRegistry", chainId);
+  //   const licenseRegistry = getContractAddress("SPLicenseRegistry", chain.id);
   //   const fetchTransferBatchEvents = async () => {
-  //     const client = getPublicClient(chainId);
+  //     const client = getPublicClient(chain);
   //     const logs = await client.getContractEvents({
   //       address: licenseRegistry,
   //       abi: SPLicenseRegistryAbi,
@@ -253,7 +247,7 @@ export default function Detail() {
   //     // }
   //   };
   //   fetchTransferBatchEvents();
-  // }, [connectedWallet, chainId]);
+  // }, [connectedWallet, chain]);
 
   // TODO: add "remix" functionality (mintLicense, linkIpToParent)
 
@@ -334,7 +328,10 @@ export default function Detail() {
                     <div>Link</div>
                     {nftContract && (
                       <a
-                        href={openseaUrl(nftContract as Address, tokenId as string)}
+                        href={openseaUrl(
+                          nftContract as Address,
+                          tokenId as string
+                        )}
                         className="text-primary overflow-hidden"
                         target="_blank"
                       >
@@ -371,14 +368,14 @@ export default function Detail() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!isConnected || !connectedWallet || !chainId) {
+                  if (!isConnected || !connectedWallet || !chain) {
                     openConnectModal?.();
                     return;
                   }
 
                   const marketplaceV3 = getContractAddress(
                     "MarketplaceV3",
-                    chainId
+                    chain.id
                   );
                   if (!marketplaceV3) return;
 

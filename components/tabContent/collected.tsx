@@ -3,11 +3,11 @@ import Filter from "@/components/filter";
 import NFTCard from "@/components/nftCard";
 import { useEffect, useMemo, useState } from "react";
 import { ListingNFT } from "../modal/listingNFTModal";
-import { Abi, Address, zeroAddress } from "viem";
+import { Abi, Address } from "viem";
 import { useAccount } from "wagmi";
 
 import AIGC from "@/abis/AIGC.json";
-import { sepoliaClient } from "@/client";
+import { getPublicClient } from "@/client";
 import { useReadAigcTokenId } from "@/generated";
 
 const Collected = ({
@@ -28,7 +28,7 @@ const Collected = ({
 
   const [filteredTokenIds, setFilteredTokenIds] = useState<string[]>([]);
 
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
 
   const { data: lastTokenId } = useReadAigcTokenId({
     address: aigcAddress,
@@ -47,7 +47,7 @@ const Collected = ({
   }, [lastTokenId]);
 
   useEffect(() => {
-    if (!aigcAddress || !address) return;
+    if (!aigcAddress || !address || !chain) return;
 
     const contract = {
       address: aigcAddress,
@@ -56,7 +56,7 @@ const Collected = ({
     };
 
     const fetchOwner = async () => {
-      const results = await sepoliaClient.multicall({
+      const results = await getPublicClient(chain).multicall({
         contracts: tokenIds.map((id) => ({
           ...contract,
           args: [BigInt(id)],
@@ -73,7 +73,7 @@ const Collected = ({
     };
 
     fetchOwner();
-  }, [aigcAddress, address, tokenIds]);
+  }, [aigcAddress, address, chain, tokenIds]);
 
   return (
     <>

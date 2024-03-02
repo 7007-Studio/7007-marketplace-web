@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   Address,
+  Chain,
   PublicClient,
   isAddress,
   isAddressEqual,
@@ -67,7 +68,7 @@ async function getLicensesBelongToIpId(
 }
 
 interface SPIntegrationProps {
-  chainId: number;
+  chain: Chain;
   connectedWallet: Address;
   nftContract: Address;
   tokenId: string;
@@ -75,7 +76,7 @@ interface SPIntegrationProps {
 }
 
 export default function SPIntegration({
-  chainId,
+  chain,
   connectedWallet,
   nftContract,
   tokenId,
@@ -86,9 +87,9 @@ export default function SPIntegration({
 
   const { data: _ipId } = useReadIpAssetRegistryIpId({
     args:
-      chainId === undefined || tokenId === undefined
+      chain === undefined || tokenId === undefined
         ? undefined
-        : [BigInt(chainId), nftContract as Address, BigInt(tokenId)],
+        : [BigInt(chain.id), nftContract as Address, BigInt(tokenId)],
   });
 
   useEffect(() => {
@@ -136,11 +137,11 @@ export default function SPIntegration({
   const [licenses, setLicenses] = useState<{ id: string; value: number }[]>();
 
   useEffect(() => {
-    if (!connectedWallet || !chainId || !ipId) return;
+    if (!connectedWallet || !chain.id || !ipId) return;
 
     const fetchTransferBatchEvents = async () => {
-      const client: PublicClient = getPublicClient(chainId);
-      const licenseRegistry = getContractAddress("SPLicenseRegistry", chainId);
+      const client: PublicClient = getPublicClient(chain);
+      const licenseRegistry = getContractAddress("SPLicenseRegistry", chain.id);
 
       if (!client || !licenseRegistry) {
         return;
@@ -186,7 +187,7 @@ export default function SPIntegration({
       setLicenses(licensesBelongToIpId);
     };
     fetchTransferBatchEvents();
-  }, [connectedWallet, chainId, ipId]);
+  }, [connectedWallet, chain, ipId]);
 
   if (isRegistered === undefined) {
     return null;
@@ -248,7 +249,7 @@ export default function SPIntegration({
 
                     const licenseRegistry = getContractAddress(
                       "SPLicenseRegistry",
-                      chainId
+                      chain.id
                     );
 
                     if (!licenseRegistry) {

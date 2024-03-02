@@ -3,7 +3,6 @@
 import { getPublicClient } from "@/client";
 import { formatDate, getContractAddress } from "@/helpers";
 import { Listing } from "@/types";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { formatUnits, formatEther, Address, erc20Abi } from "viem";
 import { useAccount, useReadContracts } from "wagmi";
@@ -19,14 +18,14 @@ export default function Buy({
   tokenId: string;
 }) {
   const [listing, setListing] = useState<Listing>();
-  const { chainId } = useAccount();
+  const { chain } = useAccount();
 
   useEffect(() => {
     const fetchCreateListingEvents = async () => {
-      if (!nftContract || !tokenId || !chainId) return;
-      const client = getPublicClient(chainId);
+      if (!nftContract || !tokenId || !chain) return;
+      const client = getPublicClient(chain);
 
-      const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
+      const marketplaceV3 = getContractAddress("MarketplaceV3", chain.id);
       const logs = await client.getContractEvents({
         address: marketplaceV3,
         abi: MarketplaceV3Abi,
@@ -55,7 +54,7 @@ export default function Buy({
       }
     };
     fetchCreateListingEvents();
-  }, [nftContract, tokenId, chainId]);
+  }, [nftContract, tokenId, chain]);
 
   const { data: listingData } = useReadContracts({
     contracts: [

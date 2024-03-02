@@ -1,16 +1,9 @@
-import { createPublicClient, http } from "viem";
-import { mainnet, sepolia } from "viem/chains";
+import { Chain, createPublicClient, http } from "viem";
+import { sepolia } from "viem/chains";
 
-export const sepoliaClient = createPublicClient({
-  chain: sepolia,
-  transport: http(),
-});
-
-export const ethClient = createPublicClient({
-  chain: mainnet,
-  transport: http(),
-});
-
-export function getPublicClient(chainId: number) {
-  return chainId === mainnet.id ? ethClient : sepoliaClient;
+export function getPublicClient(chain?: Chain) {
+  return createPublicClient({
+    chain: chain || sepolia,
+    transport: http(),
+  });
 }

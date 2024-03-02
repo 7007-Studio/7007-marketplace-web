@@ -25,7 +25,7 @@ export default function Detail() {
   const listingNFTModalRef = useRef<HTMLDialogElement>(null);
   const [listingNFT, setListingNFT] = useState<ListingNFT>();
 
-  const { address: connectedWallet, chainId } = useAccount();
+  const { address: connectedWallet, chain } = useAccount();
 
   const [metadata, setMetadata] = useState<Metadata>();
   const [animationUrl, setAnimationUrl] = useState<string>();
@@ -177,9 +177,9 @@ export default function Detail() {
             {!isOwner && nftContract && tokenId && (
               <Buy nftContract={nftContract as Address} tokenId={tokenId} />
             )}
-            {chainId && nftContract && tokenId && connectedWallet && (
+            {chain && nftContract && tokenId && connectedWallet && (
               <SPIntegration
-                chainId={chainId}
+                chain={chain}
                 connectedWallet={connectedWallet}
                 nftContract={nftContract as Address}
                 tokenId={tokenId}

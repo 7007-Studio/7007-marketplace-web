@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAccount, useReadContracts } from "wagmi";
 import axios from "axios";
 import { Listing, Metadata } from "@/types";
