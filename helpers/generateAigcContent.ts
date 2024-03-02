@@ -7,7 +7,7 @@ const generateAigcContent = async (
   prompt: string
 ): Promise<AIGCContent> => {
   let contractAddr = await initOPML(GenerateType.Image, prompt);
-  const imageUrl = await generateImage(contractAddr, prompt);
+  const imageUrl = await generateImage(contractAddr, prompt, 1231);
 
   // audio generation takes too long, pause for now
   // contractAddr = await initOPML(GenerateType.Music, data.prompt);

@@ -7,7 +7,7 @@ import { Abi, Address, zeroAddress } from "viem";
 import { useAccount } from "wagmi";
 
 import AIGC from "@/abis/AIGC.json";
-import { sepoliaClient } from "@/client";
+import { getPublicClient } from "@/client";
 
 const Collected = ({
   aigcAddress,
@@ -27,12 +27,12 @@ const Collected = ({
 
   const [tokenIds, setTokenIds] = useState<string[]>([]);
 
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
   useEffect(() => {
-    if (!aigcAddress || !address) return;
+    if (!aigcAddress || !address || !chain) return;
 
     const fetchMintEvents = async () => {
-      const logs = await sepoliaClient.getContractEvents({
+      const logs = await getPublicClient(chain).getContractEvents({
         address: aigcAddress,
         abi: AIGC.abi as Abi,
         eventName: "Transfer",
@@ -54,7 +54,7 @@ const Collected = ({
       );
     };
     fetchMintEvents();
-  }, [aigcAddress, address]);
+  }, [aigcAddress, address, chain]);
 
   return (
     <>
