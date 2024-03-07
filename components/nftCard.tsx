@@ -19,7 +19,7 @@ import { getSrc } from "@livepeer/react/external";
 import * as Player from "@livepeer/react/player";
 
 import SPLicenseRegistry from "@/abis/SPLicenseRegistry.json";
-import { useReadAigcModelName } from "@/generated";
+import { useReadAigcName } from "@/generated";
 import { Listing, Metadata } from "@/types";
 
 import {
@@ -104,7 +104,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
 
-  const { data: modelName } = useReadAigcModelName({
+  const { data: name } = useReadAigcName({
     address: nftContract,
   });
 
@@ -243,9 +243,9 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         <div className="flex py-4 px-6 justify-between items-center">
           {is7007Token(nftContract) && <span>7007 Genesis NFT</span>}
           {!is7007Token(nftContract) && <span>&nbsp;</span>}
-          {modelName && (
+          {name && (
             <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
-              {modelName}
+              {name}
             </span>
           )}
           {isSPLicenseRegistry(nftContract, chainId) && (
@@ -285,7 +285,12 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
                 console.debug("List button clicked");
                 e.stopPropagation();
                 // show list modal for this (nftContract, tokenId, metadata)
-                showListingModal({ address: nftContract, tokenId, metadata });
+                showListingModal({
+                  nftContract: nftContract,
+                  name: name || "",
+                  tokenId,
+                  metadata,
+                });
               }}
               className="btn btn-primary"
               disabled={!!listing}

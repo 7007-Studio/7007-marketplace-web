@@ -22,11 +22,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     <ModalContext.Provider value={{ showListingModal }}>
       {children}
 
-      <ListingNFTModal
-        ref={listingNFTModalRef}
-        listingNFT={listingNFT}
-        // listingSuccess={() => {TODO: refresh the card state}}
-      />
+      <ListingNFTModal ref={listingNFTModalRef} listingNFT={listingNFT} />
     </ModalContext.Provider>
   );
 };

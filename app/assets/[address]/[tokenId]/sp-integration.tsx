@@ -257,7 +257,7 @@ export default function SPIntegration({
                       return;
                     }
                     setListingLicense?.({
-                      address: licenseRegistry,
+                      nftContract: licenseRegistry,
                       tokenId: BigInt(l.id),
                     });
                   }}

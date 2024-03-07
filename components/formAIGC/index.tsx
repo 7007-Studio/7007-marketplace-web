@@ -6,6 +6,7 @@ import PromptStep from "./promptStep";
 import MintStep from "./mintStep";
 import CompleteStep from "./completeStep";
 import { useListingModal } from "@/utils/modalProvider";
+import { useReadAigcName } from "@/generated";
 
 export interface AIGCContent {
   name: string;
@@ -19,9 +20,12 @@ interface FormAIGCProps {
 }
 
 export default function FormAIGC({ nftContract }: FormAIGCProps) {
-  const router = useRouter();
   const [aigcContent, setAigcContent] = useState<AIGCContent>();
   const [mintedTokenId, setMintedTokenId] = useState<bigint>();
+
+  const { data: name } = useReadAigcName({
+    address: nftContract,
+  });
 
   const { showListingModal } = useListingModal();
 
@@ -56,8 +60,9 @@ export default function FormAIGC({ nftContract }: FormAIGCProps) {
         mintedTokenId={mintedTokenId}
         onList={() => {
           showListingModal({
-            address: nftContract,
-            tokenId: BigInt(mintedTokenId),
+            nftContract: nftContract,
+            name: name || "",
+            tokenId: mintedTokenId,
             metadata: { name: aigcContent.name },
           });
         }}

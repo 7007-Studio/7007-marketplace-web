@@ -1,24 +1,15 @@
 import React, { RefObject, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
-import {
-  useAccount,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
-import {
-  Address,
-  erc721Abi,
-  isAddressEqual,
-  parseEther,
-  zeroAddress,
-} from "viem";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { Address, isAddressEqual, parseEther, zeroAddress } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 import { NATIVE_TOKEN_ADDRESS } from "@/constants";
 import { getContractAddress } from "@/helpers";
 import {
   useReadAigcGetApproved,
+  useWriteAigcSetApprovalForAll,
   useWriteMarketplaceV3CreateListing,
 } from "@/generated";
 import { Metadata } from "@/types";
@@ -26,7 +17,8 @@ import { Metadata } from "@/types";
 import TextInput from "@/components/form/textInput";
 
 export interface ListingNFT {
-  address: Address;
+  nftContract: Address;
+  name: string;
   tokenId: bigint;
   maxQuantity?: number;
   metadata?: Partial<Metadata>;
@@ -40,13 +32,14 @@ interface IFormListNFTInput {
 
 interface ListingNFTModalProps {
   listingNFT?: ListingNFT;
-  listingSuccess?: () => void;
 }
 
 const ListingNFTModal = React.forwardRef(
-  ({ listingNFT, listingSuccess }: ListingNFTModalProps, ref) => {
+  ({ listingNFT }: ListingNFTModalProps, ref) => {
     const { isConnected, chainId } = useAccount();
     const { openConnectModal } = useConnectModal();
+
+    const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
 
     const [approvedListing, setApprovedListing] = useState(false);
     const [listInitialized, setListInitialized] = useState(false);
@@ -59,7 +52,7 @@ const ListingNFTModal = React.forwardRef(
       setIsListed(false);
     }, [listingNFT]);
 
-    const { register, handleSubmit, getValues, reset } =
+    const { register, handleSubmit, watch, reset } =
       useForm<IFormListNFTInput>();
     const onSubmit: SubmitHandler<IFormListNFTInput> = async (data) => {
       console.debug("submit data", data);
@@ -69,8 +62,10 @@ const ListingNFTModal = React.forwardRef(
         return;
       }
 
-      const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
-      if (!marketplaceV3) return;
+      if (!marketplaceV3) {
+        console.error("MarketplaceV3 not found");
+        return;
+      }
 
       if (!listingNFT) {
         return;
@@ -82,9 +77,7 @@ const ListingNFTModal = React.forwardRef(
         setListInitialized(true);
         approveListing(
           {
-            address: listingNFT?.address as Address,
-            abi: erc721Abi,
-            functionName: "setApprovalForAll",
+            address: listingNFT.nftContract,
             args: [marketplaceV3, true],
           },
           {
@@ -95,13 +88,13 @@ const ListingNFTModal = React.forwardRef(
           }
         );
       } else {
-        createListingWrapper(data);
+        handleCreateListing(data);
       }
     };
 
     // read contracts
     const { data: approved } = useReadAigcGetApproved({
-      address: listingNFT?.address,
+      address: listingNFT?.nftContract,
       args: listingNFT ? [BigInt(listingNFT?.tokenId)] : undefined,
     });
     useEffect(() => {
@@ -112,8 +105,7 @@ const ListingNFTModal = React.forwardRef(
 
     // write contracts
     const { writeContract: approveListing, data: approveTx } =
-      useWriteContract();
-    // useWriteAigcSetApprovalForAll();
+      useWriteAigcSetApprovalForAll();
 
     const { writeContract: createListing, data: createListingTx } =
       useWriteMarketplaceV3CreateListing();
@@ -123,33 +115,30 @@ const ListingNFTModal = React.forwardRef(
       hash: approveTx,
     });
     useEffect(() => {
-      console.debug("approveResult refreshed");
       if (!approveResult.isSuccess) return;
 
       setApprovedListing(true);
       setListInitialized(false);
-    }, [approveResult]);
+    }, [approveResult.isSuccess]);
 
     const listingResult = useWaitForTransactionReceipt({
       hash: createListingTx,
     });
     useEffect(() => {
-      console.debug("listingResult refreshed");
       if (!listingResult.isSuccess) return;
+
       setIsListed(true);
       setApprovedListing(false);
       setListInitialized(false);
+    }, [listingResult.isSuccess]);
 
-      (ref as RefObject<HTMLDialogElement>)?.current?.close();
-      listingSuccess?.();
-    }, [listingResult]);
-
-    function createListingWrapper(data: IFormListNFTInput) {
+    function handleCreateListing(data: IFormListNFTInput) {
       if (!listingNFT) return;
-      console.debug("listingNFT", listingNFT);
 
-      const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
-      if (!marketplaceV3) return;
+      if (!marketplaceV3) {
+        console.error("MarketplaceV3 not found");
+        return;
+      }
 
       setListInitialized(true);
 
@@ -163,7 +152,7 @@ const ListingNFTModal = React.forwardRef(
         endTimestamp: bigint;
         reserved: boolean;
       } = {
-        assetContract: listingNFT.address,
+        assetContract: listingNFT.nftContract,
         tokenId: BigInt(listingNFT.tokenId),
         quantity: BigInt(data.quantity) || 1n,
         currency: NATIVE_TOKEN_ADDRESS,
@@ -175,7 +164,6 @@ const ListingNFTModal = React.forwardRef(
         reserved: false,
       };
 
-      console.debug("createListingArgsTuple", createListingArgsTuple);
       createListing(
         {
           address: marketplaceV3,
@@ -197,78 +185,104 @@ const ListingNFTModal = React.forwardRef(
         className="modal"
       >
         <div className="modal-box max-w-[424px] bg-white">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">
+              ✕
+            </button>
+          </form>
           {!isListed ? (
             <>
-              <h3 className="heading-md">Listing NFT</h3>
+              <h3 className="heading-md pb-4">Quick list</h3>
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-6"
               >
-                <div>
-                  <div className="label">
-                    <span className="label-text">Name</span>
+                <div className="grid grid-cols-4 gap-4 items-center">
+                  <div>
+                    {listingNFT?.metadata?.image && (
+                      <Image
+                        src={listingNFT.metadata.image}
+                        alt={listingNFT.metadata.name || ""}
+                        width={72}
+                        height={72}
+                      />
+                    )}
                   </div>
-                  <div className="text-lg">{listingNFT?.metadata?.name}</div>
+                  <div className="col-span-2">
+                    <div className="text-lg">{listingNFT?.metadata?.name}</div>
+                    <div className="text-sm">{listingNFT?.name}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm pt-2">Listing price</div>
+                    <div className="text-lg">
+                      {watch("price")?.length ? watch("price") : "--"} ETH
+                    </div>
+                  </div>
                 </div>
-                <TextInput
-                  label="Price"
-                  postfix="eth"
-                  name="price"
-                  placeholder="0.00"
-                  required
-                  register={register}
-                />
-                <TextInput
-                  label="Duration"
-                  postfix="Days"
-                  name="duration"
-                  placeholder="0"
-                  min={1}
-                  max={7}
-                  required
-                  register={register}
-                />
-                <TextInput
-                  label="Quantity"
-                  name="quantity"
-                  placeholder="1"
-                  min={1}
-                  max={listingNFT?.maxQuantity || 1}
-                  required
-                  register={register}
-                />
-                <span className="text-sm">
-                  You can set a maximum of 7 days.
-                </span>
-                <div className="flex flex-row gap-4">
-                  <div className="flex-1">
-                    <button
-                      type="button"
-                      className="btn btn-secondary w-full"
-                      onClick={() => {
-                        (ref as RefObject<HTMLDialogElement>)?.current?.close();
-                      }}
-                    >
-                      Cancel
-                    </button>
+                <div>
+                  <TextInput
+                    label="Set a price"
+                    postfix="eth"
+                    name="price"
+                    placeholder="0.00"
+                    required
+                    register={register}
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label="Duration"
+                    postfix="Days"
+                    name="duration"
+                    placeholder="0"
+                    min={1}
+                    max={7}
+                    required
+                    register={register}
+                  />
+                </div>
+                <div>
+                  <div className="flex flex-row justify-between">
+                    <div>Listing price</div>
+                    <div>
+                      {watch("price")?.length ? watch("price") : "--"} ETH
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <button
-                      disabled={listInitialized}
-                      className="btn btn-primary w-full"
-                    >
-                      {listInitialized ? (
-                        <>
-                          <span className="loading loading-spinner"></span>
-                          loading
-                        </>
-                      ) : approvedListing ? (
-                        "List"
-                      ) : (
-                        "Approve Listing"
-                      )}
-                    </button>
+                  <div className="flex flex-row justify-between">
+                    <div>7007 fee</div>
+                    <div>0 %</div>
                   </div>
+                  <div className="flex flex-row justify-between">
+                    <div>OAO fee</div>
+                    <div>0 %</div>
+                  </div>
+                  <div className="flex flex-row justify-between">
+                    <div>Model earning</div>
+                    <div>0 %</div>
+                  </div>
+                  <div className="flex flex-row justify-between font-bold">
+                    <div>Total potential earnings</div>
+                    <div>
+                      {watch("price")?.length ? watch("price") : "--"} ETH
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    disabled={listInitialized}
+                    className="btn btn-primary w-full"
+                  >
+                    {listInitialized ? (
+                      <>
+                        <span className="loading loading-spinner"></span>
+                        loading
+                      </>
+                    ) : approvedListing ? (
+                      "List"
+                    ) : (
+                      "Approve Listing"
+                    )}
+                  </button>
                 </div>
               </form>
             </>

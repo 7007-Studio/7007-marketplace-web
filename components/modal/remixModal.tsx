@@ -13,18 +13,9 @@ export interface RemixModalProp {
 }
 
 const RemixModal = React.forwardRef(
-  (
-    {
-      modelIndex,
-      aigtAddress,
-      nftContract,
-      original,
-      licenseId,
-    }: RemixModalProp,
-    ref
-  ) => {
+  ({ nftContract, original, licenseId }: RemixModalProp, ref) => {
     const [aigcContent, setAigcContent] = useState<AIGCContent>(original);
-    const [mintedTokenId, setMintedTokenId] = useState<string | number>();
+    const [mintedTokenId, setMintedTokenId] = useState<bigint>();
 
     const { writeContract: registerDerivativeIp } = useRegisterDerivativeIp();
 
@@ -34,8 +25,6 @@ const RemixModal = React.forwardRef(
         className="modal"
       >
         <MintStep
-          modelIndex={modelIndex}
-          aigtAddress={aigtAddress}
           nftContract={nftContract}
           aigcContent={aigcContent}
           setAigcContent={(a) => {
