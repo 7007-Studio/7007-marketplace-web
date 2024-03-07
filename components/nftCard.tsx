@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useAccount, useReadContracts } from "wagmi";
 import axios from "axios";
-import { Listing, Metadata } from "@/types";
 import {
   Address,
   erc20Abi,
@@ -12,8 +13,15 @@ import {
   formatUnits,
   isAddressEqual,
 } from "viem";
+
+// livepeer
+import { getSrc } from "@livepeer/react/external";
+import * as Player from "@livepeer/react/player";
+
 import SPLicenseRegistry from "@/abis/SPLicenseRegistry.json";
-import Card from "./card";
+import { useReadAigcModelName } from "@/generated";
+import { Listing, Metadata } from "@/types";
+
 import {
   concatAddress,
   formatDaysLeft,
@@ -21,13 +29,9 @@ import {
   isSPLicenseRegistry,
   openseaUrl,
 } from "@/helpers";
-import { useReadAigcModelName } from "@/generated";
-import { useRouter } from "next/navigation";
-import BuyButton from "./buy-button";
 
-// livepeer
-import { getSrc } from "@livepeer/react/external";
-import * as Player from "@livepeer/react/player";
+import BuyButton from "@/components/buy-button";
+import Card from "@/components/card";
 
 function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
   if (!metadata) {
@@ -74,9 +78,11 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
 
   if (metadata?.image) {
     return (
-      <img
+      <Image
         src={metadata.image}
         alt={metadata?.name}
+        width={258}
+        height={258}
         className="w-full object-cover aspect-square"
       />
     );
@@ -229,7 +235,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
     <Card className="w-[258px]">
       <div
         className="hover:cursor-pointer"
-        onClick={() => router.push(`/assets/${nftContract}/${tokenId}/new`)}
+        onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
       >
         <div className="flex py-4 px-6 justify-between items-center">
           {is7007Token(nftContract) && <span>7007 Genesis NFT</span>}
