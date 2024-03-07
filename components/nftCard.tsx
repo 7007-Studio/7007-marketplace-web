@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
 import { useAccount, useReadContracts } from "wagmi";
 import axios from "axios";
@@ -19,7 +21,6 @@ import {
   isSPLicenseRegistry,
   openseaUrl,
 } from "@/helpers";
-import { ListingNFT } from "./modal/listingNFTModal";
 import { useReadAigcModelName } from "@/generated";
 import { useRouter } from "next/navigation";
 import BuyButton from "./buy-button";
@@ -87,17 +88,9 @@ export interface NFTCardProps {
   nftContract: Address;
   tokenId: bigint;
   listing?: Listing;
-  onListingNFT?: ({ tokenId, metadata }: ListingNFT) => void;
-  onConnectToSP?: () => void;
 }
 
-const NFTCard: React.FC<NFTCardProps> = ({
-  nftContract,
-  tokenId,
-  listing,
-  onListingNFT,
-  onConnectToSP,
-}) => {
+const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const router = useRouter();
   const { address: connectedWallet, chainId } = useAccount();
 
@@ -232,14 +225,6 @@ const NFTCard: React.FC<NFTCardProps> = ({
     }
   }, [nftContract, isErc721, tokenURI, isErc1155, uri]);
 
-  // hiding broken AIGC NFT
-  if (
-    nftContract === "0x0B89f60136A91f3B36557F9414cbd157d0ada7bc" &&
-    String(tokenId) === "1"
-  ) {
-    return null;
-  }
-
   return (
     <Card className="w-[258px]">
       <div
@@ -289,7 +274,8 @@ const NFTCard: React.FC<NFTCardProps> = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onListingNFT?.({ address: nftContract, tokenId, metadata });
+                // show list modal for this (nftContract, tokenId, metadata)
+                // onListingNFT?.({ address: nftContract, tokenId, metadata });
               }}
               className="btn btn-primary"
               disabled={!!listing}

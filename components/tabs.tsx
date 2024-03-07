@@ -1,15 +1,15 @@
-import clsx from "clsx";
+"use client";
 
-export enum TabState {
-  ModelLaunchpad = "model",
-  Marketplace = "marketplace",
-  Created = "created",
-  Collected = "collected",
+import clsx from "clsx";
+import { usePathname, useRouter } from "next/navigation";
+
+interface Tab {
+  label: string;
+  pathnames: string[];
 }
 
 interface TabsProps {
-  currentTab: TabState;
-  setCurrentTab: (tabState: TabState) => void;
+  tabs: Tab[];
 }
 
 function Tab({
@@ -33,33 +33,20 @@ function Tab({
   );
 }
 
-export default function Tabs({ currentTab, setCurrentTab }: TabsProps) {
+export default function Tabs({ tabs }: TabsProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   return (
     <div className="tabs tabs-lg tabs-bordered gap-4">
-      <Tab
-        isActive={currentTab === TabState.ModelLaunchpad}
-        onClick={() => setCurrentTab(TabState.ModelLaunchpad)}
-      >
-        Models
-      </Tab>
-      <Tab
-        isActive={currentTab === TabState.Marketplace}
-        onClick={() => setCurrentTab(TabState.Marketplace)}
-      >
-        AIGC NFT Marketplace
-      </Tab>
-      <Tab
-        isActive={currentTab === TabState.Created}
-        onClick={() => setCurrentTab(TabState.Created)}
-      >
-        Created
-      </Tab>
-      <Tab
-        isActive={currentTab === TabState.Collected}
-        onClick={() => setCurrentTab(TabState.Collected)}
-      >
-        Collected
-      </Tab>
+      {tabs.map((tab) => (
+        <Tab
+          key={tab.label}
+          isActive={!!pathname && tab.pathnames.includes(pathname)}
+          onClick={() => router.push(tab.pathnames[0])}
+        >
+          {tab.label}
+        </Tab>
+      ))}
     </div>
   );
 }

@@ -36,16 +36,16 @@ export interface Metadata {
 }
 
 export interface Listing {
-  assetContract: Address;
-  currency: Address;
-  endTimestamp: bigint;
-  listingCreator: Address;
   listingId: bigint;
-  pricePerToken: bigint;
-  quantity: bigint;
-  reserved: boolean;
-  startTimestamp: bigint;
-  stats: number;
   tokenId: bigint;
+  quantity: bigint;
+  pricePerToken: bigint;
+  startTimestamp: bigint;
+  endTimestamp: bigint;
+  listingCreator: `0x${string}`;
+  assetContract: `0x${string}`;
+  currency: `0x${string}`;
   tokenType: number;
+  status: number;
+  reserved: boolean;
 }

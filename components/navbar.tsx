@@ -28,23 +28,12 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="flex-none gap-10">
-          {/* <Link
-            href="/model/1"
-            className={clsx(
-              "hidden md:block hover:text-primary cursor-pointer",
-              {
-                underline: pathname === "/model/1",
-              }
-            )}
-          >
-            Model Launchpad
-          </Link> */}
-          {/* <Link
-            href="#"
+          <Link
+            href="/account"
             className="hidden md:block hover:text-primary cursor-pointer"
           >
-            Staking
-          </Link> */}
+            My Collection
+          </Link>
           <button
             className="hidden md:block btn btn-primary px-6"
             onClick={() => {
@@ -80,12 +69,9 @@ export default function Navbar() {
       <div
         className={`flex-col md:hidden ${isShowingMenu ? "flex" : "hidden"}`}
       >
-        {/* <Link href="/model/1" className="pl-4 py-4 text-xl hover:text-primary">
-          Model Launchpad
-        </Link> */}
-        {/* <Link href="#" className="pl-4 py-4 text-xl hover:text-primary">
-          Staking
-        </Link> */}
+        <Link href="/account" className="pl-4 py-4 text-xl hover:text-primary">
+          My Collection
+        </Link>
         <div className="w-full px-4">
           <button
             className="btn btn-primary w-full"

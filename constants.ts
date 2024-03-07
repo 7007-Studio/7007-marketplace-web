@@ -1,3 +1,5 @@
+export const ModelIndex = 1n;
+
 export const TOKEN7007_CONTRACT_ADDRESS =
   "0x6aa8BAE94DbEC32CbeE952c9f7f4248D2103eD5B";
 export const STAKE7007_CONTRACT_ADDRESS =

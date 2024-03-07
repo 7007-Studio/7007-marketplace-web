@@ -25,7 +25,6 @@ const ModelLaunchpad = ({ modelIndex }: { modelIndex: number }) => {
 
   return (
     <>
-      <div className="pb-8">Display 1 of 1 models</div>
       <div className="flex flex-row gap-x-11 justify-between">
         <div>
           <div className="flex flex-row flex-wrap gap-10">
