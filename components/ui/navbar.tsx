@@ -1,18 +1,17 @@
 "use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import clsx from "clsx";
+
+import { ModelIndex } from "@/constants";
 
 export default function Navbar() {
   // hard coded
-  const modelIndex = 1;
+  const modelIndex = ModelIndex;
 
   const [isShowingMenu, setIsShowingMenu] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
 
   return (
     <>
@@ -30,18 +29,16 @@ export default function Navbar() {
         <div className="flex-none gap-10">
           <Link
             href="/account"
-            className="hidden md:block hover:text-primary cursor-pointer"
+            className="hidden md:inline-flex  hover:text-primary cursor-pointer"
           >
             My Collection
           </Link>
-          <button
-            className="hidden md:block btn btn-primary px-6"
-            onClick={() => {
-              router.push(`/collection/${modelIndex}/mint`);
-            }}
+          <Link
+            className="hidden md:inline-flex btn btn-primary px-6"
+            href={`/collection/${modelIndex}/mint`}
           >
             Generate
-          </button>
+          </Link>
           <div className="max-md:hidden">
             <ConnectButton showBalance={false} />
             <button
@@ -73,14 +70,12 @@ export default function Navbar() {
           My Collection
         </Link>
         <div className="w-full px-4">
-          <button
+          <Link
             className="btn btn-primary w-full"
-            onClick={() => {
-              router.push(`/collection/${modelIndex}/mint`);
-            }}
+            href={`/collection/${modelIndex}/mint`}
           >
             Generate
-          </button>
+          </Link>
         </div>
       </div>
     </>

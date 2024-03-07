@@ -32,6 +32,7 @@ import {
 
 import BuyButton from "@/components/buy-button";
 import Card from "@/components/ui/card";
+import { useListingModal } from "@/utils/modalProvider";
 
 function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
   if (!metadata) {
@@ -231,6 +232,8 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
     }
   }, [nftContract, isErc721, tokenURI, isErc1155, uri]);
 
+  const { showListingModal } = useListingModal();
+
   return (
     <Card className="w-[258px]">
       <div
@@ -279,9 +282,10 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
           {isOwner && (
             <button
               onClick={(e) => {
+                console.debug("List button clicked");
                 e.stopPropagation();
                 // show list modal for this (nftContract, tokenId, metadata)
-                // onListingNFT?.({ address: nftContract, tokenId, metadata });
+                showListingModal({ address: nftContract, tokenId, metadata });
               }}
               className="btn btn-primary"
               disabled={!!listing}

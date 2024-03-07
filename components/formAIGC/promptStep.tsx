@@ -10,23 +10,16 @@ import { getContractAddress } from "@/helpers";
 
 import { AIGCContent } from ".";
 import PromptForm from "./promptForm";
+import { Address } from "viem";
 
 interface PromptStepProps {
-  modelIndex: number;
+  nftContract: Address;
   onArtGenerated: (metadata: AIGCContent) => void;
 }
 
-const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
-  const { chainId } = useAccount();
-  const aigcFactory = getContractAddress("AIGCFactory", chainId);
-
-  const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
-    address: aigcFactory,
-    args: modelIndex ? [BigInt(modelIndex)] : undefined,
-  });
-
+const PromptStep = ({ nftContract, onArtGenerated }: PromptStepProps) => {
   const { data: modelName } = useReadAigcModelName({
-    address: aigcAddress,
+    address: nftContract,
   });
 
   return (

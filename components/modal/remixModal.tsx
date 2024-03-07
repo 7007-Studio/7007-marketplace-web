@@ -36,7 +36,7 @@ const RemixModal = React.forwardRef(
         <MintStep
           modelIndex={modelIndex}
           aigtAddress={aigtAddress}
-          aigcAddress={nftContract}
+          nftContract={nftContract}
           aigcContent={aigcContent}
           setAigcContent={(a) => {
             if (a) setAigcContent(a);

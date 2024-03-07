@@ -1,4 +1,6 @@
 import Tabs from "@/components/ui/tabs";
+import { ModelIndex } from "@/constants";
+import Link from "next/link";
 
 export default function HomeLayout({
   children,
@@ -17,7 +19,12 @@ export default function HomeLayout({
           This is a banner for on going model launch
         </h1>
         <p className="text-lg pb-20">Model description</p>
-        <button className="btn btn-primary btn-lg w-full max-w-sm">Mint</button>
+        <Link
+          href={`/collection/${ModelIndex}/mint`}
+          className="btn btn-primary btn-lg w-full max-w-sm"
+        >
+          Mint
+        </Link>
       </div>
       <div>
         <div className="flex pb-20">

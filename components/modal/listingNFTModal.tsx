@@ -2,26 +2,28 @@ import React, { RefObject, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
 import {
-  UseWriteContractParameters,
   useAccount,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { Abi, Address, erc721Abi, parseEther } from "viem";
+import {
+  Address,
+  erc721Abi,
+  isAddressEqual,
+  parseEther,
+  zeroAddress,
+} from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 import { NATIVE_TOKEN_ADDRESS } from "@/constants";
 import { getContractAddress } from "@/helpers";
 import {
   useReadAigcGetApproved,
-  useWriteAigcApprove,
-  useWriteAigcSetApprovalForAll,
   useWriteMarketplaceV3CreateListing,
 } from "@/generated";
 import { Metadata } from "@/types";
 
-import TextInput from "../form/textInput";
-import { WriteContractVariables } from "wagmi/query";
+import TextInput from "@/components/form/textInput";
 
 export interface ListingNFT {
   address: Address;
@@ -102,7 +104,11 @@ const ListingNFTModal = React.forwardRef(
       address: listingNFT?.address,
       args: listingNFT ? [BigInt(listingNFT?.tokenId)] : undefined,
     });
-    // setApprovedListing(approved);
+    useEffect(() => {
+      if (approved && !isAddressEqual(approved, zeroAddress)) {
+        setApprovedListing(true);
+      }
+    }, [approved]);
 
     // write contracts
     const { writeContract: approveListing, data: approveTx } =

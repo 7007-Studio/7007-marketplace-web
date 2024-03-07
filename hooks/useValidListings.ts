@@ -6,10 +6,11 @@ import {
 } from "@/generated";
 import { getContractAddress } from "@/helpers";
 import { Address, isAddressEqual } from "viem";
+import { sepolia } from "viem/chains";
 
 const useValidListings = ({
   listingCreator,
-  chainId,
+  chainId = sepolia.id,
 }: {
   listingCreator?: Address;
   chainId?: number;

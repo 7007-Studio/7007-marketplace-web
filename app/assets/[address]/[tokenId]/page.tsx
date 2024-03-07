@@ -11,23 +11,21 @@ import { Metadata } from "@/types";
 import { concatAddress, openseaUrl } from "@/helpers";
 import ArrowLeftIcon from "@/components/ui/arrowLeftIcon";
 import Card from "@/components/ui/card";
-import ListingNFTModal, {
-  ListingNFT,
-} from "@/components/modal/listingNFTModal";
+import { ListingNFT } from "@/components/modal/listingNFTModal";
 import Buy from "./buy";
 import SPIntegration from "./sp-integration";
 import RemixModal from "@/components/modal/remixModal";
 import { AIGCContent } from "@/components/formAIGC";
 import { getSrc } from "@livepeer/react/external";
 import * as Player from "@livepeer/react/player";
+import { useListingModal } from "@/utils/modalProvider";
 
 export default function Detail() {
   const router = useRouter();
   const params = useParams<{ address: string; tokenId: string }>();
   const { address: nftContract, tokenId } = params || {};
 
-  const listingNFTModalRef = useRef<HTMLDialogElement>(null);
-  const [listingNFT, setListingNFT] = useState<ListingNFT>();
+  const { showListingModal } = useListingModal();
 
   const remixModalRef = useRef<HTMLDialogElement>(null);
   const [original, setOriginal] = useState<AIGCContent>();
@@ -225,8 +223,7 @@ export default function Detail() {
                 nftContract={nftContract as Address}
                 tokenId={tokenId}
                 setListingLicense={(license: ListingNFT) => {
-                  setListingNFT(license);
-                  listingNFTModalRef.current?.showModal();
+                  showListingModal(license);
                 }}
                 onRemixClicked={() => {
                   remixModalRef?.current?.showModal();
@@ -236,11 +233,6 @@ export default function Detail() {
           </div>
         </div>
       </div>
-      <ListingNFTModal
-        ref={listingNFTModalRef}
-        listingNFT={listingNFT}
-        // listingSuccess={() => {TODO: refresh the card state}}
-      />
       {original && (
         <RemixModal
           ref={remixModalRef}

@@ -7,7 +7,7 @@ import useNftCollection from "@/hooks/useNftCollection";
 import NFTCard from "@/components/nftCard";
 
 const Collection = () => {
-  const { address, chain } = useAccount();
+  const { chain } = useAccount();
   const { nftContract } = useNftContract({
     modelIndex: ModelIndex,
     chainId: chain?.id,

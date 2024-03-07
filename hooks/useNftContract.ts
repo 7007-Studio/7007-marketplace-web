@@ -1,9 +1,10 @@
 import { useReadAigcFactoryDeployedAigCs } from "@/generated";
 import { getContractAddress } from "@/helpers";
+import { sepolia } from "viem/chains";
 
 const useNftContract = ({
   modelIndex,
-  chainId,
+  chainId = sepolia.id,
 }: {
   modelIndex: bigint;
   chainId?: number;

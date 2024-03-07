@@ -5,6 +5,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import { Barlow } from "next/font/google";
 import { Web3Provider } from "@/utils/web3Provider";
+import { ModalProvider } from "@/utils/modalProvider";
 
 import Navbar from "@/components/ui/navbar";
 
@@ -32,10 +33,12 @@ export default function RootLayout({
         className={`${barlow.className} bg-base-100`}
       >
         <Web3Provider>
-          <Navbar />
-          <main className="max-lg:hidden flex min-h-screen flex-col lg:py-10 md:px-20 2xl:px-24 mx-auto">
-            {children}
-          </main>
+          <ModalProvider>
+            <Navbar />
+            <main className="max-lg:hidden flex min-h-screen flex-col lg:py-10 md:px-20 2xl:px-24 mx-auto">
+              {children}
+            </main>
+          </ModalProvider>
         </Web3Provider>
       </body>
     </html>

@@ -18,18 +18,14 @@ import { getTokenURI } from "./ipfsHelper";
 import EditPromptModal from "../modal/editPromptModal";
 
 interface MintStepProps {
-  modelIndex: number | string;
-  aigtAddress: Address;
-  aigcAddress: Address;
+  nftContract: Address;
   aigcContent: AIGCContent;
   setAigcContent: (aigcContent?: AIGCContent) => void;
-  onMintSuccess: (tokenId: string | number) => void;
+  onMintSuccess: (tokenId: bigint) => void;
 }
 
 const MintStep = ({
-  modelIndex,
-  aigtAddress,
-  aigcAddress,
+  nftContract,
   aigcContent,
   setAigcContent,
   onMintSuccess,
@@ -43,10 +39,10 @@ const MintStep = ({
   const { openConnectModal } = useConnectModal();
 
   const { data: modelName } = useReadAigcModelName({
-    address: aigcAddress,
+    address: nftContract,
   });
   const { data: tokenId } = useReadAigcTokenId({
-    address: aigcAddress,
+    address: nftContract,
   });
 
   // write contracts
@@ -54,10 +50,12 @@ const MintStep = ({
 
   // contract events
   useWatchAigcTransferEvent({
-    address: aigcAddress,
+    address: nftContract,
     args: { to: connectedWallet },
     onLogs: () => {
-      onMintSuccess(String(tokenId));
+      if (tokenId) {
+        onMintSuccess(tokenId);
+      }
     },
   });
 
@@ -73,21 +71,20 @@ const MintStep = ({
 
     setMintInitialized(true);
 
-    const { name, prompt, seed, imageUrl, audioUrl } = aigcContent;
+    const { name, prompt, seed, imageUrl } = aigcContent;
     const { ipfsLinkMetadata, metadata } = await getTokenURI(
       modelName || "Genesis Model",
       name,
       prompt,
       seed,
-      imageUrl,
-      audioUrl
+      imageUrl
     );
 
     const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
 
     mintAIGC(
       {
-        address: aigcAddress,
+        address: nftContract,
         args: [
           ipfsLinkMetadata,
           hashedPrompt,
