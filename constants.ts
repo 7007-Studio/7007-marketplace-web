@@ -1,10 +1,4 @@
 export const ModelIndex = 1n;
 
-export const TOKEN7007_CONTRACT_ADDRESS =
-  "0x6aa8BAE94DbEC32CbeE952c9f7f4248D2103eD5B";
-export const STAKE7007_CONTRACT_ADDRESS =
-  "0x81602E59108F4013839af8a6c5Eb50e1a7b2afB8";
-
 export const NATIVE_TOKEN_ADDRESS =
   "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
-export const WRAPPED_ETH_ADDRESS = "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92";
