@@ -10,7 +10,7 @@ import {
   useWriteAigcMint,
 } from "@/generated";
 import generateAigcContent from "@/helpers/generateAigcContent";
-import ArrowLeftIcon from "@/components/arrowLeftIcon";
+import ArrowLeftIcon from "@/components/ui/arrowLeftIcon";
 
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { AIGCContent } from ".";

@@ -37,7 +37,7 @@ export default function Navbar() {
           <button
             className="hidden md:block btn btn-primary px-6"
             onClick={() => {
-              router.push(`/model/${modelIndex}/aigc/generate`);
+              router.push(`/collection/${modelIndex}/mint`);
             }}
           >
             Generate
@@ -76,7 +76,7 @@ export default function Navbar() {
           <button
             className="btn btn-primary w-full"
             onClick={() => {
-              router.push(`/model/${modelIndex}/aigc/generate`);
+              router.push(`/collection/${modelIndex}/mint`);
             }}
           >
             Generate

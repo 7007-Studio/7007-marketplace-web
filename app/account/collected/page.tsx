@@ -1,4 +1,4 @@
-import Collected from "@/components/collected";
+import Collected from "./collected";
 
 export default function CollectedPage() {
   return <Collected />;

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Barlow } from "next/font/google";
-import Navbar from "./navbar";
+import Navbar from "./ui/navbar";
 
 const barlow = Barlow({
   subsets: ["latin"],

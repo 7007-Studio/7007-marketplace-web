@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/router";
+import { useRouter, useParams } from "next/navigation";
 import { useAccount } from "wagmi";
 
 import {
@@ -13,21 +13,21 @@ import { getContractAddress } from "@/helpers";
 
 export default function GenerateAIGC() {
   const router = useRouter();
-  const { index } = router.query;
+  const { index } = useParams<{ index: string }>() || {};
 
   const { chainId } = useAccount();
   const aigcFactory = getContractAddress("AIGCFactory", chainId);
 
   const { data: aigtAddress } = useReadAigcFactoryDeployedAigTs({
     address: aigcFactory,
-    args: index ? [BigInt(index as string)] : undefined,
+    args: index ? [BigInt(index)] : undefined,
     query: {
       enabled: !!index,
     },
   });
   const { data: aigcAddress } = useReadAigcFactoryDeployedAigCs({
     address: aigcFactory,
-    args: index ? [BigInt(index as string)] : undefined,
+    args: index ? [BigInt(index)] : undefined,
     query: {
       enabled: !!index,
     },

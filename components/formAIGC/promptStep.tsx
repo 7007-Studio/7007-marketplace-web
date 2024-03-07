@@ -6,7 +6,6 @@ import {
   useReadAigcModelName,
   useReadAigcTokenId,
 } from "@/generated";
-import AigcNftCreated from "@/components/model/aigcNftCreated";
 import { getContractAddress } from "@/helpers";
 
 import { AIGCContent } from ".";
@@ -30,20 +29,6 @@ const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
     address: aigcAddress,
   });
 
-  const { data: lastTokenId } = useReadAigcTokenId({
-    address: aigcAddress,
-  });
-
-  const tokenIds = useMemo(() => {
-    const ids: number[] = [];
-    if (!lastTokenId) return ids;
-
-    for (let i = 0; i < Number(lastTokenId); i++) {
-      ids.push(i);
-    }
-    return ids;
-  }, [lastTokenId]);
-
   return (
     <>
       <h2 className="heading-lg 2xl:mt-24 mb-12 text-center">
@@ -55,14 +40,6 @@ const PromptStep = ({ modelIndex, onArtGenerated }: PromptStepProps) => {
           modelName={modelName || "Genesis Model"}
           onArtGenerated={onArtGenerated}
         />
-      </div>
-
-      <div className="mt-20 py-20 pt-10 max-w-[1106px] mx-auto">
-        <h2 className="heading-lg mb-12">By our community</h2>
-
-        {aigcAddress && (
-          <AigcNftCreated tokenIds={tokenIds} aigcAddress={aigcAddress} />
-        )}
       </div>
     </>
   );

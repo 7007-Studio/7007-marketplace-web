@@ -20,7 +20,7 @@ import {
 } from "@/generated";
 import { Metadata } from "@/types";
 
-import TextInput from "../textInput";
+import TextInput from "../form/textInput";
 import { WriteContractVariables } from "wagmi/query";
 
 export interface ListingNFT {

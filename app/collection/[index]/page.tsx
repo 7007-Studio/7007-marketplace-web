@@ -3,9 +3,10 @@
 import { useParams } from "next/navigation";
 import { useAccount } from "wagmi";
 
-import Hero from "@/components/model/hero";
 import useNftContract from "@/hooks/useNftContract";
 import useReadAigcContracts from "@/hooks/useReadAigcContracts";
+
+import Hero from "./hero";
 
 export default function CollectionPage() {
   const { index } = useParams<{ index: string }>() || {};

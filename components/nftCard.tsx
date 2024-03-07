@@ -31,7 +31,7 @@ import {
 } from "@/helpers";
 
 import BuyButton from "@/components/buy-button";
-import Card from "@/components/card";
+import Card from "@/components/ui/card";
 
 function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
   if (!metadata) {

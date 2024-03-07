@@ -6,7 +6,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { Barlow } from "next/font/google";
 import { Web3Provider } from "@/utils/web3Provider";
 
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/ui/navbar";
 import { Suspense } from "react";
 
 const barlow = Barlow({

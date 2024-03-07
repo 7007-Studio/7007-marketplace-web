@@ -4,7 +4,7 @@ import { useAccount } from "wagmi";
 import { useReadAigcFactoryDeployedAigTs, useReadAigtName } from "@/generated";
 import { concatAddress, getContractAddress } from "@/helpers";
 
-import Card from "./card";
+import Card from "./ui/card";
 
 export interface ModelCardProps {
   modelIndex: number;
@@ -28,7 +28,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
     <Card className="max-w-[390px]">
       <div
         className="p-6 hover:cursor-pointer"
-        onClick={() => router.push(`/model/${modelIndex}`)}
+        onClick={() => router.push(`/collection/${modelIndex}`)}
       >
         <div className="flex justify-between items-center">
           <h2 className="text-lg mb-4">{modelName}</h2>
@@ -86,7 +86,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
         <div className="py-6">
           <button
             className="btn btn-secondary w-full"
-            onClick={() => router.push(`/model/${modelIndex}`)}
+            onClick={() => router.push(`/collection/${modelIndex}`)}
           >
             Learn More
           </button>

@@ -1,4 +1,4 @@
-import Marketplace from "@/components/marketplace";
+import Marketplace from "./marketplace";
 
 export default function ListedPage() {
   return <Marketplace />;

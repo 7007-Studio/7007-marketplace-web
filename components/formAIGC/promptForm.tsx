@@ -1,6 +1,6 @@
 import generateAigcContent from "@/helpers/generateAigcContent";
 import { useForm, SubmitHandler, DefaultValues } from "react-hook-form";
-import TextInput from "../textInput";
+import TextInput from "../form/textInput";
 import { useState } from "react";
 import { AIGCContent } from ".";
 

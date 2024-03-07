@@ -9,8 +9,8 @@ import { useParams, useRouter } from "next/navigation";
 import { aigcAbi } from "@/generated";
 import { Metadata } from "@/types";
 import { concatAddress, openseaUrl } from "@/helpers";
-import ArrowLeftIcon from "@/components/arrowLeftIcon";
-import Card from "@/components/card";
+import ArrowLeftIcon from "@/components/ui/arrowLeftIcon";
+import Card from "@/components/ui/card";
 import ListingNFTModal, {
   ListingNFT,
 } from "@/components/modal/listingNFTModal";
