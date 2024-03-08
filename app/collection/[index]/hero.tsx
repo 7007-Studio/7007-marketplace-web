@@ -1,37 +1,15 @@
 import { concatAddress } from "@/helpers";
+import useReadAigcContracts from "@/hooks/useReadAigcContracts";
 import Image from "next/image";
 import React, { useEffect, useRef } from "react";
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 
 interface HeroProps {
-  aigtAddress?: Address;
-  modelName?: string;
+  nftContract?: Address;
 }
 
-const Hero = ({ aigtAddress, modelName }: HeroProps) => {
-  const stats = [
-    {
-      name: "Token Name",
-      value: "#test",
-    },
-    {
-      name: "Token Price",
-      value: "$-",
-    },
-    {
-      name: "Token Quantity",
-      value: "-",
-    },
-    {
-      name: "Maximum Claim",
-      value: "-",
-    },
-    {
-      name: "Minimum Buy",
-      value: "-",
-    },
-  ];
-
+const Hero = ({ nftContract = zeroAddress }: HeroProps) => {
+  const { name = "" } = useReadAigcContracts({ nftContract });
   const heroRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!heroRef.current) return;
@@ -41,9 +19,10 @@ const Hero = ({ aigtAddress, modelName }: HeroProps) => {
   return (
     <div ref={heroRef} className="py-16 px-20 bg-cover relative z-0">
       <div className="absolute inset-0 bg-gradient-to-r from-white from-20% via-white opacity-80 -z-10"></div>
-      <div className="flex flex-row gap-x-4">
-        <div className="flex-grow">
-          <h2 className="heading-lg mb-4">{modelName}</h2>
+      <div className="grid grid-cols-3 items-center">
+        <div className="col-span-2">
+          <h2 className="heading-lg mb-4">{name}</h2>
+          <div>Launched date: 2024-03-03</div>
           <div className="pb-8 flex flex-row align-center gap-x-2">
             <Image
               src="/icon-7007.svg"
@@ -51,7 +30,7 @@ const Hero = ({ aigtAddress, modelName }: HeroProps) => {
               width={24}
               height={24}
             />
-            <span>{concatAddress(aigtAddress || "")}</span>
+            <span>{concatAddress(nftContract)}</span>
             <Image src="/x.svg" alt="X" width={16} height={16} />
           </div>
           <div className="pb-6 flex gap-2">
@@ -65,20 +44,21 @@ const Hero = ({ aigtAddress, modelName }: HeroProps) => {
               Launched
             </span>
             <span className="py-[6px] px-[12px] badge text-sm">
-              Text-to-Music
+              Text-to-Text
             </span>
           </div>
           <div className="pb-16">
-            This is a testnet Model run with Stable Diffusion.
+            Pilot of on-chain AI, fine tuned with Stable diffusion model by
+            7007.Studio.
           </div>
-          <div className="flex flex-row gap-x-20">
-            {stats.map((i) => (
-              <div key={`${i.name}`} className="flex flex-col">
-                <span>{i.name}</span>
-                <span className="text-lg">{i.value}</span>
-              </div>
-            ))}
+        </div>
+
+        <div>
+          <div className="flex flex-row justify-between">
+            <div>70% minted</div>
+            <div>70 / 90</div>
           </div>
+          <progress className="progress w-full" value="70" max="100"></progress>
         </div>
       </div>
     </div>

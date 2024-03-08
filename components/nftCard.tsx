@@ -240,21 +240,6 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         className="hover:cursor-pointer"
         onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
       >
-        <div className="flex py-4 px-6 justify-between items-center">
-          {is7007Token(nftContract) && <span>7007 Genesis NFT</span>}
-          {!is7007Token(nftContract) && <span>&nbsp;</span>}
-          {name && (
-            <span className="badge badge-lg text-[#FF78F1] bg-[#FF78F1]/[0.12]">
-              {name}
-            </span>
-          )}
-          {isSPLicenseRegistry(nftContract, chainId) && (
-            <span className="badge badge-lg text-[#CC33CC] bg-[#CC33CC]/[0.12]">
-              License
-            </span>
-          )}
-        </div>
-
         <figure>
           <NFTCoverAsset metadata={metadata} />
         </figure>
