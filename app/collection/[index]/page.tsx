@@ -10,7 +10,7 @@ import Stats from "./stats";
 import Collection from "@/app/(home)/erc-7007/collection";
 
 export default function CollectionPage() {
-  const { index } = useParams<{ index: string }>() || {};
+  const { index } = useParams<{ index: string }>();
 
   const { chain } = useAccount();
   const { nftContract } = useNftContract({
