@@ -162,7 +162,7 @@ export default function Detail() {
                           className="grid grid-flow-col grid-cols-2 border-b-1"
                         >
                           <div>{attr.trait_type}:</div>
-                          <div>{attr.value}</div>
+                          <div className="break-all">{attr.value}</div>
                         </div>
                       ))}
                     </div>
