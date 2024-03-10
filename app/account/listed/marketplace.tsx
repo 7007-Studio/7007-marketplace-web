@@ -17,7 +17,7 @@ const Marketplace = () => {
   return (
     <>
       <div className="flex flex-row gap-x-11 justify-between">
-        <div className="flex flex-row flex-wrap gap-6 items-start">
+        <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
           {listings?.map((l) => (
             <NFTCard
               key={l.listingId}

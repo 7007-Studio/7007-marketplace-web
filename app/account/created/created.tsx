@@ -52,7 +52,7 @@ const Collected = () => {
     <>
       <div className="flex flex-row gap-x-11 justify-between">
         {(nftContract && (
-          <div className="flex flex-row flex-wrap gap-6 items-start">
+           <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
             {tokenIds.map((id) => (
               <NFTCard
                 key={`${nftContract}-${id}`}
@@ -62,7 +62,7 @@ const Collected = () => {
             )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
           </div>
         )) || (
-          <div className="flex flex-row flex-wrap gap-6 items-start absolute">
+          <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
             {emptyCardList.map((l) => (
               <EmptyCard key={l} />
             ))}

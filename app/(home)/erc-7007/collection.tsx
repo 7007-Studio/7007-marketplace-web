@@ -30,7 +30,7 @@ const Collection = () => {
           )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
         </div>
       )) || (
-        <div className="columns-3 max-w-[835px] xl:columns-4 xl:max-w-[1106px]">
+        <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
           {emptyCardList.map((l) => (
             <EmptyCard key={l} />
           ))}
