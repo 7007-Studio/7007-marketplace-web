@@ -32,6 +32,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",
+    "react-loading-skeleton": "^3.4.0",
     "recharts": "^2.12.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
