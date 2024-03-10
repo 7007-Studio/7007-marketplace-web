@@ -9,6 +9,7 @@ import { getPublicClient } from "@/client";
 import { ModelIndex } from "@/constants";
 import useNftContract from "@/hooks/useNftContract";
 import NFTCard from "@/components/nftCard";
+import EmptyCard from "@/components/emptyCard";
 
 const Collected = () => {
   const { address, chain } = useAccount();
@@ -16,6 +17,7 @@ const Collected = () => {
     modelIndex: ModelIndex,
     chainId: chain?.id,
   });
+  const emptyCardList = [...Array(1).keys()];
 
   const [tokenIds, setTokenIds] = useState<bigint[]>([]);
   useEffect(() => {
@@ -49,7 +51,7 @@ const Collected = () => {
   return (
     <>
       <div className="flex flex-row gap-x-11 justify-between">
-        {nftContract && (
+        {(nftContract && (
           <div className="flex flex-row flex-wrap gap-6 items-start">
             {tokenIds.map((id) => (
               <NFTCard
@@ -57,6 +59,12 @@ const Collected = () => {
                 nftContract={nftContract}
                 tokenId={id}
               />
+            )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
+          </div>
+        )) || (
+          <div className="flex flex-row flex-wrap gap-6 items-start absolute">
+            {emptyCardList.map((l) => (
+              <EmptyCard key={l} />
             ))}
           </div>
         )}

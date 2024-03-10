@@ -10,6 +10,7 @@ import { getPublicClient } from "@/client";
 import { ModelIndex } from "@/constants";
 import useNftContract from "@/hooks/useNftContract";
 import NFTCard from "@/components/nftCard";
+import EmptyCard from "@/components/emptyCard";
 
 const Collected = () => {
   const { address, chain } = useAccount();
@@ -17,6 +18,7 @@ const Collected = () => {
     modelIndex: ModelIndex,
     chainId: chain?.id,
   });
+  const emptyCardList = [...Array(1).keys()];
 
   const { data: lastTokenId } = useReadAigcTokenId({
     address: nftContract,
@@ -61,7 +63,7 @@ const Collected = () => {
 
   return (
     <>
-      {nftContract && (
+      {(nftContract && (
         <div className="flex flex-row flex-wrap gap-6 items-start">
           {filteredTokenIds.map((id) => (
             <NFTCard
@@ -69,6 +71,12 @@ const Collected = () => {
               nftContract={nftContract}
               tokenId={id}
             />
+          )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
+        </div>
+      )) || (
+        <div className="flex flex-row flex-wrap gap-6 items-start">
+          {emptyCardList.map((l) => (
+            <EmptyCard key={l} />
           ))}
         </div>
       )}

@@ -14,6 +14,10 @@ import {
   isAddressEqual,
 } from "viem";
 
+// skeleton
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 // livepeer
 import { getSrc } from "@livepeer/react/external";
 import * as Player from "@livepeer/react/player";
@@ -37,7 +41,7 @@ import { useListingModal } from "@/utils/modalProvider";
 function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
   if (!metadata) {
     return (
-      <div className="flex w-full h-[258px] justify-center items-center">
+      <div className="flex w-full h-[258px] justify-center items-center absolute left-0 top-0">
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     );
@@ -47,7 +51,7 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
     // if animation url starts with https:// do the following
     if (!metadata.animation_url.startsWith("https://vod")) {
       return (
-        <div className="max-h-[258px] overflow-hidden">
+        <div className="max-h-[258px] overflow-hidden absolute left-0 top-0">
           <iframe src={metadata.animation_url} width={258} height={258} />
         </div>
       );
@@ -84,7 +88,7 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
         alt={metadata?.name}
         width={258}
         height={258}
-        className="w-full object-cover aspect-square"
+        className="w-full object-cover aspect-square absolute left-0 top-0 bg-[#eee]"
       />
     );
   }
@@ -240,13 +244,13 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         className="hover:cursor-pointer"
         onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
       >
-        <figure>
+        <figure className="pb-[100%] relative bg-[#eee]">
           <NFTCoverAsset metadata={metadata} />
         </figure>
 
         <div className="card-body flex-grow gap-2">
-          <h3 className="heading-md">{metadata?.name}</h3>
-          <p className="pb-4">{metadata?.description}</p>
+          <h3 className="heading-md">{metadata?.name || <Skeleton count={2} />}</h3>
+          <p className="pb-4">{metadata?.description || <Skeleton count={5} />}</p>
 
           {listing && !isOwner && (
             <>
@@ -254,11 +258,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
                 <span className="heading-md">
                   {decimals?.result
                     ? formatUnits(listing.pricePerToken, decimals.result)
-                    : formatEther(listing.pricePerToken)}{" "}
-                  {symbol?.result ? symbol.result : "ETH"}
+                    : formatEther(listing.pricePerToken) || <Skeleton />}{" " || <Skeleton />}
+                  {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
                 </span>
                 <span className="text-sm">
-                  {formatDaysLeft(Number(listing.endTimestamp) * 1000)}
+                  {formatDaysLeft(Number(listing.endTimestamp) * 1000) || <Skeleton />}
                 </span>
               </div>
               <BuyButton listing={listing} />

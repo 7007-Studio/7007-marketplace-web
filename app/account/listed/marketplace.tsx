@@ -3,6 +3,7 @@
 import { useAccount } from "wagmi";
 
 import NFTCard from "@/components/nftCard";
+import EmptyCard from "@/components/emptyCard";
 import useValidListings from "@/hooks/useValidListings";
 
 const Marketplace = () => {
@@ -11,6 +12,7 @@ const Marketplace = () => {
     listingCreator: address,
     chainId: chain?.id,
   });
+  const emptyCardList = [...Array(1).keys()];
 
   return (
     <>
@@ -23,7 +25,7 @@ const Marketplace = () => {
               tokenId={l.tokenId}
               listing={l}
             />
-          ))}
+          )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
         </div>
       </div>
     </>
