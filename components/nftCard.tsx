@@ -42,7 +42,7 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
   if (!metadata) {
     return (
       <div className="flex w-full h-[258px] justify-center items-center absolute left-0 top-0">
-        <span className="loading loading-spinner loading-lg"></span>
+        <Skeleton height="100%"/>
       </div>
     );
   }
