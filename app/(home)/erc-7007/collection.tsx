@@ -9,9 +9,9 @@ import EmptyCard from "@/components/emptyCard";
 
 // variables
 const ITEMS_PER_PAGE = 8;
-const SCROLL_THRESHOLD = 800;
+const SCROLL_THRESHOLD = 1200;
 const INITIAL_EMPTY_CARDS_COUNT = 1;
-let PREV_SCROLL_Y= 0;
+let PREV_SCROLL_Y = 0;
 
 const Collection = () => {
   const { chain } = useAccount();
@@ -25,7 +25,7 @@ const Collection = () => {
   const emptyCardList = Array.from({ length: INITIAL_EMPTY_CARDS_COUNT });
 
   const handleScroll = () => {
-    const currentScrollY = window.scrollY + 500;
+    const currentScrollY = window.scrollY + 500; // banner height
     if (currentScrollY - PREV_SCROLL_Y > SCROLL_THRESHOLD) {
       PREV_SCROLL_Y = currentScrollY;
       setStartIndex((prevIndex) => prevIndex + 1);
@@ -53,8 +53,8 @@ const Collection = () => {
 
   return (
     <>
-      <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
-        {tokenIds.length > 0
+      <div className="max-w-[828px] xl:max-w-[1106px] flex flex-wrap justify-between">
+        {nftContract && tokenIds.length > 0
           ? tokenIds.map((id) => (
               <NFTCard
                 key={`${nftContract}-${id}`}

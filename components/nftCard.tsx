@@ -239,7 +239,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const { showListingModal } = useListingModal();
 
   return (
-    <Card className="w-[258px]">
+    <Card className="w-[258px] h-fit rounded-md flex flex-col justify-between">
       <div
         className="hover:cursor-pointer"
         onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
