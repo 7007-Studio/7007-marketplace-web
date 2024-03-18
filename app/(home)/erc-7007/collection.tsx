@@ -53,14 +53,20 @@ const Collection = () => {
 
   return (
     <>
-      <div className="max-w-[828px] xl:max-w-[1106px] flex flex-wrap justify-between">
+      <div className="gap-[20px] xl:gap-0 xl:max-w-[1106px] flex flex-nowrap">
         {nftContract && tokenIds.length > 0
-          ? tokenIds.map((id) => (
-              <NFTCard
-                key={`${nftContract}-${id}`}
-                nftContract={nftContract}
-                tokenId={BigInt(id)}
-              />
+          ? [0, 1, 2, 3].map((index) => (
+              <div key={index} className="w-[23%] xl:w-1/4">
+                {tokenIds
+                  .filter((_, i) => i % 4 === index)
+                  .map((id) => (
+                    <NFTCard
+                      key={`${nftContract}-${id}`}
+                      nftContract={nftContract}
+                      tokenId={BigInt(id)}
+                    />
+                  ))}
+              </div>
             ))
           : emptyCardList.map((_, index) => <EmptyCard key={index} />)}
       </div>
