@@ -34,6 +34,12 @@ export default function Navbar() {
             My Collection
           </Link>
           <Link
+            href="/create"
+            className="hidden md:inline-flex  hover:text-primary cursor-pointer"
+          >
+            Create
+          </Link>
+          <Link
             className="hidden md:inline-flex btn btn-primary px-6"
             href={`/collection/${modelIndex}/mint`}
           >
