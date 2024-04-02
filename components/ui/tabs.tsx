@@ -23,7 +23,7 @@ function Tab({
 }) {
   return (
     <a
-      className={clsx("tab", {
+      className={clsx("text-white tab", {
         "tab-active": isActive,
       })}
       onClick={onClick}
@@ -37,7 +37,7 @@ export default function Tabs({ tabs }: TabsProps) {
   const router = useRouter();
   const pathname = usePathname();
   return (
-    <div className="tabs tabs-lg tabs-bordered gap-4">
+    <div className="tabs tabs-lg tabs-bordered bg-white/20 gap-4">
       {tabs.map((tab) => (
         <Tab
           key={tab.label}

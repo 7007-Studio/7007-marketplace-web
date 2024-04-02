@@ -10,7 +10,7 @@ const Card = ({
 }) => (
   <div
     className={clsx(
-      `card border-2 border-neutral-50 overflow-hidden mb-[24px]`,
+      `card border-2 border-white bg-black overflow-hidden mb-[24px]`,
       className
     )}
   >
