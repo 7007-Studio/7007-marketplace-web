@@ -91,43 +91,35 @@ export default function table() {
   });
 
   return (
-    <div className=" border-black border-2">
-      <details className="dropdown">
-        <summary className="m-1 btn">
-          LAST 24 HOURS <ChevronDown />
-        </summary>
-        <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-          <li>
-            <a>Item 1</a>
-          </li>
-          <li>
-            <a>Item 2</a>
-          </li>
-        </ul>
-      </details>
-      <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box w-[85%]">
-        <li>
-          <a>TRENDINGS</a>
-        </li>
-        <li>
-          <a>1HR</a>
-        </li>
-        <li>
-          <a>6HR</a>
-        </li>
-        <li>
-          <a>24HR</a>
-        </li>
-        <li>
-          <a>7DAYS</a>
-        </li>
-        <li>
-          <a>30DAYS</a>
-        </li>
-        <li>
-          <a>ALL</a>
-        </li>
-      </ul>
+    <div className=" border-white rounded-md my-4 border-2 col-span-4">
+      <div className="flex border-b-2 border-gray-700">
+        <details className="dropdown">
+          <summary className="m-1 btn bg-gray-900">
+            LAST 24 HOURS <ChevronDown />
+          </summary>
+          <ul className="p-2 shadow menu dropdown-content z-[1] bg-red-500 rounded-box w-52">
+            <li>
+              <a>Item 1</a>
+            </li>
+            <li>
+              <a>Item 2</a>
+            </li>
+          </ul>
+        </details>
+        <div className='w-1/2 flex justify-start items-center'>
+            <ul className="menu menu-vertical lg:menu-horizontal">
+            <li className='border-r-2 border-gray-200'><a>TRENDINGS</a></li>
+            <li className='border-r-2 border-gray-50'><a>1HR</a></li>
+            <li className='border-r-2 border-gray-50'><a>6HR</a></li>
+            <li className='border-r-2 border-gray-50'><a>24HR</a></li>
+            <li className='border-r-2 border-gray-50'><a>7DAYS</a></li>
+            <li className='border-r-2 border-gray-50'><a>30DAYS</a></li>
+            <li><a>ALL</a></li>
+            </ul>
+        </div>
+      </div>
+
+
       <div className="h-2 " />
       <table className="w-full border-t-2 border-black p-4">
         <thead className="">

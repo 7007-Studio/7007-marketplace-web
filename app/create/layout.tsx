@@ -16,7 +16,7 @@ export default function CreateLayout({
   ];
 
   return (
-    <div>
+    <div className="mt-40">
         <div className="grid grid-cols-6">
           <div></div>
           <div className="col-span-4">
@@ -28,7 +28,7 @@ export default function CreateLayout({
           </div>
           
         </div>
-        <div className="relative">
+        {/* <div className="relative">
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
             <h1 className="text-8xl font-bold text-white">TOKEN TRADING</h1>
           </div>
@@ -39,10 +39,17 @@ export default function CreateLayout({
             height={300}
             className="w-full"
           />
-        </div>
-
-        <div className="flex pb-5">
-          <Tabs tabs={tabs} />
+        </div> */}
+        <div className="grid grid-cols-6 mb-5 border-b-2 opacity-50 border-white">
+          <div></div>
+          <ul className="flex gap-4">
+              <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
+                  <a href="/create/dashboard" className="text-gray-900 dark:text-white hover:text-white" aria-current="page">DASHBOARD</a>
+              </li>
+              <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
+                  <a href="/create/tokenTrading" className="text-gray-900 dark:text-white">TOKEN TRADING</a>
+              </li>
+          </ul>
         </div>
       {children}
     </div>

@@ -85,7 +85,7 @@ export default function BasicTrading() {
   return (
     <>
     { isChecked &&     
-        <div className='flex flex-col'>
+        <div className='flex flex-col mt-5'>
             <div className='grid grid-cols-6 gap-4'>
                 <div></div>
                 <div>ADVANCED TRADE MODE</div>
@@ -127,8 +127,8 @@ export default function BasicTrading() {
                         </ul>
                     </div>
                     <div className='flex'>
-                        <div className='flex flex-col'>
-                            <div className='w-[850px] h-[569px] border-2 border-black'></div>
+                        <div className='flex flex-col border-2 border-gray-500'>
+                            <div className='w-[850px] h-[569px] border-2 border-gray-500'></div>
                             <div className="overflow-x-auto w-[850px] h-[400px] border-2 border-black">
                                 <table className="table overflow-y-auto">
                                     {/* head */}
@@ -208,9 +208,9 @@ export default function BasicTrading() {
 
                     </div>
                     <div className='flex mt-4'>
-                        <div className='flex justify-between w-[50%] items-center'>
+                        <div className='flex justify-between w-[68%] items-center'>
                             <div className="flex flex-col w-1/3">
-                                <div className='border-2 border-black  flex justify-evenly items-center h-[90px] rounded-lg'>
+                                <div className='border-2 border-gray-500  flex justify-evenly items-center h-[90px] rounded-lg'>
                                     <div>1.22544521122</div>
                                     <img className='w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
                                 </div>
@@ -219,7 +219,7 @@ export default function BasicTrading() {
                             
                             <ChevronRight className='scale-150'/>
                             <div className="flex flex-col w-1/3">
-                            <div className='border-2 border-black  flex justify-evenly items-center h-[90px] rounded-lg'>
+                            <div className='border-2 border-gray-500 flex justify-evenly items-center h-[90px] rounded-lg'>
                                     <div>1.22544521122</div>
                                     <img className='w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
                                 </div>
@@ -234,13 +234,13 @@ export default function BasicTrading() {
         </div>
     }
     { !isChecked &&     
-        <div className='flex flex-col'>
+        <div className='flex flex-col mt-5'>
             <div className='grid grid-cols-6 gap-4'>
                 <div></div>
-                <p>BASIC TRADING MODE</p>
                 <div></div>
+                <div>BASIC TRADING MODE</div>
                 <div></div>
-                <div className='flex justify-center items-start'>
+                <div className='col-span-2'>
                     <div className='flex justify-center items-center gap-4'>
                         MODE: BASIC
                         <label className='flex cursor-pointer select-none'>
@@ -263,18 +263,17 @@ export default function BasicTrading() {
             </div>
             <div className='grid grid-cols-6 gap-4'>
                 <div></div>
-                <div className='col-span-4 flex flex-col justify-center gap-2'>
+                <div></div>
+                <div className='col-span-4 flex flex-col gap-2'>
                     <div>
                         <div className='grid grid-cols-6 gap-4'>
-                            <div></div>
                             <div>YOU PAY</div>
                         </div>
                         <div className='grid grid-cols-6 gap-4'>
-                            <div></div>
                             <div className='col-span-3 flex justify-between items-center'>
                                 
-                                <div className='flex justify-between border-2 border-black rounded-lg w-[313px] h-[79px]'>
-                                    <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs border-none focus:outline-none" />
+                                <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
+                                    <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
                                     <p className='flex items-end p-2'>ETH</p>
                                 </div>
                                 
@@ -297,21 +296,18 @@ export default function BasicTrading() {
                     </div>
                     
                     <div className='grid grid-cols-6 gap-4'>
-                        <div></div>
                         <div className='col-span-3 flex justify-center  my-5'> <ChevronDown /></div>
                     </div>    
 
                     <div>
                         <div className='grid grid-cols-6 gap-4'>
-                            <div></div>
                             <div>You Recieved</div>
                         </div>
                         <div className='grid grid-cols-6 gap-4'>
-                            <div></div>
                             <div className='col-span-3 flex justify-between items-center'>
                                 
-                                <div className='flex justify-between border-2 border-black rounded-lg w-[313px] h-[79px]'>
-                                    <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs border-none focus:outline-none" />
+                            <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
+                                    <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
                                     <p className='flex items-end p-2'>ETH</p>
                                 </div>
                                 
