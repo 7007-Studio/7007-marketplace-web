@@ -1,6 +1,6 @@
-"use client" 
+"use client";
 
-import React from 'react'
+import React from "react";
 import {
   ColumnDef,
   flexRender,
@@ -8,75 +8,75 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from '../../data'
-import { ChevronDown } from 'lucide-react';
+} from "@tanstack/react-table";
+import { makeData, Person } from "../../data";
+import { ChevronDown } from "lucide-react";
 
 export default function table() {
-  const rerender = React.useReducer(() => ({}), {})[1]
+  const rerender = React.useReducer(() => ({}), {})[1];
 
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
-        accessorKey: 'token',
-        header: () => 'TOKEN',
-        cell: info => (
+        accessorKey: "token",
+        header: () => "TOKEN",
+        cell: (info) => (
           <div>
             <div>Token: {info.getValue()}</div>
             <div>(additional info here)</div>
           </div>
         ),
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'price',
-        header: () => 'PRICE',
-        footer: props => props.column.id,
+        accessorKey: "price",
+        header: () => "PRICE",
+        footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'age',
-        header: () => 'AGE',
-        footer: props => props.column.id,
+        accessorKey: "age",
+        header: () => "AGE",
+        footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'buys',
+        accessorKey: "buys",
         header: () => <span>BUYS</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'sells',
-        header: 'SELLS',
-        footer: props => props.column.id,
+        accessorKey: "sells",
+        header: "SELLS",
+        footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'volume',
-        header: 'VOLUME',
-        footer: props => props.column.id,
+        accessorKey: "volume",
+        header: "VOLUME",
+        footer: (props) => props.column.id,
         sortDescFirst: true, // This column will sort in descending order first (default for number columns anyway)
       },
       {
-        accessorKey: 'makers',
-        header: 'MAKERS',
-        footer: props => props.column.id,
+        accessorKey: "makers",
+        header: "MAKERS",
+        footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'liquidity',
-        header: 'LIQUIDITY',
-        footer: props => props.column.id,
+        accessorKey: "liquidity",
+        header: "LIQUIDITY",
+        footer: (props) => props.column.id,
       },
       {
-        accessorKey: 'fdv',
-        header: 'FDV',
-        footer: props => props.column.id,
+        accessorKey: "fdv",
+        header: "FDV",
+        footer: (props) => props.column.id,
       },
     ],
     []
-  )
+  );
 
-  const [data, setData] = React.useState(() => makeData(10_000))
-  const refreshData = () => setData(() => makeData(10_000))
+  const [data, setData] = React.useState(() => makeData(10_000));
+  const refreshData = () => setData(() => makeData(10_000));
 
   const table = useReactTable({
     data,
@@ -88,49 +88,69 @@ export default function table() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
-  })
+  });
 
   return (
     <div className=" border-black border-2">
       <details className="dropdown">
-        <summary className="m-1 btn">LAST 24 HOURS <ChevronDown /></summary>
+        <summary className="m-1 btn">
+          LAST 24 HOURS <ChevronDown />
+        </summary>
         <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-          <li><a>Item 1</a></li>
-          <li><a>Item 2</a></li>
+          <li>
+            <a>Item 1</a>
+          </li>
+          <li>
+            <a>Item 2</a>
+          </li>
         </ul>
       </details>
       <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box w-[85%]">
-        <li><a>TRENDINGS</a></li>
-        <li><a>1HR</a></li>
-        <li><a>6HR</a></li>
-        <li><a>24HR</a></li>
-        <li><a>7DAYS</a></li>
-        <li><a>30DAYS</a></li>
-        <li><a>ALL</a></li>
+        <li>
+          <a>TRENDINGS</a>
+        </li>
+        <li>
+          <a>1HR</a>
+        </li>
+        <li>
+          <a>6HR</a>
+        </li>
+        <li>
+          <a>24HR</a>
+        </li>
+        <li>
+          <a>7DAYS</a>
+        </li>
+        <li>
+          <a>30DAYS</a>
+        </li>
+        <li>
+          <a>ALL</a>
+        </li>
       </ul>
       <div className="h-2 " />
-      <table className='w-full border-t-2 border-black p-4'>
-        <thead className=''>
-          {table.getHeaderGroups().map(headerGroup => (
+      <table className="w-full border-t-2 border-black p-4">
+        <thead className="">
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div
                         className={
                           header.column.getCanSort()
-                            ? 'cursor-pointer select-none text-left	'
-                            : 'text-left	'
+                            ? "cursor-pointer select-none text-left	"
+                            : "text-left	"
                         }
                         onClick={header.column.getToggleSortingHandler()}
                         title={
                           header.column.getCanSort()
-                            ? header.column.getNextSortingOrder() === 'asc'
-                              ? 'Sort ascending'
-                              : header.column.getNextSortingOrder() === 'desc'
-                                ? 'Sort descending'
-                                : 'Clear sort'
+                            ? header.column.getNextSortingOrder() === "asc"
+                              ? "Sort ascending"
+                              : header.column.getNextSortingOrder() === "desc"
+                                ? "Sort descending"
+                                : "Clear sort"
                             : undefined
                         }
                       >
@@ -139,13 +159,13 @@ export default function table() {
                           header.getContext()
                         )}
                         {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
+                          asc: " 🔼",
+                          desc: " 🔽",
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}
                   </th>
-                )
+                );
               })}
             </tr>
           ))}
@@ -154,10 +174,10 @@ export default function table() {
           {table
             .getRowModel()
             .rows.slice(0, 10)
-            .map(row => {
+            .map((row) => {
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
+                  {row.getVisibleCells().map((cell) => {
                     return (
                       <td key={cell.id}>
                         {flexRender(
@@ -165,10 +185,10 @@ export default function table() {
                           cell.getContext()
                         )}
                       </td>
-                    )
+                    );
                   })}
                 </tr>
-              )
+              );
             })}
         </tbody>
       </table>
@@ -181,5 +201,5 @@ export default function table() {
       </div>
       <pre>{JSON.stringify(sorting, null, 2)}</pre>
     </div>
-);
+  );
 }

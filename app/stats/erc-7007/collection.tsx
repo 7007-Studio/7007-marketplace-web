@@ -20,7 +20,7 @@ const Collection = () => {
   return (
     <>
       {(nftContract && (
-       <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
+        <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
           {tokenIds.map((id) => (
             <NFTCard
               key={`${nftContract}-${id}`}
@@ -36,7 +36,7 @@ const Collection = () => {
           ))}
         </div>
       )}
-    </> 
+    </>
   );
 };
 

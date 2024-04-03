@@ -3,7 +3,6 @@
 import Tabs from "@/components/ui/tabs";
 import React from 'react'
 import Image from "next/image";
-import { Fullscreen } from "lucide-react";
 
 export default function CreateLayout({
   children,

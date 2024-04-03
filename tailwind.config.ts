@@ -66,6 +66,7 @@ const config = {
     },
     extend: {
       colors: {
+        grey: "#313131",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -103,7 +104,7 @@ const config = {
         neutral,
       },
       textColor: {
-        primary: "#FFC900",
+        primary: "#FFFFFF",
         secondary: "#222027",
         neutral,
       },

@@ -12,12 +12,18 @@ const emptyCard = () => {
       <div>
         <figure className="pb-[100%] relative">
           <div className="w-full aspect-square absolute left-0 top-[-5px]">
-            <Skeleton height="100%" />
+            <Skeleton height="100%" baseColor="#131313" highlightColor="#000" />
           </div>
         </figure>
-        <div className="card-body flex-grow gap-2">
-          <h3 className="heading-md">{<Skeleton count={2} />}</h3>
-          <p className="pb-4">{<Skeleton count={10} />}</p>
+        <div className="card-body flex-grow gap-4">
+          <h3 className="heading-md">
+            {<Skeleton count={1} baseColor="grey" />}
+          </h3>
+          <p className="">{<Skeleton count={3} baseColor="grey" />}</p>
+          <div className="flex gap-10">
+            <p className="">{<Skeleton baseColor="grey" />}</p>
+            <p className="">{<Skeleton baseColor="grey" />}</p>
+          </div>
         </div>
       </div>
     </Card>

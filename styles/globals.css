@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 0 0% 100%;
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -37,7 +37,7 @@
 
   .dark {
     --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --foreground: 0 0% 100%;
 
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
@@ -71,15 +71,15 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-white;
   }
 }
 
 @layer components {
   [data-theme="light-7007"] .card {
-    @apply border-neutral-50;
-    background-color: theme("colors.white");
-    border-radius: 6px;
+    @apply border-white;
+    background-color: theme("colors.black");
+    border-radius: 10px;
   }
 
   .tabs-bordered > .tab {

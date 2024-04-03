@@ -91,7 +91,7 @@ export default function BasicTrading() {
                 <div>ADVANCED TRADE MODE</div>
                 <div></div>
                 <div></div>
-                <div>
+                <div className='col-span-2'>
                     <div className='flex justify-center items-start'>
                         <div className='flex justify-center items-center gap-4'>
                             MODE: BASIC

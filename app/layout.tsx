@@ -3,15 +3,15 @@ import { Metadata } from "next";
 import "@/styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { Barlow } from "next/font/google";
+import { Syncopate } from "next/font/google";
 import { Web3Provider } from "@/utils/web3Provider";
 import { ModalProvider } from "@/utils/modalProvider";
 
 import Navbar from "@/components/ui/navbar";
 
-const barlow = Barlow({
+const syncopate = Syncopate({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -28,14 +28,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        data-theme="light-7007"
-        className={`${barlow.className} bg-base-100`}
-      >
+      <body data-theme="light-7007" className={`${syncopate.className}`}>
         <Web3Provider>
           <ModalProvider>
             <Navbar />
-            <main className="max-lg:hidden flex min-h-screen flex-col lg:py-10 md:px-20 2xl:px-24 mx-auto">
+            <main className="max-lg:hidden flex min-h-screen bg-black text-white flex-col">
               {children}
             </main>
           </ModalProvider>
