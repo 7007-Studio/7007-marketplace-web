@@ -24,6 +24,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "connectkit": "^1.7.2",
+    "cryptocurrency-icons": "^0.18.1",
     "eth-rpc-errors": "^4.0.3",
     "ethers": "^6.11.1",
     "ipfs-http-client": "^60.0.1",
@@ -39,7 +40,8 @@
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "viem": "^2.7.15",
-    "wagmi": "^2.5.7"
+    "wagmi": "^2.5.7",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
