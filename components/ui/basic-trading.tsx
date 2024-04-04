@@ -1,6 +1,6 @@
 "use client" 
 
-import React from 'react'
+import React, { useState } from 'react'
 import { ChevronDown, BadgeDollarSign, ChevronRight } from 'lucide-react';
 import { ExternalLink } from 'lucide-react';
 import { create } from 'zustand'
@@ -17,11 +17,7 @@ interface CheckboxState {
     setIsChecked: (isChecked) => set({ isChecked }),
   }));
 import { faker } from '@faker-js/faker';
-
-
-
-
-
+import { Tienne } from 'next/font/google';
 
 export type TradingRecord = {
     amount: number
@@ -46,7 +42,9 @@ export type TradingRecord = {
 
 export default function BasicTrading() {
     const { isChecked, setIsChecked } = useCheckboxStore();
-   
+    const [timeFilter, setTimeFilter] = useState('24h');
+    const [clickedItem, setClickedItem] = useState<string | null>(null);
+
     const randomValue = Math.floor(Math.random() * 21) - 10;
     // Determine the color based on the randomValue
   const color = randomValue > 0 ? 'green' : 'red';
@@ -80,60 +78,83 @@ export default function BasicTrading() {
   // Generate fake trading records
   const fakeTradingRecords = generateFakeTradingRecords(10);
 
-
+  const handleClickTimeFilter = (timeFilter: string) => {
+    setClickedItem(timeFilter); 
+  }
   
   return (
+    
     <>
-    { isChecked &&     
-        <div className='flex flex-col mt-5'>
-            <div className='grid grid-cols-6 gap-4'>
-                <div></div>
-                <div>ADVANCED TRADE MODE</div>
-                <div></div>
-                <div></div>
-                <div className='col-span-2'>
-                    <div className='flex justify-center items-start'>
-                        <div className='flex justify-center items-center gap-4'>
-                            MODE: BASIC
-                            <label className='flex cursor-pointer select-none'>
-                                <div className='relative'>
-                                    <input
-                                        type='checkbox'
-                                        checked={isChecked}
-                                        onChange={handleCheckboxChange}
-                                        className='sr-only'
-                                    />
-                                    <div className='block h-8 w-14 rounded-full bg-[#E5E7EB]'></div>
-                                    <div className='dot absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition'></div>
-                                </div>
-                            </label>
-                            ADVANCED
+    <div className='grid grid-cols-6 gap-4'>
+        <div></div>
+        <div>{ isChecked ? 'ADVANCED TRADE MODE' : 'BASIC TRADE MODE'}</div>
+        <div></div>
+        <div></div>
+        <div className='col-span-2'>
+            <div className='flex justify-center items-start'>
+                <div className='flex justify-center items-center gap-4'>
+                    MODE:
+                    <span style={{ color: isChecked ? '' : '#2B8BFC' }}>BASIC</span> 
+                    <label className='flex cursor-pointer select-none'>
+                        <div className='relative'>
+                            <input
+                                type='checkbox'
+                                checked={isChecked}
+                                onChange={handleCheckboxChange}
+                                className='sr-only'
+                            />
+                            <div className='block h-8 w-14 rounded-full bg-[#E5E7EB]'></div>
+                            <div className='dot absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition'></div>
                         </div>
+                    </label>
+                    <span style={{ color: isChecked ? '#2B8BFC' : '' }}>ADVANCED</span>
                     
-                    </div>
                 </div>
+            
             </div>
-            <div className='grid grid-cols-6 gap-4'>
-                <div></div>
-                <div className='col-span-4'>
-                    <div className='w-1/2 flex justify-start items-center'>
-                        <ul className="menu menu-vertical lg:menu-horizontal">
-                        <li className='border-r-2 border-gray-50'><a>1HR</a></li>
-                        <li className='border-r-2 border-gray-50'><a>6HR</a></li>
-                        <li className='border-r-2 border-gray-50'><a>24HR</a></li>
-                        <li className='border-r-2 border-gray-50'><a>7DAYS</a></li>
-                        <li className='border-r-2 border-gray-50'><a>30DAYS</a></li>
-                        <li><a>ALL</a></li>
-                        </ul>
-                    </div>
-                    <div className='flex'>
-                        <div className='flex flex-col border-2 border-gray-500'>
-                            <div className='w-[850px] h-[569px] border-2 border-gray-500'></div>
-                            <div className="overflow-x-auto w-[850px] h-[400px] border-2 border-black">
-                                <table className="table overflow-y-auto">
-                                    {/* head */}
-                                    <thead>
-                                    <tr>
+        </div>
+    </div>
+
+    { isChecked &&     
+        <div className='grid grid-cols-6 gap-4'>
+            <div></div>
+            <div className='col-span-4'>
+                <div className='w-1/2 flex justify-start items-center'>
+                    <ul className="menu menu-vertical lg:menu-horizontal text-white/50">
+                        <li 
+                            className='border-r-2 border-grey'
+                            onClick={() => handleClickTimeFilter('1')}
+                        ><a className={clickedItem === '1' ? 'text-white' : ''}>1HR</a></li>
+                        <li 
+                            className='border-r-2  border-grey'
+                            onClick={() => handleClickTimeFilter('6')}
+                        ><a className={clickedItem === '6' ? 'text-white' : ''}>6HR</a></li>
+                        <li 
+                            className='border-r-2  border-grey'
+                            onClick={() => handleClickTimeFilter('24')}
+                        ><a className={clickedItem === '24' ? 'text-white' : ''}>24HR</a></li>
+                        <li 
+                            className='border-r-2  border-grey'
+                            onClick={() => handleClickTimeFilter('168')}
+                        ><a className={clickedItem === '168' ? 'text-white' : ''}>7DAYS</a></li>
+                        <li 
+                            className='border-r-2  border-grey'
+                            onClick={() => handleClickTimeFilter('720')}
+                        ><a className={clickedItem === '720' ? 'text-white' : ''}>30DAYS</a></li>
+                        <li 
+                            className='border-r-2  border-grey'
+                            onClick={() => handleClickTimeFilter('1000000')}
+                        ><a className={clickedItem === '1000000' ? 'text-white' : ''}>ALL</a></li>
+                    </ul>
+                </div>
+                <div className='flex'>
+                    <div className='flex flex-col border-2'>
+                        <div className='w-[850px] h-[569px] border-2 border-white'></div>
+                        <div className="overflow-hidden w-[850px] h-[400px] border-2 border-black">
+                            <table className="table">
+                                {/* head */}
+                                <thead className='border-b-2 border-white'>
+                                    <tr className='text-white'>
                                         <th>list</th>
                                         <th>list</th>
                                         <th>list</th>
@@ -141,194 +162,167 @@ export default function BasicTrading() {
                                         <th>list</th>
                                         <th>list</th>
                                     </tr>
-                                    </thead>
-                                    <tbody className='overflow-y-auto'>
-                                        {renderTradingRecords(fakeTradingRecords)}
-                                    </tbody>
-                                </table>
+                                </thead>
+                                <tbody className='overflow-hidden'>
+                                    {renderTradingRecords(fakeTradingRecords)}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className='flex flex-col gap-4 px-5 w-[427px]'>
+                        <div className='flex flex-col  gap-4'>
+                            <div className='flex flex-col justify-center gap-2'>
+                                <div className='text-white/60'>PRICE USD</div>
+                                <div>20.89 $</div>
+                            </div>
+                            <div className='flex flex-col justify-center gap-2'>
+                                <div className='text-white/60'>PRICE ETH</div>
+                                <div>0.005907 ETH</div>
                             </div>
                         </div>
-                        <div className='flex flex-col gap-4 px-5 w-[427px]'>
-                            <div className='flex flex-col  gap-4'>
-                                <div className='flex flex-col justify-center gap-2'>
-                                    <div>PRICE USD</div>
-                                    <div>20.89 $</div>
+                        <hr className='border-grey border-solid border-2 my-2'/>
+                        <div className='flex flex-col gap-2 w-8/12'>
+                            <div className='flex gap-4 justify-between'>
+                                <div className='flex flex-col justify-center gap-1'>
+                                    <div className='text-white/60'>5m</div>
+                                    <div style={{ color: color }}>{randomValue} %</div>
                                 </div>
-                                <div className='flex flex-col justify-center gap-2'>
-                                    <div>PRICE ETH</div>
-                                    <div>0.005907 ETH</div>
-                                </div>
-                            </div>
-                            <hr className='border-black border-solid border-1 my-2'/>
-                            <div className='flex flex-col gap-2 w-8/12'>
-                                <div className='flex gap-4 justify-between'>
-                                    <div className='flex flex-col justify-center gap-1'>
-                                        <div>5m</div>
-                                        <div style={{ color: color }}>{randomValue} %</div>
-                                    </div>
-                                    <div className='flex flex-col justify-center gap-1'>
-                                        <div>30m</div>
-                                        <div style={{ color: color }}>{randomValue} %</div>
-                                    </div>
-                                </div>
-                                <div className='flex gap-4 justify-between'>
-                                    <div className='flex flex-col justify-center gap-1'>
-                                        <div>1H</div>
-                                        <div style={{ color: color }}>{randomValue} %</div>
-                                    </div>
-                                    <div className='flex flex-col justify-center gap-1'>
-                                        <div>24H</div>
-                                        <div style={{ color: color }}>{randomValue} %</div>
-                                    </div>
+                                <div className='flex flex-col justify-center gap-1'>
+                                    <div className='text-white/60'>30m</div>
+                                    <div style={{ color: color }}>{randomValue} %</div>
                                 </div>
                             </div>
-                            <hr className='border-black border-solid border-1 my-2'/>
-                            <div className='flex  gap-4'>
-                                <div className='flex flex-col justify-center gap-2'>
-                                    <div>MARKETCAP</div>
-                                    <div>$ 20.80M</div>
+                            <div className='flex gap-4 justify-between'>
+                                <div className='flex flex-col justify-center gap-1'>
+                                    <div className='text-white/60'>1H</div>
+                                    <div style={{ color: color }}>{randomValue} %</div>
                                 </div>
-                                <div className='flex flex-col justify-center gap-2'>
-                                    <div>LIQUIDITY</div>
-                                    <div>$ 1.62M</div>
-                                </div>
-                            </div>
-                            <hr className='border-black border-solid border-1 my-2'/>
-                            <div className='flex flex-col gap-4'>
-                                <div className='flex flex-col justify-center gap-2'>
-                                    <div>POOLED ETH</div>
-                                    <div>$ 20.80M</div>
-                                </div>
-                                <div className='flex flex-col justify-center gap-2'>
-                                    <div>POOLED $SIMP</div>
-                                    <div>$ 20.80M</div>
+                                <div className='flex flex-col justify-center gap-1'>
+                                    <div className='text-white/60'>24H</div>
+                                    <div style={{ color: color }}>{randomValue} %</div>
                                 </div>
                             </div>
                         </div>
+                        <hr className='border-grey border-solid border-2 my-2'/>
+                        <div className='flex  gap-4'>
+                            <div className='flex flex-col justify-center gap-2'>
+                                <div className='text-white/60'>MARKETCAP</div>
+                                <div>$ 20.80M</div>
+                            </div>
+                            <div className='flex flex-col justify-center gap-2'>
+                                <div className='text-white/60'>LIQUIDITY</div>
+                                <div>$ 1.62M</div>
+                            </div>
+                        </div>
+                        <hr className='border-grey border-solid border-2 my-2'/>
+                        <div className='flex flex-col gap-4'>
+                            <div className='flex flex-col justify-center gap-2'>
+                                <div className='text-white/60'>POOLED ETH</div>
+                                <div>$ 20.80M</div>
+                            </div>
+                            <div className='flex flex-col justify-center gap-2'>
+                                <div className='text-white/60'>POOLED $SIMP</div>
+                                <div>$ 20.80M</div>
+                            </div>
+                        </div>
+                    </div>
 
-                    </div>
-                    <div className='flex mt-4'>
-                        <div className='flex justify-between w-[68%] items-center'>
-                            <div className="flex flex-col w-1/3">
-                                <div className='border-2 border-gray-500  flex justify-evenly items-center h-[90px] rounded-lg'>
-                                    <div>1.22544521122</div>
-                                    <img className='w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
-                                </div>
-                                <div className='flex items-center justify-end'>SOLD : 47.515211 MAX</div>
-                            </div>
-                            
-                            <ChevronRight className='scale-150'/>
-                            <div className="flex flex-col w-1/3">
-                            <div className='border-2 border-gray-500 flex justify-evenly items-center h-[90px] rounded-lg'>
-                                    <div>1.22544521122</div>
-                                    <img className='w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
-                                </div>
-                                <div className='flex items-center justify-end'>SOLD : 47.515211 MAX</div>
-                            </div>
-                        </div>
-                        <div className='flex w-[30%] items-center justify-center'><button className="btn bg-white w-[250px] h-[45px] flex items-center justify-center">TRADE</button></div>
-                    </div>
                 </div>
-               
+                <div className='flex mt-4'>
+                    <div className='flex justify-between w-[68%] items-center'>
+                        <div className="flex flex-col w-1/3">
+                            <div className='border-2 border-gray-500  flex justify-evenly items-center h-[90px] rounded-lg'>
+                                <div>1.22544521122</div>
+                                <img className='w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
+                            </div>
+                            <div className='flex items-center justify-end'>SOLD : 47.515211 MAX</div>
+                        </div>
+                        
+                        <ChevronRight className='scale-150'/>
+                        <div className="flex flex-col w-1/3">
+                        <div className='border-2 border-gray-500 flex justify-evenly items-center h-[90px] rounded-lg'>
+                                <div>1.22544521122</div>
+                                <img className='w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
+                            </div>
+                            <div className='flex items-center justify-end'>SOLD : 47.515211 MAX</div>
+                        </div>
+                    </div>
+                    <div className='flex w-[30%] items-center justify-center'><button className="btn bg-white w-[250px] h-[45px] flex items-center justify-center">TRADE</button></div>
+                </div>
             </div>
+            
         </div>
     }
-    { !isChecked &&     
-        <div className='flex flex-col mt-5'>
-            <div className='grid grid-cols-6 gap-4'>
-                <div></div>
-                <div></div>
-                <div>BASIC TRADING MODE</div>
-                <div></div>
-                <div className='col-span-2'>
-                    <div className='flex justify-center items-center gap-4'>
-                        MODE: BASIC
-                        <label className='flex cursor-pointer select-none'>
-                            <div className='relative'>
-                                <input
-                                    type='checkbox'
-                                    checked={isChecked}
-                                    onChange={handleCheckboxChange}
-                                    className='sr-only'
-                                />
-                                <div className='block h-8 w-14 rounded-full bg-[#E5E7EB]'></div>
-                                <div className='dot absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition'></div>
-                            </div>
-                        </label>
-                        ADVANCED
-                    </div>
-                   
-                </div>
-                <div></div>
-            </div>
-            <div className='grid grid-cols-6 gap-4'>
-                <div></div>
-                <div></div>
-                <div className='col-span-4 flex flex-col gap-2'>
-                    <div>
-                        <div className='grid grid-cols-6 gap-4'>
-                            <div>YOU PAY</div>
-                        </div>
-                        <div className='grid grid-cols-6 gap-4'>
-                            <div className='col-span-3 flex justify-between items-center'>
-                                
-                                <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
-                                    <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
-                                    <p className='flex items-end p-2'>ETH</p>
-                                </div>
-                                
-                                <div className='flex flex-col w-[220px]'>
-                                    <div className="dropdown">
-                                        <div tabIndex={0} role="button" className="btn m-1 w-[220px] h-[40px]"><BadgeDollarSign /> ETH <ChevronDown /></div>
-                                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                            <li><a>Item 1</a></li>
-                                            <li><a>Item 2</a></li>
-                                        </ul>
-                                    </div>
-                                    <div className='w-[220px] flex justify-end gap-4'>
-                                        <p>BALANCE</p>
-                                        <p>5.77.77 LEFT</p>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className='grid grid-cols-6 gap-4'>
-                        <div className='col-span-3 flex justify-center  my-5'> <ChevronDown /></div>
-                    </div>    
 
-                    <div>
-                        <div className='grid grid-cols-6 gap-4'>
-                            <div>You Recieved</div>
-                        </div>
-                        <div className='grid grid-cols-6 gap-4'>
-                            <div className='col-span-3 flex justify-between items-center'>
-                                
+
+    { !isChecked &&     
+        <div className='grid grid-cols-6 gap-4'>
+            <div></div>
+            <div></div>
+            <div className='col-span-4 flex flex-col gap-2'>
+                <div>
+                    <div className='grid grid-cols-6 gap-4'>
+                        <div className='text-white/70'>YOU PAY</div>
+                    </div>
+                    <div className='grid grid-cols-6 gap-4'>
+                        <div className='col-span-3 flex justify-between items-center'>
+                            
                             <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
-                                    <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
-                                    <p className='flex items-end p-2'>ETH</p>
-                                </div>
-                                
-                                <div className='flex flex-col w-[220px]'>
-                                    <div className="dropdown">
-                                        <div tabIndex={0} role="button" className="btn m-1 w-[220px] h-[40px]">CHOOSE TOKEN <ChevronDown /></div>
-                                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                            <li><a>Item 1</a></li>
-                                            <li><a>Item 2</a></li>
-                                        </ul>
-                                    </div>
-                                    <div className='w-[220px] flex justify-end gap-4'>
-                                        <p>BALANCE</p>
-                                        <p>5.77.77 LEFT</p>
-                                    </div>
-                                </div>
-                                
+                                <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
+                                <p className='flex items-end p-2'>ETH</p>
                             </div>
+                            
+                            <div className='flex flex-col w-[220px]'>
+                                <div className="dropdown">
+                                    <div tabIndex={0} role="button" style={{ backgroundColor: '#313131CC'}} className="btn m-1 w-[220px] h-[40px] text-white"><img className='w-[20px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" /> ETH <ChevronDown /></div>
+                                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                        <li><a>Item 1</a></li>
+                                        <li><a>Item 2</a></li>
+                                    </ul>
+                                </div>
+                                <div className='w-[220px] flex justify-end gap-4'>
+                                    <p>BALANCE</p>
+                                    <p className='text-white/70'>5.77.77 LEFT</p>
+                                </div>
+                            </div>
+                            
                         </div>
-                    </div>      
+                    </div>
                 </div>
+                
+                <div className='grid grid-cols-6 gap-4'>
+                    <div className='col-span-3 flex justify-center  my-5'> <ChevronDown /></div>
+                </div>    
+
+                <div>
+                    <div className='grid grid-cols-6 gap-4'>
+                        <div className='text-white/70'>You Recieved</div>
+                    </div>
+                    <div className='grid grid-cols-6 gap-4'>
+                        <div className='col-span-3 flex justify-between items-center'>
+                            
+                        <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
+                                <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
+                                <p className='flex items-end p-2'>ETH</p>
+                            </div>
+                            
+                            <div className='flex flex-col w-[220px]'>
+                                <div className="dropdown">
+                                    <div tabIndex={0} role="button" style={{ backgroundColor: '#313131CC'}} className="btn text-white m-1 w-[220px] h-[40px]">CHOOSE TOKEN <ChevronDown /></div>
+                                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                        <li><a>Item 1</a></li>
+                                        <li><a>Item 2</a></li>
+                                    </ul>
+                                </div>
+                                <div className='w-[220px] flex justify-end gap-4'>
+                                    <p>BALANCE</p>
+                                    <p className='text-white/70'>5.77.77 LEFT</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>      
             </div>
         </div>
     }
