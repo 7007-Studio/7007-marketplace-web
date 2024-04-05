@@ -43,7 +43,7 @@ export default function Navbar() {
           </Link>
           <div className="h-[30px] w-[1.5px] bg-grey" />
           <Link
-            href="/create"
+            href="/create/dashboard"
             className="cursor-pointer font-bold text-base text-white/60 hover:text-white/30"
           >
             Create

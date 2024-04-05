@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-export type Person = {
+export type TradingTable = {
   token: string
   price: number
   age: number
@@ -8,6 +8,7 @@ export type Person = {
   sells: number
   volume: number
   makers: number
+  time: number
   liquidity: number,
   fdv: number,
 }
@@ -20,7 +21,7 @@ const range = (len: number) => {
   return arr
 }
 
-const newPerson = (): Person => {
+const newTradingTable = (): TradingTable => {
   return {
     token: faker.person?.firstName(),
     price: faker.number.int(10000),
@@ -29,17 +30,18 @@ const newPerson = (): Person => {
     sells: faker.number.int(100),
     volume: faker.number.int(40),
     makers: faker.number.int(40),
+    time: faker.number.int(20),
     liquidity: faker.number.int(40),
     fdv: faker.number.int(40),
   }
 } 
 
 export function makeData(...lens: number[]) {
-  const makeDataLevel = (depth = 0): Person[] => {
+  const makeDataLevel = (depth = 0): TradingTable[] => {
     const len = lens[depth]!
-    return range(len).map((d): Person => {
+    return range(len).map((d): TradingTable => {
       return {
-        ...newPerson(),
+        ...newTradingTable(),
         // subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
       }
     })

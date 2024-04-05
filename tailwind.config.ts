@@ -10,7 +10,7 @@ const neutral = {
   "400": "#302E35",
   "500": "#222027",
   "700": "#141317",
-};
+}; 
 
 const config = {
   darkMode: ["class"],
@@ -67,6 +67,8 @@ const config = {
     extend: {
       colors: {
         grey: "#313131",
+        upGreen: '#1D9E4B',
+        downRed: '#F64646',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

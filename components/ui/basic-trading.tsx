@@ -47,7 +47,7 @@ export default function BasicTrading() {
 
     const randomValue = Math.floor(Math.random() * 21) - 10;
     // Determine the color based on the randomValue
-  const color = randomValue > 0 ? 'green' : 'red';
+  const color = randomValue > 0 ? '#1D9E4B' : '#F64646';
       // Generate an array of fake trading records
   const generateFakeTradingRecords = (count: number): TradingRecord[] => {
     const records: TradingRecord[] = [];
@@ -64,7 +64,7 @@ export default function BasicTrading() {
    // Render the fake trading records in table rows
    const renderTradingRecords = (records: TradingRecord[]) => {
     return records.map((record, index) => (
-        <tr key={index} style={{ color: record.status === 'buy' ? 'green' : 'red' }}>
+        <tr key={index} style={{ color: record.status === 'buy' ? '#1D9E4B' : '#F64646' }}>
             <td>{record.status}</td>
             <td>{record.createdAt.toLocaleString()}</td>
             <td>{record.price}</td>
@@ -275,7 +275,7 @@ export default function BasicTrading() {
                             <div className='flex flex-col w-[220px]'>
                                 <div className="dropdown">
                                     <div tabIndex={0} role="button" style={{ backgroundColor: '#313131CC'}} className="btn m-1 w-[220px] h-[40px] text-white"><img className='w-[20px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" /> ETH <ChevronDown /></div>
-                                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                    <ul tabIndex={0} style={{ backgroundColor: '#313131CC'}} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                                         <li><a>Item 1</a></li>
                                         <li><a>Item 2</a></li>
                                     </ul>
@@ -291,7 +291,7 @@ export default function BasicTrading() {
                 </div>
                 
                 <div className='grid grid-cols-6 gap-4'>
-                    <div className='col-span-3 flex justify-center  my-5'> <ChevronDown /></div>
+                    <div className='col-span-3 flex justify-center  my-5 scale-125'> <ChevronDown /></div>
                 </div>    
 
                 <div>
@@ -309,7 +309,7 @@ export default function BasicTrading() {
                             <div className='flex flex-col w-[220px]'>
                                 <div className="dropdown">
                                     <div tabIndex={0} role="button" style={{ backgroundColor: '#313131CC'}} className="btn text-white m-1 w-[220px] h-[40px]">CHOOSE TOKEN <ChevronDown /></div>
-                                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                    <ul tabIndex={0} style={{ backgroundColor: '#313131CC'}} className="dropdown-content text-white z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                                         <li><a>Item 1</a></li>
                                         <li><a>Item 2</a></li>
                                     </ul>

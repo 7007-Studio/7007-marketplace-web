@@ -65,6 +65,16 @@ export default function table() {
         footer: (props) => props.column.id,
       },
       {
+        accessorKey: "time",
+        header: () => <span className="flex">5M <ChevronDown /></span>,
+        cell: (info) => (
+          <div style={{ color: Number(info.getValue()) > 0 ? '#1D9E4B' : '#F64646'}} className='flex gap-2'>
+            {info.getValue()} %
+          </div>
+        ),
+        footer: (props) => props.column.id,
+      },
+      {
         accessorKey: "liquidity",
         header: "LIQUIDITY",
         footer: (props) => props.column.id,
@@ -101,10 +111,10 @@ export default function table() {
     <div className=" border-white rounded-md my-4 border-2 col-span-4">
       <div className="flex border-b-2 border-gray-700">
         <details className="dropdown">
-          <summary style={{ backgroundColor: '#313131CC'}} className="m-1 btn text-white border-none">
+          <summary style={{ backgroundColor: '#313131CC', height: '20px'}} className="m-1 btn text-white border-none">
             LAST 24 HOURS <ChevronDown />
           </summary>
-          <ul className="p-2 shadow menu dropdown-content z-[1] bg-red-500 rounded-box w-52">
+          <ul style={{ backgroundColor: '#313131CC', color: 'text-white/0'}} className="p-2 shadow menu dropdown-content z-[1] bg-red-500 rounded-box w-52">
             <li>
               <a>Item 1</a>
             </li>
@@ -157,7 +167,7 @@ export default function table() {
                       <div
                         className={
                           header.column.getCanSort()
-                            ? "cursor-pointer select-none text-left	ml-5"
+                            ? "cursor-pointer select-none text-left"
                             : "text-left	"
                         }
                         onClick={header.column.getToggleSortingHandler()}
