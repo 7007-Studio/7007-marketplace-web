@@ -1,10 +1,9 @@
-import BasicTrading from "@/components/ui/basic-trading";
+import TokenTrading from "./tokenTrading";
 
 export default async function Page() {
     return (
-      <>
-        {/* <div className="w-full grid grid-rows-4 grid-flow-col gap-4"></div> */}
-        <div className="w-full"><BasicTrading /></div>
+      <> 
+        <div className="w-full"><TokenTrading /></div>
       </>
     );
   }

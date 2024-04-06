@@ -9,7 +9,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { makeData, Person } from "../../data";
+import { makeData, TradingTable } from "../../../data";
 import { ChevronDown } from "lucide-react";
 
 export default function table() {
@@ -18,7 +18,7 @@ export default function table() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [clickedItem, setClickedItem] = useState<string | null>('1');
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<ColumnDef<TradingTable>[]>(
     () => [
       {
         accessorKey: "token",
