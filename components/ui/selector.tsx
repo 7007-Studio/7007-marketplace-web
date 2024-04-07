@@ -1,41 +1,45 @@
 import React from "react";
 
-export interface FilterEntry {
+export interface SelectorEntry {
   id: string;
   label: string;
-  checked: boolean;
+  selected: boolean;
 }
 
-export interface FilterProps {
-  title?: string;
-  options?: FilterEntry[];
-  onChange?: (id: string) => void;
+export interface SelectorProps {
+  options: SelectorEntry[];
+  onChange: (id: string) => void;
+  single?: boolean;
 }
 
-const Selector = ({ title, options, onChange }: FilterProps) => {
+const Selector = ({ options, onChange, single = false }: SelectorProps) => {
   return (
     <div className="w-full flex items-center gap-5">
-      <div className="cursor-pointer font-bold text-base text-white hover:text-white/60">
-        All
-      </div>
-      <div className="h-[30px] w-[1.5px] bg-grey" />
-      <div className="cursor-pointer font-bold text-base text-white hover:text-white/60">
-        text-to-text
-      </div>
-      <div className="h-[30px] w-[1.5px] bg-grey" />
-      <div className="cursor-pointer font-bold text-base text-white hover:text-white/60">
-        text-to-music
-      </div>
-      <div className="h-[30px] w-[1.5px] bg-grey" />
-      <div className="cursor-pointer font-bold text-base text-white hover:text-white/60">
-        T2V
-      </div>
+      {options?.map((option, index) => {
+        if (option.label === "") return null;
+        return (
+          <div
+            key={option.id}
+            className={`cursor-pointer flex gap-5 items-center font-bold text-base ${
+              option.selected ? "text-white" : "text-white/60"
+            }`}
+            onClick={() => onChange?.(option.id)}
+          >
+            {option.label}
+            {!single && index !== options.length - 1 && (
+              <div className="h-[30px] w-[1.5px] bg-grey" />
+            )}
+          </div>
+        );
+      })}
       <div className="flex-1 h-[1.5px] bg-grey" />
       <div className="gap-4 flex">
-        <div className="h-[10px] w-[2px] bg-grey" />
-        <div className="h-[10px] w-[2px] bg-grey" />
-        <div className="h-[10px] w-[2px] bg-grey" />
-        <div className="h-[10px] w-[2px] bg-grey" />
+        {options?.map((option, index) => (
+          <div
+            key={index}
+            className={`h-[10px] w-[2px] ${option.selected ? "bg-white" : "bg-grey"}`}
+          />
+        ))}
       </div>
     </div>
   );

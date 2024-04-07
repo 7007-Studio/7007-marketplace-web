@@ -15,8 +15,8 @@ import {
 } from "viem";
 
 // skeleton
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 // livepeer
 import { getSrc } from "@livepeer/react/external";
@@ -239,7 +239,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const { showListingModal } = useListingModal();
 
   return (
-    <Card className="w-[258px]">
+    <Card className="w-full max-w-[300px]">
+      <div className="h-[38px] px-[18px] flex items-center justify-between">
+        <a className="text-white/40">NOV 012</a>
+        <a className="text-sm">Model name</a>
+      </div>
       <div
         className="hover:cursor-pointer"
         onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
@@ -247,10 +251,13 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         <figure className="pb-[100%] relative bg-[#eee]">
           <NFTCoverAsset metadata={metadata} />
         </figure>
-
-        <div className="card-body flex-grow gap-2">
-          <h3 className="heading-md">{metadata?.name || <Skeleton count={2} />}</h3>
-          <p className="pb-4">{metadata?.description || <Skeleton count={5} />}</p>
+        <div className="card-body flex-grow gap-2 p-5">
+          <a className="text-lg font-bold">
+            {metadata?.name || <Skeleton count={2} />}
+          </a>
+          <p className="flex-wrap text-md">
+            {metadata?.description || <Skeleton count={5} />}
+          </p>
 
           {listing && !isOwner && (
             <>
@@ -258,11 +265,14 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
                 <span className="heading-md">
                   {decimals?.result
                     ? formatUnits(listing.pricePerToken, decimals.result)
-                    : formatEther(listing.pricePerToken) || <Skeleton />}{" " || <Skeleton />}
+                    : formatEther(listing.pricePerToken) || <Skeleton />}
+                  {" " || <Skeleton />}
                   {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
                 </span>
                 <span className="text-sm">
-                  {formatDaysLeft(Number(listing.endTimestamp) * 1000) || <Skeleton />}
+                  {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
+                    <Skeleton />
+                  )}
                 </span>
               </div>
               <BuyButton listing={listing} />
@@ -287,8 +297,15 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
               {!!listing ? "Listed" : "List"}
             </button>
           )}
+          <div className="flex w-full justify-between gap-4 pt-2 items-end">
+            <div className="flex items-end gap-1">
+              <a className="text-[30px] leading-[90%]">0.05</a>
+              <a className="">ETH</a>
+            </div>
+            <a className="opacity-40">3 Day Left</a>
+          </div>
 
-          <button
+          {/* <button
             className="pt-8 flex flex-row justify-between items-center"
             onClick={(e) => {
               e.stopPropagation();
@@ -345,7 +362,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
                 View on OpenSea
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </Card>

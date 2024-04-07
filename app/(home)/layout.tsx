@@ -15,7 +15,7 @@ export default function HomeLayout({
   return (
     <>
       <div className="h-[50vh] flex flex-col bg-white/20 items-center justify-center gap-5">
-        <p className="text-[30px] font-bold">Model STATS Banner example </p>
+        <p className="text-[30px] font-bold">Model STATS Banner example</p>
         <Link
           href={`/collection/${ModelIndex}/mint`}
           className="border bg-black/40 h-[50px] w-[248px] flex items-center justify-center rounded-3xl text-white/80 hover:text-white/60 cursor-pointer"

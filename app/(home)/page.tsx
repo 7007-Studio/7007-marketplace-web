@@ -1,3 +1,3 @@
-import HomeModel from "../stats/model/page";
+import HomePage from ".";
 
-export default HomeModel;
+export default HomePage;

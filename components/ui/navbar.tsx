@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="navbar fixed px-4 md:px-10 h-[90px] backdrop-blur-[5px] border-b-2 border-b-grey">
+      <div className="navbar fixed px-4 md:px-10 h-[90px] backdrop-blur-[5px] border-b-2 z-50 border-b-grey">
         <div className="flex-1">
           <Link href="/">
             <Image
