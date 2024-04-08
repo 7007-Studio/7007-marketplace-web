@@ -239,71 +239,44 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const { showListingModal } = useListingModal();
 
   return (
-    <Card className="w-full max-w-[300px]">
-      <div className="h-[38px] px-[18px] flex items-center justify-between">
-        <a className="text-white/40">NOV 012</a>
-        <a className="text-sm">Model name</a>
-      </div>
+    <Card className="w-full min-w-[300px]">
+      {listing && !isOwner && (
+        <div className="h-[38px] px-[18px] flex items-center justify-between">
+          <a className="text-white/40">NOV 012</a>
+          <a className="text-sm">Model name</a>
+        </div>
+      )}
       <div
-        className="hover:cursor-pointer"
+        className="hover:cursor-pointer flex flex-col w-full h-full"
         onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
       >
-        <figure className="pb-[100%] relative bg-[#eee]">
+        <div className="pb-[100%] relative border-y border-white bg-[#eee]">
           <NFTCoverAsset metadata={metadata} />
-        </figure>
-        <div className="card-body flex-grow gap-2 p-5">
-          <a className="text-lg font-bold">
-            {metadata?.name || <Skeleton count={2} />}
-          </a>
-          <p className="flex-wrap text-md">
-            {metadata?.description || <Skeleton count={5} />}
-          </p>
+        </div>
+        <div className="gap-2 p-5 flex flex-col justify-between h-full">
+          <div className="flex flex-col gap-2">
+            <a className="text-lg font-bold">
+              {metadata?.name || <Skeleton count={2} />}
+            </a>
+            <p className="flex-wrap text-md">
+              {metadata?.description || <Skeleton count={5} />}
+            </p>
+          </div>
 
-          {listing && !isOwner && (
-            <>
-              <div className="pb-2 flex flex-row justify-between items-baseline">
-                <span className="heading-md">
-                  {decimals?.result
-                    ? formatUnits(listing.pricePerToken, decimals.result)
-                    : formatEther(listing.pricePerToken) || <Skeleton />}
-                  {" " || <Skeleton />}
-                  {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
-                </span>
-                <span className="text-sm">
-                  {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
-                    <Skeleton />
-                  )}
-                </span>
+          {!isOwner && (
+            <div className="flex w-full justify-between gap-4 pt-2 items-end">
+              <div className="flex items-end gap-1">
+                <a className="text-[30px] leading-[90%]">0.05</a>
+                <a className="">ETH</a>
               </div>
-              <BuyButton listing={listing} />
-            </>
+              <a className="opacity-40">3 Day Left</a>
+            </div>
           )}
           {isOwner && (
-            <button
-              onClick={(e) => {
-                console.debug("List button clicked");
-                e.stopPropagation();
-                // show list modal for this (nftContract, tokenId, metadata)
-                showListingModal({
-                  nftContract: nftContract,
-                  name: name || "",
-                  tokenId,
-                  metadata,
-                });
-              }}
-              className="btn btn-primary"
-              disabled={!!listing}
-            >
-              {!!listing ? "Listed" : "List"}
-            </button>
-          )}
-          <div className="flex w-full justify-between gap-4 pt-2 items-end">
-            <div className="flex items-end gap-1">
-              <a className="text-[30px] leading-[90%]">0.05</a>
-              <a className="">ETH</a>
+            <div className="flex w-full pt-2">
+              <a className="opacity-40">Last sale 0.05 ETH</a>
             </div>
-            <a className="opacity-40">3 Day Left</a>
-          </div>
+          )}
 
           {/* <button
             className="pt-8 flex flex-row justify-between items-center"
@@ -364,6 +337,45 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
             </div>
           </div> */}
         </div>
+        {/* 
+        {listing && !isOwner && (
+          <>
+            <div className="pb-2 flex flex-row justify-between items-baseline">
+              <span className="heading-md">
+                {decimals?.result
+                  ? formatUnits(listing.pricePerToken, decimals.result)
+                  : formatEther(listing.pricePerToken) || <Skeleton />}
+                {" " || <Skeleton />}
+                {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
+              </span>
+              <span className="text-sm">
+                {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
+                  <Skeleton />
+                )}
+              </span>
+            </div>
+            <BuyButton listing={listing} />
+          </>
+        )}
+        {isOwner && (
+          <button
+            onClick={(e) => {
+              console.debug("List button clicked");
+              e.stopPropagation();
+              // show list modal for this (nftContract, tokenId, metadata)
+              showListingModal({
+                nftContract: nftContract,
+                name: name || "",
+                tokenId,
+                metadata,
+              });
+            }}
+            className="btn btn-primary"
+            disabled={!!listing}
+          >
+            {!!listing ? "Listed" : "List"}
+          </button>
+        )} */}
       </div>
     </Card>
   );

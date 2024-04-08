@@ -64,7 +64,7 @@ const Collected = () => {
   return (
     <>
       {(nftContract && (
-         <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
+        <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-14">
           {filteredTokenIds.map((id) => (
             <NFTCard
               key={`${nftContract}-${id}`}
@@ -74,7 +74,7 @@ const Collected = () => {
           )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
         </div>
       )) || (
-        <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
+        <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-14">
           {emptyCardList.map((l) => (
             <EmptyCard key={l} />
           ))}

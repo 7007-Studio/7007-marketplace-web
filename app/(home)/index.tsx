@@ -7,7 +7,7 @@ import useNftCollection from "@/hooks/useNftCollection";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
 import Selector, { SelectorEntry } from "@/components/ui/selector";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 // Import Swiper styles
@@ -15,10 +15,13 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import Image from "next/image";
 
-function HomeModel() {
+function HomeModel({ windowSize }: { windowSize: number }) {
   const swiperRef = useRef<any>(null);
   const { chain } = useAccount();
+  const [swiperIndex, setSwiperIndex] = useState(0);
+  const [isEnd, setIsEnd] = useState(false);
   const emptyCardList = [...Array(4).keys()];
   const [selector1, setSelector1] = useState<SelectorEntry[]>([
     { id: "1", label: "All", selected: true },
@@ -50,21 +53,22 @@ function HomeModel() {
       </div>
 
       {(nftContract && (
-        <div className="relative hidden h-full w-full transition-all max-w-[85%] lg:flex">
+        <div className="relative hidden h-full w-full transition-all lg:flex">
           <Swiper
-            slidesPerView={4}
+            slidesPerView={windowSize > 1536 ? 4 : windowSize > 1280 ? 3 : 2}
             spaceBetween={25}
-            pagination={{
-              type: "fraction",
-            }}
             modules={[Pagination]}
-            className="h-full w-full cursor-grab"
+            className="h-full w-full max-w-[80%] cursor-grab"
             onSwiper={(swiper: any) => {
               swiperRef.current = swiper;
             }}
+            onSlideChange={(swiper: any) => {
+              setSwiperIndex(swiper.activeIndex);
+              setIsEnd(swiper.isEnd);
+            }}
           >
-            {tokenIds.map((id) => (
-              <SwiperSlide className="pb-24">
+            {tokenIds.map((id, index) => (
+              <SwiperSlide key={index}>
                 <NFTCard
                   key={`${nftContract}-${id}`}
                   nftContract={nftContract}
@@ -74,17 +78,32 @@ function HomeModel() {
             )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
           </Swiper>
 
-          <div className="absolute bottom-2 z-20 flex w-full justify-between">
-            <div onClick={() => swiperRef.current.slidePrev()}>
-              <BsArrowLeft color="white" />
-            </div>
-            <div onClick={() => swiperRef.current.slideNext()}>
-              <BsArrowRight color="white" />
-            </div>
+          <div className="absolute top-1/2 -translate-y-1/2 z-20 flex w-full px-16 justify-between">
+            <Image
+              src="/arrow.svg"
+              alt="arrow"
+              width={25}
+              height={88}
+              color="white"
+              onClick={
+                swiperIndex === 0
+                  ? () => {}
+                  : () => swiperRef.current.slidePrev()
+              }
+              className={`rotate-180 ${swiperIndex === 0 ? "opacity-20 cursor-default" : "opacity-100 hover:opacity-60 cursor-pointer"}`}
+            />
+            <Image
+              src="/arrow.svg"
+              alt="arrow"
+              width={25}
+              height={88}
+              onClick={isEnd ? () => {} : () => swiperRef.current.slideNext()}
+              className={`${isEnd ? "opacity-20 cursor-default" : "opacity-100 hover:opacity-60 cursor-pointer"}`}
+            />
           </div>
         </div>
       )) || (
-        <div className="grid grid-cols-3 xl:grid-cols-4 max-w-[85%] gap-4">
+        <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-4">
           {emptyCardList.map((l) => (
             <EmptyCard key={l} />
           ))}
@@ -231,7 +250,7 @@ function Rank() {
     </div>
   );
 }
-function Ora() {
+function Ora({ windowSize }: { windowSize: number }) {
   const [type, setType] = useState([
     { id: "1", label: "ora protocol verified", selected: true },
     { id: "", label: "", selected: false },
@@ -250,16 +269,83 @@ function Ora() {
       })
     );
   };
+  const swiperRef = useRef<any>(null);
+  const { chain } = useAccount();
+  const [swiperIndex, setSwiperIndex] = useState(0);
+  const [isEnd, setIsEnd] = useState(false);
+  const emptyCardList = [...Array(4).keys()];
+  const { nftContract } = useNftContract({
+    modelIndex: ModelIndex,
+    chainId: chain?.id,
+  });
+  const { tokenIds } = useNftCollection({ nftContract });
 
   return (
     <div className="flex flex-col w-full items-center gap-[72px]">
       <div className="w-[75%]">
         <Selector onChange={changeType} options={type} single={true} />
       </div>
+      {(nftContract && (
+        <div className="relative hidden h-full w-full transition-all lg:flex">
+          <Swiper
+            slidesPerView={windowSize > 1536 ? 4 : windowSize > 1280 ? 3 : 2}
+            spaceBetween={25}
+            modules={[Pagination]}
+            className="h-full w-full max-w-[80%] cursor-grab"
+            onSwiper={(swiper: any) => {
+              swiperRef.current = swiper;
+            }}
+            onSlideChange={(swiper: any) => {
+              setSwiperIndex(swiper.activeIndex);
+              setIsEnd(swiper.isEnd);
+            }}
+          >
+            {tokenIds.map((id, index) => (
+              <SwiperSlide key={index}>
+                <NFTCard
+                  key={`${nftContract}-${id}`}
+                  nftContract={nftContract}
+                  tokenId={BigInt(id)}
+                />
+              </SwiperSlide>
+            )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
+          </Swiper>
+
+          <div className="absolute top-1/2 -translate-y-1/2 z-20 flex w-full px-16 justify-between">
+            <Image
+              src="/arrow.svg"
+              alt="arrow"
+              width={25}
+              height={88}
+              color="white"
+              onClick={
+                swiperIndex === 0
+                  ? () => {}
+                  : () => swiperRef.current.slidePrev()
+              }
+              className={`rotate-180 ${swiperIndex === 0 ? "opacity-20 cursor-default" : "opacity-100 hover:opacity-60 cursor-pointer"}`}
+            />
+            <Image
+              src="/arrow.svg"
+              alt="arrow"
+              width={25}
+              height={88}
+              onClick={isEnd ? () => {} : () => swiperRef.current.slideNext()}
+              className={`${isEnd ? "opacity-20 cursor-default" : "opacity-100 hover:opacity-60 cursor-pointer"}`}
+            />
+          </div>
+        </div>
+      )) || (
+        <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-4">
+          {emptyCardList.map((l) => (
+            <EmptyCard key={l} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
-function Going() {
+function Going({ windowSize }: { windowSize: number }) {
   const [type, setType] = useState([
     { id: "1", label: "on going", selected: true },
     { id: "", label: "", selected: false },
@@ -287,7 +373,7 @@ function Going() {
     </div>
   );
 }
-function Trending() {
+function Trending({ windowSize }: { windowSize: number }) {
   const [type, setType] = useState([
     { id: "1", label: "Trending in text to music", selected: true },
     { id: "", label: "", selected: false },
@@ -317,13 +403,27 @@ function Trending() {
 }
 
 const HomePage = () => {
+  const [windowSize, setWindowSize] = useState(window.innerWidth);
+
+  useEffect(() => {
+    function handleResize() {
+      const width = window.innerWidth;
+      setWindowSize(width);
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    // 在組件卸載時清除事件監聽器
+    return () => window.removeEventListener("resize", handleResize);
+  }, []); // 空的依賴項表示只在組件挂載和卸載時運行一次
+
   return (
     <div className="h-full w-full flex justify-center flex-col gap-[150px] items-center pt-[150px]">
-      <HomeModel />
+      <HomeModel windowSize={windowSize} />
       <Rank />
-      <Ora />
-      <Going />
-      <Trending />
+      <Ora windowSize={windowSize} />
+      <Going windowSize={windowSize} />
+      <Trending windowSize={windowSize} />
     </div>
   );
 };
