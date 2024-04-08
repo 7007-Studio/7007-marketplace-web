@@ -64,9 +64,9 @@ export default function CreateLayout({
     </div>
 
     <div>
-      <div className="grid grid-cols-6 -mt-7 mb-5 border-b-2 opacity-50 border-white">
+      <div className="grid grid-cols-12 -mt-7 mb-5 border-b-2 opacity-50 border-white">
         <div></div>
-        <ul className="flex gap-8 col-span-2">
+        <ul className="flex gap-8 col-span-4 font-bold">
             <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
                 <a 
                   href="/create/dashboard" 

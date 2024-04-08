@@ -85,11 +85,11 @@ export default function BasicTrading() {
   return (
     
     <>
-    <div className='grid grid-cols-6 gap-4'>
+    <div className='grid grid-cols-12 gap-4 font-bold'>
         <div></div>
-        <div className='col-span-2'>{ isChecked ? 'ADVANCED TRADE MODE' : 'BASIC TRADE MODE'}</div>
-        <div></div>
-        <div className='col-span-2'>
+        <div className='col-span-4 '>{ isChecked ? 'ADVANCED TRADE MODE' : 'BASIC TRADE MODE'}</div>
+        <div className='col-span-3'></div>
+        <div className='col-span-4'>
             <div className='flex justify-center items-start'>
                 <div className='flex justify-center items-center gap-4'>
                     MODE:
@@ -114,10 +114,11 @@ export default function BasicTrading() {
         </div>
     </div>
 
-    { isChecked &&     
-        <div className='grid grid-cols-6 gap-4'>
+    { isChecked &&
+    <>     
+        <div className='grid grid-cols-12 gap-4'>
             <div></div>
-            <div className='col-span-4'>
+            <div className='col-span-6 2xl:col-span-8'>
                 <div className='2xl:w-1/2 flex justify-start items-center'>
                     <ul className="menu menu-vertical lg:menu-horizontal text-white/50">
                         <li 
@@ -148,8 +149,8 @@ export default function BasicTrading() {
                 </div>
                 <div className='flex'>
                     <div className='flex flex-col border-2'>
-                        <div className='w-[850px] h-[569px] border-2 border-white'></div>
-                        <div className="overflow-hidden w-[850px] h-[400px] border-2 border-black">
+                        <div className='w-[750px] 2xl:w-[850px] h-[569px] border-2 border-white'></div>
+                        <div className="overflow-hidden w-[750px] 2xl:w-[850px] h-[400px] border-2 border-black">
                             <table className="table">
                                 {/* head */}
                                 <thead className='border-b-2 border-white'>
@@ -168,7 +169,7 @@ export default function BasicTrading() {
                             </table>
                         </div>
                     </div>
-                    <div className='flex flex-col gap-4 px-5 w-[427px]'>
+                    <div className='flex flex-col gap-4 px-5 w-[427px] font-bold'>
                         <div className='flex flex-col  gap-4'>
                             <div className='flex flex-col justify-center gap-2'>
                                 <div className='text-white/60'>PRICE USD</div>
@@ -227,48 +228,53 @@ export default function BasicTrading() {
                     </div>
 
                 </div>
-                <div className='flex mt-4'>
-                    <div className='flex justify-between w-[68%] items-center'>
-                        <div className="flex flex-col w-1/3">
-                            <div className='border-2 border-gray-500  flex justify-evenly items-center h-[90px] rounded-lg'>
-                                <div>1.22544521122</div>
-                                <img className='w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
-                            </div>
-                            <div className='flex items-center justify-end'>SOLD : 47.515211 MAX</div>
-                        </div>
-                        
-                        <ChevronRight className='scale-150'/>
-                        <div className="flex flex-col w-1/3">
-                        <div className='border-2 border-gray-500 flex justify-evenly items-center h-[90px] rounded-lg'>
-                                <div>1.22544521122</div>
-                                <img className='w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
-                            </div>
-                            <div className='flex items-center justify-end'>SOLD : 47.515211 MAX</div>
-                        </div>
-                    </div>
-                    <div className='flex w-[30%] items-center justify-center'><button className="btn bg-white w-[250px] h-[45px] flex items-center justify-center">TRADE</button></div>
-                </div>
+               
             </div>
             
         </div>
+        <div>
+        <div className='grid grid-cols-12 gap-4'>
+            <div></div>
+            <div className='col-span-8 flex items-center mt-5 justify-between w-[750px]'>
+                <div className="flex flex-col w-4/12">
+                    <div className='border-2 border-gray-500  flex justify-evenly items-center h-[60px] 2xl:h-[90px] rounded-lg'>
+                        <div className='text-md'>1.22544521122</div>
+                        <img className='w-[20px] 2xl:w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
+                    </div>
+                    <div className='text-sm flex items-center justify-end mt-2'>SOLD : 47.515211 MAX</div>
+                </div>
+                
+                <ChevronRight className='scale-100 2xl:scale-150 w-2/12'/>
+                
+                <div className="flex flex-col w-4/12">
+                    <div className='border-2 border-gray-500  flex justify-evenly items-center h-[60px] 2xl:h-[90px] rounded-lg'>
+                        <div className='text-md'>1.22544521122</div>
+                        <img className='w-[20px] 2xl:w-[41px]' src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png" alt="" />
+                    </div>
+                    <div className='text-sm flex items-center justify-end mt-2'>SOLD : 47.515211 MAX</div>
+                </div>
+            </div>
+            <div className='col-span-2 flex items-center font-bold'><button className="btn font-bold bg-white w-[250px] h-[45px] flex items-center justify-center">TRADE</button></div>
+            </div>
+        </div>
+    </>
     }
 
 
     { !isChecked &&     
-        <div className='grid grid-cols-6 gap-4'>
-            <div></div>
-            <div></div>
-            <div className='col-span-4 flex flex-col gap-2'>
+        <div className='grid grid-cols-12 gap-4'>
+            <div className='col-span-3'></div>
+            <div className='col-span-8 flex flex-col gap-2'>
                 <div>
-                    <div className='grid grid-cols-6 gap-4'>
+                    <div className='grid grid-cols-6 gap-4 mb-2'>
                         <div className='text-white/70'>YOU PAY</div>
                     </div>
                     <div className='grid grid-cols-6 gap-4'>
-                        <div className='col-span-3 flex justify-between items-center gap-2'>
+                        <div className='col-span-4 flex justify-between items-center gap-2'>
                             
                             <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
                                 <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
-                                <p className='flex items-end p-2'>ETH</p>
+                                <p className='flex items-end py-2 pr-4'>ETH</p>
                             </div>
                             
                             <div className='flex flex-col w-[220px]'>
@@ -279,8 +285,8 @@ export default function BasicTrading() {
                                         <li><a>Item 2</a></li>
                                     </ul>
                                 </div>
-                                <div className='w-[220px] flex justify-end gap-4'>
-                                    <p>BALANCE</p>
+                                <div className='w-[220px] flex justify-end gap-4 text-sm mt-2'>
+                                    <p className='font-bold'>BALANCE</p>
                                     <p className='text-white/70'>5.77.77 LEFT</p>
                                 </div>
                             </div>
@@ -289,20 +295,21 @@ export default function BasicTrading() {
                     </div>
                 </div>
                 
-                <div className='grid grid-cols-6 gap-4'>
+                <div className='grid grid-cols-12 gap-4'>
+                    <div className='col-span-3'></div>
                     <div className='col-span-3 flex justify-center  my-5 scale-125'> <ChevronDown /></div>
                 </div>    
 
                 <div>
                     <div className='grid grid-cols-6 gap-4'>
-                        <div className='text-white/70'>You Recieved</div>
+                        <div className='text-white/70 col-span-2 mb-2'>You Recieved</div>
                     </div>
                     <div className='grid grid-cols-6 gap-4'>
-                        <div className='col-span-3 flex justify-between items-center gap-2'>
+                        <div className='col-span-4 flex justify-between items-center gap-2'>
                             
                         <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
                                 <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
-                                <p className='flex items-end p-2'>ETH</p>
+                                <p className='flex items-end py-2 pr-4'>ETH</p>
                             </div>
                             
                             <div className='flex flex-col w-[220px]'>
@@ -313,8 +320,8 @@ export default function BasicTrading() {
                                         <li><a>Item 2</a></li>
                                     </ul>
                                 </div>
-                                <div className='w-[220px] flex justify-end gap-4'>
-                                    <p>BALANCE</p>
+                                <div className='w-[220px] flex justify-end gap-4 text-sm mt-2'>
+                                    <p className='font-bold'>BALANCE</p>
                                     <p className='text-white/70'>5.77.77 LEFT</p>
                                 </div>
                             </div>

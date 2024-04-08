@@ -22,7 +22,11 @@ export default function table() {
     () => [
       {
         accessorKey: "token",
-        header: () => "TOKEN",
+        header: (isFirstColumn) => (
+          <div className={`ml-${isFirstColumn ? '5' : '0'}`}>
+            TOKEN
+          </div>
+        ),
         cell: (info) => (
           <div className="ml-5 py-2">
             <div className="flex gap-2">
