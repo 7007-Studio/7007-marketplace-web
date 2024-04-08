@@ -52,8 +52,8 @@ export default function CreateLayout({
             <div></div>
             <div className="col-span-4">
             <div className="flex justify-around">
-              <div className="text-green-200">24h volume : $ 1.27b</div>
-              <div>24h txNS : 1,935,667</div>
+              <div><span className="text-[#1D9E4B]">24h volume :</span> $ 1.27b</div>
+              <div><span className="text-[#1D9E4B]">24h txNS :</span>  1,935,667</div>
             </div>
           </div>
         </div>
