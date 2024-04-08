@@ -34,61 +34,58 @@ export default function CreateLayout({
   };
 
   return (
-    <div className="mt-28">
-      
-        <div className="grid grid-cols-6 mb-5">
-          <div></div>
-          <div className="col-span-4">
+
+    <>
+
+    <div className="h-[58vh] flex flex-col relative items-center justify-center gap-5">
+
+        <Image
+          src="/Mask group.png"
+          alt="homeMask"
+          width={1920}
+          height={300}
+          className="h-full w-full absolute top-0 left-0"
+        />
+
+        <div className=" absolute top-[90px] bg-black z-10 w-full flex items-center justify-center">
+          <div className="grid grid-cols-6 w-full py-4">
+            <div></div>
+            <div className="col-span-4">
             <div className="flex justify-around">
               <div className="text-green-200">24h volume : $ 1.27b</div>
               <div>24h txNS : 1,935,667</div>
             </div>
-        
           </div>
-          
         </div>
-        {/* <Image
-            src="/Mask group.png"
-            alt="7007 studio"
-            width={1920}
-            height={300}
-            className="w-full"
-          /> */}
-        <div className="relative">
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-            <h1 className="text-8xl font-bold text-white">TOKEN TRADING</h1>
-          </div>
-          <Image
-            src="/Mask group.png"
-            alt="7007 studio"
-            width={1920}
-            height={300}
-            className="w-full"
-          />
+
         </div>
-        {/* <div className="absolute"> */}
-          <div className="grid grid-cols-6 -mt-7 mb-5 border-b-2 opacity-50 border-white">
-            <div></div>
-            <ul className="flex gap-8 col-span-2">
-                <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
-                    <a 
-                      href="/create/dashboard" 
-                      style={{ color: pathname === '/create/dashboard' ? '#FFFFFF' : 'grey' }}
-                      aria-current="page"
-                      onClick={handleClick}
-                    >DASHBOARD</a>
-                </li>
-                <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
-                    <a 
-                      href="/create/tokenTrading" 
-                      style={{ color: pathname === '/create/tokenTrading' ? '#FFFFFF' : 'grey' }}
-                    >TOKEN TRADING</a>
-                </li>
-            </ul>
-          </div>
-        {/* </div> */}
-        
+
+        <p className="text-[30px] font-bold z-10">TOKEN TRADING</p>
+    </div>
+
+    <div>
+      <div className="grid grid-cols-6 -mt-7 mb-5 border-b-2 opacity-50 border-white">
+        <div></div>
+        <ul className="flex gap-8 col-span-2">
+            <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
+                <a 
+                  href="/create/dashboard" 
+                  style={{ color: pathname === '/create/dashboard' ? '#FFFFFF' : 'grey' }}
+                  aria-current="page"
+                  onClick={handleClick}
+                >DASHBOARD</a>
+            </li>
+            <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
+                <a 
+                  href="/create/tokenTrading" 
+                  style={{ color: pathname === '/create/tokenTrading' ? '#FFFFFF' : 'grey' }}
+                >TOKEN TRADING</a>
+            </li>
+        </ul>
+      </div>
       {children}
     </div>
+  </>
+
   );
 }

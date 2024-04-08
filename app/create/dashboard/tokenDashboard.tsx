@@ -123,7 +123,7 @@ export default function table() {
             </li>
           </ul>
         </details>
-        <div className='w-1/2 flex justify-start items-center'>
+        <div className='2xl:w-1/2 flex justify-start items-center'>
         <ul className="menu menu-vertical lg:menu-horizontal text-white/50 flex items-center">
               <span>TREDNINGS</span>
               <li 

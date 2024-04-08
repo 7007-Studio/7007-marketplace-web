@@ -87,8 +87,7 @@ export default function BasicTrading() {
     <>
     <div className='grid grid-cols-6 gap-4'>
         <div></div>
-        <div>{ isChecked ? 'ADVANCED TRADE MODE' : 'BASIC TRADE MODE'}</div>
-        <div></div>
+        <div className='col-span-2'>{ isChecked ? 'ADVANCED TRADE MODE' : 'BASIC TRADE MODE'}</div>
         <div></div>
         <div className='col-span-2'>
             <div className='flex justify-center items-start'>
@@ -119,7 +118,7 @@ export default function BasicTrading() {
         <div className='grid grid-cols-6 gap-4'>
             <div></div>
             <div className='col-span-4'>
-                <div className='w-1/2 flex justify-start items-center'>
+                <div className='2xl:w-1/2 flex justify-start items-center'>
                     <ul className="menu menu-vertical lg:menu-horizontal text-white/50">
                         <li 
                             className='border-r-2 border-grey'
@@ -265,7 +264,7 @@ export default function BasicTrading() {
                         <div className='text-white/70'>YOU PAY</div>
                     </div>
                     <div className='grid grid-cols-6 gap-4'>
-                        <div className='col-span-3 flex justify-between items-center'>
+                        <div className='col-span-3 flex justify-between items-center gap-2'>
                             
                             <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
                                 <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
@@ -299,7 +298,7 @@ export default function BasicTrading() {
                         <div className='text-white/70'>You Recieved</div>
                     </div>
                     <div className='grid grid-cols-6 gap-4'>
-                        <div className='col-span-3 flex justify-between items-center'>
+                        <div className='col-span-3 flex justify-between items-center gap-2'>
                             
                         <div className='flex justify-between border-2 border-gray-700 rounded-lg w-[313px] h-[79px]'>
                                 <input type="text" placeholder="Type here" className="h-full input w-full max-w-xs bg-transparent border-none focus:outline-none" />
