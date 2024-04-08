@@ -8,6 +8,7 @@ import { Web3Provider } from "@/utils/web3Provider";
 import { ModalProvider } from "@/utils/modalProvider";
 
 import Navbar from "@/components/ui/navbar";
+import Footer from "@/components/ui/footer";
 
 const syncopate = Syncopate({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({
             <main className="max-lg:hidden flex min-h-screen bg-black text-white flex-col">
               {children}
             </main>
+            <Footer />
           </ModalProvider>
         </Web3Provider>
       </body>

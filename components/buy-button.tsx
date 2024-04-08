@@ -9,7 +9,13 @@ import { getContractAddress } from "@/helpers";
 import { useWriteMarketplaceV3BuyFromListing } from "@/generated";
 import { Listing } from "@/types";
 
-export default function BuyButton({ listing }: { listing: Listing }) {
+export default function BuyButton({
+  listing,
+  hover,
+}: {
+  listing: Listing;
+  hover: boolean;
+}) {
   const [buyInitialized, setBuyInitialized] = useState(false);
 
   const { address: connectedWallet, chainId } = useAccount();
@@ -69,7 +75,7 @@ export default function BuyButton({ listing }: { listing: Listing }) {
         );
       }}
       disabled={buyInitialized}
-      className="btn btn-primary max-w-sm"
+      className={`w-full z-20 bg-white text-black font-bold transition-all flex justify-center items-center ${hover ? "h-12" : "h-0"}`}
     >
       {buyInitialized ? (
         <>

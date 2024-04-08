@@ -403,19 +403,22 @@ function Trending({ windowSize }: { windowSize: number }) {
 }
 
 const HomePage = () => {
-  const [windowSize, setWindowSize] = useState(window.innerWidth);
+  const [windowSize, setWindowSize] = useState(1024);
 
   useEffect(() => {
-    function handleResize() {
-      const width = window.innerWidth;
-      setWindowSize(width);
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        const width = window.innerWidth;
+        setWindowSize(width);
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
     }
-
-    window.addEventListener("resize", handleResize);
-
-    // 在組件卸載時清除事件監聽器
-    return () => window.removeEventListener("resize", handleResize);
-  }, []); // 空的依賴項表示只在組件挂載和卸載時運行一次
+  }, []);
 
   return (
     <div className="h-full w-full flex justify-center flex-col gap-[150px] items-center pt-[150px]">

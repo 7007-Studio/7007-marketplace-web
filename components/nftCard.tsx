@@ -104,7 +104,7 @@ export interface NFTCardProps {
 const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const router = useRouter();
   const { address: connectedWallet, chainId } = useAccount();
-
+  const [hover, setHover] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
 
@@ -239,7 +239,9 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const { showListingModal } = useListingModal();
 
   return (
-    <Card className="w-full min-w-[300px]">
+    <Card
+      className={`w-[300px] h-full transition-all ${hover ? "drop-shadow-card" : ""}`}
+    >
       {listing && !isOwner && (
         <div className="h-[38px] px-[18px] flex items-center justify-between">
           <a className="text-white/40">NOV 012</a>
@@ -247,10 +249,12 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         </div>
       )}
       <div
-        className="hover:cursor-pointer flex flex-col w-full h-full"
+        className="hover:cursor-pointer flex flex-col w-full h-full relative"
         onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
       >
-        <div className="pb-[100%] relative border-y border-white bg-[#eee]">
+        <div className="relative border-y border-white bg-[#eee] pb-[100%]">
           <NFTCoverAsset metadata={metadata} />
         </div>
         <div className="gap-2 p-5 flex flex-col justify-between h-full">
@@ -337,27 +341,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
             </div>
           </div> */}
         </div>
-        {/* 
-        {listing && !isOwner && (
-          <>
-            <div className="pb-2 flex flex-row justify-between items-baseline">
-              <span className="heading-md">
-                {decimals?.result
-                  ? formatUnits(listing.pricePerToken, decimals.result)
-                  : formatEther(listing.pricePerToken) || <Skeleton />}
-                {" " || <Skeleton />}
-                {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
-              </span>
-              <span className="text-sm">
-                {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
-                  <Skeleton />
-                )}
-              </span>
-            </div>
-            <BuyButton listing={listing} />
-          </>
-        )}
-        {isOwner && (
+        {isOwner && hover && (
           <button
             onClick={(e) => {
               console.debug("List button clicked");
@@ -370,12 +354,32 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
                 metadata,
               });
             }}
-            className="btn btn-primary"
+            className={`w-full z-20 bg-white text-black font-bold transition-all flex justify-center items-center ${hover ? "h-12" : "h-0"}`}
             disabled={!!listing}
           >
-            {!!listing ? "Listed" : "List"}
+            {!!listing ? "Listed" : "List for sale"}
           </button>
-        )} */}
+        )}
+
+        {listing && !isOwner && hover && (
+          <>
+            {/* <div className="pb-2 flex flex-row justify-between items-baseline">
+              <span className="heading-md">
+                {decimals?.result
+                  ? formatUnits(listing.pricePerToken, decimals.result)
+                  : formatEther(listing.pricePerToken) || <Skeleton />}
+                {" " || <Skeleton />}
+                {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
+              </span>
+              <span className="text-sm">
+                {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
+                  <Skeleton />
+                )}
+              </span>
+            </div> */}
+            <BuyButton listing={listing} hover={hover} />
+          </>
+        )}
       </div>
     </Card>
   );

@@ -1,10 +1,8 @@
 "use client";
 import ModelCard from "@/components/modelCard";
+import NFTCard from "@/components/nftCard";
 import Menu, { MenuList } from "@/components/ui/menu";
-import Selector, { SelectorEntry } from "@/components/ui/selector";
-import { ModelIndex } from "@/constants";
 import { useState } from "react";
-import { MdKeyboardArrowDown } from "react-icons/md";
 
 export default function HomeModel() {
   const menuOption = [
@@ -54,6 +52,14 @@ export default function HomeModel() {
   return (
     <div className="h-full w-full flex justify-center flex-col gap-16 items-center pt-[150px]">
       {/* <ModelCard modelIndex={ModelIndex} /> */}
+      {/* <NFTCard
+        nftContract={"0x0B89f60136A91f3B36557F9414cbd157d0ada7bc"}
+        tokenId={BigInt(61)}
+      />
+      <NFTCard
+        nftContract={"0x0B89f60136A91f3B36557F9414cbd157d0ada7bc"}
+        tokenId={BigInt(2)}
+      /> */}
       <div className="w-[75%] flex items-center gap-5">
         <Menu options={menuOption} selected={select} onSelect={handleSelect} />
         {type.map((item, index) => (

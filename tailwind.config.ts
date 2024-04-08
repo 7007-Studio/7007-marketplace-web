@@ -10,7 +10,7 @@ const neutral = {
   "400": "#302E35",
   "500": "#222027",
   "700": "#141317",
-}; 
+};
 
 const config = {
   darkMode: ["class"],
@@ -67,8 +67,8 @@ const config = {
     extend: {
       colors: {
         grey: "#313131",
-        upGreen: '#1D9E4B',
-        downRed: '#F64646',
+        upGreen: "#1D9E4B",
+        downRed: "#F64646",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -124,6 +124,9 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+      },
+      dropShadow: {
+        card: "0px 0px 20px rgba(255, 255, 255, 0.60)",
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
