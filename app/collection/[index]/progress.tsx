@@ -1,4 +1,6 @@
 import useReadAigcContracts from "@/hooks/useReadAigcContracts";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Address, zeroAddress } from "viem";
 
 export default function Progress({
@@ -6,6 +8,7 @@ export default function Progress({
 }: {
   nftContract?: Address;
 }) {
+  const params = useParams<{ index: string }>();
   return (
     <div className="flex gap-9 justify-between items-center pt-10 pb-16">
       <div className="flex flex-col flex-1 gap-3">
@@ -25,9 +28,12 @@ export default function Progress({
         ></progress> */}
         <a className="pl-3">Mint starts march 5 at 4:30 AM MST</a>
       </div>
-      <button className="bg-white text-black font-bold text-[18px] w-[290px] h-[45px] rounded flex items-center justify-center">
+      <Link
+        href={`/collection/${params.index}/mint`}
+        className="bg-white text-black font-bold text-[18px] cursor-pointer w-[290px] h-[45px] rounded flex items-center justify-center hover:opacity-60"
+      >
         buy model token
-      </button>
+      </Link>
     </div>
   );
 }

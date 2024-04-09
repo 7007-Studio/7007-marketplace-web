@@ -12,6 +12,7 @@ import ArrowLeftIcon from "@/components/ui/arrowLeftIcon";
 import { AIGCContent } from ".";
 import PromptForm from "./promptForm";
 import { Address } from "viem";
+import { useRouter } from "next/navigation";
 
 interface PromptStepProps {
   nftContract: Address;
@@ -27,6 +28,7 @@ const PromptStep = ({
   const { data: modelName } = useReadAigcModelName({
     address: nftContract,
   });
+  const router = useRouter();
 
   return (
     <div className="flex flex-col items-center w-full h-full">
@@ -37,6 +39,7 @@ const PromptStep = ({
         <span
           onClick={() => {
             setAigcContent(undefined);
+            router.back();
           }}
           className="flex flex-row gap-2 hover:cursor-pointer pb-10 opacity-40"
         >

@@ -2,6 +2,7 @@
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
 import Menu, { MenuList } from "@/components/ui/menu";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function HomeModel() {
@@ -95,8 +96,8 @@ export default function HomeModel() {
         </div>
       </div>
       <div className="flex max-w-[85%] gap-5 w-full">
-        <div className="w-full flex flex-col h-96 border border-white rounded-lg">
-          <div className="h-1/5 w-full flex items-center border-b border-white text-sm font-bold px-4">
+        <div className="w-full flex flex-col h-full border border-white rounded-lg">
+          <div className="h-[45px] w-full flex items-center border-b border-white text-sm font-bold px-4">
             <div className="w-[8%] flex items-center justify-center">Rank</div>
             <div className="w-[40%] flex items-center justify-center">
               model
@@ -111,20 +112,45 @@ export default function HomeModel() {
               quantity
             </div>
           </div>
-          <div className="h-4/5 w-full flex items-start border-b border-white px-4 py-9">
-            <div className="w-[8%] flex items-center justify-center text-lg">
-              1
-            </div>
-            <div className="w-[40%] flex items-center justify-center text-base font-bold">
-              Model name
-            </div>
-            <div className="w-[23%] flex items-center justify-center">
-              0.0007 ETH
-            </div>
-            <div className="w-[17%] flex items-center justify-center">
-              7 ETH
-            </div>
-            <div className="w-[12%] flex items-center justify-center">7</div>
+          <div className="flex flex-col w-full h-full px-6 py-4 gap-6">
+            <Link
+              className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
+              href="/collection/1"
+            >
+              <div className="w-[8%] flex items-center justify-center text-lg">
+                1
+              </div>
+              <div className="w-[40%] flex items-center gap-4 justify-center text-base font-bold">
+                <div className="size-[90px] bg-grey"></div>
+                Model name
+              </div>
+              <div className="w-[23%] flex items-center justify-center">
+                0.0007 ETH
+              </div>
+              <div className="w-[17%] flex items-center justify-center">
+                7 ETH
+              </div>
+              <div className="w-[12%] flex items-center justify-center">7</div>
+            </Link>
+            <Link
+              className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
+              href="/collection/1"
+            >
+              <div className="w-[8%] flex items-center justify-center text-lg">
+                1
+              </div>
+              <div className="w-[40%] flex items-center gap-4 justify-center text-base font-bold">
+                <div className="size-[90px] bg-grey"></div>
+                Model name
+              </div>
+              <div className="w-[23%] flex items-center justify-center">
+                0.0007 ETH
+              </div>
+              <div className="w-[17%] flex items-center justify-center">
+                7 ETH
+              </div>
+              <div className="w-[12%] flex items-center justify-center">7</div>
+            </Link>
           </div>
         </div>
       </div>

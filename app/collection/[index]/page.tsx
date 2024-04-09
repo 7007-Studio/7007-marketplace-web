@@ -7,7 +7,7 @@ import useNftContract from "@/hooks/useNftContract";
 
 import Hero from "./hero";
 import Stats from "./stats";
-import Collection from "@/app/stats/erc-7007/collection";
+import Collection from "@/components/collection";
 import Progress from "./progress";
 
 export default function CollectionPage() {
