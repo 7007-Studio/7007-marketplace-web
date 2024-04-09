@@ -36,6 +36,20 @@ export default function Navbar() {
             className="mr-[15px] opacity-60 cursor-pointer"
           />
           <Link
+            href="/modelTokens"
+            className="cursor-pointer font-bold text-base text-white/60 hover:text-white/30"
+          >
+            model tokens
+          </Link>
+          <div className="h-[30px] w-[1.5px] bg-grey" />
+          {/* <Link
+            href="/verify"
+            className="cursor-pointer font-bold text-base text-white/60 hover:text-white/30"
+          >
+            verify
+          </Link>
+          <div className="h-[30px] w-[1.5px] bg-grey" /> */}
+          <Link
             href="/stats"
             className="cursor-pointer font-bold text-base text-white/60 hover:text-white/30"
           >
