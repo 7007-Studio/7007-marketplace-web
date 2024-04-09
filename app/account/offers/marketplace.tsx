@@ -15,18 +15,16 @@ const Marketplace = () => {
   const emptyCardList = [...Array(1).keys()];
 
   return (
-    <>
-      <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-14">
-        {listings?.map((l: any) => (
-          <NFTCard
-            key={l.listingId}
-            nftContract={l.assetContract}
-            tokenId={l.tokenId}
-            listing={l}
-          />
-        )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
-      </div>
-    </>
+    <div className="flex flex-wrap max-w-[85%] gap-14 justify-center">
+      {listings?.map((l: any) => (
+        <NFTCard
+          key={l.listingId}
+          nftContract={l.assetContract}
+          tokenId={l.tokenId}
+          listing={l}
+        />
+      )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
+    </div>
   );
 };
 

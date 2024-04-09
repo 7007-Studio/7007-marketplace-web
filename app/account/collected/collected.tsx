@@ -64,7 +64,7 @@ const Collected = () => {
   return (
     <>
       {(nftContract && (
-        <div className="flex flex-wrap max-w-[85%] gap-14">
+        <div className="flex flex-wrap max-w-[85%] gap-14 justify-center">
           {filteredTokenIds.map((id) => (
             <NFTCard
               key={`${nftContract}-${id}`}
