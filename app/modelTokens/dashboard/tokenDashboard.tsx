@@ -21,11 +21,11 @@ export default function Table() {
       {
         accessorKey: "token",
         header: (isFirstColumn) => (
-          <div className={`ml-${isFirstColumn ? "5" : "0"}`}>TOKEN</div>
+          <div className={`ml-${isFirstColumn ? "5" : "0"} py-2 text-sm` }>TOKEN</div>
         ),
         cell: (info) => (
-          <div className="ml-5 py-2">
-            <div className="flex gap-2">
+          <div className="ml-5 py-4">
+            <div className="flex gap-2 text-md">
               <span className="text-white/60">#1</span>
               <img
                 className="w-[20px] h-[20px]"
@@ -50,39 +50,69 @@ export default function Table() {
       },
       {
         accessorKey: "price",
-        header: () => "PRICE",
+        header: () => <span className="px-2 text-sm">PRICE</span>,
+        cell: (info) => (
+          <div className="flex gap-2 px-2 text-sm">
+           $  <>{info.getValue()}</> 
+          </div>
+        ),
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "age",
-        header: () => "AGE",
+        header: () => <span className="px-2 text-sm">AGE</span>,
+        cell: (info) => (
+          <div className="flex gap-1 text-sm">
+            <>{info.getValue()}H {info.getValue()}M</> 
+          </div>
+        ),
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "buys",
-        header: () => <span>BUYS</span>,
+        header: () => <span className="px-2 text-sm">BUYS</span>,
+        cell: (info) => (
+          <div className="px-2 text-sm">
+            <>{info.getValue()}</> 
+          </div>
+        ),
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "sells",
-        header: "SELLS",
+        header: () => <span className="px-2 text-sm">SELLS</span>,
+        cell: (info) => (
+          <div className="px-2 text-sm">
+            <>{info.getValue()}</> 
+          </div>
+        ),
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "volume",
-        header: "VOLUME",
+        header: () => <span className="px-2 text-sm">VOLUME</span>,
+        cell: (info) => (
+          <div className="flex gap-2 px-2 text-sm">
+           $  <>{info.getValue()}</> M
+          </div>
+        ),
         footer: (props) => props.column.id,
         sortDescFirst: true, // This column will sort in descending order first (default for number columns anyway)
       },
       {
         accessorKey: "makers",
-        header: "MAKERS",
+        header: () => <span className="px-2 text-sm">MAKERS</span>,
+        cell: (info) => (
+          <div className="flex gap-2 px-2 text-sm">
+            <>{info.getValue()}</> 
+          </div>
+        ),
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "time",
         header: () => (
-          <span className="flex">
+          <span className="flex px-2 text-sm">
             5M <ChevronDown />
           </span>
         ),
@@ -91,7 +121,7 @@ export default function Table() {
             style={{
               color: Number(info.getValue()) > 0 ? "#1D9E4B" : "#F64646",
             }}
-            className="flex gap-2"
+            className="flex gap-2 px-2 text-sm"
           >
             <>{info.getValue()}</> %
           </div>
@@ -100,12 +130,22 @@ export default function Table() {
       },
       {
         accessorKey: "liquidity",
-        header: "LIQUIDITY",
+        header: () => <span className="px-2 text-sm">LIQUIDITY</span>,
+        cell: (info) => (
+          <div className="flex gap-2 px-2 text-sm">
+           $  <>{info.getValue()}</>M
+          </div>
+        ),
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "fdv",
-        header: "FDV",
+        header: () => <span className="px-2 text-sm">FDV</span>,
+        cell: (info) => (
+          <div className="flex gap-2 text-sm">
+           $  <>{info.getValue()}</>M
+          </div>
+        ),
         footer: (props) => props.column.id,
       },
     ],
@@ -132,10 +172,10 @@ export default function Table() {
 
   return (
     <div className=" border-white rounded-md my-4 border-2 col-span-10">
-      <div className="flex border-b-2 border-gray-700">
+      <div className="flex border-b-2 border-white">
         <details className="dropdown">
           <summary
-            style={{ backgroundColor: "#313131CC", height: "20px" }}
+            style={{ backgroundColor: "#313131CC", height: "10px" }}
             className="m-1 btn text-white border-none"
           >
             LAST 24 HOURS <ChevronDown />
@@ -203,7 +243,7 @@ export default function Table() {
       <table className="w-[100%] border-t-2 border-black">
         <thead
           style={{ paddingLeft: "0.8rem" }}
-          className="border-b-2 border-gray-500"
+          className="border-b-2 border-grey"
         >
           {table.getHeaderGroups().map((headerGroup) => (
             <tr className="pl-4" key={headerGroup.id}>

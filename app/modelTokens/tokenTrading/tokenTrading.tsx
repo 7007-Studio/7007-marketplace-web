@@ -55,6 +55,7 @@ export default function BasicTrading() {
   };
 
   const handleCheckboxChange = () => {
+    console.log('isChecked', isChecked)
     setIsChecked(!isChecked);
   };
 
