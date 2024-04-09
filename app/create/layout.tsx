@@ -1,10 +1,10 @@
-"use client" 
+"use client";
 
 import Tabs from "@/components/ui/tabs";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from 'next/router';
-import { usePathname } from 'next/navigation'
+import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import path from "path";
 
 export default function CreateLayout({
@@ -13,32 +13,29 @@ export default function CreateLayout({
   children: React.ReactNode;
 }) {
   const [isClicked, setIsClicked] = useState(false);
-  const pathname = usePathname()
-  const tabs = [ 
+  const pathname = usePathname();
+  const tabs = [
     { label: "DASHBOARD", pathnames: ["/create/dashboard"] },
     { label: "TOKEN TRADING", pathnames: ["/create/tokenTrading"] },
   ];
 
-  console.log('pathname', pathname)
-  console.log('pathname', pathname === '/create/dashboard')
+  console.log("pathname", pathname);
+  console.log("pathname", pathname === "/create/dashboard");
   // const router = useRouter();
   // const { pathname } = router;
 
   // console.log('Current route:', pathname);
 
-  console.log('tabs', tabs)
-  
+  console.log("tabs", tabs);
+
   const handleClick = () => {
-    console.log('isClicked', isClicked)
+    console.log("isClicked", isClicked);
     setIsClicked(!isClicked);
   };
 
   return (
-
     <>
-
-    <div className="h-[58vh] flex flex-col relative items-center justify-center gap-5">
-
+      <div className="h-[35vh] flex flex-col relative items-center justify-center gap-5">
         <Image
           src="/Mask group.png"
           alt="homeMask"
@@ -51,41 +48,52 @@ export default function CreateLayout({
           <div className="grid grid-cols-6 w-full py-4">
             <div></div>
             <div className="col-span-4">
-            <div className="flex justify-around">
-              <div><span className="text-[#1D9E4B]">24h volume :</span> $ 1.27b</div>
-              <div><span className="text-[#1D9E4B]">24h txNS :</span>  1,935,667</div>
+              <div className="flex justify-around">
+                <div>
+                  <span className="text-[#1D9E4B]">24h volume :</span> $ 1.27b
+                </div>
+                <div>
+                  <span className="text-[#1D9E4B]">24h txNS :</span> 1,935,667
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        </div>
-
         <p className="text-[30px] font-bold z-10">TOKEN TRADING</p>
-    </div>
-
-    <div>
-      <div className="grid grid-cols-12 -mt-7 mb-5 border-b-2 opacity-50 border-white">
-        <div></div>
-        <ul className="flex gap-8 col-span-4 font-bold">
-            <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
-                <a 
-                  href="/create/dashboard" 
-                  style={{ color: pathname === '/create/dashboard' ? '#FFFFFF' : 'grey' }}
-                  aria-current="page"
-                  onClick={handleClick}
-                >DASHBOARD</a>
-            </li>
-            <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
-                <a 
-                  href="/create/tokenTrading" 
-                  style={{ color: pathname === '/create/tokenTrading' ? '#FFFFFF' : 'grey' }}
-                >TOKEN TRADING</a>
-            </li>
-        </ul>
       </div>
-      {children}
-    </div>
-  </>
 
+      <div>
+        <div className="grid grid-cols-12 -mt-7 mb-5 border-b-2 opacity-50 border-white">
+          <div></div>
+          <ul className="flex gap-8 col-span-4 font-bold">
+            <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
+              <a
+                href="/create/dashboard"
+                style={{
+                  color: pathname === "/create/dashboard" ? "#FFFFFF" : "grey",
+                }}
+                aria-current="page"
+                onClick={handleClick}
+              >
+                DASHBOARD
+              </a>
+            </li>
+            <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
+              <a
+                href="/create/tokenTrading"
+                style={{
+                  color:
+                    pathname === "/create/tokenTrading" ? "#FFFFFF" : "grey",
+                }}
+              >
+                TOKEN TRADING
+              </a>
+            </li>
+          </ul>
+        </div>
+        {children}
+      </div>
+    </>
   );
 }
