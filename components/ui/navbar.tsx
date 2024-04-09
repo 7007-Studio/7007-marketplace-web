@@ -21,7 +21,7 @@ export default function Navbar() {
         <div className="flex-1">
           <Link href="/">
             <Image
-              src="/7007-logo-black.svg"
+              src="/7007logo.svg"
               alt="7007 Studio"
               width={44}
               height={44}

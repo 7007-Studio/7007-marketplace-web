@@ -18,7 +18,7 @@ export default function CreateLayout({
 
   return (
     <>
-      <div className="h-[50vh] flex flex-col relative items-center justify-center gap-5">
+      <div className="h-[35vh] flex flex-col relative items-center justify-center gap-5">
         <Image
           src="/Mask group.png"
           alt="homeMask"
@@ -27,18 +27,16 @@ export default function CreateLayout({
           className="h-full w-full absolute top-0 left-0"
         />
 
-        <div className=" absolute top-[90px] bg-black z-10 w-full flex items-center justify-center">
-          <div className="grid grid-cols-6 w-full py-2">
-            <div></div>
-            <div className="col-span-4">
-              <div className="flex justify-around">
-                <div>
-                  <span className="text-[#1D9E4B]">24h volume :</span> $ 1.27b
-                </div>
-                <div>
-                  <span className="text-[#1D9E4B]">24h txNS :</span> 1,935,667
-                </div>
-              </div>
+        <div className="absolute top-[90px] bg-black z-10 w-full flex items-center justify-center">
+          <div className="flex w-full h-[87px] py-6 items-center justify-center font-bold text-[18px]">
+            <div className="flex gap-5">
+              <a className="text-upGreen">24h volume :</a>
+              <a className="">$ 1.27b</a>
+            </div>
+            <div className="w-[1px] h-full bg-grey mx-[188px]" />
+            <div className="flex gap-5">
+              <a className="text-upGreen">24h txNS :</a>
+              <a className="">1,935,667</a>
             </div>
           </div>
         </div>
@@ -54,7 +52,8 @@ export default function CreateLayout({
               <a
                 href="/modelTokens/dashboard"
                 style={{
-                  color: pathname === "/modelTokens/dashboard" ? "#FFFFFF" : "grey",
+                  color:
+                    pathname === "/modelTokens/dashboard" ? "#FFFFFF" : "grey",
                 }}
                 aria-current="page"
                 onClick={handleClick}
@@ -67,7 +66,9 @@ export default function CreateLayout({
                 href="/modelTokens/tokenTrading"
                 style={{
                   color:
-                    pathname === "/modelTokens/tokenTrading" ? "#FFFFFF" : "grey",
+                    pathname === "/modelTokens/tokenTrading"
+                      ? "#FFFFFF"
+                      : "grey",
                 }}
               >
                 TOKEN TRADING
