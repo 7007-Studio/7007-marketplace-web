@@ -257,14 +257,14 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         <div className="relative border-y border-white bg-[#eee] pb-[100%]">
           <NFTCoverAsset metadata={metadata} />
         </div>
-        <div className="gap-2 p-5 flex flex-col justify-between h-full">
+        <div className="gap-2 p-5 flex flex-col justify-between min-h-[200px]">
           <div className="flex flex-col gap-2">
             <a className="text-lg font-bold">
               {metadata?.name || <Skeleton count={2} />}
             </a>
-            <p className="flex-wrap text-md">
+            <div className="flex-wrap text-md line-clamp-4">
               {metadata?.description || <Skeleton count={5} />}
-            </p>
+            </div>
           </div>
 
           {!isOwner && (

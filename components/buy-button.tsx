@@ -14,7 +14,7 @@ export default function BuyButton({
   hover,
 }: {
   listing: Listing;
-  hover: boolean;
+  hover?: boolean;
 }) {
   const [buyInitialized, setBuyInitialized] = useState(false);
 

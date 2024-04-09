@@ -33,7 +33,7 @@ export default function RootLayout({
         <Web3Provider>
           <ModalProvider>
             <Navbar />
-            <main className="max-lg:hidden flex min-h-screen bg-black text-white flex-col">
+            <main className="max-lg:hidden flex min-h-screen bg-black text-white flex-col pb-[400px]">
               {children}
             </main>
             <Footer />

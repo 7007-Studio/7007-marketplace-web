@@ -67,6 +67,7 @@ const config = {
     extend: {
       colors: {
         grey: "#313131",
+        blue: "#2B8BFC",
         upGreen: "#1D9E4B",
         downRed: "#F64646",
         border: "hsl(var(--border))",

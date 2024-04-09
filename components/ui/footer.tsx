@@ -5,7 +5,7 @@ import { FaXTwitter } from "react-icons/fa6";
 
 export default function Footer() {
   return (
-    <div className="px-4 md:px-10 h-[400px] z-50 bg-grey/60 text-white flex flex-col items-center gap-20 justify-center w-full">
+    <div className="px-4 md:px-10 h-[400px] z-50 bg-grey text-white flex flex-col items-center gap-20 justify-center w-full">
       <div className="flex w-4/5 justify-between">
         <a className="text-[30px] leading-[150%]">
           welcome to 7007 NFT Marketplace
