@@ -119,7 +119,7 @@ const PromptForm = ({
       <div className="flex w-full items-start pt-[100px] flex-col gap-5">
         <div className="flex justify-between w-full">
           <Image
-            src="/7007-logo-black.svg"
+            src="/7007logo.svg"
             alt="7007 Studio"
             width={44}
             height={44}
