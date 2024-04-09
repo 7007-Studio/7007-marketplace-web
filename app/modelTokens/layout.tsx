@@ -1,11 +1,8 @@
 "use client";
 
-import Tabs from "@/components/ui/tabs";
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
-import path from "path";
 
 export default function CreateLayout({
   children,
@@ -14,28 +11,14 @@ export default function CreateLayout({
 }) {
   const [isClicked, setIsClicked] = useState(false);
   const pathname = usePathname();
-  const tabs = [
-    { label: "DASHBOARD", pathnames: ["/create/dashboard"] },
-    { label: "TOKEN TRADING", pathnames: ["/create/tokenTrading"] },
-  ];
-
-  console.log("pathname", pathname);
-  console.log("pathname", pathname === "/create/dashboard");
-  // const router = useRouter();
-  // const { pathname } = router;
-
-  // console.log('Current route:', pathname);
-
-  console.log("tabs", tabs);
 
   const handleClick = () => {
-    console.log("isClicked", isClicked);
     setIsClicked(!isClicked);
   };
 
   return (
     <>
-      <div className="h-[35vh] flex flex-col relative items-center justify-center gap-5">
+      <div className="h-[50vh] flex flex-col relative items-center justify-center gap-5">
         <Image
           src="/Mask group.png"
           alt="homeMask"
@@ -45,7 +28,7 @@ export default function CreateLayout({
         />
 
         <div className=" absolute top-[90px] bg-black z-10 w-full flex items-center justify-center">
-          <div className="grid grid-cols-6 w-full py-4">
+          <div className="grid grid-cols-6 w-full py-2">
             <div></div>
             <div className="col-span-4">
               <div className="flex justify-around">
@@ -60,7 +43,7 @@ export default function CreateLayout({
           </div>
         </div>
 
-        <p className="text-[30px] font-bold z-10">TOKEN TRADING</p>
+        <p className="text-[30px] font-bold z-10 mt-16">TOKEN TRADING</p>
       </div>
 
       <div>
@@ -69,9 +52,9 @@ export default function CreateLayout({
           <ul className="flex gap-8 col-span-4 font-bold">
             <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
               <a
-                href="/create/dashboard"
+                href="/modelTokens/dashboard"
                 style={{
-                  color: pathname === "/create/dashboard" ? "#FFFFFF" : "grey",
+                  color: pathname === "/modelTokens/dashboard" ? "#FFFFFF" : "grey",
                 }}
                 aria-current="page"
                 onClick={handleClick}
@@ -81,10 +64,10 @@ export default function CreateLayout({
             </li>
             <li className="border-b-4 border-transparent hover:border-b-4 hover:border-[#2B8BFC]">
               <a
-                href="/create/tokenTrading"
+                href="/modelTokens/tokenTrading"
                 style={{
                   color:
-                    pathname === "/create/tokenTrading" ? "#FFFFFF" : "grey",
+                    pathname === "/modelTokens/tokenTrading" ? "#FFFFFF" : "grey",
                 }}
               >
                 TOKEN TRADING

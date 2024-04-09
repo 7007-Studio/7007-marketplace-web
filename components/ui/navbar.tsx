@@ -36,7 +36,7 @@ export default function Navbar() {
             className="mr-[15px] opacity-60 cursor-pointer"
           />
           <Link
-            href="/modelTokens"
+            href="/modelTokens/dashboard"
             className="cursor-pointer font-bold text-base text-white/60 hover:text-white/30"
           >
             model tokens

@@ -13,8 +13,6 @@ import { makeData, TradingTable } from "../../../data";
 import { ChevronDown } from "lucide-react";
 
 export default function Table() {
-  const rerender = React.useReducer(() => ({}), {})[1];
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [clickedItem, setClickedItem] = useState<string | null>("1");
 
@@ -115,7 +113,6 @@ export default function Table() {
   );
 
   const [data, setData] = React.useState(() => makeData(10_000));
-  const refreshData = () => setData(() => makeData(10_000));
 
   const table = useReactTable({
     data,
@@ -134,7 +131,7 @@ export default function Table() {
   };
 
   return (
-    <div className=" border-white rounded-md my-4 border-2 col-span-4">
+    <div className=" border-white rounded-md my-4 border-2 col-span-10">
       <div className="flex border-b-2 border-gray-700">
         <details className="dropdown">
           <summary
