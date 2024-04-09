@@ -95,7 +95,7 @@ export default function Table() {
             }}
             className="flex gap-2"
           >
-            {info.getValue()} %
+            <>{info.getValue()}</> %
           </div>
         ),
         footer: (props) => props.column.id,
