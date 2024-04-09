@@ -40,10 +40,10 @@ export default function AccountLayout({
         <div className="absolute h-full w-full bg-gradient-to-b from-black/5 from-55% to-black" />
       </div>
       <div className="h-full w-full flex justify-center flex-col items-center pt-12 gap-[100px]">
-        <div className="max-w-[85%] flex w-full justify-between">
-          <div className="flex flex-1 gap-12 w-full">
-            <div className="size-[200px] rounded-full border"></div>
-            <div className="flex flex-col max-w-[532px] flex-shrink-0 gap-6">
+        <div className="max-w-[85%] flex w-full">
+          <div className="size-[200px] rounded-full border"></div>
+          <div className="flex gap-12 w-4/5 pl-12 justify-between">
+            <div className="flex flex-col max-w-[532px] flex-wrap gap-6">
               <a className="font-bold text-[30px]">User name</a>
               <div className="flex gap-4">
                 <Image src="/avatar.svg" alt="avatar" width={22} height={22} />
@@ -52,20 +52,20 @@ export default function AccountLayout({
                 </a>
                 <a>Joined March 2077</a>
               </div>
-              <a>
+              <a className="">
                 Pilot of on-chain AI, fine tuned with Stable diffusion model by
                 7007.Studio.First, you’ll need to deploy a contract.
               </a>
             </div>
-          </div>
-          <div className="flex flex-col justify-end items-end gap-10">
-            <div className="flex gap-6">
-              <CiSettings size={40} />
-              <LuMenu size={40} />
+            <div className="flex flex-col justify-end items-end gap-10">
+              <div className="flex gap-6">
+                <CiSettings size={40} />
+                <LuMenu size={40} />
+              </div>
+              <button className="border px-10 py-4 rounded text-center">
+                Claim revenue from IP licensing
+              </button>
             </div>
-            <button className="border px-10 py-4 rounded">
-              Claim revenue from IP licensing
-            </button>
           </div>
         </div>
         <div className="w-[80%] flex items-center gap-5">
