@@ -34,7 +34,7 @@ export default function Table() {
                 src="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/512/Ethereum-ETH-icon.png"
                 alt=""
               />{" "}
-              {info.getValue()} / SOL
+              <span><>{info.getValue()}</> / SOL</span> 
             </div>
             <div className="flex items-center gap-2 text-white/40">
               <span>
