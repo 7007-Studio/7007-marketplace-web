@@ -3,6 +3,7 @@ import { useForm, SubmitHandler, DefaultValues } from "react-hook-form";
 import TextInput from "../form/textInput";
 import { useState } from "react";
 import { AIGCContent } from ".";
+import Image from "next/image";
 
 export interface IFormAIGCInput {
   name: string;
@@ -44,7 +45,10 @@ const PromptForm = ({
     setIsSubmitting(false);
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-[30px]"
+    >
       {errorMessage && (
         <div role="alert" className="alert alert-error">
           <svg
@@ -66,13 +70,15 @@ const PromptForm = ({
       <TextInput
         placeholder="Let’s give it a cool name"
         name="name"
+        label="title"
         register={register}
         errors={errors}
         required
       />
-      <label className="form-control w-full">
+      <label className="form-control w-full gap-2">
+        <span className="text-[18px] pl-3">prompt</span>
         <textarea
-          className="textarea h-24"
+          className="textarea h-24 bg-grey"
           placeholder="Enter your prompt"
           {...register("prompt", { required: "prompt is required" })}
         ></textarea>
@@ -80,36 +86,69 @@ const PromptForm = ({
           {errors.prompt?.message}
         </p>
       </label>
-      <div className="flex justify-between items-end">
-        <div className="flex flex-1 gap-4">
-          <label className="form-control">
-            <div className="label">
-              <span className="label-text">Type</span>
-            </div>
-            <select className="select w-full" value={1} onChange={(e) => {}}>
-              <option value={1}>Image</option>
-            </select>
-          </label>
-          <label className="form-control">
-            <div className="label">
-              <span className="label-text">Model</span>
-            </div>
-            <select className="select w-full" value={1} onChange={(e) => {}}>
-              <option value={1}>{modelName}</option>
-            </select>
-          </label>
+      <label className="form-control w-full gap-2">
+        <span className="text-[18px] pl-3">Negative prompt (optional)</span>
+        <textarea
+          className="textarea h-24 bg-grey"
+          placeholder="Enter your prompt"
+          {...register("prompt", { required: "prompt is required" })}
+        ></textarea>
+        <p className=" text-red-600 text-left text-sm">
+          {errors.prompt?.message}
+        </p>
+      </label>
+      {/* TODO: hardcode */}
+      <div className="flex gap-[30px]">
+        <TextInput
+          placeholder="Enter Seed +"
+          name="name"
+          label="seed"
+          register={register}
+          errors={errors}
+          required
+        />
+        <TextInput
+          placeholder="Model name +"
+          name="name"
+          label="model"
+          register={register}
+          errors={errors}
+          required
+        />
+      </div>
+      <div className="flex w-full items-start pt-[100px] flex-col gap-5">
+        <div className="flex justify-between w-full">
+          <Image
+            src="/7007-logo-black.svg"
+            alt="7007 Studio"
+            width={44}
+            height={44}
+            className="w-10 h-10 opacity-30"
+          />
+          <div className="flex justify-end text-end flex-col">
+            <div>estimate mint cost</div>
+            <div>~ 0.05 eth</div>
+          </div>
         </div>
-
-        <button className="btn btn-primary" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <span className="loading loading-spinner"></span>
-              loading
-            </>
-          ) : (
-            `${submitText}`
-          )}
-        </button>
+        <div className="flex justify-between w-full gap-12">
+          <a className="max-w-[502px]">
+            this is a function description a description this is function
+            function description function
+          </a>
+          <button
+            className="w-[260px] h-[58px] bg-white/40 border border-white rounded"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <span className="loading loading-spinner"></span>
+                loading
+              </>
+            ) : (
+              `${submitText}`
+            )}
+          </button>
+        </div>
       </div>
     </form>
   );

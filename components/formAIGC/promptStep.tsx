@@ -7,6 +7,7 @@ import {
   useReadAigcTokenId,
 } from "@/generated";
 import { getContractAddress } from "@/helpers";
+import ArrowLeftIcon from "@/components/ui/arrowLeftIcon";
 
 import { AIGCContent } from ".";
 import PromptForm from "./promptForm";
@@ -15,26 +16,39 @@ import { Address } from "viem";
 interface PromptStepProps {
   nftContract: Address;
   onArtGenerated: (metadata: AIGCContent) => void;
+  setAigcContent: (aigcContent?: AIGCContent) => void;
 }
 
-const PromptStep = ({ nftContract, onArtGenerated }: PromptStepProps) => {
+const PromptStep = ({
+  nftContract,
+  onArtGenerated,
+  setAigcContent,
+}: PromptStepProps) => {
   const { data: modelName } = useReadAigcModelName({
     address: nftContract,
   });
 
   return (
-    <>
-      <h2 className="heading-lg 2xl:mt-24 mb-12 text-center">
+    <div className="flex flex-col items-center w-full h-full">
+      <a className="mb-[50px] text-[30px] font-bold text-center">
         Unleash imagination
-      </h2>
-      <div className="py-20 px-40 max-w-[1106px] mx-auto bg-white">
+      </a>
+      <div className="py-[50px] border-white border rounded-lg px-14 max-w-[954px]">
+        <span
+          onClick={() => {
+            setAigcContent(undefined);
+          }}
+          className="flex flex-row gap-2 hover:cursor-pointer pb-10 opacity-40"
+        >
+          <ArrowLeftIcon className="text-white/40" /> Back
+        </span>
         <PromptForm
           submitText="Prompt &amp; Mint"
           modelName={modelName || "Genesis Model"}
           onArtGenerated={onArtGenerated}
         />
       </div>
-    </>
+    </div>
   );
 };
 

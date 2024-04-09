@@ -1,0 +1,21 @@
+<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="25" height="25" fill="#1E1E1E"/>
+<g id="create" clip-path="url(#clip0_64_5831)">
+<rect width="1920" height="1639" transform="translate(-1076 -355)" fill="black"/>
+<g id="Group 289377">
+<g id="Mask group">
+<mask id="mask0_64_5831" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="-1076" y="-355" width="1920" height="450">
+<rect id="Rectangle 2417" x="-1076" y="-355" width="1920" height="450" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_64_5831)">
+<rect id="ai-generated-7799678" x="-1076" y="-822" width="1920" height="1080" fill="url(#pattern0_64_5831)"/>
+</g>
+</g>
+<rect id="Rectangle 2422" x="-1076" y="-354" width="1920" height="450" fill="url(#paint0_linear_64_5831)"/>
+</g>
+<g id="Group 289378">
+<rect id="Rectangle 25" x="-290.25" y="-33.25" width="348.5" height="348.5" rx="9.25" fill="black" stroke="white" stroke-width="1.5"/>
+<path id="Line 121" d="M24.2546 0.958759H20.1721V5.04124H24.2546V0.958759ZM21.8598 2.64645L0.646622 23.8596L1.35373 24.5668L22.5669 3.35355L21.8598 2.64645Z" fill="white"/>
+</g>
+</g>
+</svg>

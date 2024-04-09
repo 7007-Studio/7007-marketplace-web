@@ -6,6 +6,7 @@ import useNftContract from "@/hooks/useNftContract";
 import useNftCollection from "@/hooks/useNftCollection";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
+import { CiSearch } from "react-icons/ci";
 
 const Collection = () => {
   const { chain } = useAccount();
@@ -18,9 +19,18 @@ const Collection = () => {
   const { tokenIds } = useNftCollection({ nftContract });
 
   return (
-    <>
+    <div className="flex flex-col items-center w-full">
+      <div className="flex w-full justify-end pt-20 pb-11">
+        <div className="w-[330px] h-[58px] flex items-center px-6 border-white border rounded-sm">
+          <CiSearch
+            size={30}
+            color="white"
+            className="opacity-60 cursor-pointer"
+          />
+        </div>
+      </div>
       {(nftContract && (
-        <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
+        <div className="flex flex-wrap w-full justify-items-center justify-center gap-12">
           {tokenIds.map((id) => (
             <NFTCard
               key={`${nftContract}-${id}`}
@@ -30,13 +40,13 @@ const Collection = () => {
           )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
         </div>
       )) || (
-        <div className="columns-3 max-w-[828px] xl:columns-4 xl:max-w-[1106px]">
+        <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-14">
           {emptyCardList.map((l) => (
             <EmptyCard key={l} />
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

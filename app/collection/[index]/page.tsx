@@ -8,6 +8,7 @@ import useNftContract from "@/hooks/useNftContract";
 import Hero from "./hero";
 import Stats from "./stats";
 import Collection from "@/app/stats/erc-7007/collection";
+import Progress from "./progress";
 
 export default function CollectionPage() {
   const { index } = useParams<{ index: string }>();
@@ -19,8 +20,9 @@ export default function CollectionPage() {
   });
 
   return (
-    <div>
+    <div className="w-[80%]">
       <Hero nftContract={nftContract} />
+      <Progress />
       <Stats nftContract={nftContract} />
       <Collection />
     </div>

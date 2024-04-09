@@ -58,7 +58,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
             slidesPerView={windowSize > 1536 ? 4 : windowSize > 1280 ? 3 : 2}
             spaceBetween={25}
             modules={[Pagination]}
-            className="h-full w-full max-w-[80%] cursor-grab"
+            className="h-full w-full max-w-[80%] cursor-grab flex justify-center"
             onSwiper={(swiper: any) => {
               swiperRef.current = swiper;
             }}
@@ -69,11 +69,13 @@ function HomeModel({ windowSize }: { windowSize: number }) {
           >
             {tokenIds.map((id, index) => (
               <SwiperSlide key={index}>
-                <NFTCard
-                  key={`${nftContract}-${id}`}
-                  nftContract={nftContract}
-                  tokenId={BigInt(id)}
-                />
+                <div className="w-full flex justify-center">
+                  <NFTCard
+                    key={`${nftContract}-${id}`}
+                    nftContract={nftContract}
+                    tokenId={BigInt(id)}
+                  />
+                </div>
               </SwiperSlide>
             )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
           </Swiper>
@@ -302,11 +304,13 @@ function Ora({ windowSize }: { windowSize: number }) {
           >
             {tokenIds.map((id, index) => (
               <SwiperSlide key={index}>
-                <NFTCard
-                  key={`${nftContract}-${id}`}
-                  nftContract={nftContract}
-                  tokenId={BigInt(id)}
-                />
+                <div className="w-full flex justify-center">
+                  <NFTCard
+                    key={`${nftContract}-${id}`}
+                    nftContract={nftContract}
+                    tokenId={BigInt(id)}
+                  />
+                </div>
               </SwiperSlide>
             )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
           </Swiper>

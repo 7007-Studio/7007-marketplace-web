@@ -1,5 +1,5 @@
 import Marketplace from "./marketplace";
 
-export default function ListedPage() {
+export default function OffersPage() {
   return <Marketplace />;
 }

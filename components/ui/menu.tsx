@@ -23,12 +23,12 @@ export default function Menu({ options, onSelect, selected }: MenuProps) {
         className="font-bold cursor-pointer w-[239px] h-10 flex items-center justify-center gap-3 bg-grey"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {selected.label}
+        <a className="leading-none">{selected.label}</a>
         <MdArrowDropDown
           size={20}
           className={`${
             isOpen ? "-rotate-180" : "rotate-0"
-          } transition-all duration-500`}
+          } transition-all duration-500 mb-1`}
         />
       </button>
 

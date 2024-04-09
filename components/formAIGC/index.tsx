@@ -33,6 +33,7 @@ export default function FormAIGC({ nftContract }: FormAIGCProps) {
     return (
       <PromptStep
         nftContract={nftContract}
+        setAigcContent={setAigcContent}
         onArtGenerated={(_aigcContent) => {
           setAigcContent(_aigcContent);
         }}

@@ -16,7 +16,7 @@ export default function MintPage() {
   });
 
   return (
-    <div className="h-full">
+    <div className="h-full w-[80%]">
       {nftContract && <FormAIGC nftContract={nftContract} />}
     </div>
   );

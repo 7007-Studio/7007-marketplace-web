@@ -37,16 +37,12 @@ export default function TextInput<T extends FieldValues>({
     registerOptions.required = "This field is required";
   }
   return (
-    <label className="form-control w-full">
-      {label && (
-        <div className="label">
-          <span className="label-text">{label}</span>
-        </div>
-      )}
+    <label className="form-control w-full gap-2">
+      {label && <span className="text-[18px] pl-3">{label}</span>}
       <div className="relative w-full">
         <input
           type="text"
-          className="input pl-3 pr-8 py-2 border rounded w-full"
+          className="input pl-6 py-2 rounded w-full bg-grey"
           placeholder={placeholder}
           min={min}
           max={max}

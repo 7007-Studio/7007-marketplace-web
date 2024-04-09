@@ -1,4 +1,5 @@
 import useReadAigcContracts from "@/hooks/useReadAigcContracts";
+import React from "react";
 import { Address, zeroAddress } from "viem";
 
 export default function Stats({
@@ -28,21 +29,29 @@ export default function Stats({
       value: "8888",
     },
     {
+      name: "sub models",
+      value: "12",
+    },
+    {
       name: "Accumulated profit",
       value: "500 eth",
     },
   ];
   const { tokenId: minted } = useReadAigcContracts({ nftContract });
   return (
-    <div className="flex flex-row gap-4 py-8">
-      {statItems.map((s) => {
+    <div className="flex flex-row gap-4 w-full justify-between">
+      {statItems.map((s, index) => {
         return (
-          <div
-            key={s.name}
-            className="min-w-[120px] p-4 border border-black border-solid"
-          >
-            <div>{s.name}</div>
-            <div className="font-bold">{s.value}</div>
+          <div key={s.name} className="flex gap-4">
+            <div className="min-w-[120px] border border-black border-solid flex">
+              <div className="flex flex-col items-center">
+                <a className="font-bold text-[30px]">{s.value}</a>
+                <a>{s.name}</a>
+              </div>
+            </div>
+            {index !== statItems.length - 1 && (
+              <div className="h-full w-[1.5px] bg-white/60 mx-2" />
+            )}
           </div>
         );
       })}
