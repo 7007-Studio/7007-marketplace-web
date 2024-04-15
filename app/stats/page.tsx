@@ -84,7 +84,7 @@ export default function HomeModel() {
   };
 
   const handleModelClick = (item) => {
-    setModel({id: item.id, author: item.modelAuthorID})
+    setModel({id: item.id, author: item.modelAuthorID, name: item.modelName})
   }
 
   useEffect(() => {
@@ -101,7 +101,7 @@ export default function HomeModel() {
       <NFTCard
         nftContract={"0x0B89f60136A91f3B36557F9414cbd157d0ada7bc"}
         tokenId={BigInt(2)}
-      /> */} 
+      /> */}  
       <div className="w-[75%] flex items-center gap-5">
       <button className="text-white" onClick={handleFetchData}>Refresh</button>
         <Menu options={menuOption} selected={select} onSelect={handleSelect} />

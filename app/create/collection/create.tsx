@@ -28,7 +28,7 @@ const CreateCollection = () => {
   ];
   const [modelName, setModelName] = useState('1234');
   // const [userId, setUserId] = useState('jasonTest');
-  const [baseModel, setBaseModel] = useState('')
+  // const [baseModel, setBaseModel] = useState('')
   const { uploadImages } = useGetImageStore();
   const { address } = useAccount();
   const [selectModel, setSelectModel] = useState<MenuList>(menuModelOption[0]);
@@ -36,6 +36,8 @@ const CreateCollection = () => {
   const handleSelect = (option: MenuList) => {
     setSelect(option);
   };
+
+  console.log('selectModel', selectModel.value)
 
   const handleSelectModel = (option: MenuList) => {
     setSelectModel(option);
@@ -63,7 +65,8 @@ const CreateCollection = () => {
 
   const zipAndUploadFiles = async () => {
 
-    if(!modelName || !address || uploadImages.length == 0 || !baseModel) return
+    console.log(modelName, address, uploadImages, selectModel)
+    if(!modelName || !address || uploadImages.length == 0 || !selectModel) return
 
     console.log('Starting to zip files...');
     const zip = new JSZip();
@@ -122,6 +125,8 @@ const CreateCollection = () => {
       alert('Please enter a model name and User ID.');
       return;
     }
+
+    let baseModel = selectModel.value
 
     try {
       const response = await fetch('https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_train_task', {

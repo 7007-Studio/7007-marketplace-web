@@ -52,7 +52,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   const { tokenIds } = useNftCollection({ nftContract });
 
   const handleModelClick = (item) => {
-    setModel({id: item.id, author: item.modelAuthorID})
+    setModel({id: item.id, author: item.modelAuthorID, name: item.modelName})
   }
 
   const handleFetchData = () => {

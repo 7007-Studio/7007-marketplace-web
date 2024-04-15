@@ -39,7 +39,6 @@ const { address } = useAccount();
   const genImage = async () => {
 
     var data = JSON.stringify({ modelID: model.id, prompt: prompt, modelAuthorID: model.author });
-    console.log('data', data)
 
     try {
       const response = await fetch('https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task', {
@@ -151,7 +150,7 @@ const { address } = useAccount();
         /> */}
         <div>
           <p>model</p>
-          {model.id}
+          {model.name}
         </div>
       </div>
       <div className="flex w-full items-start pt-[100px] flex-col gap-5">

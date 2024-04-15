@@ -88,7 +88,7 @@ const Marketplace = () => {
         <thead className="text-white w-full">
           <tr>
             <th></th>
-            <th>Name</th>
+            <th>Model Name</th>
             <th>Status</th>
             <th>Prompt</th>
             <th>Button</th>
