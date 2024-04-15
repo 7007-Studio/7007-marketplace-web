@@ -34,6 +34,12 @@ export default function Progress({
       >
         buy model token
       </Link>
+      <Link
+        href={`/collection/${params.index}/mint`}
+        className="bg-white text-black font-bold text-[18px] cursor-pointer w-[290px] h-[45px] rounded flex items-center justify-center hover:opacity-60"
+      >
+        Create & Mint
+      </Link>
     </div>
   );
 }

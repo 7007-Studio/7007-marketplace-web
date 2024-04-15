@@ -25,6 +25,7 @@ export default function AccountLayout({
     { pathnames: ["/account/listed"], label: "listed" },
     { pathnames: ["/account/models"], label: "models" },
     { pathnames: ["/account/offers"], label: "offers" },
+    { pathnames: ["/account/inferencing"], label: "inferencing" },
   ];
 
   return (
@@ -54,7 +55,7 @@ export default function AccountLayout({
               </div>
               <a className="">
                 Pilot of on-chain AI, fine tuned with Stable diffusion model by
-                7007.Studio.First, you’ll need to deploy a contract.
+                7007.Studio.First, you'll need to deploy a contract.
               </a>
             </div>
             <div className="flex flex-col justify-end items-end gap-10">

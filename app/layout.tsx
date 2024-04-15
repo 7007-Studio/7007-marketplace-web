@@ -3,14 +3,14 @@ import { Metadata } from "next";
 import "@/styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { Syncopate } from "next/font/google";
+import { IBM_Plex_Mono } from "next/font/google";
 import { Web3Provider } from "@/utils/web3Provider";
 import { ModalProvider } from "@/utils/modalProvider";
 
 import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/ui/footer";
 
-const syncopate = Syncopate({
+const syncopate = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "700"],
 });

@@ -3,7 +3,9 @@ import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
 import Menu, { MenuList } from "@/components/ui/menu";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import {useModelInfoStore} from './store'
 
 export default function HomeModel() {
   const menuOption = [
@@ -12,10 +14,14 @@ export default function HomeModel() {
     { id: "3", label: "text-to-music", value: "text-to-music" },
     { id: "4", label: "Model 3", value: "Model 3" },
   ];
+  const { address } = useAccount();
+  const [taskStatus, setTaskStatus] = useState([]);
   const [select, setSelect] = useState<MenuList>(menuOption[0]);
   const handleSelect = (option: MenuList) => {
     setSelect(option);
   };
+  const { setModel } = useModelInfoStore();
+
   const [type, setType] = useState([
     { id: "1", label: "Trending", selected: true },
     { id: "2", label: "Top", selected: false },
@@ -27,7 +33,33 @@ export default function HomeModel() {
     { id: "7day", label: "7day", selected: false },
     { id: "30day", label: "30day", selected: false },
     { id: "All", label: "All", selected: false },
-  ]);
+  ]); 
+
+  const handleFetchData = () => {
+    // if (!address) {
+    //   alert('Please enter a user ID.');
+    //   return;
+    // }
+
+    const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
+
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        setTaskStatus(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  console.log('taskStatus', taskStatus)
+
   const changeTime = (id: string) => {
     setTime(
       time.map((item) => {
@@ -50,6 +82,15 @@ export default function HomeModel() {
       })
     );
   };
+
+  const handleModelClick = (item) => {
+    setModel({id: item.id, author: item.modelAuthorID})
+  }
+
+  useEffect(() => {
+    handleFetchData()
+  },[])
+
   return (
     <div className="h-full w-full flex justify-center flex-col gap-16 items-center pt-[150px]">
       {/* <ModelCard modelIndex={ModelIndex} /> */}
@@ -60,8 +101,9 @@ export default function HomeModel() {
       <NFTCard
         nftContract={"0x0B89f60136A91f3B36557F9414cbd157d0ada7bc"}
         tokenId={BigInt(2)}
-      /> */}
+      /> */} 
       <div className="w-[75%] flex items-center gap-5">
+      <button className="text-white" onClick={handleFetchData}>Refresh</button>
         <Menu options={menuOption} selected={select} onSelect={handleSelect} />
         {type.map((item, index) => (
           <div
@@ -113,44 +155,33 @@ export default function HomeModel() {
             </div>
           </div>
           <div className="flex flex-col w-full h-full px-6 py-4 gap-6">
-            <Link
-              className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
-              href="/collection/1"
-            >
-              <div className="w-[8%] flex items-center justify-center text-lg">
-                1
-              </div>
-              <div className="w-[40%] flex items-center gap-4 justify-center text-base font-bold">
-                <div className="size-[90px] bg-grey"></div>
-                Model name
-              </div>
-              <div className="w-[23%] flex items-center justify-center">
-                0.0007 ETH
-              </div>
-              <div className="w-[17%] flex items-center justify-center">
-                7 ETH
-              </div>
-              <div className="w-[12%] flex items-center justify-center">7</div>
-            </Link>
-            <Link
-              className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
-              href="/collection/1"
-            >
-              <div className="w-[8%] flex items-center justify-center text-lg">
-                1
-              </div>
-              <div className="w-[40%] flex items-center gap-4 justify-center text-base font-bold">
-                <div className="size-[90px] bg-grey"></div>
-                Model name
-              </div>
-              <div className="w-[23%] flex items-center justify-center">
-                0.0007 ETH
-              </div>
-              <div className="w-[17%] flex items-center justify-center">
-                7 ETH
-              </div>
-              <div className="w-[12%] flex items-center justify-center">7</div>
-            </Link>
+          {taskStatus.map((item, index) => (
+            <div onClick={() => handleModelClick(item)}>
+              <Link 
+                className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
+                key={index} 
+                href={`/collection/${index}`}
+              >
+                  <div className="w-[8%] flex items-center justify-center text-lg">
+                    {index + 1}
+                  </div>
+                  <div className="w-[40%] flex items-center gap-4 justify-center text-base font-bold">
+                    <div className="size-[90px] bg-grey"></div>
+                    {item.modelName}
+                  </div>
+                  <div className="w-[23%] flex items-center justify-center">
+                    {0.0007} ETH
+                  </div>
+                  <div className="w-[17%] flex items-center justify-center">
+                    {7} ETH
+                  </div>
+                  <div className="w-[12%] flex items-center justify-center">
+                    {7}
+                  </div>
+              </Link>
+            </div>
+
+          ))}
           </div>
         </div>
       </div>

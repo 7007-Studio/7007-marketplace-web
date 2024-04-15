@@ -28,6 +28,7 @@
     "eth-rpc-errors": "^4.0.3",
     "ethers": "^6.11.1",
     "ipfs-http-client": "^60.0.1",
+    "jszip": "^3.10.1",
     "livepeer": "2.0",
     "lucide-react": "^0.346.0",
     "next": "14.1.0",

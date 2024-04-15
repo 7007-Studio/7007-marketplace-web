@@ -13,6 +13,7 @@ import { AIGCContent } from ".";
 import PromptForm from "./promptForm";
 import { Address } from "viem";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface PromptStepProps {
   nftContract: Address;
@@ -29,12 +30,23 @@ const PromptStep = ({
     address: nftContract,
   });
   const router = useRouter();
+  const [userId, setUserId] = useState('jasonTest')
+  // const [modelId, setModelId] = useState("0b52b440-8482-4a3a-8bcc-8bf4c2cbbaa2")
+  const [prompt, setPrompt] = useState('jasonTest 6666666') 
+  const [data, setData] = useState('')
+  
+  const { address } = useAccount();
+
+
+
+  console.log('data', data)
 
   return (
     <div className="flex flex-col items-center w-full h-full">
       <a className="mb-[50px] text-[30px] font-bold text-center">
         Unleash imagination
       </a>
+      {/* <button className="text-white" onClick={genImage}>Refresh</button> */}
       <div className="py-[50px] border-white border rounded-lg px-14 max-w-[954px]">
         <span
           onClick={() => {

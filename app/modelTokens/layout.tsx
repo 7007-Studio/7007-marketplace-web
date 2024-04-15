@@ -28,7 +28,7 @@ export default function CreateLayout({
         />
 
         <div className="absolute top-[90px] bg-black z-10 w-full flex items-center justify-center">
-          <div className="flex w-full h-[87px] py-6 items-center justify-center font-bold text-[18px]">
+          <div className="flex w-full h-[87px] py-6 itzems-center justify-center font-bold text-[18px]">
             <div className="flex gap-5">
               <a className="text-upGreen">24h volume :</a>
               <a className="">$ 1.27b</a>

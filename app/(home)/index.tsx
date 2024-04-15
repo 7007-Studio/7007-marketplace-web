@@ -10,6 +10,9 @@ import Selector, { SelectorEntry } from "@/components/ui/selector";
 import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
+import ModelCard from "@/components/modelCard";
+import { useModelInfoStore } from "../stats/store";
+
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -23,6 +26,8 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   const [swiperIndex, setSwiperIndex] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
   const emptyCardList = [...Array(4).keys()];
+  const [taskStatus, setTaskStatus] = useState([]);
+  const { setModel } = useModelInfoStore();
   const [selector1, setSelector1] = useState<SelectorEntry[]>([
     { id: "1", label: "All", selected: true },
     { id: "2", label: "text-to-text", selected: false },
@@ -46,6 +51,37 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   });
   const { tokenIds } = useNftCollection({ nftContract });
 
+  const handleModelClick = (item) => {
+    setModel({id: item.id, author: item.modelAuthorID})
+  }
+
+  const handleFetchData = () => {
+    // if (!address) {
+    //   alert('Please enter a user ID.');
+    //   return;
+    // }
+
+    const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
+
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        setTaskStatus(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  useEffect(() => {
+    handleFetchData()
+  }, [])
+
   return (
     <div className="flex flex-col w-full items-center gap-[72px]">
       <div className="w-[75%]">
@@ -67,14 +103,20 @@ function HomeModel({ windowSize }: { windowSize: number }) {
               setIsEnd(swiper.isEnd);
             }}
           >
-            {tokenIds.map((id, index) => (
+            {taskStatus.map((item, index) => (
               <SwiperSlide key={index}>
                 <div className="w-full flex justify-center">
-                  <NFTCard
+                  {/* <ModelCard 
+                    modelIndex={index}
+                  /> */}
+                  <div onClick={() => handleModelClick(item)}>
+                  <ModelCard modelIndex={ModelIndex} />
+                  </div>
+                  {/* <NFTCard
                     key={`${nftContract}-${id}`}
                     nftContract={nftContract}
                     tokenId={BigInt(id)}
-                  />
+                  /> */}
                 </div>
               </SwiperSlide>
             )) || emptyCardList.map((l) => <EmptyCard key={l} />)}

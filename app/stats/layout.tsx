@@ -23,7 +23,7 @@ export default function StatsLayout({
           height={300}
           className="h-full w-full absolute top-0 left-0"
         />
-        <p className="text-[30px] font-bold z-10">Model STATS Banner example</p>
+        <p className="text-[30px] font-bold z-10">Model STATS Banner</p>
         <Link
           href={`/collection/${ModelIndex}/mint`}
           className="border bg-black/40 h-[50px] z-10 w-[248px] flex items-center justify-center rounded-3xl text-white/80 hover:text-white/60 cursor-pointer"
