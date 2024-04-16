@@ -11,7 +11,8 @@ import ImageUploader from "./imageUploader";
 import Link from 'next/link';
 import FetchImages from "./fetchImages";
 import JSZip from 'jszip';
-import { useGetImageStore, useCollectionDescriptionStore, useTotalSupplyStore, useCreatorEarningsStore, useCreatorModelNameStore}  from './store';
+import { useGetImageStore}  from './store';
+import { useRouter } from 'next/navigation'
 
 const CreateCollection = () => {
   const menuOption = [
@@ -36,7 +37,7 @@ const CreateCollection = () => {
   const handleSelect = (option: MenuList) => {
     setSelect(option);
   };
-
+  const router = useRouter();
   console.log('selectModel', selectModel.value)
 
   const handleSelectModel = (option: MenuList) => {
@@ -111,6 +112,7 @@ const CreateCollection = () => {
       if (response.ok) {
         console.log('Successfully uploaded zip file.');
         postModelName(modelID);
+        router.push('/account/models');
       } else {
         throw new Error(`Error during upload: ${response.status} ${response.statusText}`);
       }
@@ -246,7 +248,7 @@ const CreateCollection = () => {
           </div>
           <div className="gap-2 flex flex-col">
             <a>collection description</a>
-            <CreateInput placeholder="description .." className="h-48collection description" />
+            <CreateInput placeholder="description .." className="h-48 collection description" />
           </div>
           <div className="w-full flex gap-5">
             <div className="gap-2 flex flex-col">

@@ -15,6 +15,12 @@ const UploadImages = () => {
       return;
     }
 
+    // Check if the number of selected files is less than 20
+  if (files.length < 20) {
+    setError('You must upload at least 20 photos.');
+    return;
+  }
+
     // Check file formats
     const allowedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
     const invalidFiles = files.filter(file => !allowedFormats.includes(file.type));
