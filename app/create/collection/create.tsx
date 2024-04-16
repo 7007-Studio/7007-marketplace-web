@@ -26,7 +26,7 @@ const CreateCollection = () => {
     { id: "3", label: "PE_OldCartoonStyle", value: "PE_OldCartoonStyle.safetensors [b1b2c54647]" },
     { id: "4", label: "revAnimated_v122EOL", value: "revAnimated_v122EOL.safetensors [4199bcdd14]" },
   ];
-  const [modelName, setModelName] = useState('1234');
+  const [modelName, setModelName] = useState();
   // const [userId, setUserId] = useState('jasonTest');
   // const [baseModel, setBaseModel] = useState('')
   const { uploadImages } = useGetImageStore();
@@ -233,9 +233,14 @@ const CreateCollection = () => {
               type="text"
               name="modelName"
               id="modelNameInput"
-              className="bg-grey"
+              className="bg-grey h-16 pl-10"
               value={modelName} // Bind the value to the state variable
-              onChange={(e) => setModelName(e.target.value)} // Update the input value directly
+              onChange={(e) => {
+                const inputValue = e.target.value.trim(); // Remove leading and trailing spaces
+                const formattedValue = inputValue.replace(/\s+/g, '-'); // Replace spaces with hyphens
+                setModelName(formattedValue); // Update the state with the formatted value
+              }}
+              placeholder="name..."
             />
             {/* <CreateInput placeholder="name .." /> */}
           </div>

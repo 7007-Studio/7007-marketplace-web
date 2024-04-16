@@ -28,7 +28,11 @@ const PromptForm = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { model } = useModelInfoStore();
-  const [prompt, setPrompt] = useState('Hahahaha');
+  const [prompt, setPrompt] = useState();
+  const [negativePrompt, setNegativePrompt] = useState();
+  const [seed, setSeed] = useState();
+  
+  const [title, setTitle] = useState();
   const [genImageData, setGenImageData] = useState();
 const { address } = useAccount();
   const { register, handleSubmit, formState } = useForm<IFormAIGCInput>({
@@ -64,16 +68,16 @@ const { address } = useAccount();
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
     console.log('data' ,data)
     setErrorMessage("");
-    setIsSubmitting(true);
+    // setIsSubmitting(true);
     genImage()
 
-    const aigcContent = await generateAigcContent(
-      data.name,
-      data.prompt,
-      Math.floor(Math.random() * 9999999)
-    );
-    onArtGenerated(aigcContent);
-    setIsSubmitting(false);
+    // const aigcContent = await generateAigcContent(
+    //   data.name,
+    //   data.prompt,
+    //   Math.floor(Math.random() * 9999999)
+    // );
+    // onArtGenerated(aigcContent);
+    // setIsSubmitting(false);
     
   };
 
@@ -100,15 +104,49 @@ const { address } = useAccount();
           <span>{errorMessage}</span>
         </div>
       )}
-      <TextInput
+      {/* <TextInput
         placeholder="Let's give it a cool name"
         name="name"
         label="title"
         register={register}
         errors={errors}
         required
+      /> */}
+
+
+      <p>Title</p>
+      <input
+        type="text"
+        name="modelTitle"
+        id="modelTitle"
+        className="bg-grey h-16 pl-10"
+        value={title} // Bind the value to the state variable
+        onChange={(e) => setTitle(e.target.value)} // Update the input value directly
+        required
+        placeholder="Let's give it a cool name"
       />
-      <label className="form-control w-full gap-2">
+      <p>Positive prompt</p>
+      <input
+        type="text"
+        name="modelPositive"
+        id="modelPositive"
+        className="bg-grey h-16 pl-10"
+        value={prompt} // Bind the value to the state variable
+        onChange={(e) => setPrompt(e.target.value)} // Update the input value directly
+        required
+        placeholder="Enter your prompt"
+      />
+      <p>Negative prompt</p>
+      <input
+        type="text"
+        name="modelPositive"
+        id="modelPositive"
+        className="bg-grey h-16 pl-10"
+        value={negativePrompt} // Bind the value to the state variable
+        onChange={(e) => setNegativePrompt(e.target.value)} // Update the input value directly
+        placeholder="Enter your prompt"
+      />
+      {/* <label className="form-control w-full gap-2">
         <span className="text-[18px] pl-3">Positive prompt</span>
         <textarea
           className="textarea h-24 bg-grey"
@@ -118,8 +156,8 @@ const { address } = useAccount();
         <p className=" text-red-600 text-left text-sm">
           {errors.prompt?.message}
         </p>
-      </label>
-      <label className="form-control w-full gap-2">
+      </label> */}
+      {/* <label className="form-control w-full gap-2">
         <span className="text-[18px] pl-3">Negative prompt (optional)</span>
         <textarea
           className="textarea h-24 bg-grey"
@@ -129,17 +167,30 @@ const { address } = useAccount();
         <p className=" text-red-600 text-left text-sm">
           {errors.prompt?.message}
         </p>
-      </label>
+      </label> */}
       {/* TODO: hardcode */}
-      <div className="flex gap-[30px]">
-        <TextInput
+      <div className="flex gap-[20px] justify-between">
+      <div className="flex flex-col w-1/2 gap-[30px]">
+          <p>Seed</p>
+            <input
+              type="text"
+              name="modelSeed"
+              id="modelSeed"
+              className="bg-grey h-16 pl-10"
+              value={seed} // Bind the value to the state variable
+              onChange={(e) => setSeed(e.target.value)} // Update the input value directly
+              placeholder="Enter Seed +"
+            />
+        </div>
+        
+        {/* <TextInput
           placeholder="Enter Seed +"
           name="name"
           label="seed"
           register={register}
           errors={errors}
           required
-        />
+        /> */}
         {/* <TextInput
           placeholder="Model name +"
           name="name"
@@ -148,9 +199,17 @@ const { address } = useAccount();
           errors={errors}
           required
         /> */}
-        <div>
-          <p>model</p>
-          {model.name}
+        <div className="flex flex-col w-1/2 gap-[30px]">
+          <p>Model</p>
+          <input
+            type="text"
+            name="modelName"
+            id="modelName"
+            className="bg-grey h-16 pl-10"
+            value={model.name} // Bind the value to the state variable
+            readOnly // Make the input field read-only
+            placeholder="Model name +"
+          />
         </div>
       </div>
       <div className="flex w-full items-start pt-[100px] flex-col gap-5">
