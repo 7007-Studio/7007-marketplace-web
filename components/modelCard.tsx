@@ -7,12 +7,13 @@ import { useReadAigcFactoryDeployedAigCs, useReadAigtName } from "@/generated";
 import { getContractAddress } from "@/helpers";
 
 import Card from "./ui/card";
- 
+  
 export interface ModelCardProps {
   modelIndex: bigint;
+  modelInfo: any;
 }
  
-const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
+const ModelCard: React.FC<ModelCardProps> = ({ modelIndex, modelInfo }) => {
   const router = useRouter();
 
   const { chainId } = useAccount();
@@ -25,6 +26,8 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex }) => {
   const { data: modelName } = useReadAigtName({
     address: nftContract,
   });
+
+  // console.log('modelName', modelName)
 
   return (
     <Card className="max-w-[390px] max-h-[390px] w-[390px] h-[390px]">

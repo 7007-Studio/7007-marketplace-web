@@ -6,7 +6,7 @@ import {
   FieldErrors,
   RegisterOptions,
 } from "react-hook-form";
-
+ 
 interface TextInputProps<T extends FieldValues> {
   type?: string;
   label?: string;
@@ -18,6 +18,7 @@ interface TextInputProps<T extends FieldValues> {
   name: Path<T>;
   min?: number;
   max?: number;
+  defaultValue?: string;
 }
 
 export default function TextInput<T extends FieldValues>({
@@ -31,11 +32,15 @@ export default function TextInput<T extends FieldValues>({
   errors,
   min,
   max,
+  defaultValue,
 }: TextInputProps<T>) {
   const registerOptions: RegisterOptions = {};
   if (required) {
     registerOptions.required = "This field is required";
   }
+
+  console.log('defaultValue',defaultValue)
+
   return (
     <label className="form-control w-full gap-2">
       {label && <span className="text-[18px] pl-3">{label}</span>}
@@ -47,6 +52,7 @@ export default function TextInput<T extends FieldValues>({
           min={min}
           max={max}
           {...register(name, registerOptions)}
+          defaultValue={defaultValue}
         />
         {postfix && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">

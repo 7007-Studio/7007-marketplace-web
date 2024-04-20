@@ -1,20 +1,11 @@
-import { concatAddress } from "@/helpers";
-import useReadAigcContracts from "@/hooks/useReadAigcContracts";
 import Image from "next/image";
 import React, { useEffect, useRef } from "react";
-import { Address, zeroAddress } from "viem";
 import { useModelInfoStore } from "../../stats/store"
-interface HeroProps {
-  nftContract?: Address;
-}
 
-const Hero = ({ nftContract = zeroAddress }: HeroProps) => {
-  // const { name = "" } = useReadAigcContracts({ nftContract });
+const Hero = () => {
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { model } = useModelInfoStore();
-
-  console.log('model', model)
 
   useEffect(() => {
     if (!heroRef.current) return;

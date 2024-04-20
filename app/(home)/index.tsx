@@ -12,7 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 import ModelCard from "@/components/modelCard";
 import { useModelInfoStore } from "../stats/store";
-
+ 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -34,6 +34,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
     { id: "3", label: "text-to-music", selected: false },
     { id: "4", label: "Model 3", selected: false },
   ]);
+
   const handleSelector1 = (id: string) => {
     setSelector1(
       selector1.map((item) => {
@@ -45,10 +46,12 @@ function HomeModel({ windowSize }: { windowSize: number }) {
       })
     );
   };
+
   const { nftContract } = useNftContract({
     modelIndex: ModelIndex,
     chainId: chain?.id,
   });
+
   const { tokenIds } = useNftCollection({ nftContract });
 
   const handleModelClick = (item) => {
@@ -110,7 +113,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
                     modelIndex={index}
                   /> */}
                   <div onClick={() => handleModelClick(item)}>
-                  <ModelCard modelIndex={ModelIndex} />
+                    <ModelCard modelIndex={ModelIndex} modelInfo={item} />
                   </div>
                   {/* <NFTCard
                     key={`${nftContract}-${id}`}

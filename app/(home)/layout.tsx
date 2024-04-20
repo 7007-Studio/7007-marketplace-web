@@ -20,7 +20,7 @@ export default function HomeLayout({
         />
         <p className="text-[30px] font-bold z-10">Model STATS Banner example</p>
         <Link
-          href={`/collection/${ModelIndex}/mint`}
+          href={`/stats`}
           className="border bg-black/40 h-[50px] w-[248px] flex items-center justify-center rounded-3xl z-10 text-white/80 hover:text-white/60 cursor-pointer"
         >
           Mint Now

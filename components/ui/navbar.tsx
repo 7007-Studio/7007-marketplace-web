@@ -75,11 +75,11 @@ export default function Navbar() {
           >
             Generate
           </Link> */}
-          <MdOutlineWbSunny
+          {/* <MdOutlineWbSunny
             size={20}
             color="white"
             className="opacity-60 cursor-pointer"
-          />
+          /> */}
           <ConnectButton showBalance={false} />
         </div>
 
