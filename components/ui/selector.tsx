@@ -14,7 +14,7 @@ export interface SelectorProps {
 
 const Selector = ({ options, onChange, single = false }: SelectorProps) => {
   return (
-    <div className="w-full flex items-center gap-5">
+    <div className="w-full flex items-center gap-5 uppercase">
       {options?.map((option, index) => {
         if (option.label === "") return null;
         return (

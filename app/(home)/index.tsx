@@ -12,7 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 import ModelCard from "@/components/modelCard";
 import { useModelInfoStore } from "../stats/store";
- 
+
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -32,7 +32,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
     { id: "1", label: "All", selected: true },
     { id: "2", label: "text-to-text", selected: false },
     { id: "3", label: "text-to-music", selected: false },
-    { id: "4", label: "Model 3", selected: false },
+    { id: "4", label: "t2v", selected: false },
   ]);
 
   const handleSelector1 = (id: string) => {
@@ -55,8 +55,8 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   const { tokenIds } = useNftCollection({ nftContract });
 
   const handleModelClick = (item) => {
-    setModel({id: item.id, author: item.modelAuthorID, name: item.modelName})
-  }
+    setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
+  };
 
   const handleFetchData = () => {
     // if (!address) {
@@ -67,23 +67,23 @@ function HomeModel({ windowSize }: { windowSize: number }) {
     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
 
     fetch(apiUrl, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         setTaskStatus(data);
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   };
 
   useEffect(() => {
-    handleFetchData()
-  }, [])
+    handleFetchData();
+  }, []);
 
   return (
     <div className="flex flex-col w-full items-center gap-[72px]">

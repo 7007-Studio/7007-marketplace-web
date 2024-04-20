@@ -8,11 +8,11 @@ import { CiSearch } from "react-icons/ci";
 import CreateInput from "@/components/input/creareInput";
 import Image from "next/image";
 import ImageUploader from "./imageUploader";
-import Link from 'next/link';
+import Link from "next/link";
 import FetchImages from "./fetchImages";
-import JSZip from 'jszip';
-import { useGetImageStore}  from './store';
-import { useRouter } from 'next/navigation'
+import JSZip from "jszip";
+import { useGetImageStore } from "./store";
+import { useRouter } from "next/navigation";
 
 const CreateCollection = () => {
   const menuOption = [
@@ -22,10 +22,26 @@ const CreateCollection = () => {
     { id: "4", label: "Model 3", value: "Model 3" },
   ];
   const menuModelOption = [
-    { id: "1", label: "animerge_v30", value: "animerge_v30.safetensors [0bb26698cd]" },
-    { id: "2", label: "chilloutmix_NiPrunedFp32Fix", value: "chilloutmix_NiPrunedFp32Fix.safetensors [fc2511737a]" },
-    { id: "3", label: "PE_OldCartoonStyle", value: "PE_OldCartoonStyle.safetensors [b1b2c54647]" },
-    { id: "4", label: "revAnimated_v122EOL", value: "revAnimated_v122EOL.safetensors [4199bcdd14]" },
+    {
+      id: "1",
+      label: "animerge_v30",
+      value: "animerge_v30.safetensors [0bb26698cd]",
+    },
+    {
+      id: "2",
+      label: "chilloutmix_NiPrunedFp32Fix",
+      value: "chilloutmix_NiPrunedFp32Fix.safetensors [fc2511737a]",
+    },
+    {
+      id: "3",
+      label: "PE_OldCartoonStyle",
+      value: "PE_OldCartoonStyle.safetensors [b1b2c54647]",
+    },
+    {
+      id: "4",
+      label: "revAnimated_v122EOL",
+      value: "revAnimated_v122EOL.safetensors [4199bcdd14]",
+    },
   ];
   const [modelName, setModelName] = useState();
   // const [userId, setUserId] = useState('jasonTest');
@@ -38,7 +54,7 @@ const CreateCollection = () => {
     setSelect(option);
   };
   const router = useRouter();
-  console.log('selectModel', selectModel.value)
+  console.log("selectModel", selectModel.value);
 
   const handleSelectModel = (option: MenuList) => {
     setSelectModel(option);
@@ -46,13 +62,16 @@ const CreateCollection = () => {
 
   const getPreSignedUrl = async () => {
     try {
-      const response = await fetch('https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/preSignedURL', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'user-id': address,
-        },
-      });
+      const response = await fetch(
+        "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/preSignedURL",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "user-id": address,
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         return data;
@@ -60,22 +79,22 @@ const CreateCollection = () => {
         throw new Error(`Failed to get presigned URL: ${response.status}`);
       }
     } catch (error) {
-      console.error('Request error while getting presigned URL:', error);
+      console.error("Request error while getting presigned URL:", error);
     }
   };
 
   const zipAndUploadFiles = async () => {
+    console.log(modelName, address, uploadImages, selectModel);
+    if (!modelName || !address || uploadImages.length == 0 || !selectModel)
+      return;
 
-    console.log(modelName, address, uploadImages, selectModel)
-    if(!modelName || !address || uploadImages.length == 0 || !selectModel) return
-
-    console.log('Starting to zip files...');
+    console.log("Starting to zip files...");
     const zip = new JSZip();
     let count = 0;
 
     if (uploadImages.length === 0) {
-      console.error('No files selected to zip.');
-      alert('Please select files to zip.');
+      console.error("No files selected to zip.");
+      alert("Please select files to zip.");
       return;
     }
 
@@ -85,67 +104,77 @@ const CreateCollection = () => {
         zip.file(image.name, reader.result, { binary: true });
         count++;
         if (count === uploadImages.length) {
-          zip.generateAsync({ type: 'blob' }).then(async (content) => {
-            const { preSignedUrl, modelID } = await getPreSignedUrl();
+          zip
+            .generateAsync({ type: "blob" })
+            .then(async (content) => {
+              const { preSignedUrl, modelID } = await getPreSignedUrl();
 
-            uploadFileToS3UsingUrl(content, preSignedUrl, modelID);
-          }).catch((error) => {
-            console.error('Error during zip file generation:', error);
-          });
+              uploadFileToS3UsingUrl(content, preSignedUrl, modelID);
+            })
+            .catch((error) => {
+              console.error("Error during zip file generation:", error);
+            });
         }
       };
       reader.readAsArrayBuffer(image);
     });
-    alert('Successful upload of the files');
+    alert("Successful upload of the files");
   };
 
   const uploadFileToS3UsingUrl = async (fileContent, presignedUrl, modelID) => {
-    console.log('Preparing to upload using presigned URL...');
+    console.log("Preparing to upload using presigned URL...");
     try {
       const response = await fetch(presignedUrl, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/zip',
+          "Content-Type": "application/zip",
         },
         body: fileContent,
       });
       if (response.ok) {
-        console.log('Successfully uploaded zip file.');
+        console.log("Successfully uploaded zip file.");
         postModelName(modelID);
-        router.push('/account/models');
+        router.push("/account/models");
       } else {
-        throw new Error(`Error during upload: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Error during upload: ${response.status} ${response.statusText}`
+        );
       }
     } catch (error) {
-      console.error('XHR request error:', error);
+      console.error("XHR request error:", error);
     }
   };
 
   const postModelName = async (modelID) => {
     if (!modelName || !address || !modelID) {
-      console.error('Model name and User ID are required.');
-      alert('Please enter a model name and User ID.');
+      console.error("Model name and User ID are required.");
+      alert("Please enter a model name and User ID.");
       return;
     }
 
-    let baseModel = selectModel.value
+    let baseModel = selectModel.value;
 
     try {
-      const response = await fetch('https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_train_task', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'user-id': address,
-        },
-        body: JSON.stringify({modelName, modelID, baseModel})
-      });
+      const response = await fetch(
+        "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_train_task",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "user-id": address,
+          },
+          body: JSON.stringify({ modelName, modelID, baseModel }),
+        }
+      );
       if (response.ok) {
-        console.log('Model name successfully posted:', modelName);
+        console.log("Model name successfully posted:", modelName);
       } else {
-        throw new Error(`Error during model name post: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Error during model name post: ${response.status} ${response.statusText}`
+        );
       }
     } catch (error) {
-      console.error('XHR request error:', error);
+      console.error("XHR request error:", error);
     }
   };
 
@@ -155,23 +184,22 @@ const CreateCollection = () => {
         <a className="text-[30px] font-bold">create an aigc collection</a>
         <a className="max-w-[718px]">
           First, you'll need to deploy a contract You'll need to deploy an
-          ERC-721 contract onto the blockchain before you can create a
-          drop. What is a contract?
+          ERC-721 contract onto the blockchain before you can create a drop.
+          What is a contract?
         </a>
       </div>
       <div className="flex gap-[50px] pt-[45px] w-[85%]">
         <div className="flex flex-col w-[48%] gap-[45px]">
           <div className="space-y-2">
-            <a>data upload</a>
-             
+            <a className="pl-2">data upload</a>
             <div className="w-full h-20 bg-grey flex items-center">
               <ImageUploader />
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <a>select a model</a>
+          <div className="flex flex-col gap-2 h-full">
+            <a className="pl-2">select a model</a>
             <div className="px-9 border border-white rounded-md pt-5">
-              <div className="flex gap-2 w-full border-b border-grey pb-5">
+              <div className="flex gap-2 w-full border-b border-grey pb-5 text-sm">
                 <div className="w-1/2">name</div>
                 <div className="w-[16%] flex justify-center">type</div>
                 <div className="w-[16%] flex justify-center">created</div>
@@ -179,7 +207,11 @@ const CreateCollection = () => {
               </div>
               <div className="flex gap-2 w-full py-5 font-bold">
                 <div className="w-1/2 flex gap-4">
-                <Menu options={menuModelOption} selected={selectModel} onSelect={handleSelectModel} />
+                  <Menu
+                    options={menuModelOption}
+                    selected={selectModel}
+                    onSelect={handleSelectModel}
+                  />
                 </div>
                 <div className="w-[16%] flex justify-center">77</div>
                 <div className="w-[16%] flex justify-center">77</div>
@@ -205,8 +237,8 @@ const CreateCollection = () => {
                   onSelect={handleSelect}
                 />
               </div>
-              <div className="px-9 flex flex-col py-6">
-                <div className="flex gap-2 w-full border-b border-grey pb-5 ">
+              <div className="px-9 flex flex-col py-6 h-full">
+                <div className="flex gap-2 w-full border-b border-grey pb-5 text-sm">
                   <div className="w-[32%] flex gap-4">
                     <a className="">name</a>
                   </div>
@@ -215,7 +247,7 @@ const CreateCollection = () => {
                   <div className="w-[17%] flex justify-center">inferences</div>
                   <div className="w-[17%] flex justify-center">earing %</div>
                 </div>
-                <div className="flex gap-2 w-full py-5 font-bold">
+                <div className="flex gap-2 w-full py-5">
                   <div className="w-[32%] flex gap-4">
                     <a className="">model name</a>
                   </div>
@@ -230,7 +262,7 @@ const CreateCollection = () => {
         </div>
         <div className="flex flex-col w-[48%] gap-[30px]">
           <div className="gap-2 flex flex-col">
-            <a>collection name</a>
+            <a className="pl-2">collection name</a>
             <input
               type="text"
               name="modelName"
@@ -239,7 +271,7 @@ const CreateCollection = () => {
               value={modelName} // Bind the value to the state variable
               onChange={(e) => {
                 const inputValue = e.target.value.trim(); // Remove leading and trailing spaces
-                const formattedValue = inputValue.replace(/\s+/g, '-'); // Replace spaces with hyphens
+                const formattedValue = inputValue.replace(/\s+/g, "-"); // Replace spaces with hyphens
                 setModelName(formattedValue); // Update the state with the formatted value
               }}
               placeholder="name..."
@@ -247,49 +279,52 @@ const CreateCollection = () => {
             {/* <CreateInput placeholder="name .." /> */}
           </div>
           <div className="gap-2 flex flex-col">
-            <a>collection description</a>
-            <CreateInput placeholder="description .." className="h-48 collection description" />
+            <a className="pl-2">collection description</a>
+            <CreateInput
+              placeholder="description .."
+              className="h-48 collection description"
+            />
           </div>
           <div className="w-full flex gap-5">
-            <div className="gap-2 flex flex-col">
+            <div className="gap-2 flex flex-col w-full">
               <a className="pl-2">Total supply</a>
               <CreateInput placeholder="10 - 1,000" />
             </div>
-            <div className="gap-2 flex flex-col">
+            <div className="gap-2 flex flex-col w-full">
               <a className="pl-2">Creator earnings %</a>
               <CreateInput placeholder="10-100%" />
             </div>
           </div>
           <div className="w-full flex gap-5">
-            <div className="gap-2 flex flex-col">
+            <div className="gap-2 flex flex-col w-full">
               <a className="pl-2">Mint price</a>
               <CreateInput placeholder="0.0777" type="token" />
             </div>
-            <div className="gap-2 flex flex-col">
+            <div className="gap-2 flex flex-col w-full">
               <a className="pl-2">Token symbol</a>
               <CreateInput placeholder="1,000-10,000" />
             </div>
           </div>
           <div className="w-full flex gap-5">
-            <div className="gap-2 flex flex-col">
+            <div className="gap-2 flex flex-col w-full">
               <a className="pl-2">Launch date</a>
               <CreateInput placeholder="date picker" />
             </div>
-            <div className="gap-2 flex flex-col">
+            <div className="gap-2 flex flex-col w-full">
               <a className="pl-2">End date</a>
               <CreateInput placeholder="date picker" />
             </div>
           </div>
           <div className="gap-2 flex flex-col">
-            <a>Positive Prompt</a>
-            <CreateInput placeholder="Positive ..." className="h-24"/>
+            <a className="pl-2">Positive Prompt</a>
+            <CreateInput placeholder="Positive ..." className="h-24" />
           </div>
           <div className="gap-2 flex flex-col">
-            <a>Negative Prompt</a>
-            <CreateInput placeholder="Negative ..." className="h-24"/>
+            <a className="pl-2">Negative Prompt</a>
+            <CreateInput placeholder="Negative ..." className="h-24" />
           </div>
           <div className="gap-2 flex flex-col">
-            <a>Banner image</a>
+            <a className="pl-2">Banner image</a>
             <div className="w-full h-20 bg-grey p-10"></div>
           </div>
         </div>
@@ -320,11 +355,11 @@ const CreateCollection = () => {
               Prompt
             </Link>
           </button> */}
-          <button 
+          <button
             className="w-[260px] h-[58px] bg-white/40 border border-white rounded"
             onClick={zipAndUploadFiles}
           >
-              Prompt
+            Prompt
           </button>
         </div>
       </div>
