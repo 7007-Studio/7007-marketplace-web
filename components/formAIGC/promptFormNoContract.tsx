@@ -67,8 +67,8 @@ const { address } = useAccount();
   };
 
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
-    console.log('data', data)
-    // genImage()
+    // console.log('data', data)
+    genImage()
   };
 
   return (
@@ -94,17 +94,17 @@ const { address } = useAccount();
           <span>{errorMessage}</span>
         </div>
       )}
-      <TextInput
+      {/* <TextInput
         placeholder="Let's give it a cool name"
         name="name"
         label="Title"
         register={register}
         errors={errors}
         required
-      />
+      /> */}
 
 
-      {/* <p>Title</p>
+      <p>Title</p>
       <input
         type="text"
         name="modelTitle"
@@ -135,8 +135,8 @@ const { address } = useAccount();
         value={negativePrompt} // Bind the value to the state variable
         onChange={(e) => setNegativePrompt(e.target.value)} // Update the input value directly
         placeholder="Enter your prompt"
-      /> */}
-      <label className="form-control w-full gap-2">
+      />
+      {/* <label className="form-control w-full gap-2">
         <span className="text-[18px] pl-3">Positive prompt</span>
         <textarea
           className="textarea h-24 bg-grey"
@@ -157,10 +157,10 @@ const { address } = useAccount();
         <p className=" text-red-600 text-left text-sm">
           {errors.prompt?.message}
         </p>
-      </label>
+      </label> */}
       {/* TODO: hardcode */}
       <div className="flex gap-[20px] justify-between">
-      {/* <div className="flex flex-col w-1/2 gap-[30px]">
+      <div className="flex flex-col w-1/2 gap-[30px]">
           <p>Seed</p>
             <input
               type="text"
@@ -172,15 +172,15 @@ const { address } = useAccount();
               placeholder="Enter Seed +"
             />
         </div>
-         */}
-        <TextInput
+        
+        {/* <TextInput
           placeholder="Enter Seed +"
           name="name"
           label="seed"
           register={register}
           errors={errors}
           required
-        />
+        /> */}
         {/* <TextInput
           placeholder="Model name +"
           name="name"
@@ -203,15 +203,6 @@ const { address } = useAccount();
 
         <div className="flex flex-col w-1/2 gap-[30px]">
           <p>Model</p>
-          {/* <input
-            type="text"
-            name="modelName"
-            id="modelName"
-            className="bg-grey h-16 pl-10"
-            defaultValue={model.name} // Bind the value to the state variable
-            readOnly // Make the input field read-only
-            placeholder="Model name +"
-          /> */}
           <input
             type="text"
             name="modelName" // Provide a name attribute to identify the input field
@@ -220,7 +211,6 @@ const { address } = useAccount();
             defaultValue={model.name}
             readOnly
             placeholder="Model name +"
-            {...register("modelName")} // Register the input field with React Hook Form
           />
         </div>
       </div>
