@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const PromptStep = ({ modelIndex }: { modelIndex: string }) => {
   const router = useRouter();
-  const [modelInfo, setModelInfo] = useState<modelInfo>();
+  const [modelInfo, setModelInfo] = useState<ModelInfo>();
   const [modelID, modelAuthorID] = modelIndex.split("%26");
 
   const fetchModelDetails = async () => {

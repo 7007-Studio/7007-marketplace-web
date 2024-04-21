@@ -103,7 +103,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
               setIsEnd(swiper.isEnd);
             }}
           >
-            {taskStatus.map((item: modelList, index) => (
+            {taskStatus.map((item: ModelList, index) => (
               <SwiperSlide key={index}>
                 <div className="w-full flex justify-center">
                   {/* <ModelCard 

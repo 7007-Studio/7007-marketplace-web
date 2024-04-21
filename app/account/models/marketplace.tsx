@@ -10,6 +10,7 @@ import { MdOutlineRefresh } from "react-icons/md";
 import axios from "axios";
 import ModelCard from "@/components/modelCard";
 import Card from "@/components/ui/card";
+import { ModelList } from "@/types";
 
 const Marketplace = () => {
   const [taskStatus, setTaskStatus] = useState([]);
@@ -49,8 +50,8 @@ const Marketplace = () => {
       >
         <MdOutlineRefresh size={32} />
       </button>
-      {taskStatus?.map((item: any) => (
-        <Card className="w-[300px] max-h-[390px] h-[390px]">
+      {taskStatus?.map((item: ModelList) => (
+        <Card className="w-[300px] max-h-[390px] h-[390px]" key={item.id}>
           <div className="flex flex-col justify-between h-full">
             <div className="flex justify-between items-center p-4">
               <div className="rounded-full border-2 w-16 h-16 flex justify-center items-center">

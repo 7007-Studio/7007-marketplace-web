@@ -11,7 +11,7 @@ import { ModelList } from "@/types";
 
 export interface ModelCardProps {
   modelIndex?: bigint;
-  modelInfo: modelList;
+  modelInfo: ModelList;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({ modelIndex, modelInfo }) => {

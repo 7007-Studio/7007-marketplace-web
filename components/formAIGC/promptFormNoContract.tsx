@@ -24,7 +24,7 @@ const PromptForm = ({
 }: {
   submitText?: string;
   defaultValues?: DefaultValues<IFormAIGCInput>;
-  modelInfo: modelInfo;
+  modelInfo: ModelInfo;
   modelID: string;
 }) => {
   const [errorMessage, setErrorMessage] = useState("");

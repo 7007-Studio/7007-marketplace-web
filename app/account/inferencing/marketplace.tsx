@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAccount } from "wagmi";
 
 import NFTCard from "@/components/nftCard";
@@ -14,6 +14,7 @@ import { ModelList } from "@/types";
 
 const Marketplace = () => {
   // const [userId, setUserId] = useState('jasonTest');
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [taskStatus, setTaskStatus] = useState([]);
   const { address, chain } = useAccount();
   const { listings } = useValidListings({
@@ -47,7 +48,7 @@ const Marketplace = () => {
       .then((response) => response.json())
       .then((data) => {
         setImages(data.images);
-        document.getElementById("my_modal_2")?.showModal();
+        dialogRef.current?.showModal();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -92,7 +93,7 @@ const Marketplace = () => {
       </button>
       <div className="flex flex-wrap w-full relative gap-14 justify-center">
         {taskStatus?.map((item: ModelList) => (
-          <Card className="w-[300px] max-h-[390px] h-[390px]">
+          <Card className="w-[300px] max-h-[390px] h-[390px]" key={item.id}>
             <div className="flex flex-col justify-between h-full">
               <div className="flex justify-between items-center p-4">
                 <div className="rounded-full border-2 w-16 h-16 flex justify-center items-center">
@@ -134,7 +135,7 @@ const Marketplace = () => {
           </Card>
         )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
 
-        <dialog id="my_modal_2" className="modal">
+        <dialog id="my_modal_2" ref={dialogRef} className="modal">
           <div className="modal-box">
             {images.map((imgData, index) => (
               <img
