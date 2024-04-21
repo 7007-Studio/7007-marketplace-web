@@ -1,10 +1,11 @@
 import Image from "next/image";
 import React, { useEffect, useRef } from "react";
-// import { useModelInfoStore } from "../../stats/store"
+import { useModelInfoStore } from "../../stats/store"
 
-const Hero = ({modelName} : any) => {
+const Hero = () => {
 
   const heroRef = useRef<HTMLDivElement>(null);
+  const { model } = useModelInfoStore();
 
   useEffect(() => {
     if (!heroRef.current) return;
@@ -18,7 +19,7 @@ const Hero = ({modelName} : any) => {
     >
       <div className="absolute inset-0 h-full w-full bg-gradient-to-b from-black/20 from-20% to-black rounded-md" />
       <div className="gap-4 py-10 px-[45px] flex flex-col z-20">
-        <a className="font-bold text-[30px]">{modelName}</a>
+        <a className="font-bold text-[30px]">{model.name}</a>
         <div className="flex gap-4 items-center">
           <Image src="/avatar.svg" alt="avatar" width={22} height={22} />
           {/* <span>{concatAddress(nftContract)}</span> */}
