@@ -32,18 +32,18 @@ export default function Stats() {
     },
   ];
   return (
-    <div className="flex flex-row gap-4 w-full justify-between">
+    <div className="flex flex-row w-full justify-between">
       {statItems.map((s, index) => {
         return (
-          <div key={s.name} className="flex gap-4">
-            <div className="min-w-[120px] border border-black border-solid flex">
+          <div key={s.name} className="flex justify-between w-full">
+            <div className="min-w-[120px] border flex-1 border-black border-solid flex justify-center">
               <div className="flex flex-col items-center">
                 <a className="font-bold text-[30px]">{s.value}</a>
                 <a>{s.name}</a>
               </div>
             </div>
             {index !== statItems.length - 1 && (
-              <div className="h-full w-[1.5px] bg-white/60 mx-2" />
+              <div className="h-full w-[1.5px] bg-white/60" />
             )}
           </div>
         );

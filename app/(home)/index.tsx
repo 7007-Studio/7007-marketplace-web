@@ -17,7 +17,6 @@ import { useModelInfoStore } from "../stats/store";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import Image from "next/image";
 
 function HomeModel({ windowSize }: { windowSize: number }) {

@@ -2,9 +2,9 @@ import { useForm, SubmitHandler, DefaultValues } from "react-hook-form";
 import TextInput from "../form/textInput";
 import { useState } from "react";
 import Image from "next/image";
-import {useModelInfoStore} from '../../app/stats/store'
+import { useModelInfoStore } from "../../app/stats/store";
 import { useAccount } from "wagmi";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 export interface IFormAIGCInput {
   name: string;
   prompt: string;
@@ -34,41 +34,47 @@ const PromptForm = ({
   const router = useRouter();
   const [title, setTitle] = useState();
   const [genImageData, setGenImageData] = useState();
-const { address } = useAccount();
+  const { address } = useAccount();
   const { register, handleSubmit, formState } = useForm<IFormAIGCInput>({
     defaultValues,
   });
   const { errors } = formState;
 
   const genImage = async () => {
-
-    var data = JSON.stringify({ modelID: model.id, prompt: prompt, modelAuthorID: model.author });
+    var data = JSON.stringify({
+      modelID: model.id,
+      prompt: prompt,
+      modelAuthorID: model.author,
+    });
 
     try {
-      const response = await fetch('https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'user-id': address
-        },
-        body: data
-      })
+      const response = await fetch(
+        "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "user-id": address,
+          },
+          body: data,
+        }
+      );
       if (response.ok) {
         const data = await response.json();
-        setGenImageData(data)
-        router.push('/account/inferencing');
+        setGenImageData(data);
+        router.push("/account/inferencing");
         return data;
       } else {
         throw new Error(`Failed to get presigned URL: ${response.status}`);
       }
     } catch (error) {
-      console.error('Request error while getting presigned URL:', error);
+      console.error("Request error while getting presigned URL:", error);
     }
   };
 
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
     // console.log('data', data)
-    genImage()
+    genImage();
   };
 
   return (
@@ -102,40 +108,44 @@ const { address } = useAccount();
         errors={errors}
         required
       /> */}
-
-
-      <p>Title</p>
-      <input
-        type="text"
-        name="modelTitle"
-        id="modelTitle"
-        className="bg-grey h-16 pl-10"
-        value={title} // Bind the value to the state variable
-        onChange={(e) => setTitle(e.target.value)} // Update the input value directly
-        required
-        placeholder="Let's give it a cool name"
-      />
-      <p>Positive prompt</p>
-      <input
-        type="text"
-        name="modelPositive"
-        id="modelPositive"
-        className="bg-grey h-16 pl-10"
-        value={prompt} // Bind the value to the state variable
-        onChange={(e) => setPrompt(e.target.value)} // Update the input value directly
-        required
-        placeholder="Enter your prompt"
-      />
-      <p>Negative prompt</p>
-      <input
-        type="text"
-        name="modelPositive"
-        id="modelPositive"
-        className="bg-grey h-16 pl-10"
-        value={negativePrompt} // Bind the value to the state variable
-        onChange={(e) => setNegativePrompt(e.target.value)} // Update the input value directly
-        placeholder="Enter your prompt"
-      />
+      <div className="flex flex-col w-full gap-3">
+        <p className="pl-2">Title</p>
+        <input
+          type="text"
+          name="modelTitle"
+          id="modelTitle"
+          className="bg-grey h-16 pl-10"
+          value={title} // Bind the value to the state variable
+          onChange={(e) => setTitle(e.target.value)} // Update the input value directly
+          required
+          placeholder="Let's give it a cool name"
+        />
+      </div>
+      <div className="flex flex-col w-full gap-3">
+        <p className="pl-2">Positive prompt</p>
+        <input
+          type="text"
+          name="modelPositive"
+          id="modelPositive"
+          className="bg-grey h-40 pl-10"
+          value={prompt} // Bind the value to the state variable
+          onChange={(e) => setPrompt(e.target.value)} // Update the input value directly
+          required
+          placeholder="Enter your prompt"
+        />
+      </div>
+      <div className="flex flex-col w-full gap-3">
+        <p className="pl-2">Negative prompt (optional)</p>
+        <input
+          type="text"
+          name="modelPositive"
+          id="modelPositive"
+          className="bg-grey h-32 pl-10"
+          value={negativePrompt} // Bind the value to the state variable
+          onChange={(e) => setNegativePrompt(e.target.value)} // Update the input value directly
+          placeholder="Enter your prompt"
+        />
+      </div>
       {/* <label className="form-control w-full gap-2">
         <span className="text-[18px] pl-3">Positive prompt</span>
         <textarea
@@ -160,19 +170,19 @@ const { address } = useAccount();
       </label> */}
       {/* TODO: hardcode */}
       <div className="flex gap-[20px] justify-between">
-      <div className="flex flex-col w-1/2 gap-[30px]">
-          <p>Seed</p>
-            <input
-              type="text"
-              name="modelSeed"
-              id="modelSeed"
-              className="bg-grey h-16 pl-10"
-              value={seed} // Bind the value to the state variable
-              onChange={(e) => setSeed(e.target.value)} // Update the input value directly
-              placeholder="Enter Seed +"
-            />
+        <div className="flex flex-col w-1/2 gap-3">
+          <p className="pl-2">Seed</p>
+          <input
+            type="text"
+            name="modelSeed"
+            id="modelSeed"
+            className="bg-grey h-16 pl-10"
+            value={seed} // Bind the value to the state variable
+            onChange={(e) => setSeed(e.target.value)} // Update the input value directly
+            placeholder="Enter Seed +"
+          />
         </div>
-        
+
         {/* <TextInput
           placeholder="Enter Seed +"
           name="name"
@@ -201,8 +211,8 @@ const { address } = useAccount();
           readOnly={true} // Make the input field read-only
         /> */}
 
-        <div className="flex flex-col w-1/2 gap-[30px]">
-          <p>Model</p>
+        <div className="flex flex-col w-1/2 gap-3">
+          <p className="pl-2">Model</p>
           <input
             type="text"
             name="modelName" // Provide a name attribute to identify the input field
