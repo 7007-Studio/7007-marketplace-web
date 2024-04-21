@@ -23,7 +23,9 @@ export default function Menu({ options, onSelect, selected }: MenuProps) {
         className="font-bold cursor-pointer w-[239px] h-10 flex items-center justify-center gap-3 bg-grey"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <a className="leading-none">{selected.label}</a>
+        <a className="leading-none w-[180px] text-ellipsis overflow-hidden">
+          {selected.label}
+        </a>
         <MdArrowDropDown
           size={20}
           className={`${

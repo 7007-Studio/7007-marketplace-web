@@ -5,7 +5,7 @@ import Menu, { MenuList } from "@/components/ui/menu";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import {useModelInfoStore} from './store'
+import { useModelInfoStore } from "./store";
 
 export default function HomeModel() {
   const menuOption = [
@@ -33,7 +33,7 @@ export default function HomeModel() {
     { id: "7day", label: "7day", selected: false },
     { id: "30day", label: "30day", selected: false },
     { id: "All", label: "All", selected: false },
-  ]); 
+  ]);
 
   const handleFetchData = () => {
     // if (!address) {
@@ -44,21 +44,21 @@ export default function HomeModel() {
     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
 
     fetch(apiUrl, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         setTaskStatus(data);
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
   };
 
-  console.log('taskStatus', taskStatus)
+  console.log("taskStatus", taskStatus);
 
   const changeTime = (id: string) => {
     setTime(
@@ -84,12 +84,12 @@ export default function HomeModel() {
   };
 
   const handleModelClick = (item) => {
-    setModel({id: item.id, author: item.modelAuthorID, name: item.modelName})
-  }
+    setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
+  };
 
   useEffect(() => {
-    handleFetchData()
-  },[])
+    handleFetchData();
+  }, []);
 
   return (
     <div className="h-full w-full flex justify-center flex-col gap-16 items-center pt-[150px]">
@@ -101,9 +101,11 @@ export default function HomeModel() {
       <NFTCard
         nftContract={"0x0B89f60136A91f3B36557F9414cbd157d0ada7bc"}
         tokenId={BigInt(2)}
-      /> */}  
+      /> */}
       <div className="w-[75%] flex items-center gap-5">
-      <button className="text-white" onClick={handleFetchData}>Refresh</button>
+        <button className="text-white" onClick={handleFetchData}>
+          Refresh
+        </button>
         <Menu options={menuOption} selected={select} onSelect={handleSelect} />
         {type.map((item, index) => (
           <div
@@ -139,50 +141,61 @@ export default function HomeModel() {
       </div>
       <div className="flex max-w-[85%] gap-5 w-full">
         <div className="w-full flex flex-col h-full border border-white rounded-lg">
-          <div className="h-[45px] w-full flex items-center border-b border-white text-sm font-bold px-4">
-            <div className="w-[8%] flex items-center justify-center">Rank</div>
-            <div className="w-[40%] flex items-center justify-center">
+          <div className="h-[45px] w-full flex items-center border-b border-white text-sm font-bold px-4 uppercase">
+            <div className="w-[5%] flex items-center justify-center">Rank</div>
+            <div className="w-[30%] flex items-center justify-center">
               model
             </div>
-            <div className="w-[23%] flex items-center justify-center">
+            <div className="w-[15%] flex items-center justify-center">
+              model type
+            </div>
+            <div className="w-[15%] flex items-center justify-center">
               floor price
             </div>
-            <div className="w-[17%] flex items-center justify-center">
+            <div className="w-[15%] flex items-center justify-center">
               volume
             </div>
-            <div className="w-[12%] flex items-center justify-center">
-              quantity
+            <div className="w-[10%] flex items-center justify-center">
+              %changes
+            </div>
+            <div className="w-[10%] flex items-center justify-center">
+              sales
             </div>
           </div>
           <div className="flex flex-col w-full h-full px-6 py-4 gap-6">
-          {taskStatus.map((item, index) => (
-            <div onClick={() => handleModelClick(item)}>
-              <Link 
-                className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
-                key={index} 
-                // href={`/collection/${index}`}
-                href={`/collection/1`}
-              >
-                  <div className="w-[8%] flex items-center justify-center text-lg">
+            {taskStatus.map((item, index) => (
+              <div onClick={() => handleModelClick(item)}>
+                <Link
+                  className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
+                  key={index}
+                  // href={`/collection/${index}`}
+                  href={`/collection/1`}
+                >
+                  <div className="w-[5%] flex items-center justify-center">
                     {index + 1}
                   </div>
-                  <div className="w-[40%] flex items-center gap-4 justify-center text-base font-bold">
+                  <div className="w-[30%] flex items-center gap-[30px] pl-2">
                     <div className="size-[90px] bg-grey"></div>
                     {item.modelName}
                   </div>
-                  <div className="w-[23%] flex items-center justify-center">
+                  <div className="w-[15%] flex items-center justify-center">
+                    text-to-text
+                  </div>
+                  <div className="w-[15%] flex items-center justify-center">
                     {0.0007} ETH
                   </div>
-                  <div className="w-[17%] flex items-center justify-center">
+                  <div className="w-[15%] flex items-center justify-center">
                     {7} ETH
                   </div>
-                  <div className="w-[12%] flex items-center justify-center">
-                    {7}
+                  <div className="w-[10%] flex items-center justify-center">
+                    77%
                   </div>
-              </Link>
-            </div>
-
-          ))}
+                  <div className="w-[10%] flex items-center justify-center">
+                    7777
+                  </div>
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </div>

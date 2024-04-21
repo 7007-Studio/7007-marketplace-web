@@ -69,7 +69,7 @@ const CreateCollection = () => {
           headers: {
             "Content-Type": "application/json",
             "user-id": address,
-          },
+          } as any,
         }
       );
       if (response.ok) {
@@ -200,12 +200,12 @@ const CreateCollection = () => {
             <a className="pl-2">select a model</a>
             <div className="px-9 border border-white rounded-md pt-5">
               <div className="flex gap-2 w-full border-b border-grey pb-5 text-sm">
-                <div className="w-1/2">name</div>
-                <div className="w-[16%] flex justify-center">type</div>
-                <div className="w-[16%] flex justify-center">created</div>
-                <div className="w-[17%] flex justify-center">inferences</div>
+                <div className="w-1/2">Name</div>
+                <div className="w-[15%] flex justify-center">Type</div>
+                <div className="w-[15%] flex justify-center">Created</div>
+                <div className="w-[16%] flex justify-center">Inferences</div>
               </div>
-              <div className="flex gap-2 w-full py-5 font-bold">
+              <div className="flex gap-2 w-full py-5 font-bold items-center">
                 <div className="w-1/2 flex gap-4">
                   <Menu
                     options={menuModelOption}
@@ -213,9 +213,9 @@ const CreateCollection = () => {
                     onSelect={handleSelectModel}
                   />
                 </div>
-                <div className="w-[16%] flex justify-center">77</div>
-                <div className="w-[16%] flex justify-center">77</div>
-                <div className="w-[17%] flex justify-center">10,000</div>
+                <div className="w-[15%] flex justify-center">77</div>
+                <div className="w-[15%] flex justify-center">77</div>
+                <div className="w-[16%] flex justify-center">10,000</div>
               </div>
             </div>
             <div className="w-full flex flex-col h-full border border-white rounded-lg mt-4">
@@ -356,10 +356,10 @@ const CreateCollection = () => {
             </Link>
           </button> */}
           <button
-            className="w-[260px] h-[58px] bg-white/40 border border-white rounded"
+            className="w-[260px] h-[58px] bg-white/40 border border-white rounded font-bold"
             onClick={zipAndUploadFiles}
           >
-            Prompt
+            Prompt and Mint
           </button>
         </div>
       </div>

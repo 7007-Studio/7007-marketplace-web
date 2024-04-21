@@ -23,7 +23,7 @@ export default function CollectionPage() {
       <Progress nftContract={nftContract}/>
       <Stats nftContract={nftContract} /> */}
       <Hero />
-      <Progress/>
+      <Progress />
       <Stats />
       <Collection />
     </div>
