@@ -57,7 +57,7 @@ export default function HomeModel() {
         console.error('Error fetching data:', error);
       });
   };
-
+ 
   console.log('taskStatus', taskStatus)
 
   const changeTime = (id: string) => {
@@ -161,7 +161,7 @@ export default function HomeModel() {
                 className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
                 key={index} 
                 // href={`/collection/${index}`}
-                href={`/collection/1`}
+                href={`/collection/${item.id}&${item.modelAuthorID}`}
               >
                   <div className="w-[8%] flex items-center justify-center text-lg">
                     {index + 1}

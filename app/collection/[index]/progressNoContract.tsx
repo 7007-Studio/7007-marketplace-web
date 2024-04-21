@@ -1,6 +1,16 @@
 import Link from "next/link";
 
-export default function Progress() {
+interface ModelInfoInterface {
+  baseModel: string;
+  modelAuthorID: string;
+  modelName: string;
+}
+
+export default function Progress({
+  baseModel,
+  modelAuthorID,
+  modelName
+}: ModelInfoInterface) {
   return (
     <div className="flex gap-9 justify-between items-center pt-10 pb-16">
       <div className="flex flex-col flex-1 gap-3">
