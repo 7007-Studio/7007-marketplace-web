@@ -3,18 +3,14 @@ import useReadAigcContracts from "@/hooks/useReadAigcContracts";
 import Image from "next/image";
 import React, { useEffect, useRef } from "react";
 import { Address, zeroAddress } from "viem";
-import { useModelInfoStore } from "../../stats/store"
 interface HeroProps {
   nftContract?: Address;
+  modelName?: string;
 }
 
-const Hero = ({ nftContract = zeroAddress }: HeroProps) => {
+const Hero = ({ nftContract = zeroAddress, modelName }: HeroProps) => {
   // const { name = "" } = useReadAigcContracts({ nftContract });
-
   const heroRef = useRef<HTMLDivElement>(null);
-  const { model } = useModelInfoStore();
-
-  console.log('model', model)
 
   useEffect(() => {
     if (!heroRef.current) return;
@@ -28,7 +24,7 @@ const Hero = ({ nftContract = zeroAddress }: HeroProps) => {
     >
       <div className="absolute inset-0 h-full w-full bg-gradient-to-b from-black/20 from-20% to-black rounded-md" />
       <div className="gap-4 py-10 px-[45px] flex flex-col z-20">
-        <a className="font-bold text-[30px]">{model.name}</a>
+        <a className="font-bold text-[30px]">{modelName}</a>
         <div className="flex gap-4 items-center">
           <Image src="/avatar.svg" alt="avatar" width={22} height={22} />
           {/* <span>{concatAddress(nftContract)}</span> */}
