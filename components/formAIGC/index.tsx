@@ -76,7 +76,7 @@ interface FormAIGCProps {
 //   );
 // }
 
-export default function FormAIGC() {
+export default function FormAIGC({ modelIndex }: { modelIndex: string }) {
   const [aigcContent, setAigcContent] = useState<AIGCContent>();
   const [mintedTokenId, setMintedTokenId] = useState<bigint>();
 
@@ -107,7 +107,7 @@ export default function FormAIGC() {
 
   return (
     <>
-      <PromptStep />
+      <PromptStep modelIndex={modelIndex} />
     </>
   );
 }

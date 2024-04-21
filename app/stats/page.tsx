@@ -2,6 +2,7 @@
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
 import Menu, { MenuList } from "@/components/ui/menu";
+import { modelInfo } from "@/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -15,7 +16,7 @@ export default function HomeModel() {
     { id: "4", label: "Model 3", value: "Model 3" },
   ];
   const { address } = useAccount();
-  const [taskStatus, setTaskStatus] = useState([]);
+  const [taskStatus, setTaskStatus] = useState<modelInfo[]>([]);
   const [select, setSelect] = useState<MenuList>(menuOption[0]);
   const handleSelect = (option: MenuList) => {
     setSelect(option);
@@ -36,11 +37,6 @@ export default function HomeModel() {
   ]);
 
   const handleFetchData = () => {
-    // if (!address) {
-    //   alert('Please enter a user ID.');
-    //   return;
-    // }
-
     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
 
     fetch(apiUrl, {
@@ -81,10 +77,6 @@ export default function HomeModel() {
         }
       })
     );
-  };
-
-  const handleModelClick = (item) => {
-    setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
   };
 
   useEffect(() => {
@@ -163,38 +155,35 @@ export default function HomeModel() {
             </div>
           </div>
           <div className="flex flex-col w-full h-full px-6 py-4 gap-6">
-            {taskStatus.map((item, index) => (
-              <div onClick={() => handleModelClick(item)}>
-                <Link
-                  className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
-                  key={index}
-                  // href={`/collection/${index}`}
-                  href={`/collection/1`}
-                >
-                  <div className="w-[5%] flex items-center justify-center">
-                    {index + 1}
-                  </div>
-                  <div className="w-[30%] flex items-center gap-[30px] pl-2">
-                    <div className="size-[90px] bg-grey"></div>
-                    {item.modelName}
-                  </div>
-                  <div className="w-[15%] flex items-center justify-center">
-                    text-to-text
-                  </div>
-                  <div className="w-[15%] flex items-center justify-center">
-                    {0.0007} ETH
-                  </div>
-                  <div className="w-[15%] flex items-center justify-center">
-                    {7} ETH
-                  </div>
-                  <div className="w-[10%] flex items-center justify-center">
-                    77%
-                  </div>
-                  <div className="w-[10%] flex items-center justify-center">
-                    7777
-                  </div>
-                </Link>
-              </div>
+            {taskStatus.map((item: modelInfo, index) => (
+              <Link
+                className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
+                key={index}
+                href={`/collection/${item.id}&${item.modelAuthorID}`}
+              >
+                <div className="w-[5%] flex items-center justify-center">
+                  {index + 1}
+                </div>
+                <div className="w-[30%] flex items-center gap-[30px] pl-2">
+                  <div className="size-[90px] bg-grey"></div>
+                  {item.modelName}
+                </div>
+                <div className="w-[15%] flex items-center justify-center">
+                  text-to-text
+                </div>
+                <div className="w-[15%] flex items-center justify-center">
+                  {0.0007} ETH
+                </div>
+                <div className="w-[15%] flex items-center justify-center">
+                  {7} ETH
+                </div>
+                <div className="w-[10%] flex items-center justify-center">
+                  77%
+                </div>
+                <div className="w-[10%] flex items-center justify-center">
+                  7777
+                </div>
+              </Link>
             ))}
           </div>
         </div>

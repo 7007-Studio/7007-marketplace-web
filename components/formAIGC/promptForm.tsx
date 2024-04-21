@@ -4,9 +4,9 @@ import TextInput from "../form/textInput";
 import { useState } from "react";
 import { AIGCContent } from ".";
 import Image from "next/image";
-import {useModelInfoStore} from '../../app/stats/store'
+import { useModelInfoStore } from "../../app/stats/store";
 import { useAccount } from "wagmi";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 export interface IFormAIGCInput {
   name: string;
   prompt: string;
@@ -35,35 +35,41 @@ const PromptForm = ({
   const router = useRouter();
   const [title, setTitle] = useState();
   const [genImageData, setGenImageData] = useState();
-const { address } = useAccount();
+  const { address } = useAccount();
   const { register, handleSubmit, formState } = useForm<IFormAIGCInput>({
     defaultValues,
   });
   const { errors } = formState;
 
   const genImage = async () => {
-
-    var data = JSON.stringify({ modelID: model.id, prompt: prompt, modelAuthorID: model.author });
+    var data = JSON.stringify({
+      modelID: model.id,
+      prompt: prompt,
+      modelAuthorID: model.author,
+    });
 
     try {
-      const response = await fetch('https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'user-id': address
-        },
-        body: data
-      })
+      const response = await fetch(
+        "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "user-id": address,
+          },
+          body: data,
+        }
+      );
       if (response.ok) {
         const data = await response.json();
-        setGenImageData(data)
-        router.push('/account/inferencing');
+        setGenImageData(data);
+        router.push("/account/inferencing");
         return data;
       } else {
         throw new Error(`Failed to get presigned URL: ${response.status}`);
       }
     } catch (error) {
-      console.error('Request error while getting presigned URL:', error);
+      console.error("Request error while getting presigned URL:", error);
     }
   };
 
@@ -71,7 +77,7 @@ const { address } = useAccount();
     // console.log('data' ,data)
     // setErrorMessage("");
     // setIsSubmitting(true);
-    genImage()
+    genImage();
 
     // const aigcContent = await generateAigcContent(
     //   data.name,
@@ -80,7 +86,6 @@ const { address } = useAccount();
     // );
     // onArtGenerated(aigcContent);
     // setIsSubmitting(false);
-    
   };
 
   return (
@@ -114,7 +119,6 @@ const { address } = useAccount();
         errors={errors}
         required
       /> */}
-
 
       <p>Title</p>
       <input
@@ -172,19 +176,19 @@ const { address } = useAccount();
       </label> */}
       {/* TODO: hardcode */}
       <div className="flex gap-[20px] justify-between">
-      <div className="flex flex-col w-1/2 gap-[30px]">
+        <div className="flex flex-col w-1/2 gap-[30px]">
           <p>Seed</p>
-            <input
-              type="text"
-              name="modelSeed"
-              id="modelSeed"
-              className="bg-grey h-16 pl-10"
-              value={seed} // Bind the value to the state variable
-              onChange={(e) => setSeed(e.target.value)} // Update the input value directly
-              placeholder="Enter Seed +"
-            />
+          <input
+            type="text"
+            name="modelSeed"
+            id="modelSeed"
+            className="bg-grey h-16 pl-10"
+            value={seed} // Bind the value to the state variable
+            onChange={(e) => setSeed(e.target.value)} // Update the input value directly
+            placeholder="Enter Seed +"
+          />
         </div>
-        
+
         {/* <TextInput
           placeholder="Enter Seed +"
           name="name"

@@ -2,28 +2,50 @@
 
 import { useParams } from "next/navigation";
 import { useAccount } from "wagmi";
-
 import useNftContract from "@/hooks/useNftContract";
-import Hero from "./heroNoContract";
-import Stats from "./statsNoContract";
+import Stats from "./stats";
 import Collection from "@/components/collection";
-import Progress from "./progressNoContract";
+import { modelInfo } from "@/types";
+import { useEffect, useState } from "react";
+import Hero from "./hero";
+import Progress from "./progress";
+import axios from "axios";
 
 export default function CollectionPage() {
-  // const { index } = useParams<{ index: string }>();
+  const { index } = useParams<{ index: string }>();
+  const [modelInfo, setModelInfo] = useState<modelInfo>();
   // const { chain } = useAccount();
   // const { nftContract } = useNftContract({
   //   modelIndex: index ? BigInt(index) : 1n,
   //   chainId: chain?.id,
   // });
 
+  const fetchModelDetails = async () => {
+    const [modelID, modelAuthorID] = index.split("%26");
+
+    const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/users/${modelAuthorID}/models/${modelID}`;
+
+    try {
+      const response = await axios.get(apiUrl);
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch");
+      }
+      const data = response.data;
+      setModelInfo(data);
+      console.log("data", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchModelDetails();
+  }, [index]);
+
   return (
     <div className="w-[80%]">
-      {/* <Hero nftContract={nftContract} />
-      <Progress nftContract={nftContract}/>
-      <Stats nftContract={nftContract} /> */}
-      <Hero />
-      <Progress />
+      <Hero modelName={modelInfo?.modelName} />
+      <Progress modelIndex={index} />
       <Stats />
       <Collection />
     </div>

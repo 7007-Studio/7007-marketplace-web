@@ -18,6 +18,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Image from "next/image";
+import { modelInfo } from "@/types";
 
 function HomeModel({ windowSize }: { windowSize: number }) {
   const swiperRef = useRef<any>(null);
@@ -53,7 +54,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
 
   const { tokenIds } = useNftCollection({ nftContract });
 
-  const handleModelClick = (item) => {
+  const handleModelClick = (item: any) => {
     setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
   };
 

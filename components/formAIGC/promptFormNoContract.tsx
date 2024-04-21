@@ -2,9 +2,9 @@ import { useForm, SubmitHandler, DefaultValues } from "react-hook-form";
 import TextInput from "../form/textInput";
 import { useState } from "react";
 import Image from "next/image";
-import { useModelInfoStore } from "../../app/stats/store";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
+import { modelInfo } from "@/types";
 export interface IFormAIGCInput {
   name: string;
   prompt: string;
@@ -18,16 +18,15 @@ export interface IFormAIGCInput {
 }
 const PromptForm = ({
   submitText = "Generate",
-  modelName = "Genesis Model",
   defaultValues,
+  modelInfo,
 }: {
   submitText?: string;
-  modelName?: string;
   defaultValues?: DefaultValues<IFormAIGCInput>;
+  modelInfo: modelInfo;
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { model } = useModelInfoStore();
   const [prompt, setPrompt] = useState();
   const [negativePrompt, setNegativePrompt] = useState();
   const [seed, setSeed] = useState();
@@ -41,10 +40,10 @@ const PromptForm = ({
   const { errors } = formState;
 
   const genImage = async () => {
-    var data = JSON.stringify({
-      modelID: model.id,
+    const data = JSON.stringify({
+      modelID: modelInfo.id,
       prompt: prompt,
-      modelAuthorID: model.author,
+      modelAuthorID: modelInfo.modelAuthorID,
     });
 
     try {
@@ -55,7 +54,7 @@ const PromptForm = ({
           headers: {
             "Content-Type": "application/json",
             "user-id": address,
-          },
+          } as any,
           body: data,
         }
       );
@@ -71,7 +70,6 @@ const PromptForm = ({
       console.error("Request error while getting presigned URL:", error);
     }
   };
-
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
     // console.log('data', data)
     genImage();
@@ -116,7 +114,7 @@ const PromptForm = ({
           id="modelTitle"
           className="bg-grey h-16 pl-10"
           value={title} // Bind the value to the state variable
-          onChange={(e) => setTitle(e.target.value)} // Update the input value directly
+          onChange={(e: any) => setTitle(e.target.value)} // Update the input value directly
           required
           placeholder="Let's give it a cool name"
         />
@@ -129,7 +127,7 @@ const PromptForm = ({
           id="modelPositive"
           className="bg-grey h-40 pl-10"
           value={prompt} // Bind the value to the state variable
-          onChange={(e) => setPrompt(e.target.value)} // Update the input value directly
+          onChange={(e: any) => setPrompt(e.target.value)} // Update the input value directly
           required
           placeholder="Enter your prompt"
         />
@@ -142,7 +140,7 @@ const PromptForm = ({
           id="modelPositive"
           className="bg-grey h-32 pl-10"
           value={negativePrompt} // Bind the value to the state variable
-          onChange={(e) => setNegativePrompt(e.target.value)} // Update the input value directly
+          onChange={(e: any) => setNegativePrompt(e.target.value)} // Update the input value directly
           placeholder="Enter your prompt"
         />
       </div>
@@ -178,7 +176,7 @@ const PromptForm = ({
             id="modelSeed"
             className="bg-grey h-16 pl-10"
             value={seed} // Bind the value to the state variable
-            onChange={(e) => setSeed(e.target.value)} // Update the input value directly
+            onChange={(e: any) => setSeed(e.target.value)} // Update the input value directly
             placeholder="Enter Seed +"
           />
         </div>
@@ -218,7 +216,7 @@ const PromptForm = ({
             name="modelName" // Provide a name attribute to identify the input field
             id="modelName"
             className="bg-grey h-16 pl-10"
-            defaultValue={model.name}
+            defaultValue={modelInfo?.modelName}
             readOnly
             placeholder="Model name +"
           />
