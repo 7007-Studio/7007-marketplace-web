@@ -115,20 +115,22 @@ const Marketplace = () => {
                     action
                     <span className="font-bold">{item.action}</span>
                   </div>
-                  <div className="w-full flex justify-between">
-                    <button
-                      className="border-[1px] border-white"
-                      onClick={() => handleViewImage(item.id)}
-                    >
-                      View
-                    </button>
-                    <button
-                      className="border-[1px] border-white"
-                      onClick={() => handleViewImage(item.id)}
-                    >
-                      Mint
-                    </button>
-                  </div>
+                  {item.status === "Done" && (
+                    <div className="w-full flex justify-between gap-4">
+                      <button
+                        className="border-[1px] border-white p-2 w-full rounded"
+                        onClick={() => handleViewImage(item.id)}
+                      >
+                        View
+                      </button>
+                      <button
+                        className="border-[1px] border-white p-2 w-full rounded"
+                        onClick={() => handleViewImage(item.id)}
+                      >
+                        Mint
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
