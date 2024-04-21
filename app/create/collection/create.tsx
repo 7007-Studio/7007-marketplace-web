@@ -43,7 +43,7 @@ const CreateCollection = () => {
       value: "revAnimated_v122EOL.safetensors [4199bcdd14]",
     },
   ];
-  const [modelName, setModelName] = useState();
+  const [modelName, setModelName] = useState<string>();
   // const [userId, setUserId] = useState('jasonTest');
   // const [baseModel, setBaseModel] = useState('')
   const { uploadImages } = useGetImageStore();
@@ -98,10 +98,10 @@ const CreateCollection = () => {
       return;
     }
 
-    uploadImages.forEach((image) => {
+    uploadImages.forEach((image: any) => {
       const reader = new FileReader();
       reader.onload = () => {
-        zip.file(image.name, reader.result, { binary: true });
+        zip.file(image.name, reader.result as any, { binary: true });
         count++;
         if (count === uploadImages.length) {
           zip
@@ -121,7 +121,11 @@ const CreateCollection = () => {
     alert("Successful upload of the files");
   };
 
-  const uploadFileToS3UsingUrl = async (fileContent, presignedUrl, modelID) => {
+  const uploadFileToS3UsingUrl = async (
+    fileContent: any,
+    presignedUrl: string,
+    modelID: string
+  ) => {
     console.log("Preparing to upload using presigned URL...");
     try {
       const response = await fetch(presignedUrl, {
@@ -145,7 +149,7 @@ const CreateCollection = () => {
     }
   };
 
-  const postModelName = async (modelID) => {
+  const postModelName = async (modelID: string) => {
     if (!modelName || !address || !modelID) {
       console.error("Model name and User ID are required.");
       alert("Please enter a model name and User ID.");
@@ -183,9 +187,7 @@ const CreateCollection = () => {
       <div className="flex w-[85%] items-start flex-col gap-5">
         <a className="text-[30px] font-bold">create an aigc collection</a>
         <a className="max-w-[718px]">
-          First, you'll need to deploy a contract You'll need to deploy an
-          ERC-721 contract onto the blockchain before you can create a drop.
-          What is a contract?
+          {`First, you'll need to deploy a contract You'll need to deploy an ERC-721 contract onto the blockchain before you can create a drop. What is a contract?`}
         </a>
       </div>
       <div className="flex gap-[50px] pt-[45px] w-[85%]">
@@ -276,6 +278,7 @@ const CreateCollection = () => {
               }}
               placeholder="name..."
             />
+            `1`
             {/* <CreateInput placeholder="name .." /> */}
           </div>
           <div className="gap-2 flex flex-col">

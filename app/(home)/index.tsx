@@ -18,7 +18,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Image from "next/image";
-import { modelInfo } from "@/types";
 
 function HomeModel({ windowSize }: { windowSize: number }) {
   const swiperRef = useRef<any>(null);

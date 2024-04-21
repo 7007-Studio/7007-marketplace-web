@@ -54,8 +54,7 @@ export default function AccountLayout({
                 <a>Joined March 2077</a>
               </div>
               <a className="">
-                Pilot of on-chain AI, fine tuned with Stable diffusion model by
-                7007.Studio.First, you'll need to deploy a contract.
+                {`Pilot of on-chain AI, fine tuned with Stable diffusion model by 7007.Studio.First, you'll need to deploy a contract.`}
               </a>
             </div>
             <div className="flex flex-col justify-end items-end gap-10">

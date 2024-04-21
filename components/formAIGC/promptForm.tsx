@@ -26,14 +26,14 @@ const PromptForm = ({
   defaultValues?: DefaultValues<IFormAIGCInput>;
   onArtGenerated: (aigcContent: AIGCContent) => void;
 }) => {
+  const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { model } = useModelInfoStore();
-  const [prompt, setPrompt] = useState();
-  const [negativePrompt, setNegativePrompt] = useState();
-  const [seed, setSeed] = useState();
-  const router = useRouter();
-  const [title, setTitle] = useState();
+  const [prompt, setPrompt] = useState<string>();
+  const [negativePrompt, setNegativePrompt] = useState<string>();
+  const [seed, setSeed] = useState<string>();
+  const [title, setTitle] = useState<string>();
   const [genImageData, setGenImageData] = useState();
   const { address } = useAccount();
   const { register, handleSubmit, formState } = useForm<IFormAIGCInput>({
@@ -56,7 +56,7 @@ const PromptForm = ({
           headers: {
             "Content-Type": "application/json",
             "user-id": address,
-          },
+          } as any,
           body: data,
         }
       );

@@ -20,10 +20,12 @@ const PromptForm = ({
   submitText = "Generate",
   defaultValues,
   modelInfo,
+  modelID,
 }: {
   submitText?: string;
   defaultValues?: DefaultValues<IFormAIGCInput>;
   modelInfo: modelInfo;
+  modelID: string;
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,11 +43,10 @@ const PromptForm = ({
 
   const genImage = async () => {
     const data = JSON.stringify({
-      modelID: modelInfo.id,
+      modelID: modelID,
       prompt: prompt,
       modelAuthorID: modelInfo.modelAuthorID,
     });
-
     try {
       const response = await fetch(
         "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task",
@@ -71,7 +72,6 @@ const PromptForm = ({
     }
   };
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
-    // console.log('data', data)
     genImage();
   };
 

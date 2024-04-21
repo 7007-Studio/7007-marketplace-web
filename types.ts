@@ -49,11 +49,21 @@ export interface Listing {
   status: number;
   reserved: boolean;
 }
-
-export interface modelInfo {
+export interface modelList {
   action: string;
   id: string;
   modelAuthorID: string;
   modelName: string;
   status: string;
+}
+
+export interface modelInfo {
+  // action: string;
+  // id: string;
+  // modelAuthorID: string;
+  // modelName: string;
+  // status: string;
+  baseModel: string;
+  modelAuthorID: string;
+  modelName: string;
 }

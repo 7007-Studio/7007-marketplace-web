@@ -2,7 +2,7 @@
 import ModelCard from "@/components/modelCard";
 import NFTCard from "@/components/nftCard";
 import Menu, { MenuList } from "@/components/ui/menu";
-import { modelInfo } from "@/types";
+import { modelInfo, modelList } from "@/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -16,12 +16,11 @@ export default function HomeModel() {
     { id: "4", label: "Model 3", value: "Model 3" },
   ];
   const { address } = useAccount();
-  const [taskStatus, setTaskStatus] = useState<modelInfo[]>([]);
+  const [taskStatus, setTaskStatus] = useState<modelList[]>([]);
   const [select, setSelect] = useState<MenuList>(menuOption[0]);
   const handleSelect = (option: MenuList) => {
     setSelect(option);
   };
-  const { setModel } = useModelInfoStore();
 
   const [type, setType] = useState([
     { id: "1", label: "Trending", selected: true },
@@ -155,7 +154,7 @@ export default function HomeModel() {
             </div>
           </div>
           <div className="flex flex-col w-full h-full px-6 py-4 gap-6">
-            {taskStatus.map((item: modelInfo, index) => (
+            {taskStatus.map((item: modelList, index) => (
               <Link
                 className="w-full flex items-center rounded hover:bg-grey cursor-pointer"
                 key={index}

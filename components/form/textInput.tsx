@@ -6,7 +6,7 @@ import {
   FieldErrors,
   RegisterOptions,
 } from "react-hook-form";
- 
+
 interface TextInputProps<T extends FieldValues> {
   type?: string;
   label?: string;
@@ -38,8 +38,6 @@ export default function TextInput<T extends FieldValues>({
   if (required) {
     registerOptions.required = "This field is required";
   }
-
-  console.log('defaultValue',defaultValue)
 
   return (
     <label className="form-control w-full gap-2">

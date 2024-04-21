@@ -9,9 +9,9 @@ import { useEffect, useState } from "react";
 const PromptStep = ({ modelIndex }: { modelIndex: string }) => {
   const router = useRouter();
   const [modelInfo, setModelInfo] = useState<modelInfo>();
-  const fetchModelDetails = async () => {
-    const [modelID, modelAuthorID] = modelIndex.split("%26");
+  const [modelID, modelAuthorID] = modelIndex.split("%26");
 
+  const fetchModelDetails = async () => {
     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/users/${modelAuthorID}/models/${modelID}`;
 
     try {
@@ -20,7 +20,8 @@ const PromptStep = ({ modelIndex }: { modelIndex: string }) => {
         throw new Error("Failed to fetch");
       }
       const data = response.data;
-      setModelInfo(data as modelInfo);
+      console.log("fetchModelDetails", data);
+      setModelInfo(data);
       console.log("data", data);
     } catch (error) {
       console.error("Error:", error);
@@ -46,7 +47,11 @@ const PromptStep = ({ modelIndex }: { modelIndex: string }) => {
           <ArrowLeftIcon className="text-white/40" /> Back
         </span>
         {modelInfo && (
-          <PromptForm submitText="Prompt &amp; Mint" modelInfo={modelInfo} />
+          <PromptForm
+            submitText="Prompt &amp; Mint"
+            modelInfo={modelInfo}
+            modelID={modelID}
+          />
         )}
       </div>
     </div>
