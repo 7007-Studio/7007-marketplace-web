@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
-import { modelInfo } from "@/types";
+import { ModelInfo } from "@/types";
 export interface IFormAIGCInput {
   name: string;
   prompt: string;

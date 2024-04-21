@@ -32,9 +32,9 @@ const wagmiConfig = getDefaultConfig({
     lineaTestnet,
   ],
   transports: {
-    [mainnet.id]: http(
-      `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
-    ),
+    // [mainnet.id]: http(
+    //   `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
+    // ),
     [sepolia.id]: http(
       `https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
     ),

@@ -18,6 +18,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Image from "next/image";
+import axios from "axios";
+import { ModelList } from "@/types";
 
 function HomeModel({ windowSize }: { windowSize: number }) {
   const swiperRef = useRef<any>(null);
@@ -57,27 +59,23 @@ function HomeModel({ windowSize }: { windowSize: number }) {
     setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
   };
 
-  const handleFetchData = () => {
-    // if (!address) {
-    //   alert('Please enter a user ID.');
-    //   return;
-    // }
+  const handleFetchData = async () => {
+    try {
+      const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
 
-    const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
-
-    fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setTaskStatus(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+      const response = await axios.get(apiUrl, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      const data = response.data;
+      const filteredData = data.filter((item: any) => item.status === "Done");
+
+      setTaskStatus(filteredData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   useEffect(() => {
@@ -105,7 +103,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
               setIsEnd(swiper.isEnd);
             }}
           >
-            {taskStatus.map((item, index) => (
+            {taskStatus.map((item: modelList, index) => (
               <SwiperSlide key={index}>
                 <div className="w-full flex justify-center">
                   {/* <ModelCard 

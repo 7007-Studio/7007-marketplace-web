@@ -278,7 +278,6 @@ const CreateCollection = () => {
               }}
               placeholder="name..."
             />
-            `1`
             {/* <CreateInput placeholder="name .." /> */}
           </div>
           <div className="gap-2 flex flex-col">

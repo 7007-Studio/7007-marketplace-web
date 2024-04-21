@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import useNftContract from "@/hooks/useNftContract";
 import Stats from "./stats";
 import Collection from "@/components/collection";
-import { modelInfo } from "@/types";
+import { ModelInfo } from "@/types";
 import { useEffect, useState } from "react";
 import Hero from "./hero";
 import Progress from "./progress";
@@ -13,7 +13,7 @@ import axios from "axios";
 
 export default function CollectionPage() {
   const { index } = useParams<{ index: string }>();
-  const [modelInfo, setModelInfo] = useState<modelInfo>();
+  const [modelInfo, setModelInfo] = useState<ModelInfo>();
   // const { chain } = useAccount();
   // const { nftContract } = useNftContract({
   //   modelIndex: index ? BigInt(index) : 1n,

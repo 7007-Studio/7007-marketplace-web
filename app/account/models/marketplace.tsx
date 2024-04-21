@@ -7,6 +7,9 @@ import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
 import useValidListings from "@/hooks/useValidListings";
 import { MdOutlineRefresh } from "react-icons/md";
+import axios from "axios";
+import ModelCard from "@/components/modelCard";
+import Card from "@/components/ui/card";
 
 const Marketplace = () => {
   const [taskStatus, setTaskStatus] = useState([]);
@@ -17,58 +20,63 @@ const Marketplace = () => {
   });
   const emptyCardList = [...Array(1).keys()];
 
-  const handleFetchData = () => {
-    console.log(address);
-    if (!address) {
-      alert('Please enter a user ID.');
-      return;
-    }
-
-    const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?action=train`;
-
-    fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'user-id': address
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        setTaskStatus(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+  const handleFetchData = async () => {
+    if (!address) return;
+    try {
+      const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?action=train`;
+      const response = await axios.get(apiUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "user-id": address,
+        },
       });
+      const data = response.data;
+      setTaskStatus(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  console.log('taskStatus', taskStatus)
   useEffect(() => {
-    handleFetchData()
-  }, [])
+    handleFetchData();
+  }, [address]);
 
   return (
-    <div className="flex flex-wrap max-w-[85%] gap-14 justify-center">
-      <button className="text-white" onClick={handleFetchData}><MdOutlineRefresh /></button>
-      <table className="table">
-        {/* head */}
-        <thead className="text-white w-full">
-          <tr>
-            <th></th>
-            <th>Model Name</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {taskStatus.map((item, index) => (
-            <tr key={item.id}>
-              <td>{index}</td>
-              <td>{item.modelName}</td>
-              <td>{item.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="flex flex-wrap max-w-[85%] gap-14 relative justify-center">
+      <button
+        className="text-white right-8 -top-10 absolute"
+        onClick={handleFetchData}
+      >
+        <MdOutlineRefresh size={32} />
+      </button>
+      {taskStatus?.map((item: any) => (
+        <Card className="w-[300px] max-h-[390px] h-[390px]">
+          <div className="flex flex-col justify-between h-full">
+            <div className="flex justify-between items-center p-4">
+              <div className="rounded-full border-2 w-16 h-16 flex justify-center items-center">
+                ORA
+              </div>
+              <div className="border-2 w-24 h-8 flex justify-center items-center">
+                Type
+              </div>
+            </div>
+            <div className="flex gap-4 h-fit items-start px-4 border-t-[1px] py-2 border-white flex-col">
+              <div className="w-full text-center text-lg">
+                <a className="">{item.modelName}</a>
+              </div>
+              <div className="flex flex-col gap-2 w-full ">
+                <div className="w-full flex justify-between">
+                  status <span className="font-bold">{item.status}</span>
+                </div>
+                <div className="w-full flex justify-between">
+                  action
+                  <span className="font-bold">{item.action}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
     </div>
   );
 };

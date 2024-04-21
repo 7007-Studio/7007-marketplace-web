@@ -3,7 +3,7 @@ import ArrowLeftIcon from "@/components/ui/arrowLeftIcon";
 import PromptForm from "./promptFormNoContract";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { modelInfo } from "@/types";
+import { ModelInfo } from "@/types";
 import { useEffect, useState } from "react";
 
 const PromptStep = ({ modelIndex }: { modelIndex: string }) => {
