@@ -105,7 +105,6 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const router = useRouter();
   const { address: connectedWallet, chainId } = useAccount();
   const [hover, setHover] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const [metadata, setMetadata] = useState<Metadata>();
 
   const { data: name } = useReadAigcName({
@@ -136,7 +135,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
     return (
       [
         !erc721Results.data[0].error,
-        ...(erc721Results.data.map((d) => d.result) as [Address, string]),
+        ...(erc721Results.data.map((d: any) => d.result) as [Address, string]),
       ] || []
     );
   }, [erc721Results.isFetched, erc721Results.data]);
@@ -174,7 +173,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
     return (
       [
         !erc1155Results.data[0].error,
-        ...(erc1155Results.data.map((d) => d.result) as [
+        ...(erc1155Results.data.map((d: any) => d.result) as [
           string,
           bigint,
           string,
@@ -266,16 +265,29 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
               {metadata?.description || <Skeleton count={5} />}
             </div>
           </div>
-
-          {!isOwner && (
+          {listing && !isOwner && (
             <div className="flex w-full justify-between gap-4 pt-2 items-end">
               <div className="flex items-end gap-1">
-                <a className="text-[30px] leading-[90%]">0.05</a>
-                <a className="">ETH</a>
+                <a className="text-[30px] leading-[90%]">
+                  {decimals?.result
+                    ? formatUnits(listing.pricePerToken, decimals.result)
+                    : formatEther(listing.pricePerToken) || <Skeleton />}
+                  {" " || <Skeleton />}
+                </a>
+                <a className="">
+                  {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
+                </a>
               </div>
-              <a className="opacity-40">3 Day Left</a>
+              <a className="opacity-40">
+                {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
+                  <Skeleton />
+                )}
+                Day Left
+              </a>
             </div>
           )}
+
+          {/* TODO:hardcode */}
           {isOwner && (
             <div className="flex w-full pt-2">
               <a className="opacity-40">Last sale 0.05 ETH</a>
@@ -362,23 +374,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         )}
 
         {listing && !isOwner && hover && (
-          <>
-            {/* <div className="pb-2 flex flex-row justify-between items-baseline">
-              <span className="heading-md">
-                {decimals?.result
-                  ? formatUnits(listing.pricePerToken, decimals.result)
-                  : formatEther(listing.pricePerToken) || <Skeleton />}
-                {" " || <Skeleton />}
-                {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
-              </span>
-              <span className="text-sm">
-                {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
-                  <Skeleton />
-                )}
-              </span>
-            </div> */}
-            <BuyButton listing={listing} hover={hover} />
-          </>
+          <BuyButton listing={listing} hover={hover} className={"h-12"} />
         )}
       </div>
     </Card>

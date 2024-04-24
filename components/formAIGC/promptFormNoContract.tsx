@@ -28,7 +28,7 @@ const PromptForm = ({
   modelID: string;
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [prompt, setPrompt] = useState();
   const [negativePrompt, setNegativePrompt] = useState();
   const [seed, setSeed] = useState();
@@ -42,6 +42,7 @@ const PromptForm = ({
   const { errors } = formState;
 
   const genImage = async () => {
+    setLoading(true);
     const data = JSON.stringify({
       modelID: modelID,
       prompt: prompt,
@@ -69,6 +70,8 @@ const PromptForm = ({
       }
     } catch (error) {
       console.error("Request error while getting presigned URL:", error);
+    } finally {
+      setLoading(false);
     }
   };
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
@@ -125,7 +128,7 @@ const PromptForm = ({
           type="text"
           name="modelPositive"
           id="modelPositive"
-          className="bg-grey h-40 pl-10"
+          className="bg-grey h-32 pl-10"
           value={prompt} // Bind the value to the state variable
           onChange={(e: any) => setPrompt(e.target.value)} // Update the input value directly
           required
@@ -242,10 +245,10 @@ const PromptForm = ({
             function description function
           </a>
           <button
-            className="w-[260px] h-[58px] bg-white/40 border border-white rounded"
-            disabled={isSubmitting}
+            className="w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded"
+            disabled={loading}
           >
-            {isSubmitting ? (
+            {loading ? (
               <>
                 <span className="loading loading-spinner"></span>
                 loading

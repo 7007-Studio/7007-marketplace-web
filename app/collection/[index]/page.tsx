@@ -32,7 +32,6 @@ export default function CollectionPage() {
       }
       const data = response.data;
       setModelInfo(data);
-      console.log("data", data);
     } catch (error) {
       console.error("Error:", error);
     }

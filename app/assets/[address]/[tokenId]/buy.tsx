@@ -2,20 +2,24 @@
 
 import { getPublicClient } from "@/client";
 import { formatDate, getContractAddress } from "@/helpers";
-import { Listing } from "@/types";
+import { Listing, Metadata } from "@/types";
 import { useEffect, useState } from "react";
 import { formatUnits, formatEther, Address, erc20Abi } from "viem";
 import { useAccount, useReadContracts } from "wagmi";
 
 import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
 import BuyButton from "@/components/buy-button";
+import { CiClock1 } from "react-icons/ci";
+import OfferButton from "@/components/offer-button";
 
 export default function Buy({
   nftContract,
   tokenId,
+  metadata,
 }: {
   nftContract: Address;
   tokenId: string;
+  metadata: Metadata;
 }) {
   const [listing, setListing] = useState<Listing>();
   const { chain } = useAccount();
@@ -50,6 +54,7 @@ export default function Buy({
       });
 
       if (results.length > 0) {
+        console.log(results[0].args);
         setListing(results[0].args.listing);
       }
     };
@@ -73,21 +78,47 @@ export default function Buy({
   const [decimals, symbol] = listingData || [];
 
   if (!listing) {
-    return null;
+    return (
+      <div className="flex w-full flex-col mt-20 py-7 px-6 gap-7 bg-grey rounded-xl">
+        <OfferButton
+          nftContract={nftContract}
+          tokenId={tokenId}
+          metadata={metadata}
+          className="w-full h-[45px] rounded"
+        />
+      </div>
+    );
   }
 
   return (
     <>
-      <div className="pb-2 flex flex-col">
-        <span>Sale ends {formatDate(Number(listing.endTimestamp) * 1000)}</span>
-        <span className="heading-md">
-          {decimals?.result
-            ? formatUnits(listing.pricePerToken, decimals.result)
-            : formatEther(listing.pricePerToken)}{" "}
-          {symbol?.result ? symbol.result : "ETH"}
-        </span>
+      <div className="flex w-full flex-col mt-20 py-7 px-6 gap-7 bg-grey rounded-xl">
+        <div className="flex items-center gap-2">
+          <CiClock1 size={25} />
+          <a>Sale ends {formatDate(Number(listing.endTimestamp) * 1000)}</a>
+        </div>
+        <div className="space-y-2">
+          <a>current price</a>
+          <div className="flex gap-2 items-end">
+            <a className="text-[45px] leading-none">
+              {decimals?.result
+                ? formatUnits(listing.pricePerToken, decimals.result)
+                : formatEther(listing.pricePerToken)}
+              {symbol?.result ? symbol.result : "ETH"}
+            </a>
+            <a className="text-[12px] pb-1">$ 77,777</a>
+          </div>
+        </div>
+        <div className="flex gap-5">
+          <BuyButton listing={listing} className="w-[47%] h-[45px] rounded" />
+          <OfferButton
+            nftContract={nftContract}
+            tokenId={tokenId}
+            metadata={metadata}
+            className="w-[47%] h-[45px] rounded"
+          />
+        </div>
       </div>
-      <BuyButton listing={listing} />
     </>
   );
 }

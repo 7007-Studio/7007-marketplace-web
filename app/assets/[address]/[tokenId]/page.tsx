@@ -94,13 +94,7 @@ export default function Detail() {
 
   return (
     <>
-      <div className="flex items-center flex-col h-full gap-[50px] mt-[180px] relative">
-        {/* <a
-          onClick={() => router.back()}
-          className="flex flex-row gap-2 hover:cursor-pointer absolute top-0 left-10 p-4"
-        >
-          <ArrowLeftIcon className="text-primary" /> Back
-        </a> */}
+      <div className="flex items-center flex-col h-full gap-[50px] mt-[180px] relative px-10">
         <div className="flex gap-[50px] w-full justify-center">
           <div className="size-[650px] border border-white rounded">
             {!metadata ? (
@@ -167,27 +161,14 @@ export default function Detail() {
                 </a>
               </div>
             )}
-            <div className="flex w-full flex-col mt-20 py-7 px-6 gap-7 bg-grey rounded-xl">
-              <div className="flex items-center gap-2">
-                <CiClock1 size={25} />
-                <a>Sale ends 01/01/2022 at 17:77</a>
-              </div>
-              <div className="space-y-2">
-                <a>current price</a>
-                <div className="flex gap-2 items-end">
-                  <a className="text-[45px] leading-none">7.77 ETH</a>
-                  <a className="text-[12px] pb-1">$ 77,777</a>
-                </div>
-              </div>
-              <div className="flex gap-5">
-                <button className="w-[47%] bg-white text-black font-bold transition-all flex justify-center items-center h-[45px] rounded">
-                  buy now
-                </button>
-                <button className="w-[47%] bg-transparent text-white flex justify-center items-center border border-white h-[45px] rounded">
-                  make offer
-                </button>
-              </div>
-            </div>
+
+            {!isOwner && nftContract && tokenId && metadata && (
+              <Buy
+                nftContract={nftContract as Address}
+                tokenId={tokenId}
+                metadata={metadata}
+              />
+            )}
             <div className="relative w-full">
               <input
                 type="text"
@@ -230,17 +211,15 @@ export default function Detail() {
               <div className="w-full h-fit flex flex-col gap-6 py-5 px-[30px]">
                 <div className="w-full flex justify-between gap-10">
                   <a>Contract Address</a>
-                  <a>
-                    {nftContract && (
-                      <a
-                        href={`https://sepolia.etherscan.io/address/${nftContract}`}
-                        className="text-primary overflow-hidden"
-                        target="_blank"
-                      >
-                        {concatAddress(nftContract)}
-                      </a>
-                    )}
-                  </a>
+                  {nftContract && (
+                    <a
+                      href={`https://sepolia.etherscan.io/address/${nftContract}`}
+                      className="text-primary overflow-hidden"
+                      target="_blank"
+                    >
+                      {concatAddress(nftContract)}
+                    </a>
+                  )}
                 </div>
                 <div className="w-full flex justify-between gap-10">
                   <a>Token ID</a>
@@ -324,9 +303,6 @@ export default function Detail() {
             </div>
           </div>
 
-          {/* {!isOwner && nftContract && tokenId && (
-            <Buy nftContract={nftContract as Address} tokenId={tokenId} />
-          )} */}
           {/* {chain && nftContract && tokenId && connectedWallet && (
             <SPIntegration
               chain={chain}

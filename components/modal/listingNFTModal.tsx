@@ -81,7 +81,7 @@ const ListingNFTModal = React.forwardRef(
             args: [marketplaceV3, true],
           },
           {
-            onError(error) {
+            onError(error: any) {
               console.debug("approveListing onError", error);
               setListInitialized(false);
             },
@@ -154,7 +154,8 @@ const ListingNFTModal = React.forwardRef(
       } = {
         assetContract: listingNFT.nftContract,
         tokenId: BigInt(listingNFT.tokenId),
-        quantity: BigInt(data.quantity) || 1n,
+        // quantity: BigInt(data.quantity) || 1n,
+        quantity: 1n,
         currency: NATIVE_TOKEN_ADDRESS,
         pricePerToken: parseEther(data.price),
         startTimestamp: BigInt(Math.round(Date.now() / 1000)),
@@ -170,7 +171,7 @@ const ListingNFTModal = React.forwardRef(
           args: [createListingArgsTuple],
         },
         {
-          onError(error) {
+          onError(error: any) {
             console.error(error);
             setListInitialized(false);
           },

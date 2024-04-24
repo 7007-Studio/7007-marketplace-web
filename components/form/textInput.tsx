@@ -42,7 +42,7 @@ export default function TextInput<T extends FieldValues>({
   return (
     <label className="form-control w-full gap-2">
       {label && <span className="text-[18px] pl-3">{label}</span>}
-      <div className="relative w-full">
+      <div className="relative w-full text-white">
         <input
           type="text"
           className="input pl-6 py-2 rounded w-full bg-grey"

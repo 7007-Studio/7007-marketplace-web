@@ -52,8 +52,6 @@ export default function HomeModel() {
       });
   };
 
-  console.log("taskStatus", taskStatus);
-
   const changeTime = (id: string) => {
     setTime(
       time.map((item) => {

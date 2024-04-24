@@ -226,7 +226,39 @@ function Rank() {
         </div>
       </div>
       <div className="flex max-w-[85%] gap-5 w-full">
-        <div className="w-[48%] flex flex-col h-96 border border-white rounded-lg">
+        <div className="w-full flex flex-col h-96 border border-white rounded-lg">
+          <div className="h-1/5 w-full flex items-center border-b border-white text-sm font-bold px-4">
+            <div className="w-[8%] flex items-center justify-center">Rank</div>
+            <div className="w-[40%] flex items-center justify-center">
+              model
+            </div>
+            <div className="w-[23%] flex items-center justify-center">
+              floor price
+            </div>
+            <div className="w-[17%] flex items-center justify-center">
+              volume
+            </div>
+            <div className="w-[12%] flex items-center justify-center">
+              quantity
+            </div>
+          </div>
+          <div className="h-4/5 w-full flex items-start border-b border-white px-4 py-9">
+            <div className="w-[8%] flex items-center justify-center text-lg">
+              1
+            </div>
+            <div className="w-[40%] flex items-center justify-center text-base font-bold">
+              Stable diffusion
+            </div>
+            <div className="w-[23%] flex items-center justify-center">
+              0.0007 ETH
+            </div>
+            <div className="w-[17%] flex items-center justify-center">
+              7 ETH
+            </div>
+            <div className="w-[12%] flex items-center justify-center">7</div>
+          </div>
+        </div>
+        {/* <div className="w-[48%] flex flex-col h-96 border border-white rounded-lg">
           <div className="h-1/5 w-full flex items-center border-b border-white text-sm font-bold px-4">
             <div className="w-[8%] flex items-center justify-center">Rank</div>
             <div className="w-[40%] flex items-center justify-center">
@@ -257,8 +289,8 @@ function Rank() {
             </div>
             <div className="w-[12%] flex items-center justify-center">7</div>
           </div>
-        </div>
-        <div className="w-[48%] flex flex-col h-96 border border-white rounded-lg">
+        </div> */}
+        {/* <div className="w-[48%] flex flex-col h-96 border border-white rounded-lg">
           <div className="h-1/5 w-full flex items-center border-b border-white text-sm font-bold px-4">
             <div className="w-[8%] flex items-center justify-center">Rank</div>
             <div className="w-[40%] flex items-center justify-center">
@@ -289,7 +321,7 @@ function Rank() {
             </div>
             <div className="w-[12%] flex items-center justify-center">7</div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { Abi, zeroAddress } from "viem";
 import { useAccount } from "wagmi";
 import Menu, { MenuList } from "@/components/ui/menu";
 import { CiSearch } from "react-icons/ci";
-import CreateInput from "@/components/input/creareInput";
+import CreateInput from "@/components/input/createInput";
 import Image from "next/image";
 import ImageUploader from "./imageUploader";
 import Link from "next/link";

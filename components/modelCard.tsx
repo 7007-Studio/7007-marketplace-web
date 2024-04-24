@@ -31,18 +31,23 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex, modelInfo }) => {
   return (
     <Card className="w-[300px] max-h-[390px] h-[390px]">
       <div
-        className="hover:cursor-pointer h-full"
-        onClick={() => router.push(`/collection/${modelInfo.id}`)}
+        className="cursor-pointer h-full"
+        onClick={() =>
+          router.push(`/collection/${modelInfo.id}&${modelInfo.modelAuthorID}`)
+        }
       >
-        <div className="flex flex-col justify-between h-full">
-          <div className="flex justify-between items-center p-4">
-            <div className="rounded-full border-2 w-16 h-16 flex justify-center items-center">
-              ORA
-            </div>
-            <div className="border-2 w-24 h-8 flex justify-center items-center">
-              Type
-            </div>
+        <div className="flex flex-col relative justify-between h-full">
+          <div className="absolute bg-white/30 top-4 z-10 right-4 px-2 py-1 flex justify-center items-center">
+            TEXT-TO-TEXT
           </div>
+          <div
+            className="size-full"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1608874973445-de098faf870f?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
+              backgroundSize: "cover",
+            }}
+          ></div>
+
           <div className="flex gap-4 h-fit items-start px-4 border-t-[1px] py-2 border-white flex-col">
             <div className="w-full text-center text-lg">
               <a className="">{modelInfo.modelName}</a>

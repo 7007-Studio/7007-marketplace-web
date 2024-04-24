@@ -77,66 +77,63 @@ const Marketplace = () => {
     }
   };
 
-  console.log("taskStatus", taskStatus);
-
   useEffect(() => {
     handleFetchData();
   }, [address]);
 
-  return (
-    <div className="flex w-full flex-col relative max-w-[85%]">
-      <button
-        className="text-white right-8 -top-10 absolute"
-        onClick={handleFetchData}
-      >
-        <MdOutlineRefresh size={32} />
-      </button>
-      <div className="flex flex-wrap w-full relative gap-14 justify-center">
-        {taskStatus?.map((item: ModelList) => (
-          <Card className="w-[300px] max-h-[390px] h-[390px]" key={item.id}>
-            <div className="flex flex-col justify-between h-full">
-              <div className="flex justify-between items-center p-4">
-                <div className="rounded-full border-2 w-16 h-16 flex justify-center items-center">
-                  ORA
-                </div>
-                <div className="border-2 w-24 h-8 flex justify-center items-center">
-                  Type
-                </div>
+  const modelList = () => {
+    if (!taskStatus) {
+      return emptyCardList.map((item) => <EmptyCard key={item} />);
+    } else if (taskStatus && taskStatus.length > 0) {
+      return taskStatus.map((item: ModelList) => (
+        <Card className="w-[300px] max-h-[390px] h-[390px]" key={item.id}>
+          <div className="flex flex-col relative justify-between h-full">
+            <div className="absolute bg-white/30 top-4 z-10 right-4 px-2 py-1 flex justify-center items-center">
+              TEXT-TO-TEXT
+            </div>
+
+            <div
+              className="size-full"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1608874973445-de098faf870f?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
+                backgroundSize: "cover",
+              }}
+            ></div>
+
+            <div className="flex gap-4 h-fit items-start px-4 border-t-[1px] py-2 border-white flex-col">
+              <div className="w-full text-center text-lg">
+                <a className="">{item.modelName}</a>
               </div>
-              <div className="flex gap-4 h-fit items-start px-4 border-t-[1px] py-2 border-white flex-col">
-                <div className="w-full text-center text-lg">
-                  <a className="">{item.modelName}</a>
+              <div className="flex flex-col gap-2 w-full ">
+                <div className="w-full flex justify-between">
+                  Started <span className="font-bold">Jan 1th</span>
                 </div>
-                <div className="flex flex-col gap-2 w-full ">
-                  <div className="w-full flex justify-between">
-                    status <span className="font-bold">{item.status}</span>
-                  </div>
-                  <div className="w-full flex justify-between">
-                    action
-                    <span className="font-bold">{item.action}</span>
-                  </div>
-                  {item.status === "Done" && (
-                    <div className="w-full flex justify-between gap-4">
-                      <button
-                        className="border-[1px] border-white p-2 w-full rounded"
-                        onClick={() => handleViewImage(item.id)}
-                      >
-                        View
-                      </button>
-                      <button
-                        className="border-[1px] border-white p-2 w-full rounded"
-                        onClick={() => handleViewImage(item.id)}
-                      >
-                        Mint
-                      </button>
-                    </div>
-                  )}
+                <div className=" w-full flex justify-between">
+                  action
+                  <span className="font-bold">{item.action}</span>
                 </div>
               </div>
             </div>
-          </Card>
-        )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
+          </div>
+        </Card>
+      ));
+    } else {
+      return <div>There is no inference model in your collection.</div>;
+    }
+  };
 
+  return (
+    <div className="flex w-full flex-col relative max-w-[85%]">
+      {taskStatus && taskStatus.length > 0 && (
+        <button
+          className="text-white right-8 -top-16 absolute"
+          onClick={handleFetchData}
+        >
+          <MdOutlineRefresh size={32} />
+        </button>
+      )}
+      <div className="flex flex-wrap w-full relative gap-14 justify-center">
+        {modelList()}
         <dialog id="my_modal_2" ref={dialogRef} className="modal">
           <div className="modal-box">
             {images.map((imgData, index) => (

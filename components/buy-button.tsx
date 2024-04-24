@@ -12,9 +12,11 @@ import { Listing } from "@/types";
 export default function BuyButton({
   listing,
   hover,
+  className,
 }: {
   listing: Listing;
   hover?: boolean;
+  className?: string;
 }) {
   const [buyInitialized, setBuyInitialized] = useState(false);
 
@@ -27,6 +29,43 @@ export default function BuyButton({
   const buyResult = useWaitForTransactionReceipt({
     hash: buyNftTx,
   });
+  const buy = (e: any) => {
+    console.debug("buy button clicked");
+    e.stopPropagation();
+    if (!connectedWallet) {
+      openConnectModal?.();
+      return;
+    }
+
+    const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
+    if (!marketplaceV3) return;
+
+    setBuyInitialized(true);
+    const args: [bigint, Address, bigint, Address, bigint] = [
+      listing.listingId,
+      connectedWallet,
+      listing.quantity,
+      listing.currency,
+      listing.pricePerToken,
+    ];
+    console.debug(args);
+    buyNft(
+      {
+        address: marketplaceV3,
+        value:
+          listing.currency === NATIVE_TOKEN_ADDRESS
+            ? listing.pricePerToken
+            : undefined,
+        args,
+      },
+      {
+        onError(error: any) {
+          console.error("buyNft error", error);
+          setBuyInitialized(false);
+        },
+      }
+    );
+  };
 
   useEffect(() => {
     console.debug("buyResult changed");
@@ -37,45 +76,9 @@ export default function BuyButton({
 
   return (
     <button
-      onClick={(e) => {
-        console.debug("buy button clicked");
-        e.stopPropagation();
-        if (!connectedWallet) {
-          openConnectModal?.();
-          return;
-        }
-
-        const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
-        if (!marketplaceV3) return;
-
-        setBuyInitialized(true);
-        const args: [bigint, Address, bigint, Address, bigint] = [
-          listing.listingId,
-          connectedWallet,
-          listing.quantity,
-          listing.currency,
-          listing.pricePerToken,
-        ];
-        console.debug(args);
-        buyNft(
-          {
-            address: marketplaceV3,
-            value:
-              listing.currency === NATIVE_TOKEN_ADDRESS
-                ? listing.pricePerToken
-                : undefined,
-            args,
-          },
-          {
-            onError(error) {
-              console.debug("buyNft error", error);
-              setBuyInitialized(false);
-            },
-          }
-        );
-      }}
+      onClick={(e) => buy(e)}
       disabled={buyInitialized}
-      className={`w-full z-20 bg-white text-black font-bold transition-all flex justify-center items-center ${hover ? "h-12" : "h-0"}`}
+      className={`z-20 bg-white text-black font-bold transition-all flex justify-center items-center ${className}`}
     >
       {buyInitialized ? (
         <>
