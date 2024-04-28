@@ -2,16 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useReadContracts } from "wagmi";
-import { Address, isAddressEqual, zeroAddress } from "viem";
+import {
+  Address,
+  formatEther,
+  isAddressEqual,
+  parseEther,
+  zeroAddress,
+} from "viem";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { CiClock1 } from "react-icons/ci";
-
+import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
 import { aigcAbi } from "@/generated";
-import { Metadata } from "@/types";
-import { concatAddress, openseaUrl } from "@/helpers";
-import ArrowLeftIcon from "@/components/ui/arrowLeftIcon";
-import Card from "@/components/ui/card";
+import { Listing, Metadata, Offer } from "@/types";
+import { concatAddress, getContractAddress, openseaUrl } from "@/helpers";
+import { getPublicClient } from "@/client";
 import { ListingNFT } from "@/components/modal/listingNFTModal";
 import Buy from "./buy";
 import SPIntegration from "./sp-integration";
@@ -21,21 +25,104 @@ import { getSrc } from "@livepeer/react/external";
 import * as Player from "@livepeer/react/player";
 import { useListingModal } from "@/utils/modalProvider";
 import Image from "next/image";
+import CancelOfferButton from "@/components/cancelOffer-button";
 
 export default function Detail() {
-  const router = useRouter();
   const params = useParams<{ address: string; tokenId: string }>();
   const { address: nftContract, tokenId } = params || {};
-
   const { showListingModal } = useListingModal();
-
   const remixModalRef = useRef<HTMLDialogElement>(null);
   const [original, setOriginal] = useState<AIGCContent>();
-
   const { address: connectedWallet, chain } = useAccount();
-
   const [metadata, setMetadata] = useState<Metadata>();
   const [animationUrl, setAnimationUrl] = useState<string>();
+  const [listing, setListing] = useState<Listing[]>();
+  const [offers, setOffers] = useState<Offer[]>();
+  const [reFetch, setReFetch] = useState(false);
+  const handleReFetch = () => {
+    setReFetch(!reFetch);
+  };
+
+  useEffect(() => {
+    const fetchCreateListing = async () => {
+      if (!nftContract || !tokenId || !chain) return;
+      const client = getPublicClient(chain);
+      const marketplaceV3 = getContractAddress("MarketplaceV3", chain.id);
+      if (!marketplaceV3) return;
+      const logs = (await client.getContractEvents({
+        address: marketplaceV3,
+        abi: MarketplaceV3Abi,
+        eventName: "NewListing",
+        args: {
+          assetContract: nftContract,
+        },
+        fromBlock: BigInt(5079109),
+      })) as any;
+      if (logs.length > 0) {
+        const totalLength = logs.length - 1;
+        const start = logs[0].args.listing.listingId;
+        const end = logs[totalLength].args.listing.listingId;
+        const allListings = await client.readContract({
+          address: marketplaceV3,
+          abi: MarketplaceV3Abi,
+          functionName: "getAllListings",
+          args: [start, end],
+        });
+
+        const results = (allListings as unknown as Listing[]).filter(
+          (listing) => {
+            const currentTimestamp = new Date().getTime();
+            return (
+              Number(listing.tokenId) === Number(tokenId) &&
+              Number(listing.endTimestamp) * 1000 > currentTimestamp
+            );
+          }
+        );
+        if (results.length > 0) {
+          setListing(results);
+        }
+      } else {
+        setListing(undefined);
+      }
+    };
+    const fetchOffers = async () => {
+      if (!nftContract || !tokenId || !chain) return;
+      const client = getPublicClient(chain);
+      const marketplaceV3 = getContractAddress("MarketplaceV3", chain.id);
+      if (!marketplaceV3) return;
+      const logs = (await client.getContractEvents({
+        address: marketplaceV3,
+        abi: MarketplaceV3Abi,
+        eventName: "NewOffer",
+        args: {
+          assetContract: nftContract,
+        },
+        fromBlock: BigInt(5079109),
+      })) as any;
+
+      if (logs.length > 0) {
+        const totalLength = logs.length;
+        const start = logs[0].args.offer.offerId;
+        const end = logs[totalLength - 1].args.offer.offerId;
+        const allOffer = await client.readContract({
+          address: marketplaceV3,
+          abi: MarketplaceV3Abi,
+          functionName: "getAllValidOffers", //getAllOffers
+          args: [start, end],
+        });
+        const results = (allOffer as unknown as Offer[]).filter((offer) => {
+          return Number(offer.tokenId) === Number(tokenId);
+        });
+        if (results.length > 0) {
+          setOffers(results);
+        }
+      } else {
+        setOffers(undefined);
+      }
+    };
+    fetchCreateListing();
+    fetchOffers();
+  }, [nftContract, tokenId, chain, reFetch]);
 
   // read contracts
   const aigcContractConfig = { address: nftContract as Address, abi: aigcAbi };
@@ -85,13 +172,12 @@ export default function Detail() {
     };
 
     fetchMetadata();
-  }, [tokenUri]);
+  }, [tokenUri, reFetch]);
 
   const isOwner =
     ownerOf?.result &&
     connectedWallet &&
     isAddressEqual(ownerOf?.result, connectedWallet as Address);
-
   return (
     <>
       <div className="flex items-center flex-col h-full gap-[50px] mt-[180px] relative px-10">
@@ -167,6 +253,7 @@ export default function Detail() {
                 nftContract={nftContract as Address}
                 tokenId={tokenId}
                 metadata={metadata}
+                handleReFetch={handleReFetch}
               />
             )}
             <div className="relative w-full">
@@ -180,6 +267,20 @@ export default function Detail() {
                 <a>remix</a>
               </div>
             </div>
+            {/* {chain && nftContract && tokenId && connectedWallet && (
+              <SPIntegration
+                chain={chain}
+                connectedWallet={connectedWallet}
+                nftContract={nftContract as Address}
+                tokenId={tokenId}
+                setListingLicense={(license: ListingNFT) => {
+                  showListingModal(license);
+                }}
+                onRemixClicked={() => {
+                  remixModalRef?.current?.showModal();
+                }}
+              />
+            )} */}
           </div>
           {/* {metadata && (
             <div>
@@ -230,7 +331,7 @@ export default function Detail() {
                   {nftContract && (
                     <a
                       href={openseaUrl(nftContract, tokenId as string)}
-                      className="text-primary overflow-hidden"
+                      className="text-blue overflow-hidden"
                       target="_blank"
                     >
                       View on OpenSea
@@ -266,20 +367,33 @@ export default function Detail() {
                 listings
               </div>
               <div className="w-full h-full flex flex-col gap-6 px-5">
-                <div className="w-full grid grid-cols-5 gap-5 pt-7 pb-5 justify-items-center content-center border-b border-grey">
+                <div className="w-full grid grid-cols-5 gap-5 pt-7 pb-5 justify-items-center items-center content-center border-b border-grey">
                   <a className="text-sm">price</a>
                   <a className="text-sm">use price</a>
                   <a className="text-sm">quantity</a>
-                  <a className="text-sm">floor difference</a>
+                  <a className="text-sm text-center">floor difference</a>
                   <a className="text-sm">from</a>
                 </div>
-                <div className="w-full grid grid-cols-5 gap-5 pb-4 justify-items-center content-center border-b border-grey">
-                  <a className="">17.77 ETH</a>
-                  <a className="">$17,967.16</a>
-                  <a className="">7</a>
-                  <a className="">31% below</a>
-                  <a className="text-blue">0x77..777</a>
-                </div>
+                {listing &&
+                  listing?.map((list, index) => (
+                    <div
+                      className="w-full grid grid-cols-5 gap-5 pb-4 justify-items-center content-center border-b border-grey"
+                      key={index}
+                    >
+                      <a className="">{formatEther(list.pricePerToken)} ETH</a>
+                      <a className="">
+                        ${" "}
+                        {(
+                          Number(formatEther(list.pricePerToken)) * 3000
+                        ).toFixed(2)}
+                      </a>
+                      <a className="">{list.quantity.toString()}</a>
+                      <a className="">31% below</a>
+                      <a className="text-blue">
+                        {concatAddress(list.listingCreator)}
+                      </a>
+                    </div>
+                  ))}
               </div>
             </div>
             <div className="border border-white w-full h-full rounded-md">
@@ -287,36 +401,43 @@ export default function Detail() {
                 offers
               </div>
               <div className="w-full h-full flex flex-col gap-6 px-5">
-                <div className="w-full grid grid-cols-4 gap-5 pt-7 pb-5 justify-items-center content-center border-b border-grey">
+                {/* filter offers to find if offeror = account */}
+                <div
+                  className={`w-full gap-5 pt-7 pb-5 justify-items-center content-center border-b border-grey grid grid-cols-5`}
+                >
                   <a className="text-sm">price</a>
                   <a className="text-sm">quantity</a>
                   <a className="text-sm">expiration</a>
                   <a className="text-sm">from</a>
                 </div>
-                <div className="w-full grid grid-cols-4 gap-5 pb-4 justify-items-center content-center border-b border-grey">
-                  <a className="">17.77 ETH</a>
-                  <a className="">7</a>
-                  <a className="">30 days</a>
-                  <a className="text-blue">0x77..777</a>
-                </div>
+                {offers &&
+                  offers.map((offer, index) => (
+                    <div
+                      className="w-full grid grid-cols-5 gap-5 pb-4 justify-items-center content-center border-b border-grey"
+                      key={index}
+                    >
+                      <a className="">{formatEther(offer.totalPrice)} ETH</a>
+                      <a className="">{offer.quantity.toString()}</a>
+                      <a className="">{offer.expirationTimestamp.toString()}</a>
+                      <a className="text-blue">
+                        {connectedWallet && connectedWallet === offer.offeror
+                          ? "You"
+                          : concatAddress(offer.offeror)}
+                      </a>
+                      <a>
+                        {connectedWallet &&
+                          connectedWallet === offer.offeror && (
+                            <CancelOfferButton
+                              offerId={offer.offerId.toString()}
+                              handleReFetch={handleReFetch}
+                            />
+                          )}
+                      </a>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
-
-          {/* {chain && nftContract && tokenId && connectedWallet && (
-            <SPIntegration
-              chain={chain}
-              connectedWallet={connectedWallet}
-              nftContract={nftContract as Address}
-              tokenId={tokenId}
-              setListingLicense={(license: ListingNFT) => {
-                showListingModal(license);
-              }}
-              onRemixClicked={() => {
-                remixModalRef?.current?.showModal();
-              }}
-            />
-          )} */}
         </div>
       </div>
       {original && (

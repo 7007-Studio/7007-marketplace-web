@@ -49,6 +49,18 @@ export interface Listing {
   status: number;
   reserved: boolean;
 }
+export interface Offer {
+  offerId: bigint;
+  tokenId: bigint;
+  quantity: bigint;
+  totalPrice: bigint;
+  expirationTimestamp: bigint;
+  offeror: `0x${string}`;
+  assetContract: `0x${string}`;
+  currency: `0x${string}`;
+  tokenType: number;
+  status: number;
+}
 export interface ModelList {
   action: string;
   id: string;

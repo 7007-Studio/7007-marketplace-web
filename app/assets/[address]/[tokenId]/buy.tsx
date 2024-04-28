@@ -2,7 +2,7 @@
 
 import { getPublicClient } from "@/client";
 import { formatDate, getContractAddress } from "@/helpers";
-import { Listing, Metadata } from "@/types";
+import { Listing, Metadata, Offer } from "@/types";
 import { useEffect, useState } from "react";
 import { formatUnits, formatEther, Address, erc20Abi } from "viem";
 import { useAccount, useReadContracts } from "wagmi";
@@ -16,21 +16,24 @@ export default function Buy({
   nftContract,
   tokenId,
   metadata,
+  handleReFetch,
 }: {
   nftContract: Address;
   tokenId: string;
   metadata: Metadata;
+  handleReFetch: () => void;
 }) {
   const [listing, setListing] = useState<Listing>();
+  const [offers, setOffers] = useState<Offer>();
   const { chain } = useAccount();
 
   useEffect(() => {
-    const fetchCreateListingEvents = async () => {
+    const fetchCreateListing = async () => {
       if (!nftContract || !tokenId || !chain) return;
-      const client = getPublicClient(chain);
-
       const marketplaceV3 = getContractAddress("MarketplaceV3", chain.id);
-      const logs = await client.getContractEvents({
+      const client = getPublicClient(chain);
+      if (!marketplaceV3) return;
+      const logs = (await client.getContractEvents({
         address: marketplaceV3,
         abi: MarketplaceV3Abi,
         eventName: "NewListing",
@@ -38,27 +41,73 @@ export default function Buy({
           assetContract: nftContract,
         },
         fromBlock: BigInt(5079109),
-      });
-      const results = (
-        logs as unknown as { args: { listing: Listing } }[]
-      ).filter((log) => {
-        const {
-          args: { listing },
-        } = log;
+      })) as any;
+      if (logs.length > 0) {
+        const totalLength = logs.length - 1;
+        const start = logs[0].args.listing.listingId;
+        const end = logs[totalLength].args.listing.listingId;
+        const validListings = await client.readContract({
+          address: marketplaceV3,
+          abi: MarketplaceV3Abi,
+          functionName: "getAllValidListings", //getAllListings
+          args: [start, end],
+        });
 
-        const currentTimestamp = new Date().getTime();
-        return (
-          Number(listing.tokenId) === Number(tokenId) &&
-          Number(listing.endTimestamp) * 1000 > currentTimestamp
+        const results = (validListings as unknown as Listing[]).filter(
+          (listing) => {
+            const currentTimestamp = new Date().getTime();
+            return (
+              Number(listing.tokenId) === Number(tokenId) &&
+              Number(listing.endTimestamp) * 1000 > currentTimestamp
+            );
+          }
         );
-      });
-
-      if (results.length > 0) {
-        console.log(results[0].args);
-        setListing(results[0].args.listing);
+        if (results.length > 0) {
+          setListing(results[0]);
+        }
+      } else {
+        setListing(undefined);
       }
     };
-    fetchCreateListingEvents();
+    const fetchOffers = async () => {
+      if (!nftContract || !tokenId || !chain) return;
+      const client = getPublicClient(chain);
+      const marketplaceV3 = getContractAddress("MarketplaceV3", chain.id);
+      if (!marketplaceV3) return;
+      const logs = (await client.getContractEvents({
+        address: marketplaceV3,
+        abi: MarketplaceV3Abi,
+        eventName: "NewOffer",
+        args: {
+          assetContract: nftContract,
+        },
+        fromBlock: BigInt(5079109),
+      })) as any;
+
+      if (logs.length > 0) {
+        const totalLength = logs.length;
+        const start = logs[0].args.offer.offerId;
+        const end = logs[totalLength - 1].args.offer.offerId;
+        const offerData = await client.readContract({
+          address: marketplaceV3,
+          abi: MarketplaceV3Abi,
+          functionName: "getAllValidOffers", //getAllOffers
+          args: [start, end],
+        });
+        console.log("offerData", offerData);
+
+        const results = (offerData as unknown as Offer[]).filter((offer) => {
+          return Number(offer.tokenId) === Number(tokenId);
+        });
+        if (results.length > 0) {
+          setOffers(results[0]);
+        }
+      } else {
+        setOffers(undefined);
+      }
+    };
+    fetchCreateListing();
+    fetchOffers();
   }, [nftContract, tokenId, chain]);
 
   const { data: listingData } = useReadContracts({
@@ -85,6 +134,7 @@ export default function Buy({
           tokenId={tokenId}
           metadata={metadata}
           className="w-full h-[45px] rounded"
+          handleReFetch={handleReFetch}
         />
       </div>
     );
@@ -106,7 +156,18 @@ export default function Buy({
                 : formatEther(listing.pricePerToken)}
               {symbol?.result ? symbol.result : "ETH"}
             </a>
-            <a className="text-[12px] pb-1">$ 77,777</a>
+            <a className="text-[12px] pb-1">
+              ${" "}
+              {decimals?.result
+                ? (
+                    Number(
+                      formatUnits(listing.pricePerToken, decimals.result)
+                    ) * 3000
+                  ).toFixed(2)
+                : (Number(formatEther(listing.pricePerToken)) * 3000).toFixed(
+                    2
+                  )}
+            </a>
           </div>
         </div>
         <div className="flex gap-5">
@@ -116,6 +177,7 @@ export default function Buy({
             tokenId={tokenId}
             metadata={metadata}
             className="w-[47%] h-[45px] rounded"
+            handleReFetch={handleReFetch}
           />
         </div>
       </div>

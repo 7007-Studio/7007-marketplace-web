@@ -1,8 +1,13 @@
 "use client";
 
 import { RefObject, useEffect, useRef, useState } from "react";
-import { Address, formatEther, parseEther } from "viem";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { Address, formatEther, parseEther, erc20Abi } from "viem";
+import {
+  useAccount,
+  useReadContracts,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { NATIVE_TOKEN_ADDRESS } from "@/constants";
 import { getContractAddress } from "@/helpers";
@@ -27,11 +32,13 @@ export default function OfferButton({
   tokenId,
   className,
   metadata,
+  handleReFetch,
 }: {
   nftContract: Address;
   tokenId: string;
   className?: string;
   metadata: Metadata;
+  handleReFetch: () => void;
 }) {
   const modelRef = useRef<HTMLDialogElement>(null);
   const [offerInitialized, setOfferInitialized] = useState(false);
@@ -40,6 +47,8 @@ export default function OfferButton({
   const { openConnectModal } = useConnectModal();
   const { writeContract: offerNft, data: offerNftTx } =
     useWriteMarketplaceV3MakeOffer();
+  const [approved, setApproved] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
   const offerResult = useWaitForTransactionReceipt({
     hash: offerNftTx,
   });
@@ -63,14 +72,22 @@ export default function OfferButton({
         ),
       });
     } else if (valueName === "totalPrice") {
+      const numberValue = Number(value);
+      if (isNaN(numberValue)) return;
       setArgs({
         ...args,
         totalPrice: parseEther(value),
       });
     }
   };
+  const { writeContract } = useWriteContract();
 
-  const makeOffer = () => {
+  const { writeContract: approve, data: approveData } = useWriteContract();
+  const approveResult = useWaitForTransactionReceipt({
+    hash: approveData,
+  });
+
+  const makeOffer = async () => {
     console.debug("makeOffer button clicked");
     if (!connectedWallet) {
       openConnectModal?.();
@@ -79,28 +96,61 @@ export default function OfferButton({
 
     const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
     if (!marketplaceV3) return;
-
-    setOfferInitialized(true);
-
-    console.debug(args);
-    offerNft(
-      {
-        address: marketplaceV3,
-        args: [args],
-      },
-      {
-        onError(error: any) {
-          console.error("offer Nft error", error);
-          setOfferInitialized(false);
+    if (!approved) {
+      setApproveLoading(true);
+      setApproved(true);
+      approve({
+        address: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92",
+        abi: erc20Abi,
+        functionName: "approve",
+        args: [marketplaceV3, args.totalPrice],
+      });
+    } else {
+      setOfferInitialized(true);
+      console.debug(args);
+      offerNft(
+        {
+          address: marketplaceV3,
+          args: [args],
         },
-      }
-    );
+        {
+          onError(error: any) {
+            console.error("offer Nft error", error);
+            setOfferInitialized(false);
+          },
+        }
+      );
+    }
   };
+  const resetData = () => {
+    setArgs({
+      assetContract: nftContract,
+      tokenId: BigInt(tokenId),
+      quantity: 1n,
+      currency: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92", // sepolia WETH
+      totalPrice: 0n,
+      expirationTimestamp: 0n,
+    });
+  };
+  useEffect(() => {
+    console.debug("approveResult changed");
+    if (approveResult.isSuccess) {
+      console.log("approveResult.isSuccess");
+      setApproveLoading(false);
+    } else if (approveResult.isError) {
+      console.log("approveResult.isError");
+      setApproveLoading(false);
+      setApproved(false);
+    }
+  }, [approveResult.isSuccess]);
+
   useEffect(() => {
     console.debug("offerResult changed");
     if (offerResult.isSuccess) {
       setIsOffered(true);
       setOfferInitialized(false);
+      resetData();
+      handleReFetch();
     }
   }, [offerResult.isSuccess]);
 
@@ -124,7 +174,10 @@ export default function OfferButton({
         <div className="modal-box max-w-[424px] bg-white text-black">
           <button
             className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
-            onClick={() => modelRef.current?.close()}
+            onClick={() => {
+              resetData();
+              modelRef.current?.close();
+            }}
           >
             ✕
           </button>
@@ -148,7 +201,7 @@ export default function OfferButton({
                 <div>
                   <div className="text-sm pt-2">Listing price</div>
                   <div className="text-lg">
-                    {formatEther(args.totalPrice)} ETH
+                    {formatEther(args.totalPrice)} WETH
                   </div>
                 </div>
               </div>
@@ -183,13 +236,15 @@ export default function OfferButton({
                 {formatEther(args.totalPrice)} ETH
               </div>
               <button
-                disabled={offerInitialized}
+                disabled={offerInitialized || approveLoading}
                 className="btn btn-primary w-full"
                 onClick={() => {
                   makeOffer();
                 }}
               >
-                {offerInitialized ? (
+                {!approved ? (
+                  "Approve"
+                ) : approveLoading || offerInitialized ? (
                   <>
                     <span className="loading loading-spinner"></span>
                     loading
