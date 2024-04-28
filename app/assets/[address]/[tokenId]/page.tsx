@@ -26,6 +26,8 @@ import * as Player from "@livepeer/react/player";
 import { useListingModal } from "@/utils/modalProvider";
 import Image from "next/image";
 import CancelOfferButton from "@/components/cancelOffer-button";
+import AcceptOfferButton from "@/components/acceptOffer-button";
+import CancelListingButton from "@/components/cancelListing-button";
 
 export default function Detail() {
   const params = useParams<{ address: string; tokenId: string }>();
@@ -367,7 +369,7 @@ export default function Detail() {
                 listings
               </div>
               <div className="w-full h-full flex flex-col gap-6 px-5">
-                <div className="w-full grid grid-cols-5 gap-5 pt-7 pb-5 justify-items-center items-center content-center border-b border-grey">
+                <div className="w-full grid grid-cols-6 gap-5 pt-7 pb-5 justify-items-center items-center content-center border-b border-grey">
                   <a className="text-sm">price</a>
                   <a className="text-sm">use price</a>
                   <a className="text-sm">quantity</a>
@@ -377,7 +379,7 @@ export default function Detail() {
                 {listing &&
                   listing?.map((list, index) => (
                     <div
-                      className="w-full grid grid-cols-5 gap-5 pb-4 justify-items-center content-center border-b border-grey"
+                      className="w-full grid grid-cols-6 gap-5 pb-4 justify-items-center content-center border-b border-grey"
                       key={index}
                     >
                       <a className="">{formatEther(list.pricePerToken)} ETH</a>
@@ -390,8 +392,17 @@ export default function Detail() {
                       <a className="">{list.quantity.toString()}</a>
                       <a className="">31% below</a>
                       <a className="text-blue">
-                        {concatAddress(list.listingCreator)}
+                        {connectedWallet &&
+                        connectedWallet === list.listingCreator
+                          ? "You"
+                          : concatAddress(list.listingCreator)}
                       </a>
+                      {list.listingCreator === connectedWallet && (
+                        <CancelListingButton
+                          listingId={list.listingId.toString()}
+                          handleReFetch={handleReFetch}
+                        />
+                      )}
                     </div>
                   ))}
               </div>
@@ -424,15 +435,19 @@ export default function Detail() {
                           ? "You"
                           : concatAddress(offer.offeror)}
                       </a>
-                      <a>
-                        {connectedWallet &&
-                          connectedWallet === offer.offeror && (
-                            <CancelOfferButton
-                              offerId={offer.offerId.toString()}
-                              handleReFetch={handleReFetch}
-                            />
-                          )}
-                      </a>
+                      {connectedWallet && connectedWallet === offer.offeror && (
+                        <CancelOfferButton
+                          offerId={offer.offerId.toString()}
+                          handleReFetch={handleReFetch}
+                        />
+                      )}
+                      {connectedWallet &&
+                        connectedWallet === ownerOf?.result && (
+                          <AcceptOfferButton
+                            offerId={offer.offerId.toString()}
+                            handleReFetch={handleReFetch}
+                          />
+                        )}
                     </div>
                   ))}
               </div>
