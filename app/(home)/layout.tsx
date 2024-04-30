@@ -1,13 +1,40 @@
+"use client";
 import Tabs from "@/components/ui/tabs";
 import { ModelIndex } from "@/constants";
+import { ModelList } from "@/types";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function HomeLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [modelList, setModelList] = useState<ModelList[]>([]);
+  const handleFetchData = async () => {
+    try {
+      const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
+
+      const response = await axios.get(apiUrl, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = response.data;
+      const filteredData = data.filter((item: any) => item.status === "Done");
+
+      setModelList(filteredData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchData();
+  }, []);
   return (
     <>
       <div className="h-[50vh] flex flex-col relative items-center justify-center gap-5">
@@ -19,8 +46,13 @@ export default function HomeLayout({
           className="h-full w-full absolute top-0 left-0"
         />
         <p className="text-[30px] font-bold z-10">Model STATS Banner example</p>
+        {/* TODO: 寫死link route to stable diff */}
         <Link
-          href={`/stats`}
+          href={
+            modelList.length > 0
+              ? `/collection/${modelList[0].id}&${modelList[0].modelAuthorID}`
+              : "/collection"
+          }
           className="border bg-black/40 h-[50px] w-[248px] flex items-center justify-center rounded-3xl z-10 text-white/80 hover:text-white/60 cursor-pointer"
         >
           Mint Now

@@ -236,17 +236,18 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   }, [nftContract, isErc721, tokenURI, isErc1155, uri]);
 
   const { showListingModal } = useListingModal();
-
   return (
     <Card
       className={`w-[300px] h-full transition-all ${hover ? "drop-shadow-card" : ""}`}
     >
-      {listing && !isOwner && (
-        <div className="h-[38px] px-[18px] flex items-center justify-between">
-          <a className="text-white/40">NOV 012</a>
-          <a className="text-sm">Model name</a>
-        </div>
-      )}
+      <div className="h-[38px] px-[18px] flex items-center justify-between">
+        <a className="text-white/40">NOV 012</a>
+        <a className="text-sm">
+          {metadata &&
+            metadata.attributes &&
+            metadata.attributes.find((a) => a.trait_type === "model")?.value}
+        </a>
+      </div>
       <div
         className="hover:cursor-pointer flex flex-col w-full h-full relative"
         onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}

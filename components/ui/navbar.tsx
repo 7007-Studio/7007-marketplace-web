@@ -30,11 +30,11 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="flex-none gap-[35px] hidden md:inline-flex">
-          <CiSearch
+          {/* <CiSearch
             size="20"
             color="white"
             className="mr-[15px] opacity-60 cursor-pointer"
-          />
+          /> */}
           {/* <Link
             href="/modelTokens/dashboard"
             className="cursor-pointer font-bold text-base text-white/60 hover:text-white/30"

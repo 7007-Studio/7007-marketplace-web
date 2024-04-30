@@ -258,7 +258,7 @@ export default function Detail() {
                 handleReFetch={handleReFetch}
               />
             )}
-            <div className="relative w-full">
+            {/* <div className="relative w-full">
               <input
                 type="text"
                 placeholder="prompt"
@@ -268,7 +268,7 @@ export default function Detail() {
                 <div className="bg-white/40 h-full w-[1px]" />
                 <a>remix</a>
               </div>
-            </div>
+            </div> */}
             {/* {chain && nftContract && tokenId && connectedWallet && (
               <SPIntegration
                 chain={chain}

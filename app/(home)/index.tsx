@@ -20,6 +20,7 @@ import "swiper/css/navigation";
 import Image from "next/image";
 import axios from "axios";
 import { ModelList } from "@/types";
+import { useRouter } from "next/navigation";
 
 function HomeModel({ windowSize }: { windowSize: number }) {
   const swiperRef = useRef<any>(null);
@@ -31,9 +32,8 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   const { setModel } = useModelInfoStore();
   const [selector1, setSelector1] = useState<SelectorEntry[]>([
     { id: "1", label: "All", selected: true },
+    { id: "3", label: "text-to-image", selected: false },
     { id: "2", label: "text-to-text", selected: false },
-    { id: "3", label: "text-to-music", selected: false },
-    { id: "4", label: "t2v", selected: false },
   ]);
 
   const handleSelector1 = (id: string) => {
@@ -157,6 +157,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   );
 }
 function Rank() {
+  const router = useRouter();
   const [type, setType] = useState([
     { id: "1", label: "Trending", selected: true },
     { id: "2", label: "Top", selected: false },
@@ -189,7 +190,33 @@ function Rank() {
       })
     );
   };
+  const { setModel } = useModelInfoStore();
+  const handleModelClick = (item: any) => {
+    setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
+  };
+  const [modelList, setModelList] = useState<ModelList[]>([]);
+  const handleFetchData = async () => {
+    try {
+      const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
 
+      const response = await axios.get(apiUrl, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = response.data;
+      const filteredData = data.filter((item: any) => item.status === "Done");
+
+      setModelList(filteredData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchData();
+  }, []);
   return (
     <div className="flex flex-col w-full items-center gap-[72px]">
       <div className="w-[75%] flex items-center gap-5">
@@ -225,9 +252,10 @@ function Rank() {
           ))}
         </div>
       </div>
+      {/* TODO:style hardcode */}
       <div className="flex max-w-[85%] gap-5 w-full">
-        <div className="w-full flex flex-col h-96 border border-white rounded-lg">
-          <div className="h-1/5 w-full flex items-center border-b border-white text-sm font-bold px-4">
+        <div className="w-[48%] flex flex-col h-full border border-white rounded-lg">
+          <div className="h-16 w-full flex items-center border-b border-white text-sm font-bold px-4">
             <div className="w-[8%] flex items-center justify-center">Rank</div>
             <div className="w-[40%] flex items-center justify-center">
               model
@@ -242,24 +270,33 @@ function Rank() {
               quantity
             </div>
           </div>
-          <div className="h-4/5 w-full flex items-start border-b border-white px-4 py-9">
-            <div className="w-[8%] flex items-center justify-center text-lg">
-              1
+          {modelList.slice(0, 5).map((item, index) => (
+            <div
+              key={index}
+              className="h-4/5 w-full flex items-start border-b border-white px-4 py-9 cursor-pointer hover:bg-white/10 transition-all"
+              onClick={() => {
+                handleModelClick(item);
+                router.push(`/collection/${item.id}&${item.modelAuthorID}`);
+              }}
+            >
+              <div className="w-[8%] flex items-center justify-center text-lg">
+                {index + 1}
+              </div>
+              <div className="w-[40%] flex items-center justify-center text-base font-bold">
+                {item.modelName}
+              </div>
+              <div className="w-[23%] flex items-center justify-center">
+                0.0007 ETH
+              </div>
+              <div className="w-[17%] flex items-center justify-center">
+                7 ETH
+              </div>
+              <div className="w-[12%] flex items-center justify-center">7</div>
             </div>
-            <div className="w-[40%] flex items-center justify-center text-base font-bold">
-              Stable diffusion
-            </div>
-            <div className="w-[23%] flex items-center justify-center">
-              0.0007 ETH
-            </div>
-            <div className="w-[17%] flex items-center justify-center">
-              7 ETH
-            </div>
-            <div className="w-[12%] flex items-center justify-center">7</div>
-          </div>
+          ))}
         </div>
-        {/* <div className="w-[48%] flex flex-col h-96 border border-white rounded-lg">
-          <div className="h-1/5 w-full flex items-center border-b border-white text-sm font-bold px-4">
+        <div className="w-[48%] flex flex-col h-full border border-white rounded-lg">
+          <div className="h-16 w-full flex items-center border-b border-white text-sm font-bold px-4">
             <div className="w-[8%] flex items-center justify-center">Rank</div>
             <div className="w-[40%] flex items-center justify-center">
               model
@@ -274,61 +311,39 @@ function Rank() {
               quantity
             </div>
           </div>
-          <div className="h-4/5 w-full flex items-start border-b border-white px-4 py-9">
-            <div className="w-[8%] flex items-center justify-center text-lg">
-              1
+          {modelList.slice(5, 10).map((item, index) => (
+            <div
+              key={index}
+              className="h-4/5 w-full flex items-start border-b border-white px-4 py-9 cursor-pointer hover:bg-white/10 transition-all"
+              onClick={() => {
+                handleModelClick(item);
+                router.push(`/collection/${item.id}&${item.modelAuthorID}`);
+              }}
+            >
+              <div className="w-[8%] flex items-center justify-center text-lg">
+                {index + 6}
+              </div>
+              <div className="w-[40%] flex items-center justify-center text-base font-bold">
+                {item.modelName}
+              </div>
+              <div className="w-[23%] flex items-center justify-center">
+                0.0007 ETH
+              </div>
+              <div className="w-[17%] flex items-center justify-center">
+                7 ETH
+              </div>
+              <div className="w-[12%] flex items-center justify-center">7</div>
             </div>
-            <div className="w-[40%] flex items-center justify-center text-base font-bold">
-              Model name
-            </div>
-            <div className="w-[23%] flex items-center justify-center">
-              0.0007 ETH
-            </div>
-            <div className="w-[17%] flex items-center justify-center">
-              7 ETH
-            </div>
-            <div className="w-[12%] flex items-center justify-center">7</div>
-          </div>
-        </div> */}
-        {/* <div className="w-[48%] flex flex-col h-96 border border-white rounded-lg">
-          <div className="h-1/5 w-full flex items-center border-b border-white text-sm font-bold px-4">
-            <div className="w-[8%] flex items-center justify-center">Rank</div>
-            <div className="w-[40%] flex items-center justify-center">
-              model
-            </div>
-            <div className="w-[23%] flex items-center justify-center">
-              floor price
-            </div>
-            <div className="w-[17%] flex items-center justify-center">
-              volume
-            </div>
-            <div className="w-[12%] flex items-center justify-center">
-              quantity
-            </div>
-          </div>
-          <div className="h-4/5 w-full flex items-start border-b border-white px-4 py-9">
-            <div className="w-[8%] flex items-center justify-center text-lg">
-              6
-            </div>
-            <div className="w-[40%] flex items-center justify-center text-base font-bold">
-              Model name
-            </div>
-            <div className="w-[23%] flex items-center justify-center">
-              0.0007 ETH
-            </div>
-            <div className="w-[17%] flex items-center justify-center">
-              7 ETH
-            </div>
-            <div className="w-[12%] flex items-center justify-center">7</div>
-          </div>
-        </div> */}
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 function Ora({ windowSize }: { windowSize: number }) {
+  // TODO: 改成顯示有在 On chain AI oracle 上的模型
   const [type, setType] = useState([
-    { id: "1", label: "ora protocol verified", selected: true },
+    { id: "1", label: "OAO verified", selected: true },
     { id: "", label: "", selected: false },
     { id: "", label: "", selected: false },
     { id: "", label: "", selected: false },
@@ -503,10 +518,10 @@ const HomePage = () => {
   return (
     <div className="h-full w-full flex justify-center flex-col gap-[150px] items-center pt-[150px]">
       <HomeModel windowSize={windowSize} />
-      <Rank />
+      {/* <Rank /> */}
       <Ora windowSize={windowSize} />
-      <Going windowSize={windowSize} />
-      <Trending windowSize={windowSize} />
+      {/* <Going windowSize={windowSize} /> */}
+      {/* <Trending windowSize={windowSize} /> */}
     </div>
   );
 };
