@@ -91,7 +91,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
       {(nftContract && (
         <div className="relative hidden h-full w-full transition-all lg:flex">
           <Swiper
-            slidesPerView={windowSize > 1536 ? 4 : windowSize > 1280 ? 3 : 2}
+            slidesPerView={windowSize > 1600 ? 5 : windowSize > 1280 ? 4 : 3}
             spaceBetween={25}
             modules={[Pagination]}
             className="h-full w-full max-w-[80%] cursor-grab flex justify-center"
@@ -104,20 +104,8 @@ function HomeModel({ windowSize }: { windowSize: number }) {
             }}
           >
             {taskStatus.map((item: ModelList, index) => (
-              <SwiperSlide key={index}>
-                <div className="w-full flex justify-center">
-                  {/* <ModelCard 
-                    modelIndex={index}
-                  /> */}
-                  <div onClick={() => handleModelClick(item)}>
-                    <ModelCard modelIndex={ModelIndex} modelInfo={item} />
-                  </div>
-                  {/* <NFTCard
-                    key={`${nftContract}-${id}`}
-                    nftContract={nftContract}
-                    tokenId={BigInt(id)}
-                  /> */}
-                </div>
+              <SwiperSlide key={index} onClick={() => handleModelClick(item)}>
+                <ModelCard modelIndex={ModelIndex} modelInfo={item} />
               </SwiperSlide>
             )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
           </Swiper>
@@ -379,7 +367,7 @@ function Ora({ windowSize }: { windowSize: number }) {
       {(nftContract && (
         <div className="relative hidden h-full w-full transition-all lg:flex">
           <Swiper
-            slidesPerView={windowSize > 1536 ? 4 : windowSize > 1280 ? 3 : 2}
+            slidesPerView={windowSize > 1600 ? 5 : windowSize > 1280 ? 4 : 3}
             spaceBetween={25}
             modules={[Pagination]}
             className="h-full w-full max-w-[80%] cursor-grab"

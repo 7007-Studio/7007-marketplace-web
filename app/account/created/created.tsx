@@ -37,9 +37,10 @@ const Collected = () => {
       setTokenIds(
         logs
           .filter(
-            (log) => (log.args as { tokenId?: string }).tokenId !== undefined
+            (log: any) =>
+              (log.args as { tokenId?: string }).tokenId !== undefined
           )
-          .map((log) => {
+          .map((log: any) => {
             const args = log.args as { tokenId: string };
             return BigInt(args.tokenId);
           })

@@ -29,7 +29,7 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelIndex, modelInfo }) => {
   // });
 
   return (
-    <Card className="w-[300px] max-h-[390px] h-[390px]">
+    <Card className="w-[258px] max-h-[390px] h-[390px]">
       <div
         className="cursor-pointer h-full"
         onClick={() =>

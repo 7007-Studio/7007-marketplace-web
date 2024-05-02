@@ -13,10 +13,12 @@ export default function BuyButton({
   listing,
   hover,
   className,
+  handleReFetch,
 }: {
   listing: Listing;
   hover?: boolean;
   className?: string;
+  handleReFetch?: () => void;
 }) {
   const [buyInitialized, setBuyInitialized] = useState(false);
 
@@ -71,6 +73,7 @@ export default function BuyButton({
     console.debug("buyResult changed");
     if (buyResult.isSuccess) {
       setBuyInitialized(false);
+      handleReFetch ? handleReFetch() : null;
     }
   }, [buyResult.isSuccess]);
 
@@ -78,7 +81,7 @@ export default function BuyButton({
     <button
       onClick={(e) => buy(e)}
       disabled={buyInitialized}
-      className={`z-20 bg-white text-black font-bold transition-all flex justify-center items-center ${className}`}
+      className={`z-20 bg-white text-black font-bold transition-all flex justify-center items-center p-1 rounded ${className}`}
     >
       {buyInitialized ? (
         <>

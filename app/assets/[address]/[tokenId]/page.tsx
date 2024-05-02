@@ -11,12 +11,9 @@ import {
 } from "viem";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
 import { aigcAbi } from "@/generated";
 import { Listing, Metadata, Offer } from "@/types";
 import { concatAddress, getContractAddress, openseaUrl } from "@/helpers";
-import { getPublicClient } from "@/client";
-import { ListingNFT } from "@/components/modal/listingNFTModal";
 import Buy from "./buy";
 import SPIntegration from "./sp-integration";
 import RemixModal from "@/components/modal/remixModal";
@@ -28,6 +25,12 @@ import Image from "next/image";
 import CancelOfferButton from "@/components/cancelOffer-button";
 import AcceptOfferButton from "@/components/acceptOffer-button";
 import CancelListingButton from "@/components/cancelListing-button";
+import useValidListings from "@/hooks/useValidListings";
+import useAllListings from "@/hooks/useAllListings";
+import useAllOffers from "@/hooks/useAllOffers";
+import useValidOffers from "@/hooks/useValidOffers";
+import { ListingType } from "@/enums/ListingType";
+import BuyButton from "@/components/buy-button";
 
 export default function Detail() {
   const params = useParams<{ address: string; tokenId: string }>();
@@ -38,93 +41,36 @@ export default function Detail() {
   const { address: connectedWallet, chain } = useAccount();
   const [metadata, setMetadata] = useState<Metadata>();
   const [animationUrl, setAnimationUrl] = useState<string>();
-  const [listing, setListing] = useState<Listing[]>();
-  const [offers, setOffers] = useState<Offer[]>();
   const [reFetch, setReFetch] = useState(false);
+  const [ETHPrice, setETHPrice] = useState<string>("");
+  const { listings } = useAllListings({
+    chainId: chain?.id,
+    tokenId: Number(tokenId),
+  });
+  const { offers } = useValidOffers({
+    chainId: chain?.id,
+    tokenId: Number(tokenId),
+  });
   const handleReFetch = () => {
     setReFetch(!reFetch);
   };
-
+  const getETHUSDPrice = async () => {
+    const url = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT";
+    try {
+      const res = await axios.get(url);
+      console.log("res", res);
+      if (res.status !== 200) {
+        throw new Error("Failed to fetch price");
+      }
+      const ethPrice = Number(res.data.price).toFixed(2);
+      setETHPrice(ethPrice);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const fetchCreateListing = async () => {
-      if (!nftContract || !tokenId || !chain) return;
-      const client = getPublicClient(chain);
-      const marketplaceV3 = getContractAddress("MarketplaceV3", chain.id);
-      if (!marketplaceV3) return;
-      const logs = (await client.getContractEvents({
-        address: marketplaceV3,
-        abi: MarketplaceV3Abi,
-        eventName: "NewListing",
-        args: {
-          assetContract: nftContract,
-        },
-        fromBlock: BigInt(5079109),
-      })) as any;
-      if (logs.length > 0) {
-        const totalLength = logs.length - 1;
-        const start = logs[0].args.listing.listingId;
-        const end = logs[totalLength].args.listing.listingId;
-        const allListings = await client.readContract({
-          address: marketplaceV3,
-          abi: MarketplaceV3Abi,
-          functionName: "getAllListings",
-          args: [start, end],
-        });
-
-        const results = (allListings as unknown as Listing[]).filter(
-          (listing) => {
-            const currentTimestamp = new Date().getTime();
-            return (
-              Number(listing.tokenId) === Number(tokenId) &&
-              Number(listing.endTimestamp) * 1000 > currentTimestamp
-            );
-          }
-        );
-        if (results.length > 0) {
-          setListing(results);
-        }
-      } else {
-        setListing(undefined);
-      }
-    };
-    const fetchOffers = async () => {
-      if (!nftContract || !tokenId || !chain) return;
-      const client = getPublicClient(chain);
-      const marketplaceV3 = getContractAddress("MarketplaceV3", chain.id);
-      if (!marketplaceV3) return;
-      const logs = (await client.getContractEvents({
-        address: marketplaceV3,
-        abi: MarketplaceV3Abi,
-        eventName: "NewOffer",
-        args: {
-          assetContract: nftContract,
-        },
-        fromBlock: BigInt(5079109),
-      })) as any;
-
-      if (logs.length > 0) {
-        const totalLength = logs.length;
-        const start = logs[0].args.offer.offerId;
-        const end = logs[totalLength - 1].args.offer.offerId;
-        const allOffer = await client.readContract({
-          address: marketplaceV3,
-          abi: MarketplaceV3Abi,
-          functionName: "getAllValidOffers", //getAllOffers
-          args: [start, end],
-        });
-        const results = (allOffer as unknown as Offer[]).filter((offer) => {
-          return Number(offer.tokenId) === Number(tokenId);
-        });
-        if (results.length > 0) {
-          setOffers(results);
-        }
-      } else {
-        setOffers(undefined);
-      }
-    };
-    fetchCreateListing();
-    fetchOffers();
-  }, [nftContract, tokenId, chain, reFetch]);
+    getETHUSDPrice();
+  }, []);
 
   // read contracts
   const aigcContractConfig = { address: nftContract as Address, abi: aigcAbi };
@@ -180,6 +126,25 @@ export default function Detail() {
     ownerOf?.result &&
     connectedWallet &&
     isAddressEqual(ownerOf?.result, connectedWallet as Address);
+  const listingAction = (list: Listing) => {
+    if (list.status === ListingType.CANCELLED) {
+      return <a className="text-sm">Cancelled</a>;
+    } else if (list.status === ListingType.COMPLETED) {
+      return <a className="text-sm">Completed</a>;
+    } else if (list.status === ListingType.CREATED) {
+      if (list.listingCreator === connectedWallet) {
+        return (
+          <CancelListingButton
+            listingId={list.listingId.toString()}
+            handleReFetch={handleReFetch}
+          />
+        );
+      } else {
+        return <BuyButton listing={list} handleReFetch={handleReFetch} />;
+      }
+    }
+  };
+
   return (
     <>
       <div className="flex items-center flex-col h-full gap-[50px] mt-[180px] relative px-10">
@@ -346,7 +311,7 @@ export default function Detail() {
                 </div>
                 <div className="w-full flex justify-between gap-10">
                   <a>chain</a>
-                  <a>ethereum</a>
+                  <a>{chain?.name}</a>
                 </div>
                 <div className="w-full flex justify-between gap-10">
                   <a>last updated</a>
@@ -356,10 +321,25 @@ export default function Detail() {
                   <a>Creator Earnings</a>
                   <a>5%</a>
                 </div>
-                <div className="w-full flex justify-between gap-10">
-                  <a>attribute</a>
-                  <a>base model</a>
-                </div>
+                {metadata?.attributes?.map((attr) => (
+                  <div
+                    key={attr.trait_type}
+                    className="w-full flex justify-between gap-10"
+                  >
+                    <a>{attr.trait_type}</a>
+                    {attr.trait_type === "music" ? (
+                      <a
+                        href={attr.value}
+                        className="text-blue overflow-hidden"
+                        target="_blank"
+                      >
+                        View on IPFS
+                      </a>
+                    ) : (
+                      <a>{attr.value}</a>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -376,35 +356,36 @@ export default function Detail() {
                   <a className="text-sm text-center">floor difference</a>
                   <a className="text-sm">from</a>
                 </div>
-                {listing &&
-                  listing?.map((list, index) => (
-                    <div
-                      className="w-full grid grid-cols-6 gap-5 pb-4 justify-items-center content-center border-b border-grey"
-                      key={index}
-                    >
-                      <a className="">{formatEther(list.pricePerToken)} ETH</a>
-                      <a className="">
-                        ${" "}
-                        {(
-                          Number(formatEther(list.pricePerToken)) * 3000
-                        ).toFixed(2)}
-                      </a>
-                      <a className="">{list.quantity.toString()}</a>
-                      <a className="">31% below</a>
-                      <a className="text-blue">
-                        {connectedWallet &&
-                        connectedWallet === list.listingCreator
-                          ? "You"
-                          : concatAddress(list.listingCreator)}
-                      </a>
-                      {list.listingCreator === connectedWallet && (
-                        <CancelListingButton
-                          listingId={list.listingId.toString()}
-                          handleReFetch={handleReFetch}
-                        />
-                      )}
-                    </div>
-                  ))}
+                {listings &&
+                  listings
+                    .slice()
+                    .reverse()
+                    .map((list: Listing, index: number) => (
+                      <div
+                        className="w-full grid grid-cols-6 gap-5 pb-4 justify-items-center text-center items-center content-center border-b border-grey"
+                        key={index}
+                      >
+                        <a className="">
+                          {formatEther(list.pricePerToken)} ETH
+                        </a>
+                        <a className="">
+                          ${" "}
+                          {(
+                            Number(formatEther(list.pricePerToken)) *
+                            Number(ETHPrice)
+                          ).toFixed(2)}
+                        </a>
+                        <a className="">{list.quantity.toString()}</a>
+                        <a className="">31% below</a>
+                        <a className="text-blue">
+                          {connectedWallet &&
+                          connectedWallet === list.listingCreator
+                            ? "You"
+                            : concatAddress(list.listingCreator)}
+                        </a>
+                        {listingAction(list)}
+                      </div>
+                    ))}
               </div>
             </div>
             <div className="border border-white w-full h-full rounded-md">
@@ -412,7 +393,7 @@ export default function Detail() {
                 offers
               </div>
               <div className="w-full h-full flex flex-col gap-6 px-5">
-                {/* filter offers to find if offeror = account */}
+                {/* TODO:filter offers to find if offeror = account */}
                 <div
                   className={`w-full gap-5 pt-7 pb-5 justify-items-center content-center border-b border-grey grid grid-cols-5`}
                 >
@@ -422,9 +403,9 @@ export default function Detail() {
                   <a className="text-sm">from</a>
                 </div>
                 {offers &&
-                  offers.map((offer, index) => (
+                  offers.map((offer: Offer, index: number) => (
                     <div
-                      className="w-full grid grid-cols-5 gap-5 pb-4 justify-items-center content-center border-b border-grey"
+                      className="w-full grid grid-cols-5 gap-5 pb-4 justify-items-center text-center items-center content-center border-b border-grey"
                       key={index}
                     >
                       <a className="">{formatEther(offer.totalPrice)} ETH</a>

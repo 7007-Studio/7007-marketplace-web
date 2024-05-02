@@ -20,9 +20,7 @@ const PromptStep = ({ modelIndex }: { modelIndex: string }) => {
         throw new Error("Failed to fetch");
       }
       const data = response.data;
-      console.log("fetchModelDetails", data);
       setModelInfo(data);
-      console.log("data", data);
     } catch (error) {
       console.error("Error:", error);
     }

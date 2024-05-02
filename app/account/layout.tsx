@@ -15,17 +15,18 @@ export default function AccountLayout({
   const { address, isConnected } = useAccount();
   const pathName = usePathname();
   const tabs = [
-    { pathnames: ["/account/collected", "/account"], label: "collected" },
-    { pathnames: ["/account/created"], label: "created" },
-    { pathnames: ["/account/listed"], label: "listed" },
-    { pathnames: ["/account/models"], label: "models" },
-    { pathnames: ["/account/offers"], label: "offers" },
-    { pathnames: ["/account/inferencing"], label: "inferencing" },
+    { pathnames: ["/account/collected", "/account"], label: "Collected" },
+    { pathnames: ["/account/created"], label: "Created" },
+    { pathnames: ["/account/listed"], label: "Listed" },
+    { pathnames: ["/account/models"], label: "Models" },
+    // { pathnames: ["/account/offers"], label: "Offers received" },
+    { pathnames: ["/account/offeror"], label: "Offers made" },
+    // { pathnames: ["/account/inferencing"], label: "inferencing" },
   ];
 
   return (
     <>
-      <div className="h-[35vh] relative border-b border-grey">
+      {/* <div className="h-[35vh] relative border-b border-grey">
         <Image
           src="/Mask group.png"
           alt="homeMask"
@@ -34,7 +35,9 @@ export default function AccountLayout({
           className="h-full w-full absolute top-0 left-0 shadow-inner"
         />
         <div className="absolute h-full w-full bg-gradient-to-b from-black/5 from-55% to-black" />
-      </div>
+      </div> */}
+      <div className="h-[90px] relative" />
+
       <div className="h-full w-full flex justify-center flex-col items-center pt-12 gap-[100px]">
         <div className="max-w-[85%] flex w-full">
           <div className="size-[200px] rounded-full overflow-hidden border">
@@ -55,10 +58,10 @@ export default function AccountLayout({
               </a>
             </div>
             <div className="flex flex-col justify-start items-end gap-10">
-              <div className="flex gap-6">
+              {/* <div className="flex gap-6">
                 <CiSettings size={40} />
                 <LuMenu size={40} />
-              </div>
+              </div> */}
               {/* <button className="border px-10 py-4 rounded text-center">
                 Claim revenue from IP licensing
               </button> */}

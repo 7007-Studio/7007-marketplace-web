@@ -5,6 +5,7 @@ import {
   useReadMarketplaceV3TotalListings,
 } from "@/generated";
 import { getContractAddress } from "@/helpers";
+import { Listing } from "@/types";
 import { Address, isAddressEqual } from "viem";
 import { sepolia } from "viem/chains";
 
@@ -19,7 +20,6 @@ const useValidListings = ({
   const { data: totalListings } = useReadMarketplaceV3TotalListings({
     address: marketplaceV3,
   });
-
   const { data: allValidListings } = useReadMarketplaceV3GetAllValidListings({
     address: marketplaceV3,
     args: [0n, totalListings ? totalListings - 1n : 0n],
@@ -29,7 +29,7 @@ const useValidListings = ({
     return { listings: allValidListings };
   }
 
-  const listings = allValidListings?.filter((l) =>
+  const listings = allValidListings?.filter((l: Listing) =>
     isAddressEqual(listingCreator, l.listingCreator)
   );
 

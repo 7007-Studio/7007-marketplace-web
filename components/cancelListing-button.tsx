@@ -72,7 +72,7 @@ export default function CancelListingButton({
     <button
       onClick={() => handelCancelListing()}
       disabled={offerInitialized}
-      className={`bg-transparent text-white flex justify-center gap-2 items-center hover:text-blue ${className}`}
+      className={`bg-transparent text-white flex justify-center gap-2 items-center ${className}`}
     >
       {offerInitialized ? (
         <>
@@ -80,7 +80,7 @@ export default function CancelListingButton({
           loading
         </>
       ) : (
-        "Cancel"
+        <a className="underline underline-offset-2 hover:text-blue">Cancel</a>
       )}
     </button>
   );

@@ -21,13 +21,13 @@ const Collection = () => {
   return (
     <div className="flex flex-col items-center w-full">
       <div className="flex w-full justify-end pt-20 pb-11">
-        <div className="w-[330px] h-[58px] flex items-center px-6 border-white border rounded-sm">
+        {/* <div className="w-[330px] h-[58px] flex items-center px-6 border-white border rounded-sm">
           <CiSearch
             size={30}
             color="white"
             className="opacity-60 cursor-pointer"
           />
-        </div>
+        </div> */}
       </div>
       {(nftContract && (
         <div className="flex flex-wrap w-full justify-items-center justify-center gap-12">

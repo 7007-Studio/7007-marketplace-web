@@ -11,6 +11,10 @@ import { ModelIndex } from "@/constants";
 import useNftContract from "@/hooks/useNftContract";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
+import { getContractAddress } from "@/helpers";
+import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
+import { Listing, Offer } from "@/types";
+import useValidListings from "@/hooks/useValidListings";
 
 const Collected = () => {
   const { address, chain } = useAccount();
@@ -18,13 +22,15 @@ const Collected = () => {
     modelIndex: ModelIndex,
     chainId: chain?.id,
   });
-  const emptyCardList = [...Array(1).keys()];
-
+  const emptyCardList = [...Array(4).keys()];
   const { data: lastTokenId } = useReadAigcTokenId({
     address: nftContract,
   });
-
   const [filteredTokenIds, setFilteredTokenIds] = useState<bigint[]>([]);
+  const { listings } = useValidListings({
+    listingCreator: address,
+    chainId: chain?.id,
+  });
 
   const tokenIds = useMemo(() => {
     const ids: number[] = [];
@@ -38,7 +44,6 @@ const Collected = () => {
 
   useEffect(() => {
     if (!nftContract || !address || !chain) return;
-
     const fetchOwner = async () => {
       const results = await getPublicClient(chain).multicall({
         contracts: tokenIds.map((id) => ({
@@ -57,7 +62,6 @@ const Collected = () => {
       }
       setFilteredTokenIds(ownedTokenIds);
     };
-
     fetchOwner();
   }, [nftContract, address, chain, tokenIds]);
 
@@ -70,6 +74,7 @@ const Collected = () => {
               key={`${nftContract}-${id}`}
               nftContract={nftContract}
               tokenId={id}
+              listing={listings?.find((l: Listing) => l.tokenId === id)}
             />
           )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
         </div>

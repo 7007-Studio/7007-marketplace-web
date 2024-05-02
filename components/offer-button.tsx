@@ -135,10 +135,8 @@ export default function OfferButton({
   useEffect(() => {
     console.debug("approveResult changed");
     if (approveResult.isSuccess) {
-      console.log("approveResult.isSuccess");
       setApproveLoading(false);
     } else if (approveResult.isError) {
-      console.log("approveResult.isError");
       setApproveLoading(false);
       setApproved(false);
     }

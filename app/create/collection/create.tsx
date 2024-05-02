@@ -9,7 +9,6 @@ import CreateInput from "@/components/input/createInput";
 import Image from "next/image";
 import ImageUploader from "./imageUploader";
 import Link from "next/link";
-import FetchImages from "./fetchImages";
 import JSZip from "jszip";
 import { useGetImageStore } from "./store";
 import { useRouter } from "next/navigation";

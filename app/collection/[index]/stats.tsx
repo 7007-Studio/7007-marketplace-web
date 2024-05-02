@@ -29,14 +29,14 @@ export default function Stats({
       name: "Owners",
       value: "8888",
     },
-    {
-      name: "sub models",
-      value: "12",
-    },
-    {
-      name: "Accumulated profit",
-      value: "500 eth",
-    },
+    // {
+    //   name: "sub models",
+    //   value: "12",
+    // },
+    // {
+    //   name: "Accumulated profit",
+    //   value: "500 eth",
+    // },
   ];
   return (
     <div className="flex flex-row w-full justify-between">

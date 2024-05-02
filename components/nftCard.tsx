@@ -24,11 +24,12 @@ import * as Player from "@livepeer/react/player";
 
 import SPLicenseRegistry from "@/abis/SPLicenseRegistry.json";
 import { useReadAigcName } from "@/generated";
-import { Listing, Metadata } from "@/types";
+import { Listing, Metadata, Offer } from "@/types";
 
 import {
   concatAddress,
   formatDaysLeft,
+  getContractAddress,
   is7007Token,
   isSPLicenseRegistry,
   openseaUrl,
@@ -37,6 +38,8 @@ import {
 import BuyButton from "@/components/buy-button";
 import Card from "@/components/ui/card";
 import { useListingModal } from "@/utils/modalProvider";
+import { getPublicClient } from "@/client";
+import { tr } from "@faker-js/faker";
 
 function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
   if (!metadata) {
@@ -103,7 +106,7 @@ export interface NFTCardProps {
 
 const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const router = useRouter();
-  const { address: connectedWallet, chainId } = useAccount();
+  const { address: connectedWallet, chainId, chain } = useAccount();
   const [hover, setHover] = useState(false);
   const [metadata, setMetadata] = useState<Metadata>();
 
@@ -182,7 +185,6 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
       ] || []
     );
   }, [erc1155Results.isFetched, erc1155Results.data]);
-
   const { data: listingData } = useReadContracts({
     contracts: [
       {
@@ -198,7 +200,6 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
     ],
   });
   const [decimals, symbol] = listingData || [];
-
   const isOwner =
     ownerOf && connectedWallet && isAddressEqual(ownerOf, connectedWallet);
 
@@ -234,15 +235,15 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
       parseURI();
     }
   }, [nftContract, isErc721, tokenURI, isErc1155, uri]);
-
   const { showListingModal } = useListingModal();
+
   return (
     <Card
-      className={`w-[300px] h-full transition-all ${hover ? "drop-shadow-card" : ""}`}
+      className={`w-[258px] h-full transition-all ${hover ? "drop-shadow-card" : ""}`}
     >
-      <div className="h-[38px] px-[18px] flex items-center justify-between">
-        <a className="text-white/40">NOV 012</a>
-        <a className="text-sm">
+      <div className="h-[38px] px-[10px] flex items-center justify-between">
+        <a className="text-white/40 text-sm">NOV {tokenId.toString()}</a>
+        <a className="text-[10px] text-end">
           {metadata &&
             metadata.attributes &&
             metadata.attributes.find((a) => a.trait_type === "model")?.value}
@@ -255,45 +256,43 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         onMouseLeave={() => setHover(false)}
       >
         <div className="relative border-y border-white bg-[#eee] pb-[100%]">
-          <NFTCoverAsset metadata={metadata} />
+          {metadata && <NFTCoverAsset metadata={metadata} />}
         </div>
-        <div className="gap-2 p-5 flex flex-col justify-between min-h-[200px]">
+        <div className="gap-2 p-5 flex flex-col justify-between min-h-[50px]">
           <div className="flex flex-col gap-2">
             <a className="text-lg font-bold">
               {metadata?.name || <Skeleton count={2} />}
             </a>
             <div className="flex-wrap text-md line-clamp-4">
-              {metadata?.description || <Skeleton count={5} />}
+              {metadata?.attributes
+                .filter((a) => a.trait_type === "prompt")
+                .map((a) => (
+                  <a key={a.value} className="">
+                    {a.value}
+                  </a>
+                )) || <Skeleton count={5} />}
             </div>
-          </div>
-          {listing && !isOwner && (
-            <div className="flex w-full justify-between gap-4 pt-2 items-end">
-              <div className="flex items-end gap-1">
-                <a className="text-[30px] leading-[90%]">
-                  {decimals?.result
-                    ? formatUnits(listing.pricePerToken, decimals.result)
-                    : formatEther(listing.pricePerToken) || <Skeleton />}
-                  {" " || <Skeleton />}
-                </a>
-                <a className="">
-                  {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
+            {listing && (
+              <div className="flex w-full justify-between gap-4 pt-2 items-end">
+                <div className="flex items-end gap-1">
+                  <a className="text-[20px]">
+                    {decimals?.result
+                      ? formatUnits(listing.pricePerToken, decimals.result)
+                      : formatEther(listing.pricePerToken) || <Skeleton />}
+                    {" " || <Skeleton />}
+                  </a>
+                  <a className="">
+                    {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
+                  </a>
+                </div>
+                <a className="opacity-40">
+                  {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
+                    <Skeleton />
+                  )}
                 </a>
               </div>
-              <a className="opacity-40">
-                {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
-                  <Skeleton />
-                )}
-                Day Left
-              </a>
-            </div>
-          )}
-
-          {/* TODO:hardcode */}
-          {isOwner && (
-            <div className="flex w-full pt-2">
-              <a className="opacity-40">Last sale 0.05 ETH</a>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* <button
             className="pt-8 flex flex-row justify-between items-center"
