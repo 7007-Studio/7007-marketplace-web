@@ -5,10 +5,7 @@ import { Address } from "viem";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { getContractAddress } from "@/helpers";
-import {
-  useWriteMarketplaceV3AcceptOffer,
-  useWriteMarketplaceV3CancelOffer,
-} from "@/generated";
+import { useWriteMarketplaceV3AcceptOffer } from "@/generated";
 
 export interface Args {
   assetContract: Address;
@@ -75,7 +72,7 @@ export default function AcceptOfferButton({
     <button
       onClick={() => handelAcceptOffer()}
       disabled={offerInitialized}
-      className={`bg-transparent text-white flex justify-center gap-2 items-center hover:text-blue ${className}`}
+      className={`bg-transparent text-white flex justify-center gap-2 items-center ${className}`}
     >
       {offerInitialized ? (
         <>
@@ -83,7 +80,7 @@ export default function AcceptOfferButton({
           loading
         </>
       ) : (
-        "Accept"
+        <a className="underline underline-offset-2 hover:text-blue">Accept</a>
       )}
     </button>
   );

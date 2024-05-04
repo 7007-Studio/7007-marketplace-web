@@ -58,7 +58,6 @@ export default function Detail() {
     const url = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT";
     try {
       const res = await axios.get(url);
-      console.log("res", res);
       if (res.status !== 200) {
         throw new Error("Failed to fetch price");
       }
@@ -92,7 +91,7 @@ export default function Detail() {
       },
     ],
   });
-
+  console.log("aigcData", aigcData);
   const [modelName, ownerOf, tokenUri] = aigcData || [];
 
   useEffect(() => {
@@ -103,6 +102,7 @@ export default function Detail() {
       const metadata = res.data;
 
       setMetadata(metadata);
+      console.log("metadata", metadata);
 
       if (metadata.animation_url) {
         setAnimationUrl(metadata.animation_url);

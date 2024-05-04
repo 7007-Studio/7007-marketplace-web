@@ -17,6 +17,7 @@ export interface AIGCContent {
 
 interface FormAIGCProps {
   nftContract: Address;
+  modelIndex: string;
 }
 
 // export default function FormAIGC({ nftContract }: FormAIGCProps) {
@@ -76,14 +77,14 @@ interface FormAIGCProps {
 //   );
 // }
 
-export default function FormAIGC({ modelIndex }: { modelIndex: string }) {
+export default function FormAIGC({ modelIndex, nftContract }: FormAIGCProps) {
   const [aigcContent, setAigcContent] = useState<AIGCContent>();
   const [mintedTokenId, setMintedTokenId] = useState<bigint>();
 
-  // const { data: name } = useReadAigcName({
-  //   address: nftContract,
-  // });
-
+  const { data: name } = useReadAigcName({
+    address: nftContract,
+  });
+  console.log("name", name);
   const { showListingModal } = useListingModal();
 
   // if (!aigcContent) {

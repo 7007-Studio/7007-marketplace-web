@@ -46,7 +46,7 @@ const PromptStep = ({ modelIndex }: { modelIndex: string }) => {
         </span>
         {modelInfo && (
           <PromptForm
-            submitText="Prompt &amp; Mint"
+            submitText="Prompt"
             modelInfo={modelInfo}
             modelID={modelID}
           />

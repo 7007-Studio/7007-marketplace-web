@@ -264,13 +264,15 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
               {metadata?.name || <Skeleton count={2} />}
             </a>
             <div className="flex-wrap text-md line-clamp-4">
-              {metadata?.attributes
-                .filter((a) => a.trait_type === "prompt")
-                .map((a) => (
-                  <a key={a.value} className="">
-                    {a.value}
-                  </a>
-                )) || <Skeleton count={5} />}
+              {(metadata &&
+                metadata.attributes &&
+                metadata.attributes
+                  .filter((a) => a.trait_type === "prompt")
+                  .map((a) => (
+                    <a key={a.value} className="">
+                      {a.value}
+                    </a>
+                  ))) || <Skeleton count={5} />}
             </div>
             {listing && (
               <div className="flex w-full justify-between gap-4 pt-2 items-end">

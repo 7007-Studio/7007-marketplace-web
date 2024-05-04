@@ -1,11 +1,16 @@
 import { useForm, SubmitHandler, DefaultValues } from "react-hook-form";
 import TextInput from "../form/textInput";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useAccount } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useRouter } from "next/navigation";
 import { ModelInfo } from "@/types";
 import axios from "axios";
+import { useWriteAigcMint } from "@/generated";
+import { ethers } from "ethers";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { getTokenURI } from "./ipfsHelper";
+import useNftContract from "@/hooks/useNftContract";
 export interface IFormAIGCInput {
   name: string;
   prompt: string;
@@ -36,14 +41,22 @@ const PromptForm = ({
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [title, setTitle] = useState();
-  const { address } = useAccount();
+  const { address, isConnected, chain } = useAccount();
   const { register, handleSubmit, formState } = useForm<IFormAIGCInput>({
     defaultValues,
   });
-  const { errors } = formState;
-  const [images, setImages] = useState([]);
-  const [task, setTask] = useState();
+  const { writeContract: mintAIGC, data: mintTx } = useWriteAigcMint();
+  const mintResult = useWaitForTransactionReceipt({
+    hash: mintTx,
+  });
 
+  const [image, setImage] = useState();
+  const { openConnectModal } = useConnectModal();
+  const [mintInitialized, setMintInitialized] = useState(false);
+  const { nftContract } = useNftContract({
+    modelIndex: 1n,
+    chainId: chain?.id,
+  });
   const handleFetchData = async () => {
     if (!address) return;
 
@@ -57,12 +70,12 @@ const PromptForm = ({
       });
 
       const data = response.data;
-      console.log("Data:", data);
-      setTask(data);
-      data.map((task: any) => {
-        fetchImages(task.requestID);
-        console.log("Task:", task);
-      });
+      const targetTask = data.filter(
+        (task: any) => task.prompt === prompt && task.seed === seed
+      );
+      console.log("Target task:", targetTask);
+      if (targetTask.length === 0) return;
+      fetchImages(targetTask[0].id);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -80,39 +93,62 @@ const PromptForm = ({
           },
         }
       );
-      console.log("Image:", image);
-      // setImages(image.data.images);
+      console.log("Image:", image.data.images[0]);
+      // setImages(image.data);
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
+  // const genImage = async () => {
+  //   setLoading(true);
+  //   if (!prompt || !seed || !address) return;
+  //   const data = JSON.stringify({
+  //     prompt: prompt,
+  //     seed: seed,
+  //     modelID: modelID,
+  //     modelAuthorID: modelInfo.modelAuthorID,
+  //   });
+  //   try {
+  //     const res = await axios.post(
+  //       "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task",
+  //       // "https://ai.7007.studio/gen",
+  //       data,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "user-id": address,
+  //         },
+  //       }
+  //     );
+  //     if (res.data.message === "Success") {
+  //       // router.push("/account/inferencing");
+  //       dialogRef.current?.showModal();
+  //       handleFetchData();
+  //     } else {
+  //       throw new Error(`Failed to get presigned URL: ${res.status}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Request error while getting presigned URL:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const genImage = async () => {
     setLoading(true);
+    if (!prompt || !seed || !address) return;
     const data = JSON.stringify({
       prompt: prompt,
       seed: seed,
-      modelID: modelID,
-      modelAuthorID: modelInfo.modelAuthorID,
     });
     try {
-      const res = await axios.post(
-        "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task",
-        // "https://ai.7007.studio/gen",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "user-id": address,
-          },
-        }
-      );
-      if (res.data.message === "Success") {
-        // router.push("/account/inferencing");
-        dialogRef.current?.showModal();
-        handleFetchData();
-      } else {
-        throw new Error(`Failed to get presigned URL: ${res.status}`);
-      }
+      const res = await axios.post("https://ai.7007.studio/gen", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setImage(res.data);
+      dialogRef.current?.showModal();
+      // handleFetchData();
     } catch (error) {
       console.error("Request error while getting presigned URL:", error);
     } finally {
@@ -122,6 +158,63 @@ const PromptForm = ({
   const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
     genImage();
   };
+
+  const onMint = async () => {
+    if (!isConnected) {
+      openConnectModal?.();
+      return;
+    }
+
+    if (
+      !title ||
+      !prompt ||
+      !seed ||
+      !image ||
+      !address ||
+      !nftContract ||
+      !modelInfo
+    ) {
+      return;
+    }
+
+    setMintInitialized(true);
+
+    const { ipfsLinkMetadata, metadata } = await getTokenURI(
+      modelInfo ? modelInfo.modelName : "Genesis Model",
+      title,
+      prompt,
+      Number(seed),
+      `https://cloudflare-ipfs.com/ipfs/${image}`
+    );
+    console.log("ipfsLinkMetadata:", ipfsLinkMetadata);
+    console.log("metadata:", metadata);
+
+    const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
+
+    mintAIGC(
+      {
+        address: nftContract,
+        args: [
+          ipfsLinkMetadata,
+          hashedPrompt,
+          "0x7465787400000000000000000000000000000000000000000000000000000000",
+          metadata?.image || "",
+        ],
+      },
+      {
+        onError(error: any) {
+          setMintInitialized(false);
+        },
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (mintResult.isSuccess) {
+      setMintInitialized(false);
+      router.push("/account/created");
+    }
+  }, [mintResult.isSuccess]);
 
   return (
     <>
@@ -202,7 +295,12 @@ const PromptForm = ({
               id="modelSeed"
               className="bg-grey h-16 pl-10"
               value={seed} // Bind the value to the state variable
-              onChange={(e: any) => setSeed(e.target.value)} // Update the input value directly
+              onChange={(e: any) => {
+                const regex = /^(0|[1-9]\d*)$/;
+                if (e.target.value === "" || regex.test(e.target.value)) {
+                  setSeed(e.target.value);
+                }
+              }} // Update the input value directly
               placeholder="Enter Seed +"
             />
           </div>
@@ -263,31 +361,41 @@ const PromptForm = ({
             </button>
           </div>
         </div>
-        <button onClick={() => dialogRef.current?.showModal()}>sasd</button>
       </form>
-      <dialog id="my_modal_2" ref={dialogRef} className="modal">
+      <dialog ref={dialogRef} className="modal">
         <div className="modal-box flex flex-col p-4 items-center gap-4">
-          {images.map((imgData, index) => (
+          {image ? (
             <img
-              key={index}
-              src={`data:image/jpeg;base64,${imgData}`}
-              alt={`Image ${index}`}
+              src={`https://cloudflare-ipfs.com/ipfs/${image}`}
+              alt="Image"
+              className="size-[500px]"
             />
-          ))}
-          <Image
-            src={
-              "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII="
-            }
-            alt="Image"
-            width={100}
-            height={100}
-          />
+          ) : (
+            <div className="flex gap-2 size-[200px] justify-center items-center">
+              <span className="loading loading-spinner text-black" />
+              <a className="text-black">loading</a>
+            </div>
+          )}
           <div className="flex justify-between w-full gap-4 h-[45px]">
-            <button className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ">
+            <button
+              className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
+              onClick={() => dialogRef.current?.close()}
+            >
               Cancel
             </button>
-            <button className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full">
-              Mint
+            <button
+              className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
+              onClick={() => onMint()}
+              disabled={mintInitialized}
+            >
+              {mintInitialized ? (
+                <div className="flex gap-2 items-center">
+                  <span className="loading loading-spinner"></span>
+                  Minting
+                </div>
+              ) : (
+                "Mint"
+              )}
             </button>
           </div>
         </div>
