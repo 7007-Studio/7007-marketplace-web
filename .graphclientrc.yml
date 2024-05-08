@@ -1,0 +1,9 @@
+sources:
+  - name: new7007
+    handler:
+      graphql:
+        endpoint: https://api.studio.thegraph.com/query/72917/7007new/v0.0.2
+
+documents:
+  - ./.graphql
+

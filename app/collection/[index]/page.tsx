@@ -10,10 +10,19 @@ import { useEffect, useState } from "react";
 import Hero from "./hero";
 import Progress from "./progress";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { getBuiltGraphSDK, GraphQueryQuery } from "@/.graphclient";
 
 export default function CollectionPage() {
   const { index } = useParams<{ index: string }>();
   const [modelInfo, setModelInfo] = useState<ModelInfo>();
+  const sdk = getBuiltGraphSDK();
+  const result = useQuery({
+    queryKey: ["GraphQuery"],
+    queryFn: () => sdk.GraphQuery(),
+  });
+  const { data, isLoading, error, refetch } = result;
+
   // const { chain } = useAccount();
   // const { nftContract } = useNftContract({
   //   modelIndex: index ? BigInt(index) : 1n,
@@ -45,8 +54,8 @@ export default function CollectionPage() {
     <div className="w-[80%]">
       <Hero modelName={modelInfo?.modelName} />
       <Progress modelIndex={index} />
-      <Stats />
-      <Collection />
+      <Stats NFTData={isLoading ? undefined : (data as GraphQueryQuery)} />
+      {/* <Collection /> */}
     </div>
   );
 }

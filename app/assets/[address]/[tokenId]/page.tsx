@@ -196,11 +196,20 @@ export default function Detail() {
           </div>
           <div className="flex flex-col w-1/2 max-w-[650px] gap-5">
             <div className="flex gap-4 items-center">
-              {modelName?.result && (
+              {metadata?.attributes && (
+                <a className="text-[30px] font-bold leading-none">
+                  {metadata?.attributes.map((attr: any) => {
+                    if (attr.trait_type === "model") {
+                      return attr.value;
+                    }
+                  })}
+                </a>
+              )}
+              {/* {modelName?.result && (
                 <a className="text-[30px] font-bold leading-none">
                   {modelName.result}
                 </a>
-              )}
+              )} */}
               <div className="bg-white/30 mb-2 text-white font-bold max-h-[24px] h-full rounded flex items-center px-4">
                 <a>text-to-text</a>
               </div>

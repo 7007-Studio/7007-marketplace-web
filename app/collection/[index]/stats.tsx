@@ -1,21 +1,38 @@
+import { GraphQueryQuery } from "@/.graphclient";
 import useReadAigcContracts from "@/hooks/useReadAigcContracts";
 import React from "react";
-import { Address, zeroAddress } from "viem";
+import { Address, formatEther, zeroAddress } from "viem";
 
 export default function Stats({
   nftContract = zeroAddress,
+  NFTData,
 }: {
   nftContract?: Address;
+  NFTData?: GraphQueryQuery;
 }) {
   const { tokenId: minted } = useReadAigcContracts({ nftContract });
+
+  //TODO: check token decimals
+  const totalVolume = NFTData?.newSales.reduce((accumulator, sale) => {
+    return accumulator + Number(formatEther(sale.totalPricePaid));
+  }, 0);
+  const floorPrice = NFTData?.newListings.reduce((minPrice, listing) => {
+    const price = Number(formatEther(listing.listing_pricePerToken));
+    return price < minPrice ? price : minPrice;
+  }, Infinity);
+
   const statItems = [
     {
       name: "Total volume",
-      value: "1000 eth",
+      value:
+        NFTData && NFTData.newSales?.length > 0
+          ? `${totalVolume?.toFixed(4)} ETH`
+          : 0,
     },
     {
       name: "Floor price",
-      value: "0.49 eth",
+      value:
+        NFTData && NFTData.newListings?.length > 0 ? `${floorPrice} ETH` : 0,
     },
     {
       name: "Total quantity",

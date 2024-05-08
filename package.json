@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build-client": "graphclient build",
+    "graphiql": "graphclient serve-dev"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -27,6 +29,7 @@
     "cryptocurrency-icons": "^0.18.1",
     "eth-rpc-errors": "^4.0.3",
     "ethers": "^6.11.1",
+    "graphql": "^16.8.1",
     "ipfs-http-client": "^60.0.1",
     "jszip": "^3.10.1",
     "livepeer": "2.0",
@@ -47,6 +50,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@graphprotocol/client-cli": "^3.0.3",
     "@types/node": "^20.11.19",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
