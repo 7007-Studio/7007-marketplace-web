@@ -6,9 +6,11 @@ import { Address, formatEther, zeroAddress } from "viem";
 export default function Stats({
   nftContract = zeroAddress,
   NFTData,
+  totalListings,
 }: {
   nftContract?: Address;
   NFTData?: GraphQueryQuery;
+  totalListings?: number;
 }) {
   const { tokenId: minted } = useReadAigcContracts({ nftContract });
 
@@ -40,7 +42,7 @@ export default function Stats({
     },
     {
       name: "Listed",
-      value: "8888",
+      value: totalListings?.toString() || "0",
     },
     {
       name: "Owners",
