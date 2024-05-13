@@ -13,10 +13,15 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { aigcAbi } from "@/generated";
 import { Listing, Metadata, Offer } from "@/types";
-import { concatAddress, getContractAddress, openseaUrl } from "@/helpers";
+import {
+  concatAddress,
+  formatDate,
+  getContractAddress,
+  openseaUrl,
+} from "@/helpers";
 import Buy from "./buy";
 import SPIntegration from "./sp-integration";
-import RemixModal from "@/components/modal/remixModal";
+// import RemixModal from "@/components/modal/remixModal";
 import { AIGCContent } from "@/components/formAIGC";
 import { getSrc } from "@livepeer/react/external";
 import * as Player from "@livepeer/react/player";
@@ -31,6 +36,7 @@ import useAllOffers from "@/hooks/useAllOffers";
 import useValidOffers from "@/hooks/useValidOffers";
 import { ListingType } from "@/enums/ListingType";
 import BuyButton from "@/components/buy-button";
+import Skeleton from "react-loading-skeleton";
 
 export default function Detail() {
   const params = useParams<{ address: string; tokenId: string }>();
@@ -46,10 +52,12 @@ export default function Detail() {
   const { listings } = useAllListings({
     chainId: chain?.id,
     tokenId: Number(tokenId),
+    assetContract: nftContract as Address,
   });
   const { offers } = useValidOffers({
     chainId: chain?.id,
     tokenId: Number(tokenId),
+    assetContract: nftContract as Address,
   });
   const handleReFetch = () => {
     setReFetch(!reFetch);
@@ -77,10 +85,6 @@ export default function Detail() {
     contracts: [
       {
         ...aigcContractConfig,
-        functionName: "modelName",
-      },
-      {
-        ...aigcContractConfig,
         functionName: "ownerOf",
         args: tokenId ? [BigInt(tokenId)] : undefined,
       },
@@ -91,8 +95,7 @@ export default function Detail() {
       },
     ],
   });
-  console.log("aigcData", aigcData);
-  const [modelName, ownerOf, tokenUri] = aigcData || [];
+  const [ownerOf, tokenUri] = aigcData || [];
 
   useEffect(() => {
     if (!tokenUri?.result) return;
@@ -100,9 +103,7 @@ export default function Detail() {
     const fetchMetadata = async () => {
       const res = await axios.get(tokenUri.result);
       const metadata = res.data;
-
       setMetadata(metadata);
-      console.log("metadata", metadata);
 
       if (metadata.animation_url) {
         setAnimationUrl(metadata.animation_url);
@@ -126,21 +127,27 @@ export default function Detail() {
     ownerOf?.result &&
     connectedWallet &&
     isAddressEqual(ownerOf?.result, connectedWallet as Address);
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+
   const listingAction = (list: Listing) => {
     if (list.status === ListingType.CANCELLED) {
       return <a className="text-sm">Cancelled</a>;
     } else if (list.status === ListingType.COMPLETED) {
       return <a className="text-sm">Completed</a>;
     } else if (list.status === ListingType.CREATED) {
-      if (list.listingCreator === connectedWallet) {
-        return (
-          <CancelListingButton
-            listingId={list.listingId.toString()}
-            handleReFetch={handleReFetch}
-          />
-        );
+      if (currentTimestamp > Number(list.endTimestamp)) {
+        return <a className="text-sm">Expired</a>;
       } else {
-        return <BuyButton listing={list} handleReFetch={handleReFetch} />;
+        if (list.listingCreator === connectedWallet) {
+          return (
+            <CancelListingButton
+              listingId={list.listingId.toString()}
+              handleReFetch={handleReFetch}
+            />
+          );
+        } else {
+          return <BuyButton listing={list} handleReFetch={handleReFetch} />;
+        }
       }
     }
   };
@@ -149,9 +156,9 @@ export default function Detail() {
     <>
       <div className="flex items-center flex-col h-full gap-[50px] mt-[180px] relative px-10">
         <div className="flex gap-[50px] w-full justify-center">
-          <div className="size-[650px] border border-white rounded">
+          <div className="w-1/2 max-w-[650px]">
             {!metadata ? (
-              <div className="flex w-full h-[258px] justify-center items-center">
+              <div className="flex w-full h-[650px] justify-center items-center border border-white rounded">
                 <span className="loading loading-spinner loading-lg"></span>
               </div>
             ) : animationUrl?.startsWith("https://vod") ? (
@@ -186,10 +193,12 @@ export default function Detail() {
               </div>
             ) : (
               metadata.image && (
-                <img
-                  src={metadata.image}
-                  alt={metadata.name}
-                  className="w-full object-cover aspect-square"
+                <Image
+                  src={metadata?.image}
+                  alt={metadata?.name}
+                  width={258}
+                  height={258}
+                  className="w-full object-contain aspect-square border border-white rounded"
                 />
               )
             )}
@@ -205,13 +214,8 @@ export default function Detail() {
                   })}
                 </a>
               )}
-              {/* {modelName?.result && (
-                <a className="text-[30px] font-bold leading-none">
-                  {modelName.result}
-                </a>
-              )} */}
               <div className="bg-white/30 mb-2 text-white font-bold max-h-[24px] h-full rounded flex items-center px-4">
-                <a>text-to-text</a>
+                <a>Text-To-Image</a>
               </div>
             </div>
             {metadata && <a className="text-[60px]">{metadata.name}</a>}
@@ -223,7 +227,27 @@ export default function Detail() {
                 </a>
               </div>
             )}
-
+            <div className="flex-wrap flex flex-col text-md line-clamp-4 gap-4">
+              {(metadata &&
+                metadata.attributes &&
+                metadata.attributes
+                  .filter(
+                    (a) =>
+                      a.trait_type === "positive_prompt" ||
+                      a.trait_type === "negative_prompt"
+                  )
+                  .map((prompt) => (
+                    <div key={prompt.value} className="">
+                      <a className="font-semibold text-[28px]">
+                        {prompt.trait_type === "positive_prompt"
+                          ? "Positive"
+                          : "Negative"}
+                        :{" "}
+                      </a>
+                      <a className="text-[24px]">{prompt.value}</a>
+                    </div>
+                  ))) || <Skeleton count={5} />}
+            </div>
             {!isOwner && nftContract && tokenId && metadata && (
               <Buy
                 nftContract={nftContract as Address}
@@ -324,7 +348,7 @@ export default function Detail() {
                 </div>
                 <div className="w-full flex justify-between gap-10">
                   <a>last updated</a>
-                  <a>7 month age</a>
+                  <a>1 month age</a>
                 </div>
                 <div className="w-full flex justify-between gap-10">
                   <a>Creator Earnings</a>
@@ -335,7 +359,13 @@ export default function Detail() {
                     key={attr.trait_type}
                     className="w-full flex justify-between gap-10"
                   >
-                    <a>{attr.trait_type}</a>
+                    <a>
+                      {attr.trait_type === "positive_prompt"
+                        ? "Positive Prompt"
+                        : attr.trait_type === "negative_prompt"
+                          ? "Negative Prompt"
+                          : attr.trait_type}
+                    </a>
                     {attr.trait_type === "music" ? (
                       <a
                         href={attr.value}
@@ -445,7 +475,7 @@ export default function Detail() {
           </div>
         </div>
       </div>
-      {original && (
+      {/* {original && (
         <RemixModal
           ref={remixModalRef}
           modelIndex={1}
@@ -453,7 +483,7 @@ export default function Detail() {
           nftContract={nftContract as Address}
           original={original}
         />
-      )}
+      )} */}
     </>
   );
 }

@@ -2,12 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Abi } from "viem";
-import { useAccount } from "wagmi";
-
+import { useAccount, useReadContract } from "wagmi";
 import AIGC from "@/abis/AIGC.json";
-import { useReadAigcTokenId } from "@/generated";
 import { getPublicClient } from "@/client";
-import { ModelIndex } from "@/constants";
+import { ModelIndex } from "@/constants/constants";
 import useNftContract from "@/hooks/useNftContract";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
@@ -17,30 +15,32 @@ import { Listing, Offer } from "@/types";
 import useValidListings from "@/hooks/useValidListings";
 
 const Collected = () => {
+  //TODO: mutliple contracts
   const { address, chain } = useAccount();
   const { nftContract } = useNftContract({
-    modelIndex: ModelIndex,
     chainId: chain?.id,
   });
   const emptyCardList = [...Array(4).keys()];
-  const { data: lastTokenId } = useReadAigcTokenId({
-    address: nftContract,
-  });
   const [filteredTokenIds, setFilteredTokenIds] = useState<bigint[]>([]);
   const { listings } = useValidListings({
     listingCreator: address,
     chainId: chain?.id,
   });
+  const { data: totalSupply } = useReadContract({
+    address: nftContract,
+    abi: AIGC.abi as Abi,
+    functionName: "totalSupply",
+  });
 
   const tokenIds = useMemo(() => {
     const ids: number[] = [];
-    if (!lastTokenId) return ids;
+    if (!totalSupply) return ids;
 
-    for (let i = 0; i < Number(lastTokenId); i++) {
+    for (let i = 0; i < Number(totalSupply); i++) {
       ids.push(i);
     }
     return ids;
-  }, [lastTokenId]);
+  }, [totalSupply]);
 
   useEffect(() => {
     if (!nftContract || !address || !chain) return;
@@ -64,7 +64,6 @@ const Collected = () => {
     };
     fetchOwner();
   }, [nftContract, address, chain, tokenIds]);
-
   return (
     <>
       {(nftContract && (

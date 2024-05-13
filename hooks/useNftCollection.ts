@@ -1,6 +1,6 @@
+import { useReadAigcTotalSupply } from "@/generated";
 import { useMemo } from "react";
 import { Address } from "viem";
-import { useReadAigcTokenId } from "@/generated";
 
 const useNftCollection = ({
   nftContract,
@@ -11,19 +11,19 @@ const useNftCollection = ({
   from?: number;
   to?: number;
 }) => {
-  const { data: tokenId } = useReadAigcTokenId({
+  const { data: totalSupply } = useReadAigcTotalSupply({
     address: nftContract,
   });
 
   const tokenIds = useMemo(() => {
     const ids: number[] = [];
-    if (!tokenId) return ids;
+    if (!totalSupply) return ids;
 
-    for (let i = from; i < Math.min(Number(tokenId), to); i++) {
+    for (let i = from; i < Math.min(Number(totalSupply), to); i++) {
       ids.push(i);
     }
     return ids;
-  }, [tokenId, from, to]);
+  }, [totalSupply, from, to]);
 
   if (!nftContract) return { tokenIds: [] };
 

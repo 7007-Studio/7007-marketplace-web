@@ -1,6 +1,6 @@
 "use client";
 import Tabs from "@/components/ui/tabs";
-import { ModelIndex } from "@/constants";
+import { ModelIndex } from "@/constants/constants";
 import { ModelList } from "@/types";
 import axios from "axios";
 import Image from "next/image";
@@ -45,14 +45,11 @@ export default function HomeLayout({
           height={300}
           className="h-full w-full absolute top-0 left-0"
         />
-        <p className="text-[30px] font-bold z-10">Model STATS Banner example</p>
-        {/* TODO: 寫死link route to stable diff */}
+        <p className="text-[30px] font-bold z-10">
+          AI Inference asset protocol
+        </p>
         <Link
-          href={
-            modelList.length > 0
-              ? `/collection/${modelList[0].id}&${modelList[0].modelAuthorID}`
-              : "/collection"
-          }
+          href={`/collection/0`}
           className="border bg-black/40 h-[50px] w-[248px] flex items-center justify-center rounded-3xl z-10 text-white/80 hover:text-white/60 cursor-pointer"
         >
           Mint Now

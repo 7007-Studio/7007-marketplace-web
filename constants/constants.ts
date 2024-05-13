@@ -1,3 +1,24 @@
+import { ModelDetail } from "@/types";
+
+export const ModelIndex = 1n;
+
+export const NATIVE_TOKEN_ADDRESS =
+  "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+
+export const modelData: ModelDetail[] = [
+  {
+    id: "0",
+    action: "launched",
+    modelAuthorID: "1",
+    modelName: "Stable Diffusion",
+    status: "active",
+    NFTContract: "0x32088Be31D2403db83bC2de80Ba244455a34f4c3",
+    description:
+      "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
+    type: "Text-To-Image",
+  },
+];
+
 export const socialLink = [
   { id: "Telegram", link: "https://t.me/+wUoA1zKgUBIzYzJl" },
   { id: "X", link: "https://twitter.com/Lab7007" },

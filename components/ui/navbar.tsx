@@ -7,7 +7,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { CiSearch } from "react-icons/ci";
 import { MdOutlineWbSunny } from "react-icons/md";
 
-import { ModelIndex } from "@/constants";
+import { ModelIndex } from "@/constants/constants";
 
 export default function Navbar() {
   // hard coded

@@ -7,6 +7,7 @@ import EmptyCard from "@/components/emptyCard";
 import useValidListings from "@/hooks/useValidListings";
 
 const Marketplace = () => {
+  //TODO: mutliple contracts
   const { address, chain } = useAccount();
   const { listings } = useValidListings({
     listingCreator: address,

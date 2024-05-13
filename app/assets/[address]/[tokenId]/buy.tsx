@@ -40,7 +40,6 @@ export default function Buy({
     const url = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT";
     try {
       const res = await axios.get(url);
-      console.log("res", res);
       if (res.status !== 200) {
         throw new Error("Failed to fetch price");
       }
@@ -84,7 +83,7 @@ export default function Buy({
     };
     fetchCreateListing();
     fetchOffers();
-  }, [nftContract, tokenId, chain]);
+  }, [nftContract, tokenId, chain, listings]);
 
   const { data: listingData } = useReadContracts({
     contracts: [

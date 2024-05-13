@@ -29,8 +29,8 @@ export interface MetadataAttribute {
 
 export interface Metadata {
   name: string;
-  description: string;
   image: string;
+  description: string;
   animation_url?: string;
   attributes: MetadataAttribute[];
 }
@@ -78,4 +78,15 @@ export interface ModelInfo {
   baseModel: string;
   modelAuthorID: string;
   modelName: string;
+}
+
+export interface ModelDetail {
+  action: string;
+  id: string;
+  modelAuthorID: string;
+  modelName: string;
+  status: string;
+  NFTContract: string;
+  description: string;
+  type: string;
 }

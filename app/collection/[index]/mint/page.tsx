@@ -5,22 +5,17 @@ import { useParams } from "next/navigation";
 import FormAIGC from "@/components/formAIGC";
 import useNftContract from "@/hooks/useNftContract";
 import { useAccount } from "wagmi";
-// import useNftContract from "@/hooks/useNftContract";
+import { ModelDetail } from "@/types";
+import { modelData } from "@/constants/constants";
+import { Address } from "viem";
 
 export default function MintPage() {
   const { index } = useParams<{ index: string }>() || {};
-  // console.log('index', index)
-
-  const { chain } = useAccount();
-  //TODO: hardcode modelIndex
-  const { nftContract } = useNftContract({
-    modelIndex: 1n,
-    chainId: chain?.id,
-  });
+  const modelInfo: ModelDetail[] = modelData;
 
   return (
     <div className="h-full w-[80%]">
-      {nftContract && <FormAIGC modelIndex={index} nftContract={nftContract} />}
+      {index && <FormAIGC modelData={modelInfo[Number(index)]} />}
     </div>
   );
 }

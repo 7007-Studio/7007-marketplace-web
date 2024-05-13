@@ -1,40 +1,25 @@
 "use client";
 import { useAccount } from "wagmi";
-
-import { ModelIndex } from "@/constants";
-import useNftContract from "@/hooks/useNftContract";
 import useNftCollection from "@/hooks/useNftCollection";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
-import { CiSearch } from "react-icons/ci";
+import { Address } from "viem";
 
-const Collection = () => {
+const Collection = ({ NFTAddress }: { NFTAddress: Address }) => {
   const { chain } = useAccount();
-  const { nftContract } = useNftContract({
-    modelIndex: ModelIndex,
-    chainId: chain?.id,
-  });
   const emptyCardList = [...Array(1).keys()];
 
-  const { tokenIds } = useNftCollection({ nftContract });
+  const { tokenIds } = useNftCollection({ nftContract: NFTAddress });
 
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="flex w-full justify-end pt-20 pb-11">
-        {/* <div className="w-[330px] h-[58px] flex items-center px-6 border-white border rounded-sm">
-          <CiSearch
-            size={30}
-            color="white"
-            className="opacity-60 cursor-pointer"
-          />
-        </div> */}
-      </div>
-      {(nftContract && (
+      <div className="flex w-full justify-end pt-20 pb-11"></div>
+      {(NFTAddress && (
         <div className="flex flex-wrap w-full justify-items-center justify-center gap-12">
           {tokenIds.map((id) => (
             <NFTCard
-              key={`${nftContract}-${id}`}
-              nftContract={nftContract}
+              key={`${NFTAddress}-${id}`}
+              nftContract={NFTAddress}
               tokenId={BigInt(id)}
             />
           )) || emptyCardList.map((l) => <EmptyCard key={l} />)}

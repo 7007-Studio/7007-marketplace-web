@@ -19,25 +19,14 @@ export default function AccountLayout({
     { pathnames: ["/account/created"], label: "Created" },
     { pathnames: ["/account/listed"], label: "Listed" },
     { pathnames: ["/account/models"], label: "Models" },
-    // { pathnames: ["/account/offers"], label: "Offers received" },
+    { pathnames: ["/account/offers"], label: "Offers received" },
     { pathnames: ["/account/offeror"], label: "Offers made" },
     // { pathnames: ["/account/inferencing"], label: "inferencing" },
   ];
 
   return (
     <>
-      {/* <div className="h-[35vh] relative border-b border-grey">
-        <Image
-          src="/Mask group.png"
-          alt="homeMask"
-          width={1920}
-          height={300}
-          className="h-full w-full absolute top-0 left-0 shadow-inner"
-        />
-        <div className="absolute h-full w-full bg-gradient-to-b from-black/5 from-55% to-black" />
-      </div> */}
       <div className="h-[90px] relative" />
-
       <div className="h-full w-full flex justify-center flex-col items-center pt-12 gap-[100px]">
         <div className="max-w-[85%] flex w-full">
           <div className="size-[200px] rounded-full overflow-hidden border">
@@ -45,14 +34,11 @@ export default function AccountLayout({
           </div>
           <div className="flex gap-12 w-4/5 pl-12 justify-between">
             <div className="flex flex-col max-w-[532px] flex-wrap gap-6">
-              <a className="font-bold text-[30px]">User Name</a>
-              <div className="flex gap-4">
-                <Image src="/avatar.svg" alt="avatar" width={22} height={22} />
-                <a className="font-bold">
-                  {address && address.slice(0, 6) + "..." + address.slice(-4)}
-                </a>
-                <a>Joined March 2077</a>
+              <div className="flex gap-4 font-bold text-[30px]">
+                <Image src="/avatar.svg" alt="avatar" width={40} height={40} />
+                {address && address.slice(0, 6) + "..." + address.slice(-4)}
               </div>
+              {/* <a>Joined March 2077</a> */}
               <a className="">
                 {/* {`Pilot of on-chain AI, fine tuned with Stable diffusion model by 7007.Studio.First, you'll need to deploy a contract.`} */}
               </a>

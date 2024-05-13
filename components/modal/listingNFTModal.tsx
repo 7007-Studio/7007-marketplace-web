@@ -5,7 +5,7 @@ import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { Address, isAddressEqual, parseEther, zeroAddress } from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
-import { NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { NATIVE_TOKEN_ADDRESS } from "@/constants/constants";
 import { getContractAddress } from "@/helpers";
 import {
   useReadAigcGetApproved,

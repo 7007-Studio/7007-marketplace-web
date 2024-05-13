@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Address } from "viem";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { NATIVE_TOKEN_ADDRESS } from "@/constants/constants";
 import { getContractAddress } from "@/helpers";
 import { useWriteMarketplaceV3BuyFromListing } from "@/generated";
 import { Listing } from "@/types";

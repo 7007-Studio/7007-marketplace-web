@@ -27,6 +27,12 @@ const nextConfig = {
         protocol: "https",
         hostname: "alpha.7007.studio",
       },
+      {
+        protocol: "https",
+        hostname: "gateway.pinata.cloud",
+        port: "",
+        pathname: "/ipfs/**",
+      }
     ],
   },
 };

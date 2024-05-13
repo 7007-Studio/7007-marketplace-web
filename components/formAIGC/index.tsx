@@ -1,12 +1,8 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Address } from "viem";
-
-import PromptStep from "./promptStepNoContract";
-import MintStep from "./mintStep";
-import CompleteStep from "./completeStep";
+import PromptStep from "./promptStep";
 import { useListingModal } from "@/utils/modalProvider";
 import { useReadAigcName } from "@/generated";
+import { ModelDetail } from "@/types";
 
 export interface AIGCContent {
   name: string;
@@ -16,8 +12,7 @@ export interface AIGCContent {
 }
 
 interface FormAIGCProps {
-  nftContract: Address;
-  modelIndex: string;
+  modelData: ModelDetail;
 }
 
 // export default function FormAIGC({ nftContract }: FormAIGCProps) {
@@ -77,14 +72,13 @@ interface FormAIGCProps {
 //   );
 // }
 
-export default function FormAIGC({ modelIndex, nftContract }: FormAIGCProps) {
+export default function FormAIGC({ modelData }: FormAIGCProps) {
   const [aigcContent, setAigcContent] = useState<AIGCContent>();
   const [mintedTokenId, setMintedTokenId] = useState<bigint>();
 
-  const { data: name } = useReadAigcName({
-    address: nftContract,
-  });
-  console.log("name", name);
+  // const { data: name } = useReadAigcName({
+  //   address: modelData.NFTContract as Address,
+  // });
   const { showListingModal } = useListingModal();
 
   // if (!aigcContent) {
@@ -108,7 +102,7 @@ export default function FormAIGC({ modelIndex, nftContract }: FormAIGCProps) {
 
   return (
     <>
-      <PromptStep modelIndex={modelIndex} />
+      <PromptStep modelData={modelData} />
     </>
   );
 }

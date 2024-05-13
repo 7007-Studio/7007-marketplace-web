@@ -9,7 +9,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { NATIVE_TOKEN_ADDRESS } from "@/constants";
+import { NATIVE_TOKEN_ADDRESS } from "@/constants/constants";
 import { getContractAddress } from "@/helpers";
 import { useReadAigcName, useWriteMarketplaceV3MakeOffer } from "@/generated";
 import { Listing, Metadata } from "@/types";

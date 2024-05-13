@@ -10,36 +10,25 @@ import {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const aigcAbi = [
-  { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
   {
-    type: 'error',
+    type: 'constructor',
     inputs: [
-      { name: 'numerator', internalType: 'uint256', type: 'uint256' },
-      { name: 'denominator', internalType: 'uint256', type: 'uint256' },
+      {
+        name: '_aiOracle',
+        internalType: 'contract IAIOracle',
+        type: 'address',
+      },
+      { name: '_name', internalType: 'string', type: 'string' },
+      { name: '_symbol', internalType: 'string', type: 'string' },
+      { name: '_mintPrice', internalType: 'uint256', type: 'uint256' },
+      { name: '_aiModelId', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'ERC2981InvalidDefaultRoyalty',
+    stateMutability: 'nonpayable',
   },
   {
     type: 'error',
-    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
-    name: 'ERC2981InvalidDefaultRoyaltyReceiver',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'numerator', internalType: 'uint256', type: 'uint256' },
-      { name: 'denominator', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'ERC2981InvalidTokenRoyalty',
-  },
-  {
-    type: 'error',
-    inputs: [
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'receiver', internalType: 'address', type: 'address' },
-    ],
-    name: 'ERC2981InvalidTokenRoyaltyReceiver',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'AddressInsufficientBalance',
   },
   {
     type: 'error',
@@ -88,8 +77,25 @@ export const aigcAbi = [
     inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'ERC721NonexistentToken',
   },
-  { type: 'error', inputs: [], name: 'InvalidInitialization' },
-  { type: 'error', inputs: [], name: 'NotInitializing' },
+  { type: 'error', inputs: [], name: 'FailedInnerCall' },
+  {
+    type: 'error',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+    name: 'OwnableInvalidOwner',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
+  },
+  {
+    type: 'error',
+    inputs: [
+      { name: 'expected', internalType: 'contract IAIOracle', type: 'address' },
+      { name: 'found', internalType: 'contract IAIOracle', type: 'address' },
+    ],
+    name: 'UnauthorizedCallbackSource',
+  },
   {
     type: 'event',
     anonymous: false,
@@ -140,45 +146,19 @@ export const aigcAbi = [
     anonymous: false,
     inputs: [
       {
-        name: '_fromTokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
       },
       {
-        name: '_toTokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
       },
     ],
-    name: 'BatchMetadataUpdate',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'version',
-        internalType: 'uint64',
-        type: 'uint64',
-        indexed: false,
-      },
-    ],
-    name: 'Initialized',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: '_tokenId',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'MetadataUpdate',
+    name: 'OwnershipTransferred',
   },
   {
     type: 'event',
@@ -196,10 +176,113 @@ export const aigcAbi = [
     name: 'Transfer',
   },
   {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'requestId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'sender',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'modelId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'prompt',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+    ],
+    name: 'promptRequest',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'requestId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'modelId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      { name: 'input', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'output',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'callbackData',
+        internalType: 'bytes',
+        type: 'bytes',
+        indexed: false,
+      },
+    ],
+    name: 'promptsUpdated',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'AIGC_tokens',
+    outputs: [
+      { name: 'prompt', internalType: 'string', type: 'string' },
+      { name: 'neg_prompt', internalType: 'string', type: 'string' },
+      { name: 'title', internalType: 'string', type: 'string' },
+      { name: 'seed', internalType: 'uint256', type: 'uint256' },
+      { name: 'author', internalType: 'address', type: 'address' },
+    ],
+    stateMutability: 'view',
+  },
+  {
     type: 'function',
     inputs: [],
-    name: 'aiModelVm',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'aiModelId',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'aiOracle',
+    outputs: [
+      { name: '', internalType: 'contract IAIOracle', type: 'address' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'requestId', internalType: 'uint256', type: 'uint256' },
+      { name: 'output', internalType: 'bytes', type: 'bytes' },
+      { name: 'callbackData', internalType: 'bytes', type: 'bytes' },
+    ],
+    name: 'aiOracleCallback',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'aiOracleCallbackGasLimit',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
     stateMutability: 'view',
   },
   {
@@ -221,16 +304,33 @@ export const aigcAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'buy',
-    outputs: [],
-    stateMutability: 'payable',
+    inputs: [
+      { name: 'prompt', internalType: 'string', type: 'string' },
+      { name: 'seed', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'encode',
+    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    stateMutability: 'pure',
   },
   {
     type: 'function',
     inputs: [],
-    name: 'costToken',
+    name: 'estimateOAOFee',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'estimateTotalFee',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getAIResultFromTokenId',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
     stateMutability: 'view',
   },
   {
@@ -243,28 +343,8 @@ export const aigcAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'getModelIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [
-      { name: 'vals', internalType: 'uint256[]', type: 'uint256[]' },
-      { name: 'vals2', internalType: 'string[]', type: 'string[]' },
-      { name: 'vals3', internalType: 'address[]', type: 'address[]' },
-      { name: '_aiModelVm', internalType: 'bytes32', type: 'bytes32' },
-      { name: '_royalty', internalType: 'uint96', type: 'uint96' },
-    ],
-    name: 'initialize',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'ipOrgAddr',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'hasStartMint',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
@@ -279,28 +359,29 @@ export const aigcAbi = [
   },
   {
     type: 'function',
-    inputs: [
-      { name: '_tokenURI', internalType: 'string', type: 'string' },
-      { name: '_promptHash', internalType: 'bytes32', type: 'bytes32' },
-      { name: '_opmlFinalState', internalType: 'bytes32', type: 'bytes32' },
-      { name: '_ipAssetMediaUrl', internalType: 'string', type: 'string' },
-    ],
-    name: 'mint',
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'modelIndex',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    inputs: [{ name: 'requestId', internalType: 'uint256', type: 'uint256' }],
+    name: 'isFinalized',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
     stateMutability: 'view',
   },
   {
     type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'positive_prompt', internalType: 'string', type: 'string' },
+      { name: 'neg_prompt', internalType: 'string', type: 'string' },
+      { name: 'title', internalType: 'string', type: 'string' },
+      { name: 'seed', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'mint',
+    outputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'payable',
+  },
+  {
+    type: 'function',
     inputs: [],
-    name: 'modelName',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    name: 'mintPrice',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -313,8 +394,8 @@ export const aigcAbi = [
   {
     type: 'function',
     inputs: [],
-    name: 'opmlLib',
-    outputs: [{ name: '', internalType: 'contract IOpmlLib', type: 'address' }],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
   {
@@ -326,14 +407,37 @@ export const aigcAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    name: 'promptSeedToTokenId',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [
-      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
-      { name: 'salePrice', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'royaltyInfo',
-    outputs: [
-      { name: '', internalType: 'address', type: 'address' },
       { name: '', internalType: 'uint256', type: 'uint256' },
+      { name: '', internalType: 'string', type: 'string' },
+    ],
+    name: 'prompts',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'requests',
+    outputs: [
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'modelId', internalType: 'uint256', type: 'uint256' },
+      { name: 'input', internalType: 'bytes', type: 'bytes' },
+      { name: 'output', internalType: 'bytes', type: 'bytes' },
     ],
     stateMutability: 'view',
   },
@@ -372,6 +476,13 @@ export const aigcAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'startOrStopMint',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'interfaceId', internalType: 'bytes4', type: 'bytes4' }],
     name: 'supportsInterface',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -386,23 +497,16 @@ export const aigcAbi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'token',
-    outputs: [{ name: '', internalType: 'contract IERC20', type: 'address' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [],
-    name: 'tokenId',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
+    inputs: [{ name: 'tokenId', internalType: 'uint256', type: 'uint256' }],
     name: 'tokenURI',
     outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -418,9 +522,23 @@ export const aigcAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
-    name: 'verify',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_gasLimit', internalType: 'uint64', type: 'uint64' }],
+    name: 'updateAIOracleCallbackGasLimit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
     stateMutability: 'nonpayable',
   },
 ] as const
@@ -3127,12 +3245,37 @@ export const marketplaceV3Abi = [
 export const useReadAigc = /*#__PURE__*/ createUseReadContract({ abi: aigcAbi })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"aiModelVm"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"AIGC_tokens"`
  */
-export const useReadAigcAiModelVm = /*#__PURE__*/ createUseReadContract({
+export const useReadAigcAigcTokens = /*#__PURE__*/ createUseReadContract({
   abi: aigcAbi,
-  functionName: 'aiModelVm',
+  functionName: 'AIGC_tokens',
 })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"aiModelId"`
+ */
+export const useReadAigcAiModelId = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'aiModelId',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"aiOracle"`
+ */
+export const useReadAigcAiOracle = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'aiOracle',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"aiOracleCallbackGasLimit"`
+ */
+export const useReadAigcAiOracleCallbackGasLimit =
+  /*#__PURE__*/ createUseReadContract({
+    abi: aigcAbi,
+    functionName: 'aiOracleCallbackGasLimit',
+  })
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"balanceOf"`
@@ -3143,12 +3286,37 @@ export const useReadAigcBalanceOf = /*#__PURE__*/ createUseReadContract({
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"costToken"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"encode"`
  */
-export const useReadAigcCostToken = /*#__PURE__*/ createUseReadContract({
+export const useReadAigcEncode = /*#__PURE__*/ createUseReadContract({
   abi: aigcAbi,
-  functionName: 'costToken',
+  functionName: 'encode',
 })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"estimateOAOFee"`
+ */
+export const useReadAigcEstimateOaoFee = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'estimateOAOFee',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"estimateTotalFee"`
+ */
+export const useReadAigcEstimateTotalFee = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'estimateTotalFee',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"getAIResultFromTokenId"`
+ */
+export const useReadAigcGetAiResultFromTokenId =
+  /*#__PURE__*/ createUseReadContract({
+    abi: aigcAbi,
+    functionName: 'getAIResultFromTokenId',
+  })
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"getApproved"`
@@ -3159,19 +3327,11 @@ export const useReadAigcGetApproved = /*#__PURE__*/ createUseReadContract({
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"getModelIndex"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"hasStartMint"`
  */
-export const useReadAigcGetModelIndex = /*#__PURE__*/ createUseReadContract({
+export const useReadAigcHasStartMint = /*#__PURE__*/ createUseReadContract({
   abi: aigcAbi,
-  functionName: 'getModelIndex',
-})
-
-/**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"ipOrgAddr"`
- */
-export const useReadAigcIpOrgAddr = /*#__PURE__*/ createUseReadContract({
-  abi: aigcAbi,
-  functionName: 'ipOrgAddr',
+  functionName: 'hasStartMint',
 })
 
 /**
@@ -3183,19 +3343,19 @@ export const useReadAigcIsApprovedForAll = /*#__PURE__*/ createUseReadContract({
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"modelIndex"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"isFinalized"`
  */
-export const useReadAigcModelIndex = /*#__PURE__*/ createUseReadContract({
+export const useReadAigcIsFinalized = /*#__PURE__*/ createUseReadContract({
   abi: aigcAbi,
-  functionName: 'modelIndex',
+  functionName: 'isFinalized',
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"modelName"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"mintPrice"`
  */
-export const useReadAigcModelName = /*#__PURE__*/ createUseReadContract({
+export const useReadAigcMintPrice = /*#__PURE__*/ createUseReadContract({
   abi: aigcAbi,
-  functionName: 'modelName',
+  functionName: 'mintPrice',
 })
 
 /**
@@ -3207,11 +3367,11 @@ export const useReadAigcName = /*#__PURE__*/ createUseReadContract({
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"opmlLib"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"owner"`
  */
-export const useReadAigcOpmlLib = /*#__PURE__*/ createUseReadContract({
+export const useReadAigcOwner = /*#__PURE__*/ createUseReadContract({
   abi: aigcAbi,
-  functionName: 'opmlLib',
+  functionName: 'owner',
 })
 
 /**
@@ -3223,11 +3383,28 @@ export const useReadAigcOwnerOf = /*#__PURE__*/ createUseReadContract({
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"royaltyInfo"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"promptSeedToTokenId"`
  */
-export const useReadAigcRoyaltyInfo = /*#__PURE__*/ createUseReadContract({
+export const useReadAigcPromptSeedToTokenId =
+  /*#__PURE__*/ createUseReadContract({
+    abi: aigcAbi,
+    functionName: 'promptSeedToTokenId',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"prompts"`
+ */
+export const useReadAigcPrompts = /*#__PURE__*/ createUseReadContract({
   abi: aigcAbi,
-  functionName: 'royaltyInfo',
+  functionName: 'prompts',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"requests"`
+ */
+export const useReadAigcRequests = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'requests',
 })
 
 /**
@@ -3246,27 +3423,19 @@ export const useReadAigcSymbol = /*#__PURE__*/ createUseReadContract({
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"token"`
- */
-export const useReadAigcToken = /*#__PURE__*/ createUseReadContract({
-  abi: aigcAbi,
-  functionName: 'token',
-})
-
-/**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"tokenId"`
- */
-export const useReadAigcTokenId = /*#__PURE__*/ createUseReadContract({
-  abi: aigcAbi,
-  functionName: 'tokenId',
-})
-
-/**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"tokenURI"`
  */
 export const useReadAigcTokenUri = /*#__PURE__*/ createUseReadContract({
   abi: aigcAbi,
   functionName: 'tokenURI',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"totalSupply"`
+ */
+export const useReadAigcTotalSupply = /*#__PURE__*/ createUseReadContract({
+  abi: aigcAbi,
+  functionName: 'totalSupply',
 })
 
 /**
@@ -3277,27 +3446,20 @@ export const useWriteAigc = /*#__PURE__*/ createUseWriteContract({
 })
 
 /**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"aiOracleCallback"`
+ */
+export const useWriteAigcAiOracleCallback =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigcAbi,
+    functionName: 'aiOracleCallback',
+  })
+
+/**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"approve"`
  */
 export const useWriteAigcApprove = /*#__PURE__*/ createUseWriteContract({
   abi: aigcAbi,
   functionName: 'approve',
-})
-
-/**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"buy"`
- */
-export const useWriteAigcBuy = /*#__PURE__*/ createUseWriteContract({
-  abi: aigcAbi,
-  functionName: 'buy',
-})
-
-/**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"initialize"`
- */
-export const useWriteAigcInitialize = /*#__PURE__*/ createUseWriteContract({
-  abi: aigcAbi,
-  functionName: 'initialize',
 })
 
 /**
@@ -3307,6 +3469,15 @@ export const useWriteAigcMint = /*#__PURE__*/ createUseWriteContract({
   abi: aigcAbi,
   functionName: 'mint',
 })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"renounceOwnership"`
+ */
+export const useWriteAigcRenounceOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigcAbi,
+    functionName: 'renounceOwnership',
+  })
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"safeTransferFrom"`
@@ -3327,6 +3498,13 @@ export const useWriteAigcSetApprovalForAll =
   })
 
 /**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"startOrStopMint"`
+ */
+export const useWriteAigcStartOrStopMint = /*#__PURE__*/ createUseWriteContract(
+  { abi: aigcAbi, functionName: 'startOrStopMint' },
+)
+
+/**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"transferFrom"`
  */
 export const useWriteAigcTransferFrom = /*#__PURE__*/ createUseWriteContract({
@@ -3335,11 +3513,29 @@ export const useWriteAigcTransferFrom = /*#__PURE__*/ createUseWriteContract({
 })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"verify"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"transferOwnership"`
  */
-export const useWriteAigcVerify = /*#__PURE__*/ createUseWriteContract({
+export const useWriteAigcTransferOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigcAbi,
+    functionName: 'transferOwnership',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"updateAIOracleCallbackGasLimit"`
+ */
+export const useWriteAigcUpdateAiOracleCallbackGasLimit =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: aigcAbi,
+    functionName: 'updateAIOracleCallbackGasLimit',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"withdraw"`
+ */
+export const useWriteAigcWithdraw = /*#__PURE__*/ createUseWriteContract({
   abi: aigcAbi,
-  functionName: 'verify',
+  functionName: 'withdraw',
 })
 
 /**
@@ -3350,6 +3546,15 @@ export const useSimulateAigc = /*#__PURE__*/ createUseSimulateContract({
 })
 
 /**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"aiOracleCallback"`
+ */
+export const useSimulateAigcAiOracleCallback =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
+    functionName: 'aiOracleCallback',
+  })
+
+/**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"approve"`
  */
 export const useSimulateAigcApprove = /*#__PURE__*/ createUseSimulateContract({
@@ -3358,29 +3563,21 @@ export const useSimulateAigcApprove = /*#__PURE__*/ createUseSimulateContract({
 })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"buy"`
- */
-export const useSimulateAigcBuy = /*#__PURE__*/ createUseSimulateContract({
-  abi: aigcAbi,
-  functionName: 'buy',
-})
-
-/**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"initialize"`
- */
-export const useSimulateAigcInitialize =
-  /*#__PURE__*/ createUseSimulateContract({
-    abi: aigcAbi,
-    functionName: 'initialize',
-  })
-
-/**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"mint"`
  */
 export const useSimulateAigcMint = /*#__PURE__*/ createUseSimulateContract({
   abi: aigcAbi,
   functionName: 'mint',
 })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"renounceOwnership"`
+ */
+export const useSimulateAigcRenounceOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
+    functionName: 'renounceOwnership',
+  })
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"safeTransferFrom"`
@@ -3401,6 +3598,15 @@ export const useSimulateAigcSetApprovalForAll =
   })
 
 /**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"startOrStopMint"`
+ */
+export const useSimulateAigcStartOrStopMint =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
+    functionName: 'startOrStopMint',
+  })
+
+/**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"transferFrom"`
  */
 export const useSimulateAigcTransferFrom =
@@ -3410,11 +3616,29 @@ export const useSimulateAigcTransferFrom =
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"verify"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"transferOwnership"`
  */
-export const useSimulateAigcVerify = /*#__PURE__*/ createUseSimulateContract({
+export const useSimulateAigcTransferOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
+    functionName: 'transferOwnership',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"updateAIOracleCallbackGasLimit"`
+ */
+export const useSimulateAigcUpdateAiOracleCallbackGasLimit =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: aigcAbi,
+    functionName: 'updateAIOracleCallbackGasLimit',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link aigcAbi}__ and `functionName` set to `"withdraw"`
+ */
+export const useSimulateAigcWithdraw = /*#__PURE__*/ createUseSimulateContract({
   abi: aigcAbi,
-  functionName: 'verify',
+  functionName: 'withdraw',
 })
 
 /**
@@ -3443,30 +3667,12 @@ export const useWatchAigcApprovalForAllEvent =
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"BatchMetadataUpdate"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"OwnershipTransferred"`
  */
-export const useWatchAigcBatchMetadataUpdateEvent =
+export const useWatchAigcOwnershipTransferredEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: aigcAbi,
-    eventName: 'BatchMetadataUpdate',
-  })
-
-/**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"Initialized"`
- */
-export const useWatchAigcInitializedEvent =
-  /*#__PURE__*/ createUseWatchContractEvent({
-    abi: aigcAbi,
-    eventName: 'Initialized',
-  })
-
-/**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"MetadataUpdate"`
- */
-export const useWatchAigcMetadataUpdateEvent =
-  /*#__PURE__*/ createUseWatchContractEvent({
-    abi: aigcAbi,
-    eventName: 'MetadataUpdate',
+    eventName: 'OwnershipTransferred',
   })
 
 /**
@@ -3476,6 +3682,24 @@ export const useWatchAigcTransferEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: aigcAbi,
     eventName: 'Transfer',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"promptRequest"`
+ */
+export const useWatchAigcPromptRequestEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcAbi,
+    eventName: 'promptRequest',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link aigcAbi}__ and `eventName` set to `"promptsUpdated"`
+ */
+export const useWatchAigcPromptsUpdatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: aigcAbi,
+    eventName: 'promptsUpdated',
   })
 
 /**

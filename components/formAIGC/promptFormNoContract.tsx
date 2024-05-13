@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useRouter } from "next/navigation";
-import { ModelInfo } from "@/types";
+import { ModelDetail, ModelInfo } from "@/types";
 import axios from "axios";
-import { useWriteAigcMint } from "@/generated";
+import { useReadAigcEstimateTotalFee, useWriteAigcMint } from "@/generated";
 import { ethers } from "ethers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { getTokenURI } from "./ipfsHelper";
-import useNftContract from "@/hooks/useNftContract";
+import { Address, formatEther } from "viem";
+import { format } from "path";
 export interface IFormAIGCInput {
   name: string;
   prompt: string;
@@ -25,17 +26,15 @@ export interface IFormAIGCInput {
 const PromptForm = ({
   submitText = "Generate",
   defaultValues,
-  modelInfo,
-  modelID,
+  modelData,
 }: {
   submitText?: string;
   defaultValues?: DefaultValues<IFormAIGCInput>;
-  modelInfo: ModelInfo;
-  modelID: string;
+  modelData: ModelDetail;
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [prompt, setPrompt] = useState();
+  const [positivePrompt, setPositivePrompt] = useState();
   const [negativePrompt, setNegativePrompt] = useState();
   const [seed, setSeed] = useState();
   const router = useRouter();
@@ -49,56 +48,55 @@ const PromptForm = ({
   const mintResult = useWaitForTransactionReceipt({
     hash: mintTx,
   });
+  const { data: totalFee } = useReadAigcEstimateTotalFee({
+    address: modelData.NFTContract as Address,
+  });
 
   const [image, setImage] = useState();
   const { openConnectModal } = useConnectModal();
   const [mintInitialized, setMintInitialized] = useState(false);
-  const { nftContract } = useNftContract({
-    modelIndex: 1n,
-    chainId: chain?.id,
-  });
-  const handleFetchData = async () => {
-    if (!address) return;
 
-    try {
-      const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?action=inference`;
-      const response = await axios.get(apiUrl, {
-        headers: {
-          "Content-Type": "application/json",
-          "user-id": address,
-        },
-      });
+  // const handleFetchData = async () => {
+  //   if (!address) return;
+  //   try {
+  //     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?action=inference`;
+  //     const response = await axios.get(apiUrl, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "user-id": address,
+  //       },
+  //     });
 
-      const data = response.data;
-      const targetTask = data.filter(
-        (task: any) => task.prompt === prompt && task.seed === seed
-      );
-      console.log("Target task:", targetTask);
-      if (targetTask.length === 0) return;
-      fetchImages(targetTask[0].id);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  //     const data = response.data;
+  //     const targetTask = data.filter(
+  //       (task: any) => task.prompt === prompt && task.seed === seed
+  //     );
+  //     console.log("Target task:", targetTask);
+  //     if (targetTask.length === 0) return;
+  //     fetchImages(targetTask[0].id);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
-  const fetchImages = async (requestId: string) => {
-    if (!address || !requestId) return;
-    try {
-      const image = await axios.get(
-        `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/genImages?requestID=${requestId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "user-id": address,
-          },
-        }
-      );
-      console.log("Image:", image.data.images[0]);
-      // setImages(image.data);
-    } catch (error) {
-      console.error("Error fetching images:", error);
-    }
-  };
+  // const fetchImages = async (requestId: string) => {
+  //   if (!address || !requestId) return;
+  //   try {
+  //     const image = await axios.get(
+  //       `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/genImages?requestID=${requestId}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "user-id": address,
+  //         },
+  //       }
+  //     );
+  //     console.log("Image:", image.data.images[0]);
+  //     // setImages(image.data);
+  //   } catch (error) {
+  //     console.error("Error fetching images:", error);
+  //   }
+  // };
   // const genImage = async () => {
   //   setLoading(true);
   //   if (!prompt || !seed || !address) return;
@@ -135,13 +133,14 @@ const PromptForm = ({
   // };
   const genImage = async () => {
     setLoading(true);
-    if (!prompt || !seed || !address) return;
+    if (!positivePrompt || !negativePrompt || !seed || !address) return;
+    const prompt = positivePrompt + "---" + negativePrompt;
     const data = JSON.stringify({
       prompt: prompt,
       seed: seed,
     });
     try {
-      const res = await axios.post("https://ai.7007.studio/gen", data, {
+      const res = await axios.post("https://ai.7007.ai/gen", data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -150,7 +149,7 @@ const PromptForm = ({
       dialogRef.current?.showModal();
       // handleFetchData();
     } catch (error) {
-      console.error("Request error while getting presigned URL:", error);
+      console.error("error:", error);
     } finally {
       setLoading(false);
     }
@@ -167,42 +166,25 @@ const PromptForm = ({
 
     if (
       !title ||
-      !prompt ||
+      !positivePrompt ||
+      !negativePrompt ||
       !seed ||
       !image ||
       !address ||
-      !nftContract ||
-      !modelInfo
+      !modelData
     ) {
       return;
     }
-
     setMintInitialized(true);
-
-    const { ipfsLinkMetadata, metadata } = await getTokenURI(
-      modelInfo ? modelInfo.modelName : "Genesis Model",
-      title,
-      prompt,
-      Number(seed),
-      `https://cloudflare-ipfs.com/ipfs/${image}`
-    );
-    console.log("ipfsLinkMetadata:", ipfsLinkMetadata);
-    console.log("metadata:", metadata);
-
-    const hashedPrompt = ethers.encodeBytes32String(prompt) as `0x${string}`;
-
     mintAIGC(
       {
-        address: nftContract,
-        args: [
-          ipfsLinkMetadata,
-          hashedPrompt,
-          "0x7465787400000000000000000000000000000000000000000000000000000000",
-          metadata?.image || "",
-        ],
+        address: modelData.NFTContract as Address,
+        args: [address, positivePrompt, negativePrompt, title, BigInt(seed)],
+        value: totalFee,
       },
       {
         onError(error: any) {
+          console.error("Error minting AIGC:", error);
           setMintInitialized(false);
         },
       }
@@ -240,14 +222,6 @@ const PromptForm = ({
             <span>{errorMessage}</span>
           </div>
         )}
-        {/* <TextInput
-        placeholder="Let's give it a cool name"
-        name="name"
-        label="Title"
-        register={register}
-        errors={errors}
-        required
-      /> */}
         <div className="flex flex-col w-full gap-3">
           <p className="pl-2">Title</p>
           <input
@@ -268,8 +242,8 @@ const PromptForm = ({
             name="modelPositive"
             id="modelPositive"
             className="bg-grey h-32 pl-10"
-            value={prompt} // Bind the value to the state variable
-            onChange={(e: any) => setPrompt(e.target.value)} // Update the input value directly
+            value={positivePrompt} // Bind the value to the state variable
+            onChange={(e: any) => setPositivePrompt(e.target.value)} // Update the input value directly
             required
             placeholder="Enter your prompt"
           />
@@ -304,16 +278,6 @@ const PromptForm = ({
               placeholder="Enter Seed +"
             />
           </div>
-          {/* <TextInput
-          placeholder="Model name +"
-          name="name"
-          label="model"
-          register={register}
-          errors={errors}
-          required
-          defaultValue={model.name} // Set the default value
-          readOnly={true} // Make the input field read-only
-        /> */}
           <div className="flex flex-col w-1/2 gap-3">
             <p className="pl-2">Model</p>
             <input
@@ -321,7 +285,7 @@ const PromptForm = ({
               name="modelName" // Provide a name attribute to identify the input field
               id="modelName"
               className="bg-grey h-16 pl-10"
-              defaultValue={modelInfo?.modelName}
+              defaultValue={modelData?.modelName}
               readOnly
               placeholder="Model name +"
             />
@@ -378,7 +342,7 @@ const PromptForm = ({
           )}
           <div className="flex justify-between w-full gap-4 h-[45px]">
             <button
-              className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
+              className="z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
               onClick={() => dialogRef.current?.close()}
             >
               Cancel
@@ -390,7 +354,7 @@ const PromptForm = ({
             >
               {mintInitialized ? (
                 <div className="flex gap-2 items-center">
-                  <span className="loading loading-spinner"></span>
+                  <span className="loading loading-spinner cursor-pointer"></span>
                   Minting
                 </div>
               ) : (

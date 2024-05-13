@@ -9,6 +9,7 @@ import Card from "@/components/ui/card";
 import { ModelList } from "@/types";
 
 const Marketplace = () => {
+  //TODO: mutliple models
   const [taskStatus, setTaskStatus] = useState([]);
   const { address, isConnected } = useAccount();
   const emptyCardList = [...Array(1).keys()];

@@ -1,5 +1,5 @@
 import Tabs from "@/components/ui/tabs";
-import { ModelIndex } from "@/constants";
+import { ModelIndex } from "@/constants/constants";
 import Image from "next/image";
 import Link from "next/link";
 

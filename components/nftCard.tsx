@@ -83,11 +83,10 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
       </Player.Root>
     );
   }
-
   if (metadata?.image) {
     return (
       <Image
-        src={metadata.image}
+        src={metadata?.image}
         alt={metadata?.name}
         width={258}
         height={258}
@@ -236,7 +235,6 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
     }
   }, [nftContract, isErc721, tokenURI, isErc1155, uri]);
   const { showListingModal } = useListingModal();
-
   return (
     <Card
       className={`w-[258px] h-full transition-all ${hover ? "drop-shadow-card" : ""}`}
@@ -263,14 +261,21 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
             <a className="text-lg font-bold">
               {metadata?.name || <Skeleton count={2} />}
             </a>
-            <div className="flex-wrap text-md line-clamp-4">
+            <div className="flex-wrap flex flex-col text-md line-clamp-4">
               {(metadata &&
                 metadata.attributes &&
                 metadata.attributes
-                  .filter((a) => a.trait_type === "prompt")
-                  .map((a) => (
-                    <a key={a.value} className="">
-                      {a.value}
+                  .filter(
+                    (a) =>
+                      a.trait_type === "positive_prompt" ||
+                      a.trait_type === "negative_prompt"
+                  )
+                  .map((prompt) => (
+                    <a key={prompt.value} className="">
+                      {prompt.trait_type === "positive_prompt"
+                        ? "Positive"
+                        : "Negative"}
+                      : {prompt.value}
                     </a>
                   ))) || <Skeleton count={5} />}
             </div>
@@ -278,16 +283,18 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
               <div className="flex w-full justify-between gap-4 pt-2 items-end">
                 <div className="flex items-end gap-1">
                   <a className="text-[20px]">
-                    {decimals?.result
+                    {decimals?.result && listing.pricePerToken
                       ? formatUnits(listing.pricePerToken, decimals.result)
-                      : formatEther(listing.pricePerToken) || <Skeleton />}
+                      : Number(formatEther(listing.pricePerToken)).toFixed(
+                          4
+                        ) || <Skeleton />}
                     {" " || <Skeleton />}
                   </a>
                   <a className="">
                     {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
                   </a>
                 </div>
-                <a className="opacity-40">
+                <a className="opacity-40 text-sm">
                   {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
                     <Skeleton />
                   )}

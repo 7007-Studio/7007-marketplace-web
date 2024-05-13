@@ -6,19 +6,24 @@ import { useAccount } from "wagmi";
 
 import AIGC from "@/abis/AIGC.json";
 import { getPublicClient } from "@/client";
-import { ModelIndex } from "@/constants";
+import { ModelIndex } from "@/constants/constants";
 import useNftContract from "@/hooks/useNftContract";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
+import useValidListings from "@/hooks/useValidListings";
+import { Listing } from "@/types";
 
-const Collected = () => {
+const Created = () => {
+  //TODO: mutliple contracts
   const { address, chain } = useAccount();
   const { nftContract } = useNftContract({
-    modelIndex: ModelIndex,
     chainId: chain?.id,
   });
   const emptyCardList = [...Array(1).keys()];
-
+  const { listings } = useValidListings({
+    listingCreator: address,
+    chainId: chain?.id,
+  });
   const [tokenIds, setTokenIds] = useState<bigint[]>([]);
   useEffect(() => {
     if (!nftContract || !address || !chain) return;
@@ -48,7 +53,6 @@ const Collected = () => {
     };
     fetchMintEvents();
   }, [nftContract, address, chain]);
-
   return (
     <>
       {(nftContract && (
@@ -58,6 +62,7 @@ const Collected = () => {
               key={`${nftContract}-${id}`}
               nftContract={nftContract}
               tokenId={id}
+              listing={listings?.find((l: Listing) => l.tokenId === id)}
             />
           )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
         </div>
@@ -72,4 +77,4 @@ const Collected = () => {
   );
 };
 
-export default Collected;
+export default Created;

@@ -1,7 +1,7 @@
 "use client";
 import { useAccount } from "wagmi";
 
-import { ModelIndex } from "@/constants";
+import { modelData, ModelIndex } from "@/constants/constants";
 import useNftContract from "@/hooks/useNftContract";
 import useNftCollection from "@/hooks/useNftCollection";
 import NFTCard from "@/components/nftCard";
@@ -19,12 +19,12 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Image from "next/image";
 import axios from "axios";
-import { ModelList } from "@/types";
+import { ModelDetail, ModelList } from "@/types";
 import { useRouter } from "next/navigation";
 
 function HomeModel({ windowSize }: { windowSize: number }) {
+  const modelList: ModelDetail[] = modelData;
   const swiperRef = useRef<any>(null);
-  const { chain } = useAccount();
   const [swiperIndex, setSwiperIndex] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
   const emptyCardList = [...Array(4).keys()];
@@ -32,8 +32,8 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   const { setModel } = useModelInfoStore();
   const [selector1, setSelector1] = useState<SelectorEntry[]>([
     { id: "1", label: "All", selected: true },
-    { id: "3", label: "text-to-image", selected: false },
-    { id: "2", label: "text-to-text", selected: false },
+    { id: "2", label: "text-to-image", selected: false },
+    // { id: "3", label: "text-to-text", selected: false },
   ]);
 
   const handleSelector1 = (id: string) => {
@@ -47,48 +47,82 @@ function HomeModel({ windowSize }: { windowSize: number }) {
       })
     );
   };
-
-  const { nftContract } = useNftContract({
-    modelIndex: ModelIndex,
-    chainId: chain?.id,
-  });
-
-  const { tokenIds } = useNftCollection({ nftContract });
-
   const handleModelClick = (item: any) => {
     setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
   };
+  // const handleFetchData = async () => {
+  //   try {
+  //     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
 
-  const handleFetchData = async () => {
-    try {
-      const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
+  //     const response = await axios.get(apiUrl, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
 
-      const response = await axios.get(apiUrl, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  //     const data = response.data;
+  //     const filteredData = data.filter((item: any) => item.status === "Done");
 
-      const data = response.data;
-      const filteredData = data.filter((item: any) => item.status === "Done");
+  //     setTaskStatus(filteredData);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
-      setTaskStatus(filteredData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    handleFetchData();
-  }, []);
+  // useEffect(() => {
+  //   handleFetchData();
+  // }, []);
 
   return (
     <div className="flex flex-col w-full items-center gap-[72px]">
       <div className="w-[75%]">
         <Selector onChange={handleSelector1} options={selector1} />
       </div>
+      <div className="relative hidden h-full w-full transition-all lg:flex">
+        <Swiper
+          slidesPerView={windowSize > 1600 ? 5 : windowSize > 1280 ? 4 : 3}
+          spaceBetween={25}
+          modules={[Pagination]}
+          className="h-full w-full max-w-[80%] cursor-grab flex justify-center"
+          onSwiper={(swiper: any) => {
+            swiperRef.current = swiper;
+          }}
+          onSlideChange={(swiper: any) => {
+            setSwiperIndex(swiper.activeIndex);
+            setIsEnd(swiper.isEnd);
+          }}
+        >
+          {modelList.map((model: ModelDetail, index) => (
+            <SwiperSlide key={index} onClick={() => handleModelClick(model)}>
+              <ModelCard modelData={model} />
+            </SwiperSlide>
+          )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
+        </Swiper>
 
-      {(nftContract && (
+        <div className="absolute top-1/2 -translate-y-1/2 z-20 flex w-full px-16 justify-between">
+          <Image
+            src="/arrow.svg"
+            alt="arrow"
+            width={25}
+            height={88}
+            color="white"
+            onClick={
+              swiperIndex === 0 ? () => {} : () => swiperRef.current.slidePrev()
+            }
+            className={`rotate-180 ${swiperIndex === 0 ? "opacity-20 cursor-default" : "opacity-100 hover:opacity-60 cursor-pointer"}`}
+          />
+          <Image
+            src="/arrow.svg"
+            alt="arrow"
+            width={25}
+            height={88}
+            onClick={isEnd ? () => {} : () => swiperRef.current.slideNext()}
+            className={`${isEnd ? "opacity-20 cursor-default" : "opacity-100 hover:opacity-60 cursor-pointer"}`}
+          />
+        </div>
+      </div>
+
+      {/* {(taskStatus && (
         <div className="relative hidden h-full w-full transition-all lg:flex">
           <Swiper
             slidesPerView={windowSize > 1600 ? 5 : windowSize > 1280 ? 4 : 3}
@@ -140,7 +174,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
             <EmptyCard key={l} />
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }
@@ -354,11 +388,9 @@ function Ora({ windowSize }: { windowSize: number }) {
   const [isEnd, setIsEnd] = useState(false);
   const emptyCardList = [...Array(4).keys()];
   const { nftContract } = useNftContract({
-    modelIndex: ModelIndex,
     chainId: chain?.id,
   });
   const { tokenIds } = useNftCollection({ nftContract });
-
   return (
     <div className="flex flex-col w-full items-center gap-[72px]">
       <div className="w-[75%]">
