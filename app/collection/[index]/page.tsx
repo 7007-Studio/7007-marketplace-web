@@ -10,7 +10,7 @@ import Hero from "./hero";
 import Progress from "./progress";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { getBuiltGraphSDK, GraphQueryQuery } from "@/.graphclient";
+import { getBuiltGraphSDK, StableDiffusionQueryQuery } from "@/.graphclient";
 import useValidListings from "@/hooks/useValidListings";
 import { Address } from "viem";
 import { aigcAbi } from "@/generated";
@@ -25,7 +25,7 @@ export default function CollectionPage() {
   const sdk = getBuiltGraphSDK();
   const result = useQuery({
     queryKey: ["GraphQuery"],
-    queryFn: () => sdk.GraphQuery(),
+    queryFn: () => sdk.StableDiffusionQuery(),
   });
   const { data, isLoading, error, refetch } = result;
   const { listings } = useValidListings({
@@ -83,7 +83,7 @@ export default function CollectionPage() {
       />
       <Progress modelIndex={index} />
       <Stats
-        NFTData={isLoading ? undefined : (data as GraphQueryQuery)}
+        NFTData={isLoading ? undefined : (data as StableDiffusionQueryQuery)}
         totalListings={listings && listings.length}
         totalSupply={totalSupply ? String(totalSupply) : "0"}
         owners={owners}

@@ -1,4 +1,4 @@
-import { GraphQueryQuery } from "@/.graphclient";
+import { StableDiffusionQueryQuery } from "@/.graphclient";
 import useReadAigcContracts from "@/hooks/useReadAigcContracts";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ export default function Stats({
   owners,
 }: {
   nftContract?: Address;
-  NFTData?: GraphQueryQuery;
+  NFTData?: StableDiffusionQueryQuery;
   totalListings?: number;
   totalSupply?: string;
   owners?: number;

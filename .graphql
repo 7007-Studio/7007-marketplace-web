@@ -1,5 +1,8 @@
-query GraphQuery {
-  newListings(orderBy: listing_listingId) {
+query StableDiffusionQuery {
+  newListings(
+    orderBy: listing_listingId
+        where: {assetContract_contains: "0x32088be31d2403db83bc2de80ba244455a34f4c3"}
+  ) {
     listingId
     listingCreator
     listing_tokenId
@@ -13,7 +16,9 @@ query GraphQuery {
     listing_endTimestamp
     listing_assetContract
   }
-  newSales(orderBy: listingId) {
+  newSales(orderBy: listingId
+    where: {assetContract_contains: "0x32088be31d2403db83bc2de80ba244455a34f4c3"}
+  ) {
     buyer
     listingCreator
     listingId
@@ -22,7 +27,7 @@ query GraphQuery {
     assetContract
     quantityBought
   }
-  newOffers(orderBy: offerId) {
+  newOffers(orderBy: offerId where: {assetContract_contains: "0x32088be31d2403db83bc2de80ba244455a34f4c3"}) {
     offerId
     offeror
     offer_tokenType
