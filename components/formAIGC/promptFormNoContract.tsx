@@ -307,8 +307,8 @@ const PromptForm = ({
           </div>
           <div className="flex justify-between w-full gap-12">
             <a className="max-w-[502px]">
-              this is a function description a description this is function
-              function description function
+              Each set of prompts relate to unique result, inferences are non
+              fungible.
             </a>
             <button
               className="w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded"

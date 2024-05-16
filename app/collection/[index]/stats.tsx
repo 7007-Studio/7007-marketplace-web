@@ -28,19 +28,21 @@ export default function Stats({
 
   const statItems = [
     {
-      name: "Total volume",
+      name: "Total Volume",
       value:
         NFTData && NFTData.newSales?.length > 0
           ? `${totalVolume?.toFixed(4)} ETH`
           : 0,
     },
     {
-      name: "Floor price",
+      name: "Floor Price",
       value:
-        NFTData && NFTData.newListings?.length > 0 ? `${floorPrice} ETH` : 0,
+        NFTData && NFTData.newListings?.length > 0
+          ? `${floorPrice?.toFixed(4)} ETH`
+          : 0,
     },
     {
-      name: "Total quantity",
+      name: "Total Quantity",
       value: totalSupply,
     },
     {

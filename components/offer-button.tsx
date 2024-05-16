@@ -80,7 +80,6 @@ export default function OfferButton({
       });
     }
   };
-  const { writeContract } = useWriteContract();
 
   const { writeContract: approve, data: approveData } = useWriteContract();
   const approveResult = useWaitForTransactionReceipt({
@@ -218,19 +217,11 @@ export default function OfferButton({
                 placeholder="0"
               />
               <div className="flex flex-row justify-between">
-                <div>7007 fee</div>
-                <div>0 %</div>
-              </div>
-              <div className="flex flex-row justify-between">
-                <div>OAO fee</div>
-                <div>0 %</div>
-              </div>
-              <div className="flex flex-row justify-between">
                 <div>Model earning</div>
-                <div>0 %</div>
+                <div>10 %</div>
               </div>
               <div className="flex flex-row justify-between font-bold">
-                <div>Total potential earnings</div>
+                <div>Total cost</div>
                 {formatEther(args.totalPrice)} ETH
               </div>
               <button
@@ -261,7 +252,7 @@ export default function OfferButton({
                 height={120}
               />
               <div className="px-4 text-center">
-                <h2 className="heading-md">Your Offer was successfully!</h2>
+                <h2 className="heading-md">Your offer has been submitted!</h2>
               </div>
               <button
                 type="button"

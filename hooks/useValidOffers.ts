@@ -21,13 +21,15 @@ const useValidOffers = ({
   assetContract?: Address;
 }) => {
   const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
-  const { data: totalOffers } = useReadMarketplaceV3TotalOffers({
-    address: marketplaceV3,
-  });
-  const { data: allValidOffers } = useReadMarketplaceV3GetAllValidOffers({
-    address: marketplaceV3,
-    args: [0n, totalOffers ? totalOffers - 1n : 0n],
-  });
+  const { data: totalOffers, refetch: refetchTotalOffers } =
+    useReadMarketplaceV3TotalOffers({
+      address: marketplaceV3,
+    });
+  const { data: allValidOffers, refetch: refetchAllValidOffers } =
+    useReadMarketplaceV3GetAllValidOffers({
+      address: marketplaceV3,
+      args: [0n, totalOffers ? totalOffers - 1n : 0n],
+    });
 
   const filterOffers = (offers: any) => {
     const tokenIdExists = tokenId !== undefined;
@@ -67,10 +69,14 @@ const useValidOffers = ({
       }
     });
   };
+  const refetch = async () => {
+    await refetchTotalOffers();
+    await refetchAllValidOffers();
+  };
 
   const filteredOffers = filterOffers(allValidOffers || []);
 
-  return { offers: filteredOffers };
+  return { offers: filteredOffers, refetch };
 };
 
 export default useValidOffers;

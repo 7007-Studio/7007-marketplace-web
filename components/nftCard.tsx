@@ -240,7 +240,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
       className={`w-[258px] h-full transition-all ${hover ? "drop-shadow-card" : ""}`}
     >
       <div className="h-[38px] px-[10px] flex items-center justify-between">
-        <a className="text-white/40 text-sm">NOV {tokenId.toString()}</a>
+        <a className="text-white/40 text-sm">ID {tokenId.toString()}</a>
         <a className="text-[10px] text-end">
           {metadata &&
             metadata.attributes &&
@@ -256,12 +256,12 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         <div className="relative border-y border-white bg-[#eee] pb-[100%]">
           {metadata && <NFTCoverAsset metadata={metadata} />}
         </div>
-        <div className="gap-2 p-5 flex flex-col justify-between min-h-[50px]">
+        <div className="gap-2 p-5 flex flex-col justify-between h-[150px]">
           <div className="flex flex-col gap-2">
             <a className="text-lg font-bold">
               {metadata?.name || <Skeleton count={2} />}
             </a>
-            <div className="flex-wrap flex flex-col text-md line-clamp-4">
+            <div className="flex flex-col gap-1 text-md line-clamp-2">
               {(metadata &&
                 metadata.attributes &&
                 metadata.attributes
@@ -271,7 +271,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
                       a.trait_type === "negative_prompt"
                   )
                   .map((prompt) => (
-                    <a key={prompt.value} className="">
+                    <a key={prompt.value} className="line-clamp-2">
                       {prompt.trait_type === "positive_prompt"
                         ? "Positive"
                         : "Negative"}

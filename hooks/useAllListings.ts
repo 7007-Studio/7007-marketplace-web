@@ -21,13 +21,15 @@ const useAllListings = ({
   tokenId?: number;
 }) => {
   const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
-  const { data: totalListings } = useReadMarketplaceV3TotalListings({
-    address: marketplaceV3,
-  });
-  const { data: allListings } = useReadMarketplaceV3GetAllListings({
-    address: marketplaceV3,
-    args: [0n, totalListings ? totalListings - 1n : 0n],
-  });
+  const { data: totalListings, refetch: refetchTotalListings } =
+    useReadMarketplaceV3TotalListings({
+      address: marketplaceV3,
+    });
+  const { data: allListings, refetch: refetchAllListings } =
+    useReadMarketplaceV3GetAllListings({
+      address: marketplaceV3,
+      args: [0n, totalListings ? totalListings - 1n : 0n],
+    });
 
   const filterListings = (listings: any) => {
     const tokenIdExists = tokenId !== undefined;
@@ -67,10 +69,13 @@ const useAllListings = ({
       }
     });
   };
-
+  const refetch = async () => {
+    await refetchTotalListings();
+    await refetchAllListings();
+  };
   const filteredListings = filterListings(allListings || []);
 
-  return { listings: filteredListings };
+  return { listings: filteredListings, refetch };
 };
 
 export default useAllListings;

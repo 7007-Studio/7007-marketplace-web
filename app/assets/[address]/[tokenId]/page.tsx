@@ -49,18 +49,20 @@ export default function Detail() {
   const [animationUrl, setAnimationUrl] = useState<string>();
   const [reFetch, setReFetch] = useState(false);
   const [ETHPrice, setETHPrice] = useState<string>("");
-  const { listings } = useAllListings({
+  const { listings, refetch: refetchAllListings } = useAllListings({
     chainId: chain?.id,
     tokenId: Number(tokenId),
     assetContract: nftContract as Address,
   });
-  const { offers } = useValidOffers({
+  const { offers, refetch: refetchValidOffers } = useValidOffers({
     chainId: chain?.id,
     tokenId: Number(tokenId),
     assetContract: nftContract as Address,
   });
   const handleReFetch = () => {
     setReFetch(!reFetch);
+    refetchValidOffers();
+    refetchAllListings();
   };
   const getETHUSDPrice = async () => {
     const url = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT";
@@ -248,6 +250,26 @@ export default function Detail() {
                     </div>
                   ))) || <Skeleton count={5} />}
             </div>
+            {isOwner && nftContract && tokenId && metadata && (
+              <div className="flex w-full flex-col mt-20 py-7 px-6 gap-7 bg-transparent border border-white rounded-xl">
+                <button
+                  onClick={(e) => {
+                    console.debug("List button clicked");
+                    e.stopPropagation();
+                    showListingModal({
+                      nftContract: nftContract as Address,
+                      name: metadata.name || "",
+                      tokenId: BigInt(tokenId),
+                      metadata,
+                    });
+                  }}
+                  className="w-full h-[45px] rounded bg-white text-black flex font-bold justify-center items-center"
+                  // disabled={!!listing}
+                >
+                  List for sale
+                </button>
+              </div>
+            )}
             {!isOwner && nftContract && tokenId && metadata && (
               <Buy
                 nftContract={nftContract as Address}
@@ -301,13 +323,13 @@ export default function Detail() {
           <div className="w-[650px] flex flex-col gap-[30px] h-full">
             <div className="border border-white w-full h-full rounded-md">
               <div className="py-5 border-b px-[30px] flex font-bold">
-                price history
+                Price History
               </div>
               <div className="w-full h-full flex flex-col"></div>
             </div>
             <div className="border border-white w-full h-full rounded-md">
               <div className="py-5 border-b px-[30px] flex font-bold">
-                detail
+                Detail
               </div>
               <div className="w-full h-fit flex flex-col gap-6 py-5 px-[30px]">
                 <div className="w-full flex justify-between gap-10">
@@ -343,11 +365,11 @@ export default function Detail() {
                   <a>ERC-7007</a>
                 </div>
                 <div className="w-full flex justify-between gap-10">
-                  <a>chain</a>
+                  <a>Chain</a>
                   <a>{chain?.name}</a>
                 </div>
                 <div className="w-full flex justify-between gap-10">
-                  <a>last updated</a>
+                  <a>Last Updated</a>
                   <a>1 month age</a>
                 </div>
                 <div className="w-full flex justify-between gap-10">
@@ -359,12 +381,13 @@ export default function Detail() {
                     key={attr.trait_type}
                     className="w-full flex justify-between gap-10"
                   >
-                    <a>
+                    <a className="">
                       {attr.trait_type === "positive_prompt"
                         ? "Positive Prompt"
                         : attr.trait_type === "negative_prompt"
                           ? "Negative Prompt"
-                          : attr.trait_type}
+                          : attr.trait_type.charAt(0).toUpperCase() +
+                            attr.trait_type.slice(1)}
                     </a>
                     {attr.trait_type === "music" ? (
                       <a
