@@ -1,21 +1,21 @@
 "use client";
 
-import { useAccount, useReadContract } from "wagmi";
-
+import { useAccount, useReadContracts } from "wagmi";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
 import useValidOffers from "@/hooks/useValidOffers";
 import { useEffect, useMemo, useState } from "react";
 import { Offer } from "@/types";
-import { Abi, PublicClient } from "viem";
+import { Abi, Address, PublicClient } from "viem";
 import { getPublicClient } from "@/client";
-import useNftContract from "@/hooks/useNftContract";
+import useNftContracts from "@/hooks/useNftContracts";
 import AIGC from "@/abis/AIGC.json";
+import useTotalTokenIDs, { TokenIDs } from "@/hooks/useTotalTokenIDs";
 
 const Marketplace = () => {
   const [receivedTokenIds, setReceivedTokenIds] = useState<bigint[]>([]);
   const { address, chain } = useAccount();
-  const { nftContract } = useNftContract({
+  const { nftContracts } = useNftContracts({
     chainId: chain?.id,
   });
   const { offers } = useValidOffers({
@@ -23,33 +23,19 @@ const Marketplace = () => {
   });
   const emptyCardList = [...Array(1).keys()];
 
-  const { data: totalSupply } = useReadContract({
-    address: nftContract,
-    abi: AIGC.abi as Abi,
-    functionName: "totalSupply",
-  });
+  const { tokenIds } = useTotalTokenIDs({ nftContracts });
 
-  const tokenIds = useMemo(() => {
-    const ids: number[] = [];
-    if (!totalSupply) return ids;
-
-    for (let i = 0; i < Number(totalSupply); i++) {
-      ids.push(i);
-    }
-    return ids;
-  }, [totalSupply]);
-
-  //TODO: mutliple contracts
   useEffect(() => {
-    if (!nftContract || !address || !chain || !offers || !tokenIds) return;
+    if (!nftContracts || !address || !chain || !offers || !tokenIds.length)
+      return;
 
     const fetchOwnerAndFilterOffers = async () => {
       const results = await getPublicClient(chain).multicall({
-        contracts: tokenIds.map((id) => ({
-          address: nftContract,
+        contracts: tokenIds.map(({ id, contract }: TokenIDs) => ({
+          address: contract,
           abi: AIGC.abi as Abi,
           functionName: "ownerOf",
-          args: [BigInt(id)],
+          args: [id],
         })),
       });
 
@@ -57,23 +43,29 @@ const Marketplace = () => {
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
         if (result.result === address) {
-          ownedTokenIds.push(BigInt(tokenIds[i]));
+          ownedTokenIds.push({
+            tokenId: tokenIds[i].id,
+            contract: tokenIds[i].contract,
+          });
         }
       }
 
       const receivedTokenIds = offers.filter((offer: Offer) => {
-        return ownedTokenIds.includes(offer.tokenId);
+        return ownedTokenIds.some(
+          (ownedToken) =>
+            ownedToken.tokenId === offer.tokenId &&
+            ownedToken.contract === offer.assetContract
+        );
       });
 
       setReceivedTokenIds(receivedTokenIds);
     };
 
     fetchOwnerAndFilterOffers();
-  }, [nftContract, address, chain, tokenIds, offers]);
-
+  }, [nftContracts, address, chain, tokenIds, offers]);
   return (
     <div className="flex flex-wrap max-w-[85%] gap-14 justify-center">
-      {receivedTokenIds?.map((offer: any) => (
+      {receivedTokenIds.map((offer: any) => (
         <NFTCard
           key={offer.offerId}
           nftContract={offer.assetContract}

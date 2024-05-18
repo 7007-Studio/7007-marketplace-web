@@ -53,10 +53,8 @@ export default function CollectionPage() {
   //     console.error("Error:", error);
   //   }
   // };
-  const openseaTestNetURL =
-    "https://testnets-api.opensea.io/api/v2/collections/stable-diffusion-19/stats";
-  const openseaMainNetURL =
-    "https://api.opensea.io/api/v2/collections/stable-diffusion-19/stats";
+  const openseaTestNetURL = `https://testnets-api.opensea.io/api/v2/collections/${modelInfo[Number(index)].openSeaName}/stats`;
+  const openseaMainNetURL = `https://api.opensea.io/api/v2/collections/${modelInfo[Number(index)].openSeaName}/stats`;
   const fetchCollectionData = async () => {
     try {
       const response = await axios.get(openseaTestNetURL);
@@ -83,6 +81,7 @@ export default function CollectionPage() {
       />
       <Progress modelIndex={index} />
       <Stats
+        //TODO: mutilple NFTs
         NFTData={isLoading ? undefined : (data as StableDiffusionQueryQuery)}
         totalListings={listings && listings.length}
         totalSupply={totalSupply ? String(totalSupply) : "0"}

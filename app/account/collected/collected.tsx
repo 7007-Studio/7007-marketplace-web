@@ -1,83 +1,83 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Abi } from "viem";
-import { useAccount, useReadContract } from "wagmi";
+import { Abi, Address } from "viem";
+import { useAccount, useReadContracts } from "wagmi";
 import AIGC from "@/abis/AIGC.json";
 import { getPublicClient } from "@/client";
-import { ModelIndex } from "@/constants/constants";
-import useNftContract from "@/hooks/useNftContract";
+import useNftContracts from "@/hooks/useNftContracts";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
-import { getContractAddress } from "@/helpers";
-import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
-import { Listing, Offer } from "@/types";
 import useValidListings from "@/hooks/useValidListings";
+import { Listing } from "@/types";
+import useTotalTokenIDs, { TokenIDs } from "@/hooks/useTotalTokenIDs";
 
 const Collected = () => {
-  //TODO: mutliple contracts
   const { address, chain } = useAccount();
-  const { nftContract } = useNftContract({
+  const { nftContracts } = useNftContracts({
     chainId: chain?.id,
   });
   const emptyCardList = [...Array(4).keys()];
-  const [filteredTokenIds, setFilteredTokenIds] = useState<bigint[]>([]);
+  const [filteredTokenIds, setFilteredTokenIds] = useState<
+    { id: bigint; contract: string }[]
+  >([]);
   const { listings } = useValidListings({
     listingCreator: address,
     chainId: chain?.id,
   });
-  const { data: totalSupply } = useReadContract({
-    address: nftContract,
-    abi: AIGC.abi as Abi,
-    functionName: "totalSupply",
-  });
 
-  const tokenIds = useMemo(() => {
-    const ids: number[] = [];
-    if (!totalSupply) return ids;
-
-    for (let i = 0; i < Number(totalSupply); i++) {
-      ids.push(i);
-    }
-    return ids;
-  }, [totalSupply]);
+  const { tokenIds } = useTotalTokenIDs({ nftContracts });
 
   useEffect(() => {
-    if (!nftContract || !address || !chain) return;
+    if (
+      !nftContracts ||
+      !address ||
+      !chain ||
+      !tokenIds ||
+      tokenIds.length === 0
+    )
+      return;
     const fetchOwner = async () => {
       const results = await getPublicClient(chain).multicall({
-        contracts: tokenIds.map((id) => ({
-          address: nftContract,
+        contracts: tokenIds.map(({ id, contract }: TokenIDs) => ({
+          address: contract,
           abi: AIGC.abi as Abi,
           functionName: "ownerOf",
-          args: [BigInt(id)],
+          args: [id],
         })),
       });
-      const ownedTokenIds = [];
-      for (let i = 0; i < results.length; i++) {
-        const result = results[i];
-        if (result.result === address) {
-          ownedTokenIds.push(BigInt(tokenIds[i]));
-        }
-      }
+
+      const ownedTokenIds = results
+        .map((result: any, index: number) => ({
+          id: tokenIds[index].id,
+          contract: tokenIds[index].contract,
+          owner: result.result,
+        }))
+        .filter((token: any) => token.owner === address)
+        .map((token: any) => ({ id: token.id, contract: token.contract }));
+
       setFilteredTokenIds(ownedTokenIds);
     };
+
     fetchOwner();
-  }, [nftContract, address, chain, tokenIds]);
+  }, [nftContracts, address, chain, tokenIds]);
+
   return (
     <>
-      {(nftContract && (
+      {nftContracts.length > 0 ? (
         <div className="flex flex-wrap max-w-[85%] gap-14 justify-center">
-          {filteredTokenIds.map((id) => (
+          {filteredTokenIds.map(({ id, contract }: any) => (
             <NFTCard
-              key={`${nftContract}-${id}`}
-              nftContract={nftContract}
+              key={`${contract}-${id}`}
+              nftContract={contract}
               tokenId={id}
-              listing={listings?.find((l: Listing) => l.tokenId === id)}
+              listing={listings?.find(
+                (l: Listing) => l.tokenId === id && l.assetContract === contract
+              )}
             />
           )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
         </div>
-      )) || (
+      ) : (
         <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-14">
           {emptyCardList.map((l) => (
             <EmptyCard key={l} />

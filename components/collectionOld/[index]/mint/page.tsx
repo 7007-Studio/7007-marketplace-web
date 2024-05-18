@@ -3,9 +3,9 @@
 // import { useParams } from "next/navigation";
 // // import { useAccount } from "wagmi";
 // import FormAIGC from "@/components/formAIGC";
-// import useNftContract from "@/hooks/useNftContract";
+// import useNftContracts from "@/hooks/useNftContracts";
 // import { useAccount } from "wagmi";
-// // import useNftContract from "@/hooks/useNftContract";
+// // import useNftContracts from "@/hooks/useNftContracts";
 
 // export default function MintPage() {
 //   const { index } = useParams<{ index: string }>() || {};
@@ -13,7 +13,7 @@
 
 //   const { chain } = useAccount();
 //   //TODO: hardcode modelIndex
-//   const { nftContract } = useNftContract({
+//   const { nftContract } = useNftContracts({
 //     chainId: chain?.id,
 //   });
 

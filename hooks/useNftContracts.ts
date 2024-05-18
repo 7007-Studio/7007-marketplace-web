@@ -2,16 +2,17 @@ import { useReadAigcFactoryDeployedAigCs } from "@/generated";
 import { getContractAddress } from "@/helpers";
 import { sepolia } from "viem/chains";
 
-const useNftContract = ({
+const useNftContracts = ({
   // modelIndex,
   chainId = sepolia.id,
 }: {
   // modelIndex: bigint;
   chainId?: number;
 }) => {
-  const nftContract = getContractAddress("NFTContract", chainId);
+  const SDNFT = getContractAddress("StableDiffusionNFT", chainId);
+  const OPMLNFT = getContractAddress("OPMLNFT", chainId);
 
-  return { nftContract };
+  return { nftContracts: [SDNFT, OPMLNFT] };
 };
 
-export default useNftContract;
+export default useNftContracts;

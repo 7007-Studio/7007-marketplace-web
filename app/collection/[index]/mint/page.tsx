@@ -3,8 +3,6 @@
 import { useParams } from "next/navigation";
 // import { useAccount } from "wagmi";
 import FormAIGC from "@/components/formAIGC";
-import useNftContract from "@/hooks/useNftContract";
-import { useAccount } from "wagmi";
 import { ModelDetail } from "@/types";
 import { modelData } from "@/constants/constants";
 import { Address } from "viem";

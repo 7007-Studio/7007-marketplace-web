@@ -89,4 +89,5 @@ export interface ModelDetail {
   NFTContract: string;
   description: string;
   type: string;
+  openSeaName: string;
 }

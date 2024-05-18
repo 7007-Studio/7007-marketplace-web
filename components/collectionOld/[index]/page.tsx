@@ -2,7 +2,7 @@
 
 // import { useParams } from "next/navigation";
 // import { useAccount, useReadContract, useReadContracts } from "wagmi";
-// import useNftContract from "@/hooks/useNftContract";
+// import useNftContracts from "@/hooks/useNftContracts";
 // import Stats from "./stats";
 // import Collection from "@/components/collection";
 // import { ModelInfo } from "@/types";
@@ -30,7 +30,7 @@
 //   const { listings } = useValidListings({
 //     chainId: chain?.id,
 //   });
-//   const { nftContract } = useNftContract({
+//   const { nftContract } = useNftContracts({
 //     chainId: chain?.id,
 //   });
 //   const { data: totalSupply } = useReadContract({

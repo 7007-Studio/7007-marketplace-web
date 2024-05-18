@@ -140,6 +140,7 @@ const PromptForm = ({
       seed: seed,
     });
     try {
+      //TODO: check model api url
       const res = await axios.post("https://ai.7007.ai/gen", data, {
         headers: {
           "Content-Type": "application/json",

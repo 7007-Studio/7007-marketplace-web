@@ -2,8 +2,7 @@
 import { useAccount } from "wagmi";
 
 import { modelData, ModelIndex } from "@/constants/constants";
-import useNftContract from "@/hooks/useNftContract";
-import useNftCollection from "@/hooks/useNftCollection";
+import useNftContracts from "@/hooks/useNftContracts";
 import NFTCard from "@/components/nftCard";
 import EmptyCard from "@/components/emptyCard";
 import Selector, { SelectorEntry } from "@/components/ui/selector";
@@ -21,6 +20,7 @@ import Image from "next/image";
 import axios from "axios";
 import { ModelDetail, ModelList } from "@/types";
 import { useRouter } from "next/navigation";
+import useTotalTokenIDs from "@/hooks/useTotalTokenIDs";
 
 function HomeModel({ windowSize }: { windowSize: number }) {
   const modelList: ModelDetail[] = modelData;
@@ -78,7 +78,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
       <div className="w-[75%]">
         <Selector onChange={handleSelector1} options={selector1} />
       </div>
-      <div className="relative hidden h-full w-full transition-all lg:flex">
+      {/* <div className="relative hidden h-full w-full transition-all lg:flex">
         <Swiper
           slidesPerView={windowSize > 1600 ? 5 : windowSize > 1280 ? 4 : 3}
           spaceBetween={25}
@@ -120,6 +120,11 @@ function HomeModel({ windowSize }: { windowSize: number }) {
             className={`${isEnd ? "opacity-20 cursor-default" : "opacity-100 hover:opacity-60 cursor-pointer"}`}
           />
         </div>
+      </div> */}
+      <div className="flex w-full h-full px-16 justify-center gap-10 flex-wrap">
+        {modelList?.map((model: ModelDetail, index) => (
+          <ModelCard modelData={model} key={index} />
+        )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
       </div>
 
       {/* {(taskStatus && (
@@ -387,16 +392,16 @@ function Ora({ windowSize }: { windowSize: number }) {
   const [swiperIndex, setSwiperIndex] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
   const emptyCardList = [...Array(4).keys()];
-  const { nftContract } = useNftContract({
+  const { nftContracts } = useNftContracts({
     chainId: chain?.id,
   });
-  const { tokenIds } = useNftCollection({ nftContract });
+  const { tokenIds } = useTotalTokenIDs({ nftContracts });
   return (
     <div className="flex flex-col w-full items-center gap-[72px]">
       <div className="w-[75%]">
         <Selector onChange={changeType} options={type} single={true} />
       </div>
-      {(nftContract && (
+      {(nftContracts && (
         <div className="relative hidden h-full w-full transition-all lg:flex">
           <Swiper
             slidesPerView={windowSize > 1600 ? 5 : windowSize > 1280 ? 4 : 3}
@@ -411,12 +416,12 @@ function Ora({ windowSize }: { windowSize: number }) {
               setIsEnd(swiper.isEnd);
             }}
           >
-            {tokenIds.map((id, index) => (
+            {tokenIds.map(({ id, contract }: any, index: number) => (
               <SwiperSlide key={index}>
                 <div className="w-full flex justify-center">
                   <NFTCard
-                    key={`${nftContract}-${id}`}
-                    nftContract={nftContract}
+                    key={`${contract}-${id}`}
+                    nftContract={contract}
                     tokenId={BigInt(id)}
                   />
                 </div>

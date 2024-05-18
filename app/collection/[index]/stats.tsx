@@ -5,13 +5,11 @@ import React, { useEffect, useState } from "react";
 import { Address, formatEther, zeroAddress } from "viem";
 
 export default function Stats({
-  nftContract = zeroAddress,
   NFTData,
   totalListings,
   totalSupply,
   owners,
 }: {
-  nftContract?: Address;
   NFTData?: StableDiffusionQueryQuery;
   totalListings?: number;
   totalSupply?: string;
