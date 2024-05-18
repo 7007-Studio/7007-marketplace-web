@@ -1,4 +1,4 @@
-import { StableDiffusionQueryQuery } from "@/.graphclient";
+import { StableDiffusionQueryQuery, OPMLQueryQuery } from "@/.graphclient";
 import useReadAigcContracts from "@/hooks/useReadAigcContracts";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ export default function Stats({
   totalSupply,
   owners,
 }: {
-  NFTData?: StableDiffusionQueryQuery;
+  NFTData?: StableDiffusionQueryQuery | OPMLQueryQuery;
   totalListings?: number;
   totalSupply?: string;
   owners?: number;

@@ -24,8 +24,8 @@ export const modelData: ModelDetail[] = [
     modelAuthorID: "1",
     modelName: "OpenLM",
     status: "active",
-    NFTContract: "0x32088Be31D2403db83bC2de80Ba244455a34f4c3",
-    openSeaName: "stable-diffusion-19",
+    NFTContract: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8",
+    openSeaName: "openlm-5",
     description:
       "OpenLM is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
     type: "Text-To-Image",

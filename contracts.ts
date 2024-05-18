@@ -27,7 +27,7 @@ export const Contracts: IContracts = {
   [sepolia.id]: {
     AIGCFactory: "0x8F5B3428f0caBCCBFaD145D22DF0aEa4ba799d10",
     StableDiffusionNFT: "0x32088Be31D2403db83bC2de80Ba244455a34f4c3",
-    OPMLNFT: "0x32088Be31D2403db83bC2de80Ba244455a34f4c3",
+    OPMLNFT: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8",
     MarketplaceV3: "0x29e5E223074daD39D33327f1655f38BDD04Ba2f6",
     SPRegistrationModule: "0x8b3f6b736b520f69c37a575293d3c1ff6383d495",
     SPLicenseRegistry: "0xc2BC7a2d5784768BDEd98436f2522A4931e2FBb4",

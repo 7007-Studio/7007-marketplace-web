@@ -5531,7 +5531,8 @@ const merger = new(BareMerger as any)({
         store: rootStore.child('bareMerger')
       })
 const documentHashMap = {
-        "d7c716d2e0459c21fb1c165dc1f31d0266bc1eccba42371cffe1ee350e5fe2e6": StableDiffusionQueryDocument
+        "26aa8f68adac743447fb3397df189958530f598ed821bd16d9e9617fde42aa50": StableDiffusionQueryDocument,
+"26aa8f68adac743447fb3397df189958530f598ed821bd16d9e9617fde42aa50": OpmlQueryDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
         getPersistedOperation(key) {
@@ -5558,7 +5559,14 @@ additionalEnvelopPlugins.push(usePersistedOperations({
           return printWithCache(StableDiffusionQueryDocument);
         },
         location: 'StableDiffusionQueryDocument.graphql',
-        sha256Hash: 'd7c716d2e0459c21fb1c165dc1f31d0266bc1eccba42371cffe1ee350e5fe2e6'
+        sha256Hash: '26aa8f68adac743447fb3397df189958530f598ed821bd16d9e9617fde42aa50'
+      },{
+        document: OpmlQueryDocument,
+        get rawSDL() {
+          return printWithCache(OpmlQueryDocument);
+        },
+        location: 'OpmlQueryDocument.graphql',
+        sha256Hash: '26aa8f68adac743447fb3397df189958530f598ed821bd16d9e9617fde42aa50'
       }
     ];
     },
@@ -5618,6 +5626,11 @@ export type StableDiffusionQueryQueryVariables = Exact<{ [key: string]: never; }
 
 export type StableDiffusionQueryQuery = { newListings: Array<Pick<NewListing, 'listingId' | 'listingCreator' | 'listing_tokenId' | 'listing_status' | 'listing_quantity' | 'listing_pricePerToken' | 'listing_currency' | 'listing_startTimestamp' | 'listing_tokenType' | 'listing_reserved' | 'listing_endTimestamp' | 'listing_assetContract'>>, newSales: Array<Pick<NewSale, 'buyer' | 'listingCreator' | 'listingId' | 'tokenId' | 'totalPricePaid' | 'assetContract' | 'quantityBought'>>, newOffers: Array<Pick<NewOffer, 'offerId' | 'offeror' | 'offer_tokenType' | 'offer_totalPrice' | 'offer_tokenId' | 'offer_status' | 'offer_quantity' | 'offer_offeror' | 'offer_expirationTimestamp' | 'offer_currency' | 'offer_assetContract'>> };
 
+export type OPMLQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OPMLQueryQuery = { newListings: Array<Pick<NewListing, 'listingId' | 'listingCreator' | 'listing_tokenId' | 'listing_status' | 'listing_quantity' | 'listing_pricePerToken' | 'listing_currency' | 'listing_startTimestamp' | 'listing_tokenType' | 'listing_reserved' | 'listing_endTimestamp' | 'listing_assetContract'>>, newSales: Array<Pick<NewSale, 'buyer' | 'listingCreator' | 'listingId' | 'tokenId' | 'totalPricePaid' | 'assetContract' | 'quantityBought'>>, newOffers: Array<Pick<NewOffer, 'offerId' | 'offeror' | 'offer_tokenType' | 'offer_totalPrice' | 'offer_tokenId' | 'offer_status' | 'offer_quantity' | 'offer_offeror' | 'offer_expirationTimestamp' | 'offer_currency' | 'offer_assetContract'>> };
+
 
 export const StableDiffusionQueryDocument = gql`
     query StableDiffusionQuery {
@@ -5668,6 +5681,56 @@ export const StableDiffusionQueryDocument = gql`
   }
 }
     ` as unknown as DocumentNode<StableDiffusionQueryQuery, StableDiffusionQueryQueryVariables>;
+export const OPMLQueryDocument = gql`
+    query OPMLQuery {
+  newListings(
+    orderBy: listing_listingId
+    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+  ) {
+    listingId
+    listingCreator
+    listing_tokenId
+    listing_status
+    listing_quantity
+    listing_pricePerToken
+    listing_currency
+    listing_startTimestamp
+    listing_tokenType
+    listing_reserved
+    listing_endTimestamp
+    listing_assetContract
+  }
+  newSales(
+    orderBy: listingId
+    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+  ) {
+    buyer
+    listingCreator
+    listingId
+    tokenId
+    totalPricePaid
+    assetContract
+    quantityBought
+  }
+  newOffers(
+    orderBy: offerId
+    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+  ) {
+    offerId
+    offeror
+    offer_tokenType
+    offer_totalPrice
+    offer_tokenId
+    offer_status
+    offer_quantity
+    offer_offeror
+    offer_expirationTimestamp
+    offer_currency
+    offer_assetContract
+  }
+}
+    ` as unknown as DocumentNode<OPMLQueryQuery, OPMLQueryQueryVariables>;
+
 
 
 export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
@@ -5675,6 +5738,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     StableDiffusionQuery(variables?: StableDiffusionQueryQueryVariables, options?: C): Promise<StableDiffusionQueryQuery> {
       return requester<StableDiffusionQueryQuery, StableDiffusionQueryQueryVariables>(StableDiffusionQueryDocument, variables, options) as Promise<StableDiffusionQueryQuery>;
+    },
+    OPMLQuery(variables?: OPMLQueryQueryVariables, options?: C): Promise<OPMLQueryQuery> {
+      return requester<OPMLQueryQuery, OPMLQueryQueryVariables>(OPMLQueryDocument, variables, options) as Promise<OPMLQueryQuery>;
     }
   };
 }

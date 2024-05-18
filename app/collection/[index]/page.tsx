@@ -10,7 +10,11 @@ import Hero from "./hero";
 import Progress from "./progress";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { getBuiltGraphSDK, StableDiffusionQueryQuery } from "@/.graphclient";
+import {
+  getBuiltGraphSDK,
+  OPMLQueryQuery,
+  StableDiffusionQueryQuery,
+} from "@/.graphclient";
 import useValidListings from "@/hooks/useValidListings";
 import { Address } from "viem";
 import { aigcAbi } from "@/generated";
@@ -23,15 +27,33 @@ export default function CollectionPage() {
   const [owners, setOwners] = useState(0);
   const { chain } = useAccount();
   const sdk = getBuiltGraphSDK();
-  const result = useQuery({
-    queryKey: ["GraphQuery"],
+  const SDresult = useQuery({
+    queryKey: ["StableDiffusionQuery"],
     queryFn: () => sdk.StableDiffusionQuery(),
   });
-  const { data, isLoading, error, refetch } = result;
-  const { listings } = useValidListings({
-    chainId: chain?.id,
+  const OPresult = useQuery({
+    queryKey: ["OPMLQuery"],
+    queryFn: () => sdk.OPMLQuery(),
   });
 
+  const results = [
+    {
+      data: SDresult.data as StableDiffusionQueryQuery,
+      isLoading: SDresult.isLoading,
+      error: SDresult.error,
+    },
+    {
+      data: OPresult.data as OPMLQueryQuery,
+      isLoading: OPresult.isLoading,
+      error: OPresult.error,
+    },
+  ];
+  const currentResult = results[Number(index)];
+
+  const { listings } = useValidListings({
+    chainId: chain?.id,
+    assetContract: modelInfo[Number(index)].NFTContract as Address,
+  });
   const { data: totalSupply } = useReadContract({
     address: modelInfo[Number(index)].NFTContract as Address,
     abi: aigcAbi,
@@ -81,8 +103,7 @@ export default function CollectionPage() {
       />
       <Progress modelIndex={index} />
       <Stats
-        //TODO: mutilple NFTs
-        NFTData={isLoading ? undefined : (data as StableDiffusionQueryQuery)}
+        NFTData={currentResult.isLoading ? undefined : currentResult.data}
         totalListings={listings && listings.length}
         totalSupply={totalSupply ? String(totalSupply) : "0"}
         owners={owners}

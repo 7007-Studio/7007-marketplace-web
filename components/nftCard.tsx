@@ -201,7 +201,6 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
   const [decimals, symbol] = listingData || [];
   const isOwner =
     ownerOf && connectedWallet && isAddressEqual(ownerOf, connectedWallet);
-
   useEffect(() => {
     if (!nftContract) return;
 
@@ -268,13 +267,16 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
                   .filter(
                     (a) =>
                       a.trait_type === "positive_prompt" ||
-                      a.trait_type === "negative_prompt"
+                      a.trait_type === "negative_prompt" ||
+                      a.trait_type === "prompt"
                   )
                   .map((prompt) => (
                     <a key={prompt.value} className="line-clamp-2">
                       {prompt.trait_type === "positive_prompt"
                         ? "Positive"
-                        : "Negative"}
+                        : prompt.trait_type === "negative_prompt"
+                          ? "Negative"
+                          : "Prompt"}
                       : {prompt.value}
                     </a>
                   ))) || <Skeleton count={5} />}
