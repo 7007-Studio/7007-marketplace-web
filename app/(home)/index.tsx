@@ -18,9 +18,10 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Image from "next/image";
 import axios from "axios";
-import { ModelDetail, ModelList } from "@/types";
+import { Listing, ModelDetail, ModelList } from "@/types";
 import { useRouter } from "next/navigation";
 import useTotalTokenIDs from "@/hooks/useTotalTokenIDs";
+import useValidListings from "@/hooks/useValidListings";
 
 function HomeModel({ windowSize }: { windowSize: number }) {
   const modelList: ModelDetail[] = modelData;
@@ -32,8 +33,8 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   const { setModel } = useModelInfoStore();
   const [selector1, setSelector1] = useState<SelectorEntry[]>([
     { id: "1", label: "All", selected: true },
-    { id: "2", label: "text-to-image", selected: false },
-    // { id: "3", label: "text-to-text", selected: false },
+    { id: "2", label: "Text-To-Image", selected: false },
+    { id: "3", label: "Text-To-Text", selected: false },
   ]);
 
   const handleSelector1 = (id: string) => {
@@ -50,6 +51,14 @@ function HomeModel({ windowSize }: { windowSize: number }) {
   const handleModelClick = (item: any) => {
     setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
   };
+
+  const filteredModelList = modelList.filter((model) => {
+    const selectedFilter = selector1.find((item) => item.selected);
+    if (selectedFilter?.label === "All") {
+      return true;
+    }
+    return model.type === selectedFilter?.label;
+  });
   // const handleFetchData = async () => {
   //   try {
   //     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
@@ -122,7 +131,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
         </div>
       </div> */}
       <div className="flex w-full h-full px-16 justify-center gap-10 flex-wrap">
-        {modelList?.map((model: ModelDetail, index) => (
+        {filteredModelList?.map((model: ModelDetail, index) => (
           <ModelCard modelData={model} key={index} />
         )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
       </div>
@@ -396,6 +405,9 @@ function Ora({ windowSize }: { windowSize: number }) {
     chainId: chain?.id,
   });
   const { tokenIds } = useTotalTokenIDs({ nftContracts });
+  const { listings } = useValidListings({
+    chainId: chain?.id,
+  });
   return (
     <div className="flex flex-col w-full items-center gap-[72px]">
       <div className="w-[75%]">
@@ -423,6 +435,10 @@ function Ora({ windowSize }: { windowSize: number }) {
                     key={`${contract}-${id}`}
                     nftContract={contract}
                     tokenId={BigInt(id)}
+                    listing={listings?.find(
+                      (l: Listing) =>
+                        l.tokenId === id && l.assetContract === contract
+                    )}
                   />
                 </div>
               </SwiperSlide>

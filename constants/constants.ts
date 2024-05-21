@@ -27,8 +27,8 @@ export const modelData: ModelDetail[] = [
     NFTContract: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8",
     openSeaName: "openlm-5",
     description:
-      "OpenLM is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
-    type: "Text-To-Image",
+      "OpenLM is a latent text-to-text diffusion model capable of generating photo-realistic images given any text input.",
+    type: "Text-To-Text",
   },
 ];
 

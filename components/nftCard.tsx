@@ -101,9 +101,15 @@ export interface NFTCardProps {
   nftContract: Address;
   tokenId: bigint;
   listing?: Listing;
+  offer?: Offer;
 }
 
-const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
+const NFTCard: React.FC<NFTCardProps> = ({
+  nftContract,
+  tokenId,
+  listing,
+  offer,
+}) => {
   const router = useRouter();
   const { address: connectedWallet, chainId, chain } = useAccount();
   const [hover, setHover] = useState(false);
@@ -255,10 +261,12 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
         <div className="relative border-y border-white bg-[#eee] pb-[100%]">
           {metadata && <NFTCoverAsset metadata={metadata} />}
         </div>
-        <div className="gap-2 p-5 flex flex-col justify-between h-[150px]">
+        <div
+          className={`gap-2 pt-5 px-5 flex flex-col justify-between h-[190px]`}
+        >
           <div className="flex flex-col gap-2">
             <a className="text-lg font-bold">
-              {metadata?.name || <Skeleton count={2} />}
+              {metadata?.name || <Skeleton count={1} />}
             </a>
             <div className="flex flex-col gap-1 text-md line-clamp-2">
               {(metadata &&
@@ -279,90 +287,53 @@ const NFTCard: React.FC<NFTCardProps> = ({ nftContract, tokenId, listing }) => {
                           : "Prompt"}
                       : {prompt.value}
                     </a>
-                  ))) || <Skeleton count={5} />}
+                  ))) || <Skeleton count={2} />}
             </div>
-            {listing && (
-              <div className="flex w-full justify-between gap-4 pt-2 items-end">
-                <div className="flex items-end gap-1">
-                  <a className="text-[20px]">
-                    {decimals?.result && listing.pricePerToken
-                      ? formatUnits(listing.pricePerToken, decimals.result)
-                      : Number(formatEther(listing.pricePerToken)).toFixed(
-                          4
-                        ) || <Skeleton />}
-                    {" " || <Skeleton />}
-                  </a>
-                  <a className="">
-                    {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
-                  </a>
-                </div>
-                <a className="opacity-40 text-sm">
-                  {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
-                    <Skeleton />
-                  )}
+          </div>
+          {listing && (
+            <div className="flex w-full justify-between gap-4 py-2 items-end">
+              <div className="flex items-end gap-1">
+                <a className="text-[20px]">
+                  {decimals?.result && listing.pricePerToken
+                    ? formatUnits(listing.pricePerToken, decimals.result)
+                    : Number(formatEther(listing.pricePerToken)).toFixed(2) || (
+                        <Skeleton />
+                      )}
+                  {" " || <Skeleton />}
+                </a>
+                <a className="">
+                  {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
                 </a>
               </div>
-            )}
-          </div>
-
-          {/* <button
-            className="pt-8 flex flex-row justify-between items-center"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsCollapsed(!isCollapsed);
-            }}
-          >
-            <div>{isCollapsed ? "View more" : "Collapse"}</div>
-            <svg
-              className="w-4 h-4 transform text-primary"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="4"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              style={{
-                transform: isCollapsed ? "rotate(0)" : "rotate(-90deg)",
-                transition: "all 0.25s ease-in-out ",
-              }}
-            >
-              <path d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-          <div
-            className={`${
-              isCollapsed
-                ? "opacity-0 max-h-0 hidden"
-                : "opacity-100 transition-opacity ease-in-out duration-500"
-            } `}
-          >
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
-              <div>Contract Address</div>
-              <a
-                href={`https://sepolia.etherscan.io/address/${nftContract}`}
-                className="text-primary overflow-hidden"
-                target="_blank"
-              >
-                {concatAddress(nftContract)}
+              <a className="opacity-40 text-sm">
+                {formatDaysLeft(Number(listing.endTimestamp) * 1000) || (
+                  <Skeleton />
+                )}
               </a>
             </div>
-
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
-              <div>Token ID</div>
-              <div>{tokenId.toString()}</div>
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm leading-5">
-              <div>Link</div>
-              <a
-                href={openseaUrl(nftContract, tokenId.toString())}
-                className="text-primary overflow-hidden"
-                target="_blank"
-              >
-                View on OpenSea
+          )}
+          {offer && (
+            <div className="flex w-full justify-between gap-4 py-2 items-end">
+              <div className="flex items-end gap-1">
+                <a className="text-[20px]">
+                  {decimals?.result && offer.totalPrice
+                    ? formatUnits(offer.totalPrice, decimals.result)
+                    : Number(formatEther(offer.totalPrice)).toFixed(2) || (
+                        <Skeleton />
+                      )}
+                  {" " || <Skeleton />}
+                </a>
+                <a className="">
+                  {symbol?.result ? symbol.result : "ETH" || <Skeleton />}
+                </a>
+              </div>
+              <a className="opacity-40 text-sm">
+                {formatDaysLeft(Number(offer.expirationTimestamp) * 1000) || (
+                  <Skeleton />
+                )}
               </a>
             </div>
-          </div> */}
+          )}
         </div>
         {isOwner && hover && (
           <button

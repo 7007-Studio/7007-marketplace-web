@@ -13,7 +13,9 @@ export default function MintPage() {
 
   return (
     <div className="h-full w-[80%]">
-      {index && <FormAIGC modelData={modelInfo[Number(index)]} />}
+      {index && (
+        <FormAIGC modelData={modelInfo[Number(index)]} modelIndex={index} />
+      )}
     </div>
   );
 }

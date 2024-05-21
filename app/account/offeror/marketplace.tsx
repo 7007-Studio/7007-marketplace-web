@@ -21,7 +21,7 @@ const Marketplace = () => {
           key={l.listingId}
           nftContract={l.assetContract}
           tokenId={l.tokenId}
-          listing={l}
+          offer={l}
         />
       )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
     </div>

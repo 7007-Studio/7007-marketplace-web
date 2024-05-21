@@ -1,8 +1,8 @@
-import { useState } from "react";
-import PromptStep from "./promptStep";
-import { useListingModal } from "@/utils/modalProvider";
-import { useReadAigcName } from "@/generated";
-import { ModelDetail } from "@/types";
+import ArrowLeftIcon from "@/components/ui/arrowLeftIcon";
+import PromptFormSD from "./promptFormSD";
+import PromptFormOP from "./promptFormOP";
+import { useRouter } from "next/navigation";
+import { ModelDetail, ModelInfo } from "@/types";
 
 export interface AIGCContent {
   name: string;
@@ -13,96 +13,31 @@ export interface AIGCContent {
 
 interface FormAIGCProps {
   modelData: ModelDetail;
+  modelIndex?: string;
 }
 
-// export default function FormAIGC({ nftContract }: FormAIGCProps) {
-//   const [aigcContent, setAigcContent] = useState<AIGCContent>();
-//   const [mintedTokenId, setMintedTokenId] = useState<bigint>();
-
-//   const { data: name } = useReadAigcName({
-//     address: nftContract,
-//   });
-
-//   const { showListingModal } = useListingModal();
-
-//   if (!aigcContent) {
-//     return (
-//       <PromptStep
-//         nftContract={nftContract}
-//         setAigcContent={setAigcContent}
-//         onArtGenerated={(_aigcContent) => {
-//           setAigcContent(_aigcContent);
-//         }}
-//       />
-//     );
-//   }
-
-//   if (!mintedTokenId) {
-//     return (
-//       <MintStep
-//         nftContract={nftContract}
-//         aigcContent={aigcContent}
-//         setAigcContent={setAigcContent}
-//         onMintSuccess={(tokenId) => {
-//           setMintedTokenId(tokenId);
-//         }}
-//       />
-//     );
-//   }
-
-//   return (
-//     <>
-//       <CompleteStep
-//         nftContract={nftContract}
-//         mintedTokenId={mintedTokenId}
-//         onList={() => {
-//           showListingModal({
-//             nftContract: nftContract,
-//             name: name || "",
-//             tokenId: mintedTokenId,
-//             metadata: { name: aigcContent.name },
-//           });
-//         }}
-//         onGenerateAgain={() => {
-//           setAigcContent(undefined);
-//           setMintedTokenId(undefined);
-//         }}
-//       />
-//     </>
-//   );
-// }
-
-export default function FormAIGC({ modelData }: FormAIGCProps) {
-  const [aigcContent, setAigcContent] = useState<AIGCContent>();
-  const [mintedTokenId, setMintedTokenId] = useState<bigint>();
-
-  // const { data: name } = useReadAigcName({
-  //   address: modelData.NFTContract as Address,
-  // });
-  const { showListingModal } = useListingModal();
-
-  // if (!aigcContent) {
-  //   return (
-  //     <PromptStep />
-  //   );
-  // }
-
-  // if (!mintedTokenId) {
-  //   return (
-  //     <MintStep
-  //       // nftContract={nftContract}
-  //       aigcContent={aigcContent}
-  //       setAigcContent={setAigcContent}
-  //       onMintSuccess={(tokenId) => {
-  //         setMintedTokenId(tokenId);
-  //       }}
-  //     />
-  //   );
-  // }
-
+export default function FormAIGC({ modelData, modelIndex }: FormAIGCProps) {
+  const router = useRouter();
   return (
-    <>
-      <PromptStep modelData={modelData} />
-    </>
+    <div className="flex flex-col items-center w-full h-full">
+      <a className="mb-[50px] text-[30px] font-bold text-center">
+        Unleash imagination
+      </a>
+      <div className="py-[50px] border-white border rounded-lg px-14 max-w-[954px]">
+        <span
+          onClick={() => {
+            router.back();
+          }}
+          className="flex flex-row gap-2 hover:cursor-pointer pb-10 opacity-40"
+        >
+          <ArrowLeftIcon className="text-white/40" /> Back
+        </span>
+        {modelData && modelIndex === "0" ? (
+          <PromptFormSD submitText="Prompt" modelData={modelData} />
+        ) : modelIndex === "1" ? (
+          <PromptFormOP submitText="Prompt" modelData={modelData} />
+        ) : null}
+      </div>
+    </div>
   );
 }

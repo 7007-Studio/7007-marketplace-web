@@ -9,6 +9,7 @@ import { ModalProvider } from "@/utils/modalProvider";
 
 import Navbar from "@/components/ui/navbar";
 import Footer from "@/components/ui/footer";
+import { Toaster } from "react-hot-toast";
 
 const IBMPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
@@ -32,6 +33,21 @@ export default function RootLayout({
       <body data-theme="light-7007" className={`${IBMPlexMono.className}`}>
         <Web3Provider>
           <ModalProvider>
+            <Toaster
+              toastOptions={{
+                style: {
+                  background: "#0F0F0F",
+                  paddingTop: "6px",
+                  paddingBottom: "6px",
+                  paddingRight: "10px",
+                  paddingLeft: "10px",
+                  border: "1px solid #B4FF78",
+                  color: "#B4FF78",
+                  fontSize: "12px",
+                  fontFamily: "Digital Numbers",
+                },
+              }}
+            />
             <Navbar />
             <main className="max-lg:hidden flex min-h-screen bg-black text-white flex-col pb-[400px] relative">
               {children}

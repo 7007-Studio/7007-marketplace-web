@@ -1,13 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Address } from "viem";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { Address, erc20Abi, formatEther } from "viem";
+import {
+  useAccount,
+  useBalance,
+  useReadContract,
+  useReadContracts,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { NATIVE_TOKEN_ADDRESS } from "@/constants/constants";
 import { getContractAddress } from "@/helpers";
 import { useWriteMarketplaceV3BuyFromListing } from "@/generated";
 import { Listing } from "@/types";
+import { format } from "path";
+import { toast } from "react-hot-toast";
 
 export default function BuyButton({
   listing,
@@ -21,12 +29,13 @@ export default function BuyButton({
   handleReFetch?: () => void;
 }) {
   const [buyInitialized, setBuyInitialized] = useState(false);
-
   const { address: connectedWallet, chainId } = useAccount();
   const { openConnectModal } = useConnectModal();
-
   const { writeContract: buyNft, data: buyNftTx } =
     useWriteMarketplaceV3BuyFromListing();
+  const { data: balance } = useBalance({
+    address: connectedWallet,
+  });
 
   const buyResult = useWaitForTransactionReceipt({
     hash: buyNftTx,
@@ -41,6 +50,16 @@ export default function BuyButton({
 
     const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
     if (!marketplaceV3) return;
+    if (
+      balance &&
+      Number(formatEther(balance.value)) <
+        Number(formatEther(listing.pricePerToken))
+    ) {
+      toast.error(
+        <span className="whitespace-pre-wrap">Insufficient balance</span>
+      );
+      return;
+    }
 
     setBuyInitialized(true);
     const args: [bigint, Address, bigint, Address, bigint] = [

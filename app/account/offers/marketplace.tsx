@@ -70,7 +70,7 @@ const Marketplace = () => {
           key={offer.offerId}
           nftContract={offer.assetContract}
           tokenId={offer.tokenId}
-          // offer={offer}
+          offer={offer}
         />
       )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
     </div>

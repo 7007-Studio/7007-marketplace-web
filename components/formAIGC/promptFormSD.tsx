@@ -1,49 +1,30 @@
-import { useForm, SubmitHandler, DefaultValues } from "react-hook-form";
-import TextInput from "../form/textInput";
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { useRouter } from "next/navigation";
-import { ModelDetail, ModelInfo } from "@/types";
+import { ModelDetail } from "@/types";
 import axios from "axios";
 import { useReadAigcEstimateTotalFee, useWriteAigcMint } from "@/generated";
-import { ethers } from "ethers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { getTokenURI } from "./ipfsHelper";
-import { Address, formatEther } from "viem";
-import { format } from "path";
-export interface IFormAIGCInput {
-  name: string;
-  prompt: string;
-  type: string;
-  negative: string;
-  seed: string;
-  modelID: string;
-  model: string;
-  imageUrl: string;
-  audioUrl: string;
-}
-const PromptForm = ({
+import { Address } from "viem";
+
+const PromptFormSD = ({
   submitText = "Generate",
-  defaultValues,
   modelData,
 }: {
   submitText?: string;
-  defaultValues?: DefaultValues<IFormAIGCInput>;
   modelData: ModelDetail;
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [positivePrompt, setPositivePrompt] = useState();
-  const [negativePrompt, setNegativePrompt] = useState();
+  const [minted, setMinted] = useState(false);
+  const [title, setTitle] = useState("");
+  const [positivePrompt, setPositivePrompt] = useState("");
+  const [negativePrompt, setNegativePrompt] = useState("");
   const [seed, setSeed] = useState();
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [title, setTitle] = useState();
   const { address, isConnected, chain } = useAccount();
-  const { register, handleSubmit, formState } = useForm<IFormAIGCInput>({
-    defaultValues,
-  });
   const { writeContract: mintAIGC, data: mintTx } = useWriteAigcMint();
   const mintResult = useWaitForTransactionReceipt({
     hash: mintTx,
@@ -131,7 +112,7 @@ const PromptForm = ({
   //     setLoading(false);
   //   }
   // };
-  const genImage = async () => {
+  const genSDImage = async () => {
     setLoading(true);
     if (!positivePrompt || !negativePrompt || !seed || !address) return;
     const prompt = positivePrompt + "---" + negativePrompt;
@@ -140,7 +121,6 @@ const PromptForm = ({
       seed: seed,
     });
     try {
-      //TODO: check model api url
       const res = await axios.post("https://ai.7007.ai/gen", data, {
         headers: {
           "Content-Type": "application/json",
@@ -155,10 +135,6 @@ const PromptForm = ({
       setLoading(false);
     }
   };
-  const onSubmit: SubmitHandler<IFormAIGCInput> = async (data) => {
-    genImage();
-  };
-
   const onMint = async () => {
     if (!isConnected) {
       openConnectModal?.();
@@ -195,16 +171,13 @@ const PromptForm = ({
   useEffect(() => {
     if (mintResult.isSuccess) {
       setMintInitialized(false);
-      router.push("/account/created");
+      setMinted(true);
     }
   }, [mintResult.isSuccess]);
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-[30px]"
-      >
+      <div className="flex flex-col gap-[30px]">
         {errorMessage && (
           <div role="alert" className="alert alert-error">
             <svg
@@ -256,8 +229,8 @@ const PromptForm = ({
             name="modelPositive"
             id="modelPositive"
             className="bg-grey h-32 pl-10"
-            value={negativePrompt} // Bind the value to the state variable
-            onChange={(e: any) => setNegativePrompt(e.target.value)} // Update the input value directly
+            value={negativePrompt}
+            onChange={(e: any) => setNegativePrompt(e.target.value)}
             placeholder="Enter your prompt"
           />
         </div>
@@ -269,7 +242,7 @@ const PromptForm = ({
               name="modelSeed"
               id="modelSeed"
               className="bg-grey h-16 pl-10"
-              value={seed} // Bind the value to the state variable
+              value={seed}
               onChange={(e: any) => {
                 const regex = /^(0|[1-9]\d*)$/;
                 if (e.target.value === "" || regex.test(e.target.value)) {
@@ -312,8 +285,9 @@ const PromptForm = ({
               fungible.
             </a>
             <button
-              className="w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded"
-              disabled={loading}
+              className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !positivePrompt || !seed || !title ? "cursor-not-allowed opacity-40" : ""}`}
+              disabled={loading || !positivePrompt || !seed || !title}
+              onClick={() => genSDImage()}
             >
               {loading ? (
                 <>
@@ -326,47 +300,88 @@ const PromptForm = ({
             </button>
           </div>
         </div>
-      </form>
+      </div>
       <dialog ref={dialogRef} className="modal">
-        <div className="modal-box flex flex-col p-4 items-center gap-4">
-          {image ? (
-            <img
-              src={`https://cloudflare-ipfs.com/ipfs/${image}`}
-              alt="Image"
-              className="size-[500px]"
-            />
-          ) : (
-            <div className="flex gap-2 size-[200px] justify-center items-center">
-              <span className="loading loading-spinner text-black" />
-              <a className="text-black">loading</a>
+        {!minted ? (
+          <div className="modal-box flex flex-col p-4 items-center gap-4">
+            {image ? (
+              <img
+                src={`https://cloudflare-ipfs.com/ipfs/${image}`}
+                alt="Image"
+                className="size-[500px]"
+              />
+            ) : (
+              <div className="flex gap-2 size-[200px] justify-center items-center">
+                <span className="loading loading-spinner text-black" />
+                <a className="text-black">loading</a>
+              </div>
+            )}
+            <div className="flex justify-between w-full gap-4 h-[45px]">
+              <button
+                className="z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
+                disabled={mintInitialized}
+                onClick={() => dialogRef.current?.close()}
+              >
+                Cancel
+              </button>
+              <button
+                className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
+                onClick={() => onMint()}
+                disabled={mintInitialized}
+              >
+                {mintInitialized ? (
+                  <div className="flex gap-2 items-center">
+                    <span className="loading loading-spinner cursor-pointer"></span>
+                    Minting
+                  </div>
+                ) : (
+                  "Mint"
+                )}
+              </button>
             </div>
-          )}
-          <div className="flex justify-between w-full gap-4 h-[45px]">
-            <button
-              className="z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
-              onClick={() => dialogRef.current?.close()}
-            >
-              Cancel
-            </button>
-            <button
-              className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
-              onClick={() => onMint()}
-              disabled={mintInitialized}
-            >
-              {mintInitialized ? (
-                <div className="flex gap-2 items-center">
-                  <span className="loading loading-spinner cursor-pointer"></span>
-                  Minting
-                </div>
-              ) : (
-                "Mint"
-              )}
-            </button>
           </div>
-        </div>
+        ) : (
+          <div className="modal-box max-w-[424px] bg-white">
+            <div className="flex flex-col justify-center items-center gap-10">
+              <Image
+                src="/check.svg"
+                alt="NFT listed"
+                width={120}
+                height={120}
+              />
+              <div className="px-4 text-center">
+                <h2 className="heading-md">
+                  Your NFT was minted successfully!
+                </h2>
+              </div>
+              <div className="flex flex-col gap-2 w-full">
+                <button
+                  type="button"
+                  className="btn btn-secondary w-full"
+                  onClick={() => {
+                    (
+                      dialogRef as RefObject<HTMLDialogElement>
+                    )?.current?.close();
+                  }}
+                >
+                  Done
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary w-full"
+                  onClick={() => {
+                    router.push("/account/created");
+                  }}
+                >
+                  Go to your NFT
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </dialog>
     </>
   );
 };
 
-export default PromptForm;
+export default PromptFormSD;
