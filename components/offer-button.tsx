@@ -85,11 +85,12 @@ export default function OfferButton({
       });
     }
   };
+  const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
   const { data: allowance } = useReadContract({
     address: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92",
     abi: erc20Abi,
     functionName: "allowance",
-    args: [connectedWallet, getContractAddress("MarketplaceV3", chainId)],
+    args: [connectedWallet!, marketplaceV3!],
   });
   useEffect(() => {
     if (allowance && Number(allowance) <= Number(args.totalPrice)) {
