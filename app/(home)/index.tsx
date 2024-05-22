@@ -414,6 +414,27 @@ function Ora({ windowSize }: { windowSize: number }) {
         <Selector onChange={changeType} options={type} single={true} />
       </div>
       {(nftContracts && (
+        <div className="flex flex-wrap w-full justify-items-center justify-center gap-12">
+          {tokenIds.map(({ id, contract }: any) => (
+            <NFTCard
+              key={`${contract}-${id}`}
+              nftContract={contract}
+              tokenId={BigInt(id)}
+              listing={listings?.find(
+                (l: Listing) => l.tokenId === id && l.assetContract === contract
+              )}
+            />
+          )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
+        </div>
+      )) || (
+        <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-4">
+          {emptyCardList.map((l) => (
+            <EmptyCard key={l} />
+          ))}
+        </div>
+      )}
+
+      {/* {(nftContracts && (
         <div className="relative hidden h-full w-full transition-all lg:flex">
           <Swiper
             slidesPerView={windowSize > 1600 ? 5 : windowSize > 1280 ? 4 : 3}
@@ -475,7 +496,7 @@ function Ora({ windowSize }: { windowSize: number }) {
             <EmptyCard key={l} />
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }

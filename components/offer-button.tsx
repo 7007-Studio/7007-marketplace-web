@@ -1,9 +1,10 @@
 "use client";
 
 import { RefObject, useEffect, useRef, useState } from "react";
-import { Address, formatEther, parseEther, erc20Abi } from "viem";
+import { Address, formatEther, parseEther } from "viem";
 import {
   useAccount,
+  useReadContract,
   useReadContracts,
   useWaitForTransactionReceipt,
   useWriteContract,
@@ -11,7 +12,11 @@ import {
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { NATIVE_TOKEN_ADDRESS } from "@/constants/constants";
 import { getContractAddress } from "@/helpers";
-import { useReadAigcName, useWriteMarketplaceV3MakeOffer } from "@/generated";
+import {
+  erc20Abi,
+  useReadAigcName,
+  useWriteMarketplaceV3MakeOffer,
+} from "@/generated";
 import { Listing, Metadata } from "@/types";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
@@ -80,6 +85,19 @@ export default function OfferButton({
       });
     }
   };
+  const { data: allowance } = useReadContract({
+    address: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92",
+    abi: erc20Abi,
+    functionName: "allowance",
+    args: [connectedWallet, getContractAddress("MarketplaceV3", chainId)],
+  });
+  useEffect(() => {
+    if (allowance && Number(allowance) <= Number(args.totalPrice)) {
+      setApproved(false);
+    } else if (allowance && Number(allowance) > Number(args.totalPrice)) {
+      setApproved(true);
+    }
+  }, [allowance]);
 
   const { writeContract: approve, data: approveData } = useWriteContract();
   const approveResult = useWaitForTransactionReceipt({
@@ -139,7 +157,7 @@ export default function OfferButton({
       setApproveLoading(false);
       setApproved(false);
     }
-  }, [approveResult.isSuccess]);
+  }, [approveResult.isError, approveResult.isSuccess]);
 
   useEffect(() => {
     console.debug("offerResult changed");
@@ -174,6 +192,8 @@ export default function OfferButton({
             onClick={() => {
               resetData();
               modelRef.current?.close();
+              setApproveLoading(false);
+              setOfferInitialized(false);
             }}
           >
             ✕
