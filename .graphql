@@ -41,7 +41,7 @@ query StableDiffusionQuery {
     offer_assetContract
   }
 }
-query OPMLQuery {
+query OpmlQuery {
   newListings(
     orderBy: listing_listingId
         where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}

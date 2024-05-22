@@ -12,7 +12,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import {
   getBuiltGraphSDK,
-  OPMLQueryQuery,
+  OpmlQueryQuery,
   StableDiffusionQueryQuery,
 } from "@/.graphclient";
 import useValidListings from "@/hooks/useValidListings";
@@ -32,8 +32,8 @@ export default function CollectionPage() {
     queryFn: () => sdk.StableDiffusionQuery(),
   });
   const OPresult = useQuery({
-    queryKey: ["OPMLQuery"],
-    queryFn: () => sdk.OPMLQuery(),
+    queryKey: ["OpmlQuery"],
+    queryFn: () => sdk.OpmlQuery(),
   });
 
   const results = [
@@ -43,7 +43,7 @@ export default function CollectionPage() {
       error: SDresult.error,
     },
     {
-      data: OPresult.data as OPMLQueryQuery,
+      data: OPresult.data as OpmlQueryQuery,
       isLoading: OPresult.isLoading,
       error: OPresult.error,
     },

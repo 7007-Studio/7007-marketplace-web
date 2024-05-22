@@ -245,7 +245,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
       className={`w-[258px] h-full transition-all ${hover ? "drop-shadow-card" : ""}`}
     >
       <div className="h-[38px] px-[10px] flex items-center justify-between">
-        <a className="text-white/40 text-sm">ID {tokenId.toString()}</a>
+        <a className="text-white/40 text-sm">ID {tokenId?.toString()}</a>
         <a className="text-[10px] text-end">
           {metadata &&
             metadata.attributes &&
