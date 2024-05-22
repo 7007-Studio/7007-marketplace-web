@@ -340,8 +340,8 @@ const CreateCollection = () => {
             className="w-10 h-10 opacity-30"
           />
           <div className="flex justify-end text-end flex-col">
-            <div>estimate mint cost</div>
-            <div>~ 0.05 eth</div>
+            {/* <div>estimate mint cost</div> */}
+            {/* <div>~ 0.05 eth</div> */}
           </div>
         </div>
         <div className="flex justify-between w-full">

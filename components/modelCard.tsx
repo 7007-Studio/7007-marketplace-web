@@ -28,10 +28,11 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelData }) => {
           <div
             className="size-full"
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1608874973445-de098faf870f?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
-              backgroundSize: "cover",
+              backgroundImage: `url('${modelData.logo}')`,
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
             }}
-          ></div>
+          />
 
           <div className="flex gap-4 h-fit items-start px-4 border-t-[1px] py-2 border-white flex-col">
             <div className="w-full text-center text-lg">

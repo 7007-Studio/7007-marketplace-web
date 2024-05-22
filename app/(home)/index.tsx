@@ -578,7 +578,7 @@ const HomePage = () => {
   }, [typeof window]);
 
   return (
-    <div className="h-full w-full flex justify-center flex-col gap-[150px] items-center pt-[150px]">
+    <div className="h-full w-full flex justify-center flex-col gap-[150px] items-center">
       <HomeModel windowSize={windowSize} />
       {/* <Rank /> */}
       <Ora windowSize={windowSize} />

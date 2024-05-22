@@ -38,13 +38,13 @@ export default function HomeLayout({
   return (
     <>
       <div className="h-[50vh] flex flex-col relative items-center justify-center gap-5">
-        <Image
+        {/* <Image
           src="/homeMask.png"
           alt="homeMask"
           width={1920}
           height={300}
           className="h-full w-full absolute top-0 left-0"
-        />
+        /> */}
         <p className="text-[30px] font-bold z-10">
           AI Inference asset protocol
         </p>
