@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useAccount, useReadContracts } from "wagmi";
+import { useAccount, useReadContract, useReadContracts } from "wagmi";
 import {
   Address,
   formatEther,
@@ -54,6 +54,36 @@ export default function Detail() {
     tokenId: Number(tokenId),
     assetContract: nftContract as Address,
   });
+  // const { data: AIResult } = useReadContract({
+  //   address: nftContract as Address,
+  //   abi: aigcAbi,
+  //   functionName: "getAIResultFromTokenId",
+  //   args: [tokenId],
+  // });
+  // console.log("AIResult", AIResult);
+  const { listings: validListings, refetch: refetchAllValidListings } =
+    useValidListings({
+      chainId: chain?.id,
+      assetContract: nftContract as Address,
+    });
+  const floorPrice = validListings?.length
+    ? validListings.reduce((acc: number, listing: Listing) => {
+        const price = Number(listing.pricePerToken);
+        return price < acc ? price : acc;
+      }, Number(validListings[0].pricePerToken)) // 确保初始值类型一致
+    : 0;
+
+  const calculateFloorDifference = (price: number, floorPrice: number) => {
+    if (floorPrice === 0) return 0;
+    return Number(Number((price - floorPrice) / floorPrice).toFixed(4)) * 100;
+  };
+
+  const listingsWithDifference = validListings?.map((listing: Listing) => {
+    const price = Number(listing.pricePerToken);
+    const difference = calculateFloorDifference(price, floorPrice);
+    return difference;
+  });
+  console.log("listingsWithDifference", listingsWithDifference);
   const { offers, refetch: refetchValidOffers } = useValidOffers({
     chainId: chain?.id,
     tokenId: Number(tokenId),
@@ -80,7 +110,6 @@ export default function Detail() {
   useEffect(() => {
     getETHUSDPrice();
   }, []);
-
   // read contracts
   const aigcContractConfig = { address: nftContract as Address, abi: aigcAbi };
   const { data: aigcData } = useReadContracts({
@@ -129,6 +158,11 @@ export default function Detail() {
     ownerOf?.result &&
     connectedWallet &&
     isAddressEqual(ownerOf?.result, connectedWallet as Address);
+
+  const isListed = validListings.some(
+    (list: Listing) =>
+      list.assetContract === nftContract && list.tokenId === BigInt(tokenId)
+  );
   const currentTimestamp = Math.floor(Date.now() / 1000);
 
   const listingAction = (list: Listing) => {
@@ -250,7 +284,7 @@ export default function Detail() {
                     </div>
                   ))) || <Skeleton count={5} />}
             </div>
-            {isOwner && nftContract && tokenId && metadata && (
+            {isOwner && !isListed && nftContract && tokenId && metadata && (
               <div className="flex w-full flex-col mt-20 py-7 px-6 gap-7 bg-transparent border border-white rounded-xl">
                 <button
                   onClick={(e) => {
@@ -374,7 +408,7 @@ export default function Detail() {
                 </div>
                 <div className="w-full flex justify-between gap-10">
                   <a>Creator Earnings</a>
-                  <a>5%</a>
+                  <a>10%</a>
                 </div>
                 {metadata?.attributes?.map((attr) => (
                   <div
@@ -438,7 +472,13 @@ export default function Detail() {
                           ).toFixed(2)}
                         </a>
                         <a className="">{list.quantity.toString()}</a>
-                        <a className="">31% below</a>
+                        <a className="">
+                          {calculateFloorDifference(
+                            Number(list.pricePerToken.toString()),
+                            floorPrice
+                          )}
+                          %
+                        </a>
                         <a className="text-blue">
                           {connectedWallet &&
                           connectedWallet === list.listingCreator

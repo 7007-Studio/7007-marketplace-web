@@ -19,6 +19,7 @@ interface TextInputProps<T extends FieldValues> {
   min?: number;
   max?: number;
   defaultValue?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function TextInput<T extends FieldValues>({
@@ -33,6 +34,7 @@ export default function TextInput<T extends FieldValues>({
   min,
   max,
   defaultValue,
+  onChange,
 }: TextInputProps<T>) {
   const registerOptions: RegisterOptions = {};
   if (required) {
@@ -51,6 +53,7 @@ export default function TextInput<T extends FieldValues>({
           max={max}
           {...register(name, registerOptions)}
           defaultValue={defaultValue}
+          onChange={onChange}
         />
         {postfix && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">

@@ -8,21 +8,19 @@ export default function Stats({
   NFTData,
   totalListings,
   totalSupply,
+  floorPrice,
   owners,
 }: {
   NFTData?: StableDiffusionQueryQuery | OpmlQueryQuery;
   totalListings?: number;
   totalSupply?: string;
+  floorPrice?: number;
   owners?: number;
 }) {
   //TODO: check token decimals
   const totalVolume = NFTData?.newSales.reduce((accumulator, sale) => {
     return accumulator + Number(formatEther(sale.totalPricePaid));
   }, 0);
-  const floorPrice = NFTData?.newListings.reduce((minPrice, listing) => {
-    const price = Number(formatEther(listing.listing_pricePerToken));
-    return price < minPrice ? price : minPrice;
-  }, Infinity);
 
   const statItems = [
     {
@@ -35,9 +33,8 @@ export default function Stats({
     {
       name: "Floor Price",
       value:
-        NFTData && NFTData.newListings?.length > 0
-          ? `${floorPrice?.toFixed(4)} ETH`
-          : 0,
+        floorPrice &&
+        `${Number(formatEther(BigInt(floorPrice))).toFixed(3)} ETH`,
     },
     {
       name: "Total Quantity",

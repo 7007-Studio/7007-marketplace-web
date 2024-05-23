@@ -1,7 +1,7 @@
 query StableDiffusionQuery {
   newListings(
     orderBy: listing_listingId
-        where: {assetContract_contains: "0x32088be31d2403db83bc2de80ba244455a34f4c3"}
+        where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
   ) {
     listingId
     listingCreator
@@ -17,7 +17,7 @@ query StableDiffusionQuery {
     listing_assetContract
   }
   newSales(orderBy: listingId
-    where: {assetContract_contains: "0x32088be31d2403db83bc2de80ba244455a34f4c3"}
+    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
   ) {
     buyer
     listingCreator
@@ -27,7 +27,7 @@ query StableDiffusionQuery {
     assetContract
     quantityBought
   }
-  newOffers(orderBy: offerId where: {assetContract_contains: "0x32088be31d2403db83bc2de80ba244455a34f4c3"}) {
+  newOffers(orderBy: offerId where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}) {
     offerId
     offeror
     offer_tokenType

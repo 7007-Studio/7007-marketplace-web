@@ -15,7 +15,7 @@ export const modelData: ModelDetail[] = [
     modelName: "Stable Diffusion",
     status: "active",
     NFTContract: "0x530511810d56157D50E2D215aE4fC9bC9b57df02",
-    openSeaName: "stable-diffusion-19",
+    openSeaName: "stable-diffusion-20",
     description:
       "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
     type: "Text-To-Image",

@@ -27,7 +27,6 @@ export interface ListingNFT {
 interface IFormListNFTInput {
   price: string;
   duration: number;
-  quantity: number;
 }
 
 interface ListingNFTModalProps {
@@ -44,6 +43,8 @@ const ListingNFTModal = React.forwardRef(
     const [approvedListing, setApprovedListing] = useState(false);
     const [listInitialized, setListInitialized] = useState(false);
     const [isListed, setIsListed] = useState(false);
+    const [price, setPrice] = useState<string>();
+    const [duration, setDuration] = useState<number>();
 
     useEffect(() => {
       reset();
@@ -228,6 +229,9 @@ const ListingNFTModal = React.forwardRef(
                     placeholder="0.00"
                     required
                     register={register}
+                    onChange={(e) => {
+                      setPrice(e.target.value);
+                    }}
                   />
                 </div>
                 <div>
@@ -240,6 +244,9 @@ const ListingNFTModal = React.forwardRef(
                     max={7}
                     required
                     register={register}
+                    onChange={(e) => {
+                      setDuration(Number(e.target.value));
+                    }}
                   />
                 </div>
                 <div>
@@ -259,7 +266,7 @@ const ListingNFTModal = React.forwardRef(
                   </div>
                   <div className="flex flex-row justify-between">
                     <div>Model earning</div>
-                    <div>0 %</div>
+                    <div>10 %</div>
                   </div>
                   <div className="flex flex-row justify-between font-bold">
                     <div>Total potential earnings</div>
@@ -270,8 +277,8 @@ const ListingNFTModal = React.forwardRef(
                 </div>
                 <div>
                   <button
-                    disabled={listInitialized}
-                    className="btn btn-primary w-full"
+                    disabled={listInitialized || !price || !duration}
+                    className={`btn btn-primary w-full ${!price || !duration ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
                     {listInitialized ? (
                       <>

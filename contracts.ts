@@ -20,6 +20,8 @@ interface IContracts {
 export const Contracts: IContracts = {
   [mainnet.id]: {
     AIGCFactory: "0x0",
+    StableDiffusionNFT: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2",
+    OPMLNFT: "0x0",
     MarketplaceV3: "0x0",
     SPRegistrationModule: "0x0",
     SPLicenseRegistry: "0x0",

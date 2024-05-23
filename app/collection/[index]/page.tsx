@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useAccount, useReadContract } from "wagmi";
 import Stats from "./stats";
 import Collection from "@/components/collection";
-import { ModelDetail } from "@/types";
+import { Listing, ModelDetail } from "@/types";
 import { useEffect, useState } from "react";
 import Hero from "./hero";
 import Progress from "./progress";
@@ -54,6 +54,13 @@ export default function CollectionPage() {
     chainId: chain?.id,
     assetContract: modelInfo[Number(index)].NFTContract as Address,
   });
+  const floorPrice = listings?.length
+    ? listings.reduce((acc: number, listing: Listing) => {
+        const price = Number(listing.pricePerToken);
+        return price < acc ? price : acc;
+      }, Number(listings[0].pricePerToken)) // 确保初始值类型一致
+    : 0;
+
   const { data: totalSupply } = useReadContract({
     address: modelInfo[Number(index)].NFTContract as Address,
     abi: aigcAbi,
@@ -106,6 +113,7 @@ export default function CollectionPage() {
         NFTData={currentResult.isLoading ? undefined : currentResult.data}
         totalListings={listings && listings.length}
         totalSupply={totalSupply ? String(totalSupply) : "0"}
+        floorPrice={floorPrice}
         owners={owners}
       />
       <Collection

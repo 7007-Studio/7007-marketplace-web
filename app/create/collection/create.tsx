@@ -293,7 +293,7 @@ const CreateCollection = () => {
             </div>
             <div className="gap-2 flex flex-col w-full">
               <a className="pl-2">Creator earnings %</a>
-              <CreateInput placeholder="10-100%" />
+              <CreateInput placeholder="10%" />
             </div>
           </div>
           <div className="w-full flex gap-5">
