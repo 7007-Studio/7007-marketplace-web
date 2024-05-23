@@ -255,13 +255,13 @@ export default function Detail() {
       return (
         <>
           {!imageError ? (
-            <div className="w-1/2 max-w-[650px]">
+            <div className="w-1/2 max-w-[650px] border border-white rounded">
               <Image
                 src={metadata?.image}
                 alt={metadata?.name}
                 width={258}
                 height={258}
-                className="w-full object-cover aspect-square absolute left-0 top-0 bg-[#eee]"
+                className="w-full object-cover aspect-square rounded"
                 onError={handleError}
                 onLoad={handleLoad}
               />
