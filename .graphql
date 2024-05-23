@@ -1,7 +1,7 @@
 query StableDiffusionQuery {
   newListings(
     orderBy: listing_listingId
-        where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+        where: {assetContract_contains: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2"}
   ) {
     listingId
     listingCreator
@@ -17,7 +17,7 @@ query StableDiffusionQuery {
     listing_assetContract
   }
   newSales(orderBy: listingId
-    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+    where: {assetContract_contains: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2"}
   ) {
     buyer
     listingCreator
@@ -27,7 +27,7 @@ query StableDiffusionQuery {
     assetContract
     quantityBought
   }
-  newOffers(orderBy: offerId where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}) {
+  newOffers(orderBy: offerId where: {assetContract_contains: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2"}) {
     offerId
     offeror
     offer_tokenType
@@ -44,7 +44,7 @@ query StableDiffusionQuery {
 query OpmlQuery {
   newListings(
     orderBy: listing_listingId
-        where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+        where: {assetContract_contains: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b"}
   ) {
     listingId
     listingCreator
@@ -60,7 +60,7 @@ query OpmlQuery {
     listing_assetContract
   }
   newSales(orderBy: listingId
-    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+    where: {assetContract_contains: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b"}
   ) {
     buyer
     listingCreator
@@ -70,7 +70,7 @@ query OpmlQuery {
     assetContract
     quantityBought
   }
-  newOffers(orderBy: offerId where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}) {
+  newOffers(orderBy: offerId where: {assetContract_contains: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b"}) {
     offerId
     offeror
     offer_tokenType

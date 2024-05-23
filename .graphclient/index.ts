@@ -5531,8 +5531,8 @@ const merger = new(BareMerger as any)({
         store: rootStore.child('bareMerger')
       })
 const documentHashMap = {
-        "8c886fb5b3a316038915bdbb2a224176abd5b6592680fe6787092d2546dd7818": StableDiffusionQueryDocument,
-"8c886fb5b3a316038915bdbb2a224176abd5b6592680fe6787092d2546dd7818": OpmlQueryDocument
+        "90e4622826996dac3fc60b10368302abb6ddd4a83812c9054a7041c13b9cd221": StableDiffusionQueryDocument,
+"90e4622826996dac3fc60b10368302abb6ddd4a83812c9054a7041c13b9cd221": OpmlQueryDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
         getPersistedOperation(key) {
@@ -5559,14 +5559,14 @@ additionalEnvelopPlugins.push(usePersistedOperations({
           return printWithCache(StableDiffusionQueryDocument);
         },
         location: 'StableDiffusionQueryDocument.graphql',
-        sha256Hash: '8c886fb5b3a316038915bdbb2a224176abd5b6592680fe6787092d2546dd7818'
+        sha256Hash: '90e4622826996dac3fc60b10368302abb6ddd4a83812c9054a7041c13b9cd221'
       },{
         document: OpmlQueryDocument,
         get rawSDL() {
           return printWithCache(OpmlQueryDocument);
         },
         location: 'OpmlQueryDocument.graphql',
-        sha256Hash: '8c886fb5b3a316038915bdbb2a224176abd5b6592680fe6787092d2546dd7818'
+        sha256Hash: '90e4622826996dac3fc60b10368302abb6ddd4a83812c9054a7041c13b9cd221'
       }
     ];
     },
@@ -5636,7 +5636,7 @@ export const StableDiffusionQueryDocument = gql`
     query StableDiffusionQuery {
   newListings(
     orderBy: listing_listingId
-    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+    where: {assetContract_contains: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2"}
   ) {
     listingId
     listingCreator
@@ -5653,7 +5653,7 @@ export const StableDiffusionQueryDocument = gql`
   }
   newSales(
     orderBy: listingId
-    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+    where: {assetContract_contains: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2"}
   ) {
     buyer
     listingCreator
@@ -5665,7 +5665,7 @@ export const StableDiffusionQueryDocument = gql`
   }
   newOffers(
     orderBy: offerId
-    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+    where: {assetContract_contains: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2"}
   ) {
     offerId
     offeror
@@ -5685,7 +5685,7 @@ export const OpmlQueryDocument = gql`
     query OpmlQuery {
   newListings(
     orderBy: listing_listingId
-    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+    where: {assetContract_contains: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b"}
   ) {
     listingId
     listingCreator
@@ -5702,7 +5702,7 @@ export const OpmlQueryDocument = gql`
   }
   newSales(
     orderBy: listingId
-    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+    where: {assetContract_contains: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b"}
   ) {
     buyer
     listingCreator
@@ -5714,7 +5714,7 @@ export const OpmlQueryDocument = gql`
   }
   newOffers(
     orderBy: offerId
-    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+    where: {assetContract_contains: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b"}
   ) {
     offerId
     offeror

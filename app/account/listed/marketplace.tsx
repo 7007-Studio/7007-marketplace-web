@@ -8,7 +8,6 @@ import useValidListings from "@/hooks/useValidListings";
 import useNftContracts from "@/hooks/useNftContracts";
 
 const Marketplace = () => {
-  //TODO: mutliple contracts
   const { address, chain } = useAccount();
   const { nftContracts } = useNftContracts({
     chainId: chain?.id,

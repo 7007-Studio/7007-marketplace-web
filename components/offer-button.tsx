@@ -5,12 +5,10 @@ import { Address, formatEther, parseEther } from "viem";
 import {
   useAccount,
   useReadContract,
-  useReadContracts,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { NATIVE_TOKEN_ADDRESS } from "@/constants/constants";
 import { getContractAddress } from "@/helpers";
 import {
   erc20Abi,
@@ -19,9 +17,8 @@ import {
 } from "@/generated";
 import { Listing, Metadata } from "@/types";
 import Image from "next/image";
-import { useForm } from "react-hook-form";
-import TextInput from "./form/textInput";
 import OfferInput from "./input/offerInput";
+import { mainnet } from "viem/chains";
 
 export interface Args {
   assetContract: Address;
@@ -45,6 +42,8 @@ export default function OfferButton({
   metadata: Metadata;
   handleReFetch: () => void;
 }) {
+  const sepoliaWeth = "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92";
+  const mainnetWeth = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
   const modelRef = useRef<HTMLDialogElement>(null);
   const [offerInitialized, setOfferInitialized] = useState(false);
   const [isOffered, setIsOffered] = useState(false);
@@ -64,7 +63,7 @@ export default function OfferButton({
     assetContract: nftContract,
     tokenId: BigInt(tokenId),
     quantity: 1n,
-    currency: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92", // sepolia WETH
+    currency: chainId === mainnet.id ? mainnetWeth : sepoliaWeth,
     totalPrice: 0n,
     expirationTimestamp: 0n,
   });
@@ -87,7 +86,7 @@ export default function OfferButton({
   };
   const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
   const { data: allowance } = useReadContract({
-    address: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92",
+    address: chainId === mainnet.id ? mainnetWeth : sepoliaWeth,
     abi: erc20Abi,
     functionName: "allowance",
     args: [connectedWallet!, marketplaceV3!],
@@ -118,7 +117,7 @@ export default function OfferButton({
       setApproveLoading(true);
       setApproved(true);
       approve({
-        address: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92",
+        address: chainId === mainnet.id ? mainnetWeth : sepoliaWeth,
         abi: erc20Abi,
         functionName: "approve",
         args: [marketplaceV3, args.totalPrice],
@@ -145,7 +144,7 @@ export default function OfferButton({
       assetContract: nftContract,
       tokenId: BigInt(tokenId),
       quantity: 1n,
-      currency: "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92", // sepolia WETH
+      currency: chainId === mainnet.id ? mainnetWeth : sepoliaWeth,
       totalPrice: 0n,
       expirationTimestamp: 0n,
     });
