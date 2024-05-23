@@ -1,12 +1,18 @@
 import { RefObject, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useReadContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { useRouter } from "next/navigation";
 import { ModelDetail } from "@/types";
 import axios from "axios";
 import { useReadAigcEstimateTotalFee, useWriteAigcMint } from "@/generated";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { Address } from "viem";
+import { Address, parseUnits } from "viem";
+import { toast } from "react-hot-toast";
 
 const PromptFormOP = ({
   submitText = "Generate",
@@ -34,7 +40,9 @@ const PromptFormOP = ({
   const [text, setText] = useState();
   const { openConnectModal } = useConnectModal();
   const [mintInitialized, setMintInitialized] = useState(false);
-
+  const result = useBalance({
+    address: address,
+  });
   const genOPImage = async () => {
     setLoading(true);
     if (!prompt || !address) return;
@@ -64,6 +72,10 @@ const PromptFormOP = ({
   const onMint = async () => {
     if (!isConnected) {
       openConnectModal?.();
+      return;
+    }
+    if (Number(result.data?.formatted) < Number(totalFee)) {
+      toast.error("Insufficient balance");
       return;
     }
 
@@ -171,20 +183,30 @@ const PromptFormOP = ({
               Each set of prompts relate to unique result, inferences are non
               fungible.
             </a>
-            <button
-              className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !prompt || !title ? "cursor-not-allowed opacity-40" : ""}`}
-              disabled={loading || !prompt || !title}
-              onClick={() => genOPImage()}
-            >
-              {loading ? (
-                <>
-                  <span className="loading loading-spinner"></span>
-                  loading
-                </>
-              ) : (
-                `${submitText}`
-              )}
-            </button>
+            {!isConnected ? (
+              <button
+                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded`}
+                disabled={!openConnectModal}
+                onClick={() => openConnectModal?.()}
+              >
+                Connect
+              </button>
+            ) : (
+              <button
+                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !title ? "cursor-not-allowed opacity-40" : ""}`}
+                disabled={loading || !prompt || !title}
+                onClick={() => genOPImage()}
+              >
+                {loading ? (
+                  <>
+                    <span className="loading loading-spinner" />
+                    loading
+                  </>
+                ) : (
+                  `${submitText}`
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>

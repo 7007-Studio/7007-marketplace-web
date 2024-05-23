@@ -1,12 +1,13 @@
 import { RefObject, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useBalance, useWaitForTransactionReceipt } from "wagmi";
 import { useRouter } from "next/navigation";
 import { ModelDetail } from "@/types";
 import axios from "axios";
 import { useReadAigcEstimateTotalFee, useWriteAigcMint } from "@/generated";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Address } from "viem";
+import { toast } from "react-hot-toast";
 
 const PromptFormSD = ({
   submitText = "Generate",
@@ -36,82 +37,9 @@ const PromptFormSD = ({
   const [image, setImage] = useState();
   const { openConnectModal } = useConnectModal();
   const [mintInitialized, setMintInitialized] = useState(false);
-
-  // const handleFetchData = async () => {
-  //   if (!address) return;
-  //   try {
-  //     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?action=inference`;
-  //     const response = await axios.get(apiUrl, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "user-id": address,
-  //       },
-  //     });
-
-  //     const data = response.data;
-  //     const targetTask = data.filter(
-  //       (task: any) => task.prompt === prompt && task.seed === seed
-  //     );
-  //     console.log("Target task:", targetTask);
-  //     if (targetTask.length === 0) return;
-  //     fetchImages(targetTask[0].id);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
-  // const fetchImages = async (requestId: string) => {
-  //   if (!address || !requestId) return;
-  //   try {
-  //     const image = await axios.get(
-  //       `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/genImages?requestID=${requestId}`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "user-id": address,
-  //         },
-  //       }
-  //     );
-  //     console.log("Image:", image.data.images[0]);
-  //     // setImages(image.data);
-  //   } catch (error) {
-  //     console.error("Error fetching images:", error);
-  //   }
-  // };
-  // const genImage = async () => {
-  //   setLoading(true);
-  //   if (!prompt || !seed || !address) return;
-  //   const data = JSON.stringify({
-  //     prompt: prompt,
-  //     seed: seed,
-  //     modelID: modelID,
-  //     modelAuthorID: modelInfo.modelAuthorID,
-  //   });
-  //   try {
-  //     const res = await axios.post(
-  //       "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task",
-  //       // "https://ai.7007.studio/gen",
-  //       data,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "user-id": address,
-  //         },
-  //       }
-  //     );
-  //     if (res.data.message === "Success") {
-  //       // router.push("/account/inferencing");
-  //       dialogRef.current?.showModal();
-  //       handleFetchData();
-  //     } else {
-  //       throw new Error(`Failed to get presigned URL: ${res.status}`);
-  //     }
-  //   } catch (error) {
-  //     console.error("Request error while getting presigned URL:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const result = useBalance({
+    address: address,
+  });
   const genSDImage = async () => {
     setLoading(true);
     if (!positivePrompt || !negativePrompt || !seed || !address) return;
@@ -139,6 +67,10 @@ const PromptFormSD = ({
   const onMint = async () => {
     if (!isConnected) {
       openConnectModal?.();
+      return;
+    }
+    if (Number(result.data?.formatted) < Number(totalFee)) {
+      toast.error("Insufficient balance");
       return;
     }
 
@@ -287,20 +219,30 @@ const PromptFormSD = ({
               Each set of prompts relate to unique result, inferences are non
               fungible.
             </a>
-            <button
-              className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !positivePrompt || !seed || !title ? "cursor-not-allowed opacity-40" : ""}`}
-              disabled={loading || !positivePrompt || !seed || !title}
-              onClick={() => genSDImage()}
-            >
-              {loading ? (
-                <>
-                  <span className="loading loading-spinner"></span>
-                  loading
-                </>
-              ) : (
-                `${submitText}`
-              )}
-            </button>
+            {!isConnected ? (
+              <button
+                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded`}
+                disabled={!openConnectModal}
+                onClick={() => openConnectModal?.()}
+              >
+                Connect
+              </button>
+            ) : (
+              <button
+                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !positivePrompt || !seed || !title ? "cursor-not-allowed opacity-40" : ""}`}
+                disabled={loading || !prompt || !title}
+                onClick={() => genSDImage()}
+              >
+                {loading ? (
+                  <>
+                    <span className="loading loading-spinner" />
+                    loading
+                  </>
+                ) : (
+                  `${submitText}`
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
