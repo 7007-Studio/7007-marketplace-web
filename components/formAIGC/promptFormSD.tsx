@@ -135,6 +135,7 @@ const PromptFormSD = ({
       setLoading(false);
     }
   };
+
   const onMint = async () => {
     if (!isConnected) {
       openConnectModal?.();
@@ -172,6 +173,7 @@ const PromptFormSD = ({
     if (mintResult.isSuccess) {
       setMintInitialized(false);
       setMinted(true);
+      setImage(undefined);
     }
   }, [mintResult.isSuccess]);
 
@@ -320,7 +322,10 @@ const PromptFormSD = ({
               <button
                 className="z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
                 disabled={mintInitialized}
-                onClick={() => dialogRef.current?.close()}
+                onClick={() => {
+                  setImage(undefined);
+                  dialogRef.current?.close();
+                }}
               >
                 Cancel
               </button>
