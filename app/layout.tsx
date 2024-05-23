@@ -52,6 +52,12 @@ export default function RootLayout({
             <main className="max-lg:hidden flex min-h-screen bg-black text-white flex-col pb-[400px] relative">
               {children}
             </main>
+            <main
+              className="hidden max-lg:flex bg-black text-white flex-col items-center justify-center relative"
+              style={{ height: "calc(100vh - 200px)" }}
+            >
+              The app is only available on PC screen
+            </main>
             <Footer />
           </ModalProvider>
         </Web3Provider>

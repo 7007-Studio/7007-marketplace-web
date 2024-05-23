@@ -27,7 +27,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="flex w-4/5 justify-between items-end">
+      <div className="flex w-4/5 justify-between gap-4 lg:flex-row flex-col lg:items-end">
         <a className="text-[15px] leading-[150%] max-w-[400px]">
           {`The world's first permissionless AI inference asset protocol. Use AI models to create and trade exclusive digital collections`}
         </a>
