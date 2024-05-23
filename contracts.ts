@@ -25,8 +25,9 @@ export const Contracts: IContracts = {
     SPLicenseRegistry: "0x0",
   },
   [sepolia.id]: {
+    //TODO: 改合約要連同Graph一起改
     AIGCFactory: "0x8F5B3428f0caBCCBFaD145D22DF0aEa4ba799d10",
-    StableDiffusionNFT: "0x32088Be31D2403db83bC2de80Ba244455a34f4c3",
+    StableDiffusionNFT: "0x530511810d56157D50E2D215aE4fC9bC9b57df02",
     OPMLNFT: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8",
     MarketplaceV3: "0x29e5E223074daD39D33327f1655f38BDD04Ba2f6",
     SPRegistrationModule: "0x8b3f6b736b520f69c37a575293d3c1ff6383d495",
