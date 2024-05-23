@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { aigcAbi } from "@/generated";
-import { Listing, Metadata, Offer } from "@/types";
+import { Listing, Metadata, ModelDetail, Offer } from "@/types";
 import {
   concatAddress,
   formatDate,
@@ -38,9 +38,11 @@ import { ListingType } from "@/enums/ListingType";
 import BuyButton from "@/components/buy-button";
 import Skeleton from "react-loading-skeleton";
 import { imageConfigDefault } from "next/dist/shared/lib/image-config";
+import { modelData } from "@/constants/constants";
 
 export default function Detail() {
   const params = useParams<{ address: string; tokenId: string }>();
+  const router = useRouter();
   const { address: nftContract, tokenId } = params || {};
   const { showListingModal } = useListingModal();
   const remixModalRef = useRef<HTMLDialogElement>(null);
@@ -55,17 +57,6 @@ export default function Detail() {
     tokenId: Number(tokenId),
     assetContract: nftContract as Address,
   });
-  const [imageError, setImageError] = useState(false);
-  const [imageLoading, setImageLoading] = useState(true);
-
-  const handleError = () => {
-    setImageError(true);
-    setImageLoading(false);
-  };
-
-  const handleLoad = () => {
-    setImageLoading(false);
-  };
   // const { data: AIResult } = useReadContract({
   //   address: nftContract as Address,
   //   abi: aigcAbi,
@@ -277,6 +268,12 @@ export default function Detail() {
 
     return <div className="w-1/2 max-w-[650px]"></div>;
   }
+  const modelName = metadata?.attributes?.find(
+    (attr: { trait_type: string; value: string }) => attr.trait_type === "model"
+  );
+  const modelInfo = modelData.find(
+    (model: ModelDetail) => model.modelName === modelName?.value
+  );
 
   return (
     <>
@@ -284,7 +281,10 @@ export default function Detail() {
         <div className="flex gap-[50px] w-full justify-center">
           {metadata && <NFTCoverAsset metadata={metadata} />}
           <div className="flex flex-col w-1/2 max-w-[650px] gap-5">
-            <div className="flex gap-4 items-center">
+            <div
+              className="flex gap-4 items-center cursor-pointer"
+              onClick={() => router.push(`/collection/${modelInfo?.id}`)}
+            >
               {metadata?.attributes && (
                 <a className="text-[30px] font-bold leading-none">
                   {metadata?.attributes.map((attr: any) => {
@@ -295,7 +295,7 @@ export default function Detail() {
                 </a>
               )}
               <div className="bg-white/30 mb-2 text-white font-bold max-h-[24px] h-full rounded flex items-center px-4">
-                <a>Text-To-Image</a>
+                <a>{modelInfo?.type}</a>
               </div>
             </div>
             {metadata && <a className="text-[60px]">{metadata.name}</a>}
