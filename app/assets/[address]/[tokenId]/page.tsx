@@ -83,7 +83,6 @@ export default function Detail() {
     const difference = calculateFloorDifference(price, floorPrice);
     return difference;
   });
-  console.log("listingsWithDifference", listingsWithDifference);
   const { offers, refetch: refetchValidOffers } = useValidOffers({
     chainId: chain?.id,
     tokenId: Number(tokenId),
