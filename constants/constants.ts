@@ -14,8 +14,8 @@ export const modelData: ModelDetail[] = [
     modelAuthorID: "1",
     modelName: "Stable Diffusion",
     status: "active",
-    NFTContract: "0x530511810d56157D50E2D215aE4fC9bC9b57df02",
-    openSeaName: "stable-diffusion-20",
+    NFTContract: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2",
+    openSeaName: "stable-diffusion-4",
     description:
       "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
     type: "Text-To-Image",
@@ -27,7 +27,7 @@ export const modelData: ModelDetail[] = [
     modelAuthorID: "1",
     modelName: "OpenLM",
     status: "active",
-    NFTContract: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8",
+    NFTContract: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b",
     openSeaName: "openlm-5",
     description:
       "OpenLM is a latent text-to-text diffusion model capable of generating photo-realistic images given any text input.",

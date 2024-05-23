@@ -26,14 +26,7 @@ import SPLicenseRegistry from "@/abis/SPLicenseRegistry.json";
 import { useReadAigcName } from "@/generated";
 import { Listing, Metadata, Offer } from "@/types";
 
-import {
-  concatAddress,
-  formatDaysLeft,
-  getContractAddress,
-  is7007Token,
-  isSPLicenseRegistry,
-  openseaUrl,
-} from "@/helpers";
+import { formatDaysLeft } from "@/helpers";
 
 import BuyButton from "@/components/buy-button";
 import Card from "@/components/ui/card";

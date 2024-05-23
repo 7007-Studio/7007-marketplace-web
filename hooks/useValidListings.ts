@@ -7,12 +7,12 @@ import {
 import { getContractAddress } from "@/helpers";
 import { Listing } from "@/types";
 import { Address, isAddressEqual } from "viem";
-import { sepolia } from "viem/chains";
+import { mainnet, sepolia } from "viem/chains";
 
 const useValidListings = ({
   listingCreator,
   assetContract,
-  chainId = sepolia.id,
+  chainId = mainnet.id,
 }: {
   listingCreator?: Address;
   assetContract?: Address;

@@ -1,7 +1,7 @@
 import { Address, isAddress, isAddressEqual } from "viem";
 import { Model, NFT } from "./types";
 import { Contracts } from "./contracts";
-import { sepolia } from "viem/chains";
+import { mainnet, sepolia } from "viem/chains";
 
 export function isNFT(item: any): item is NFT {
   return (item as NFT).tokenID !== undefined;
@@ -23,7 +23,7 @@ export function openseaUrl(
   address: string,
   tokenId: string | number | bigint
 ): string {
-  return `https://testnets.opensea.io/assets/sepolia/${address}/${tokenId}`;
+  return `https://opensea.io/assets/ethereum/${address}/${tokenId}`;
 }
 
 export function formatDaysLeft(ms: number): string {
@@ -36,7 +36,7 @@ export function formatDaysLeft(ms: number): string {
 
 export function getContractAddress(
   contract: string,
-  chainId: number = sepolia.id
+  chainId: number = mainnet.id
 ) {
   if (!chainId) {
     return undefined;

@@ -7,11 +7,11 @@ import {
 import { getContractAddress } from "@/helpers";
 import { Offer } from "@/types";
 import { Address, isAddressEqual } from "viem";
-import { sepolia } from "viem/chains";
+import { mainnet, sepolia } from "viem/chains";
 
 const useAllOffers = ({
   offeror,
-  chainId = sepolia.id,
+  chainId = mainnet.id,
   tokenId,
 }: {
   offeror?: Address;

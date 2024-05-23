@@ -154,6 +154,7 @@ const PromptFormSD = ({
       return;
     }
     setMintInitialized(true);
+
     mintAIGC(
       {
         address: modelData.NFTContract as Address,

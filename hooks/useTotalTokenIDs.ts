@@ -21,7 +21,6 @@ const useTotalTokenIDs = ({ nftContracts }: UseTotalSupplyProps) => {
         functionName: "totalSupply",
       })),
   });
-
   const tokenIds: TokenIDs[] = useMemo(() => {
     return (
       totalSupplyResults.data?.flatMap((totalSupply: any, index: number) => {

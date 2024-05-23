@@ -86,7 +86,12 @@ export default function CollectionPage() {
   const openseaMainNetURL = `https://api.opensea.io/api/v2/collections/${modelInfo[Number(index)].openSeaName}/stats`;
   const fetchCollectionData = async () => {
     try {
-      const response = await axios.get(openseaTestNetURL);
+      const response = await axios.get(openseaMainNetURL, {
+        headers: {
+          Accept: "application/json",
+          "X-API-KEY": process.env.NEXT_PUBLIC_OPENSEA_API_KEY,
+        },
+      });
       if (response.status !== 200) {
         throw new Error("Failed to fetch");
       }

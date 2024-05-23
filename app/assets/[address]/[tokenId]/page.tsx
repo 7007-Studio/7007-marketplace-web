@@ -363,7 +363,7 @@ export default function Detail() {
                   <a>Contract Address</a>
                   {nftContract && (
                     <a
-                      href={`https://sepolia.etherscan.io/address/${nftContract}`}
+                      href={`https://etherscan.io/address/${nftContract}`}
                       className="text-primary overflow-hidden"
                       target="_blank"
                     >
