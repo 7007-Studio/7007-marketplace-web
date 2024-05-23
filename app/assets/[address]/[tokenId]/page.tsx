@@ -37,6 +37,7 @@ import useValidOffers from "@/hooks/useValidOffers";
 import { ListingType } from "@/enums/ListingType";
 import BuyButton from "@/components/buy-button";
 import Skeleton from "react-loading-skeleton";
+import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 
 export default function Detail() {
   const params = useParams<{ address: string; tokenId: string }>();
@@ -54,6 +55,17 @@ export default function Detail() {
     tokenId: Number(tokenId),
     assetContract: nftContract as Address,
   });
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  const handleError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleLoad = () => {
+    setImageLoading(false);
+  };
   // const { data: AIResult } = useReadContract({
   //   address: nftContract as Address,
   //   abi: aigcAbi,
@@ -180,58 +192,97 @@ export default function Detail() {
       }
     }
   };
+  function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
+    const [imageError, setImageError] = useState(false);
+    const [imageLoading, setImageLoading] = useState(true);
+
+    const handleError = () => {
+      setImageError(true);
+      setImageLoading(false);
+    };
+
+    const handleLoad = () => {
+      setImageLoading(false);
+    };
+
+    if (!metadata) {
+      return (
+        <div className="flex w-full h-[650px] justify-center items-center border border-white rounded">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      );
+    }
+    if (metadata?.animation_url) {
+      // if animation url starts with https:// do the following
+      if (!metadata.animation_url.startsWith("https://vod")) {
+        return (
+          <div className="w-1/2 max-w-[650px]">
+            <div className="max-h-[254px] overflow-hidden">
+              <iframe src={animationUrl} width={258} height={258} />
+            </div>
+          </div>
+        );
+      }
+      return (
+        <Player.Root
+          src={getSrc({
+            type: "vod",
+            // @ts-ignore
+            meta: {
+              playbackPolicy: null,
+              source: [
+                {
+                  hrn: "HLS (TS)",
+                  type: "html5/application/vnd.apple.mpegurl",
+                  url: animationUrl,
+                },
+              ],
+            },
+          })}
+          autoPlay
+          volume={0}
+        >
+          <Player.Container>
+            <Player.Video
+              title="Agent 327"
+              style={{ height: "100%", width: "100%" }}
+            />
+          </Player.Container>
+        </Player.Root>
+      );
+    }
+    if (metadata?.image) {
+      return (
+        <>
+          {!imageError ? (
+            <div className="w-1/2 max-w-[650px]">
+              <Image
+                src={metadata?.image}
+                alt={metadata?.name}
+                width={258}
+                height={258}
+                className="w-full object-cover aspect-square absolute left-0 top-0 bg-[#eee]"
+                onError={handleError}
+                onLoad={handleLoad}
+              />
+            </div>
+          ) : (
+            <div className="w-1/2 max-w-[650px] border border-white flex items-center justify-center">
+              <span className="loading loading-spinner size-24 text-white"></span>
+            </div>
+          )}
+        </>
+      );
+    }
+
+    return <div className="w-1/2 max-w-[650px]"></div>;
+  }
 
   return (
     <>
       <div className="flex items-center flex-col h-full gap-[50px] mt-[180px] relative px-10">
         <div className="flex gap-[50px] w-full justify-center">
-          <div className="w-1/2 max-w-[650px]">
-            {!metadata ? (
-              <div className="flex w-full h-[650px] justify-center items-center border border-white rounded">
-                <span className="loading loading-spinner loading-lg"></span>
-              </div>
-            ) : animationUrl?.startsWith("https://vod") ? (
-              <Player.Root
-                src={getSrc({
-                  type: "vod",
-                  // @ts-ignore
-                  meta: {
-                    playbackPolicy: null,
-                    source: [
-                      {
-                        hrn: "HLS (TS)",
-                        type: "html5/application/vnd.apple.mpegurl",
-                        url: animationUrl,
-                      },
-                    ],
-                  },
-                })}
-                autoPlay
-                volume={0}
-              >
-                <Player.Container>
-                  <Player.Video
-                    title="Agent 327"
-                    style={{ height: "100%", width: "100%" }}
-                  />
-                </Player.Container>
-              </Player.Root>
-            ) : animationUrl ? (
-              <div className="max-h-[254px] overflow-hidden">
-                <iframe src={animationUrl} width={258} height={258} />
-              </div>
-            ) : (
-              metadata.image && (
-                <Image
-                  src={metadata?.image}
-                  alt={metadata?.name}
-                  width={258}
-                  height={258}
-                  className="w-full object-contain aspect-square border border-white rounded"
-                />
-              )
-            )}
-          </div>
+          {metadata && <NFTCoverAsset metadata={metadata} />}
           <div className="flex flex-col w-1/2 max-w-[650px] gap-5">
             <div className="flex gap-4 items-center">
               {metadata?.attributes && (

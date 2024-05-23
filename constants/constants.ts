@@ -1,6 +1,8 @@
 import { ModelDetail } from "@/types";
 import OPLogo from "@/components/assets/OPLogo.jpeg";
 import SDLogo from "@/components/assets/SDLogo.jpeg";
+import SDBanner from "@/components/assets/SDBanner.jpeg";
+import OPBanner from "@/components/assets/OPBanner.jpeg";
 
 export const ModelIndex = 1n;
 
@@ -20,6 +22,7 @@ export const modelData: ModelDetail[] = [
       "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
     type: "Text-To-Image",
     logo: SDLogo.src,
+    banner: SDBanner.src,
   },
   {
     id: "1",
@@ -33,6 +36,7 @@ export const modelData: ModelDetail[] = [
       "OpenLM is a latent text-to-text diffusion model capable of generating photo-realistic images given any text input.",
     type: "Text-To-Text",
     logo: OPLogo.src,
+    banner: OPBanner.src,
   },
 ];
 

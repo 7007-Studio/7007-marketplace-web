@@ -91,4 +91,5 @@ export interface ModelDetail {
   type: string;
   openSeaName: string;
   logo: string;
+  banner: string;
 }
