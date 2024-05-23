@@ -6,7 +6,7 @@ import { ModelDetail } from "@/types";
 import axios from "axios";
 import { useReadAigcEstimateTotalFee, useWriteAigcMint } from "@/generated";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { Address } from "viem";
+import { Address, formatEther, parseEther } from "viem";
 import { toast } from "react-hot-toast";
 
 const PromptFormSD = ({
@@ -69,7 +69,7 @@ const PromptFormSD = ({
       openConnectModal?.();
       return;
     }
-    if (Number(result.data?.formatted) < Number(totalFee)) {
+    if (Number(result.data?.formatted) < Number(formatEther(totalFee))) {
       toast.error("Insufficient balance");
       return;
     }
