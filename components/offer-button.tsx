@@ -19,6 +19,7 @@ import { Listing, Metadata } from "@/types";
 import Image from "next/image";
 import OfferInput from "./input/offerInput";
 import { mainnet } from "viem/chains";
+import { toast } from "react-hot-toast";
 
 export interface Args {
   assetContract: Address;
@@ -98,6 +99,12 @@ export default function OfferButton({
       setApproved(true);
     }
   }, [allowance]);
+  const { data: balance } = useReadContract({
+    address: chainId === mainnet.id ? mainnetWeth : sepoliaWeth,
+    abi: erc20Abi,
+    functionName: "balanceOf",
+    args: [connectedWallet!],
+  });
 
   const { writeContract: approve, data: approveData } = useWriteContract();
   const approveResult = useWaitForTransactionReceipt({
@@ -113,6 +120,12 @@ export default function OfferButton({
 
     const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
     if (!marketplaceV3) return;
+    if (Number(balance) < Number(args.totalPrice)) {
+      toast.error(
+        <span className="whitespace-pre-wrap">You don't have enough WETH</span>
+      );
+      return;
+    }
     if (!approved) {
       setApproveLoading(true);
       setApproved(true);
