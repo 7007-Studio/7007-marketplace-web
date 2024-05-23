@@ -122,7 +122,7 @@ export default function OfferButton({
     if (!marketplaceV3) return;
     if (Number(balance) < Number(args.totalPrice)) {
       toast.error(
-        <span className="whitespace-pre-wrap">You don't have enough WETH</span>
+        <span className="whitespace-pre-wrap">{`You don't have enough WETH`}</span>
       );
       return;
     }
