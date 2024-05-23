@@ -69,10 +69,6 @@ const PromptFormSD = ({
       openConnectModal?.();
       return;
     }
-    if (Number(result.data?.formatted) < Number(formatEther(totalFee))) {
-      toast.error("Insufficient balance");
-      return;
-    }
 
     if (
       !title ||
@@ -81,8 +77,13 @@ const PromptFormSD = ({
       !seed ||
       !image ||
       !address ||
-      !modelData
+      !modelData ||
+      !totalFee
     ) {
+      return;
+    }
+    if (Number(result.data?.formatted) < Number(formatEther(totalFee))) {
+      toast.error("Insufficient balance");
       return;
     }
     setMintInitialized(true);
