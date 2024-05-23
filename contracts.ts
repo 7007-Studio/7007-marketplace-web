@@ -22,7 +22,7 @@ export const Contracts: IContracts = {
     AIGCFactory: "0x0",
     StableDiffusionNFT: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2",
     OPMLNFT: "0x0",
-    MarketplaceV3: "0x0",
+    MarketplaceV3: "0x743F0EBdd63FE11555FeF6F53b3213DACDb1BB23",
     SPRegistrationModule: "0x0",
     SPLicenseRegistry: "0x0",
   },

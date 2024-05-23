@@ -42,10 +42,24 @@ import { getPublicClient } from "@/client";
 import { tr } from "@faker-js/faker";
 
 function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  const handleError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleLoad = () => {
+    setImageLoading(false);
+  };
+
   if (!metadata) {
     return (
-      <div className="flex w-full h-[258px] justify-center items-center absolute left-0 top-0">
-        <span className="loading loading-spinner loading-lg"></span>
+      <div className="relative border-y border-white bg-[#eee] pb-[100%]">
+        <div className="flex w-full h-[258px] justify-center items-center absolute left-0 top-0">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
       </div>
     );
   }
@@ -83,15 +97,28 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
       </Player.Root>
     );
   }
+  // console.log("metadata", metadata?.image);
   if (metadata?.image) {
     return (
-      <Image
-        src={metadata?.image}
-        alt={metadata?.name}
-        width={258}
-        height={258}
-        className="w-full object-cover aspect-square absolute left-0 top-0 bg-[#eee]"
-      />
+      <>
+        {!imageError ? (
+          <div className="relative border-y border-white bg-[#eee] pb-[100%]">
+            <Image
+              src={metadata?.image}
+              alt={metadata?.name}
+              width={258}
+              height={258}
+              className="w-full object-cover aspect-square absolute left-0 top-0 bg-[#eee]"
+              onError={handleError}
+              onLoad={handleLoad}
+            />
+          </div>
+        ) : (
+          <div className="flex w-[258px] h-[258px] items-center justify-center border-y border-white bg-[#eee]">
+            <span className="loading loading-spinner loading-lg text-black"></span>
+          </div>
+        )}
+      </>
     );
   }
 
@@ -258,9 +285,8 @@ const NFTCard: React.FC<NFTCardProps> = ({
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
-        <div className="relative border-y border-white bg-[#eee] pb-[100%]">
-          {metadata && <NFTCoverAsset metadata={metadata} />}
-        </div>
+        {metadata && <NFTCoverAsset metadata={metadata} />}
+
         <div
           className={`gap-2 pt-5 px-5 flex flex-col justify-between h-[190px]`}
         >

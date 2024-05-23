@@ -77,12 +77,6 @@ export default function Detail() {
     if (floorPrice === 0) return 0;
     return Number(Number((price - floorPrice) / floorPrice).toFixed(4)) * 100;
   };
-
-  const listingsWithDifference = validListings?.map((listing: Listing) => {
-    const price = Number(listing.pricePerToken);
-    const difference = calculateFloorDifference(price, floorPrice);
-    return difference;
-  });
   const { offers, refetch: refetchValidOffers } = useValidOffers({
     chainId: chain?.id,
     tokenId: Number(tokenId),

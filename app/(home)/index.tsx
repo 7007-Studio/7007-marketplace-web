@@ -414,7 +414,7 @@ function Ora({ windowSize }: { windowSize: number }) {
         <Selector onChange={changeType} options={type} single={true} />
       </div>
       {(nftContracts && (
-        <div className="flex flex-wrap w-full justify-items-center justify-center gap-12">
+        <div className="flex flex-wrap w-[75%] justify-items-center justify-center gap-12 ">
           {tokenIds.map(({ id, contract }: any) => (
             <NFTCard
               key={`${contract}-${id}`}
