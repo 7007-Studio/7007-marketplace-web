@@ -23,6 +23,7 @@ export const modelData: ModelDetail[] = [
     type: "Text-To-Image",
     logo: SDLogo.src,
     banner: SDBanner.src,
+    launchTime: "May 23rd",
   },
   {
     id: "1",
@@ -37,6 +38,7 @@ export const modelData: ModelDetail[] = [
     type: "Text-To-Text",
     logo: OPLogo.src,
     banner: OPBanner.src,
+    launchTime: "May 23rd",
   },
 ];
 

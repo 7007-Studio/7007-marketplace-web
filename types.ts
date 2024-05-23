@@ -92,4 +92,5 @@ export interface ModelDetail {
   openSeaName: string;
   logo: string;
   banner: string;
+  launchTime: string;
 }

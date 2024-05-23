@@ -40,7 +40,8 @@ const ModelCard: React.FC<ModelCardProps> = ({ modelData }) => {
             </div>
             <div className="flex flex-col gap-2 w-full ">
               <div className="w-full flex justify-between">
-                Started <span className="font-bold">Jan 1th</span>
+                Started
+                <span className="font-bold">{modelData.launchTime}</span>
               </div>
               <div className="w-full flex justify-between">
                 Action
