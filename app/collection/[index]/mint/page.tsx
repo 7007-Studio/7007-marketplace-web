@@ -6,15 +6,18 @@ import FormAIGC from "@/components/formAIGC";
 import { ModelDetail } from "@/types";
 import { modelData } from "@/constants/constants";
 import { Address } from "viem";
+import { getModelsData } from "@/helpers";
+import { useAccount } from "wagmi";
 
 export default function MintPage() {
   const { index } = useParams<{ index: string }>() || {};
-  const modelInfo: ModelDetail[] = modelData;
+  const { chainId } = useAccount();
+  const modelList: ModelDetail[] | undefined = getModelsData(chainId);
 
   return (
     <div className="h-full w-[80%]">
-      {index && (
-        <FormAIGC modelData={modelInfo[Number(index)]} modelIndex={index} />
+      {index && modelList && (
+        <FormAIGC modelData={modelList[Number(index)]} modelIndex={index} />
       )}
     </div>
   );

@@ -17,6 +17,7 @@ import {
   concatAddress,
   formatDate,
   getContractAddress,
+  getModelsData,
   openseaUrl,
 } from "@/helpers";
 import Buy from "./buy";
@@ -47,7 +48,7 @@ export default function Detail() {
   const { showListingModal } = useListingModal();
   const remixModalRef = useRef<HTMLDialogElement>(null);
   const [original, setOriginal] = useState<AIGCContent>();
-  const { address: connectedWallet, chain } = useAccount();
+  const { address: connectedWallet, chain, chainId } = useAccount();
   const [metadata, setMetadata] = useState<Metadata>();
   const [animationUrl, setAnimationUrl] = useState<string>();
   const [reFetch, setReFetch] = useState(false);
@@ -271,9 +272,13 @@ export default function Detail() {
   const modelName = metadata?.attributes?.find(
     (attr: { trait_type: string; value: string }) => attr.trait_type === "model"
   );
-  const modelInfo = modelData.find(
-    (model: ModelDetail) => model.modelName === modelName?.value
-  );
+  const modelData: ModelDetail[] | undefined = getModelsData(chainId);
+
+  const modelInfo =
+    modelData &&
+    modelData.find(
+      (model: ModelDetail) => model.modelName === modelName?.value
+    );
 
   return (
     <>
@@ -428,9 +433,9 @@ export default function Detail() {
                 </div>
                 <div className="w-full flex justify-between gap-10">
                   <div>Link</div>
-                  {nftContract && (
+                  {nftContract && chainId && (
                     <a
-                      href={openseaUrl(nftContract, tokenId as string)}
+                      href={openseaUrl(chainId, nftContract, tokenId as string)}
                       className="text-blue overflow-hidden"
                       target="_blank"
                     >

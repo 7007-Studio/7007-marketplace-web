@@ -19,11 +19,13 @@ import useValidListings from "@/hooks/useValidListings";
 import { Address } from "viem";
 import { aigcAbi } from "@/generated";
 import { modelData } from "@/constants/constants";
+import { getModelsData } from "@/helpers";
+import { mainnet } from "viem/chains";
 
 export default function CollectionPage() {
   const { index } = useParams<{ index: string }>();
-  // const [modelInfo, setModelInfo] = useState<ModelInfo>();
-  const modelInfo: ModelDetail[] = modelData;
+  const { chainId } = useAccount();
+  const modelInfo: ModelDetail[] | undefined = getModelsData(chainId);
   const [owners, setOwners] = useState(0);
   const { chain } = useAccount();
   const sdk = getBuiltGraphSDK();
@@ -52,7 +54,8 @@ export default function CollectionPage() {
 
   const { listings } = useValidListings({
     chainId: chain?.id,
-    assetContract: modelInfo[Number(index)].NFTContract as Address,
+    assetContract:
+      modelInfo && (modelInfo[Number(index)].NFTContract as Address),
   });
   const floorPrice = listings?.length
     ? listings.reduce((acc: number, listing: Listing) => {
@@ -62,7 +65,7 @@ export default function CollectionPage() {
     : 0;
 
   const { data: totalSupply } = useReadContract({
-    address: modelInfo[Number(index)].NFTContract as Address,
+    address: modelInfo && (modelInfo[Number(index)].NFTContract as Address),
     abi: aigcAbi,
     functionName: "totalSupply",
   });
@@ -82,16 +85,19 @@ export default function CollectionPage() {
   //     console.error("Error:", error);
   //   }
   // };
-  const openseaTestNetURL = `https://testnets-api.opensea.io/api/v2/collections/${modelInfo[Number(index)].openSeaName}/stats`;
-  const openseaMainNetURL = `https://api.opensea.io/api/v2/collections/${modelInfo[Number(index)].openSeaName}/stats`;
+  const openseaTestNetURL = `https://testnets-api.opensea.io/api/v2/collections/${modelInfo ? modelInfo[Number(index)].openSeaName : ""}/stats`;
+  const openseaMainNetURL = `https://api.opensea.io/api/v2/collections/${modelInfo ? modelInfo[Number(index)].openSeaName : ""}/stats`;
   const fetchCollectionData = async () => {
     try {
-      const response = await axios.get(openseaMainNetURL, {
-        headers: {
-          Accept: "application/json",
-          "X-API-KEY": process.env.NEXT_PUBLIC_OPENSEA_API_KEY,
-        },
-      });
+      const response = await axios.get(
+        chain === mainnet ? openseaMainNetURL : openseaTestNetURL,
+        {
+          headers: {
+            Accept: "application/json",
+            "X-API-KEY": process.env.NEXT_PUBLIC_OPENSEA_API_KEY,
+          },
+        }
+      );
       if (response.status !== 200) {
         throw new Error("Failed to fetch");
       }
@@ -110,7 +116,9 @@ export default function CollectionPage() {
     <div className="w-[80%]">
       <Hero
         modelData={
-          index ? (modelInfo[Number(index)] as ModelDetail) : undefined
+          index && modelInfo
+            ? (modelInfo[Number(index)] as ModelDetail)
+            : undefined
         }
       />
       <Progress modelIndex={index} />
@@ -121,9 +129,11 @@ export default function CollectionPage() {
         floorPrice={floorPrice}
         owners={owners}
       />
-      <Collection
-        NFTAddress={modelInfo[Number(index)].NFTContract as Address}
-      />
+      {modelInfo && (
+        <Collection
+          NFTAddress={modelInfo[Number(index)].NFTContract as Address}
+        />
+      )}
     </div>
   );
 }

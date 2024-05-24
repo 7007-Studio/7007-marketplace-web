@@ -1,6 +1,7 @@
 import { concatAddress, openseaUrl } from "@/helpers";
 import Image from "next/image";
 import { Address } from "viem";
+import { useAccount } from "wagmi";
 
 const CompleteStep = ({
   nftContract,
@@ -13,6 +14,7 @@ const CompleteStep = ({
   onList: () => void;
   onGenerateAgain: () => void;
 }) => {
+  const { chainId } = useAccount();
   return (
     <div className="flex flex-col max-w-[552px] mx-auto mt-24 justify-center items-center gap-10">
       <Image src="/check.svg" alt="NFT minted" width={160} height={160} />
@@ -27,7 +29,11 @@ const CompleteStep = ({
       <div className="flex flex-row px-12 w-full justify-between">
         <span>Link</span>
         <span>
-          <a href={openseaUrl(nftContract, mintedTokenId)}>View on OpenSea</a>
+          {chainId && (
+            <a href={openseaUrl(chainId, nftContract, mintedTokenId)}>
+              View on OpenSea
+            </a>
+          )}
         </span>
       </div>
       <div className="flex flex-row w-full items-center gap-4">
