@@ -409,7 +409,7 @@ export default function Detail() {
               <div className="py-5 border-b px-[30px] flex font-bold">
                 Detail
               </div>
-              <div className="w-full h-fit flex flex-col gap-6 py-5 px-[30px]">
+              <div className="w-full h-full flex flex-col gap-6 py-5 px-[30px]">
                 <div className="w-full flex justify-between gap-10">
                   <a>Contract Address</a>
                   {nftContract && (
@@ -457,16 +457,16 @@ export default function Detail() {
                 {metadata?.attributes?.map((attr) => (
                   <div
                     key={attr.trait_type}
-                    className="w-full flex justify-between gap-10"
+                    className="w-full flex justify-between gap-10 h-full"
                   >
-                    <a className="">
+                    <div className="">
                       {attr.trait_type === "positive_prompt"
                         ? "Positive Prompt"
                         : attr.trait_type === "negative_prompt"
                           ? "Negative Prompt"
                           : attr.trait_type.charAt(0).toUpperCase() +
                             attr.trait_type.slice(1)}
-                    </a>
+                    </div>
                     {attr.trait_type === "music" ? (
                       <a
                         href={attr.value}
@@ -476,7 +476,9 @@ export default function Detail() {
                         View on IPFS
                       </a>
                     ) : (
-                      <a>{attr.value}</a>
+                      <a className="min-h-fit overflow-x-clip text-ellipsis">
+                        {attr.value}
+                      </a>
                     )}
                   </div>
                 ))}
