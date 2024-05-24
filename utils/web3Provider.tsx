@@ -24,27 +24,27 @@ const wagmiConfig = getDefaultConfig({
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
   chains: [
     mainnet,
-    sepolia,
-    arbitrumSepolia,
-    baseSepolia,
-    bscTestnet,
-    auroraTestnet,
-    lineaTestnet,
+    // sepolia,
+    // arbitrumSepolia,
+    // baseSepolia,
+    // bscTestnet,
+    // auroraTestnet,
+    // lineaTestnet,
   ],
   transports: {
     [mainnet.id]: http(
       `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
     ),
-    [sepolia.id]: http(
-      `https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
-    ),
-    [baseSepolia.id]: http(),
-    [lineaTestnet.id]: http(
-      `https://linea-goerli.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
-    ),
-    [arbitrumSepolia.id]: http(),
-    [auroraTestnet.id]: http(),
-    [bscTestnet.id]: http(),
+    // [sepolia.id]: http(
+    //   `https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
+    // ),
+    // [baseSepolia.id]: http(),
+    // [lineaTestnet.id]: http(
+    //   `https://linea-goerli.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`
+    // ),
+    // [arbitrumSepolia.id]: http(),
+    // [auroraTestnet.id]: http(),
+    // [bscTestnet.id]: http(),
   },
 });
 
