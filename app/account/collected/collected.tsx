@@ -27,7 +27,6 @@ const Collected = () => {
   });
 
   const { tokenIds } = useTotalTokenIDs({ nftContracts });
-
   useEffect(() => {
     if (
       !nftContracts ||
@@ -46,7 +45,6 @@ const Collected = () => {
           args: [id],
         })),
       });
-
       const ownedTokenIds = results
         .map((result: any, index: number) => ({
           id: tokenIds[index].id,

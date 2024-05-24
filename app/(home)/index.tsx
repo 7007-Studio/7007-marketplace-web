@@ -22,9 +22,11 @@ import { Listing, ModelDetail, ModelList } from "@/types";
 import { useRouter } from "next/navigation";
 import useTotalTokenIDs from "@/hooks/useTotalTokenIDs";
 import useValidListings from "@/hooks/useValidListings";
+import { getModelsData } from "@/helpers";
 
 function HomeModel({ windowSize }: { windowSize: number }) {
-  const modelList: ModelDetail[] = modelData;
+  const { chainId } = useAccount();
+  const modelList: ModelDetail[] | undefined = getModelsData(chainId);
   const swiperRef = useRef<any>(null);
   const [swiperIndex, setSwiperIndex] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
@@ -36,7 +38,6 @@ function HomeModel({ windowSize }: { windowSize: number }) {
     { id: "2", label: "Text-To-Image", selected: false },
     { id: "3", label: "Text-To-Text", selected: false },
   ]);
-
   const handleSelector1 = (id: string) => {
     setSelector1(
       selector1.map((item) => {
@@ -52,7 +53,7 @@ function HomeModel({ windowSize }: { windowSize: number }) {
     setModel({ id: item.id, author: item.modelAuthorID, name: item.modelName });
   };
 
-  const filteredModelList = modelList.filter((model) => {
+  const filteredModelList = modelList?.filter((model) => {
     const selectedFilter = selector1.find((item) => item.selected);
     if (selectedFilter?.label === "All") {
       return true;

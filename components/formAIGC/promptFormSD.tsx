@@ -41,8 +41,8 @@ const PromptFormSD = ({
     address: address,
   });
   const genSDImage = async () => {
+    if (!positivePrompt || !seed || !address) return;
     setLoading(true);
-    if (!positivePrompt || !negativePrompt || !seed || !address) return;
     const prompt = positivePrompt + "---" + negativePrompt;
     const data = JSON.stringify({
       prompt: prompt,
@@ -74,7 +74,7 @@ const PromptFormSD = ({
     if (
       !title ||
       !positivePrompt ||
-      !negativePrompt ||
+      // !negativePrompt ||
       !seed ||
       !image ||
       !address ||
@@ -232,7 +232,7 @@ const PromptFormSD = ({
             ) : (
               <button
                 className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !positivePrompt || !seed || !title ? "cursor-not-allowed opacity-40" : ""}`}
-                disabled={loading || !prompt || !title}
+                disabled={loading || !positivePrompt || !title}
                 onClick={() => genSDImage()}
               >
                 {loading ? (

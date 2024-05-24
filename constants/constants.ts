@@ -3,20 +3,91 @@ import OPLogo from "@/components/assets/OPLogo.jpeg";
 import SDLogo from "@/components/assets/SDLogo.jpeg";
 import SDBanner from "@/components/assets/SDBanner.jpeg";
 import OPBanner from "@/components/assets/OPBanner.jpeg";
+import { mainnet, sepolia } from "viem/chains";
+
+interface IModels {
+  [key: number]: Array<ModelDetail>;
+}
 
 export const ModelIndex = 1n;
 
 export const NATIVE_TOKEN_ADDRESS =
   "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
-export const modelData: ModelDetail[] = [
+export const modelData: IModels = {
+  [mainnet.id]: [
+    {
+      id: "0",
+      action: "launched",
+      modelAuthorID: "1",
+      modelName: "Stable Diffusion",
+      status: "active",
+      NFTContract: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2",
+      openSeaName: "stable-diffusion-4",
+      description:
+        "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
+      type: "Text-To-Image",
+      logo: SDLogo.src,
+      banner: SDBanner.src,
+      launchTime: "May 23rd",
+    },
+    {
+      id: "1",
+      action: "launched",
+      modelAuthorID: "1",
+      modelName: "OpenLM",
+      status: "active",
+      NFTContract: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b",
+      openSeaName: "openlm",
+      description:
+        "OpenLM is a latent text-to-text diffusion model capable of generating photo-realistic images given any text input.",
+      type: "Text-To-Text",
+      logo: OPLogo.src,
+      banner: OPBanner.src,
+      launchTime: "May 23rd",
+    },
+  ],
+  [sepolia.id]: [
+    {
+      id: "0",
+      action: "launched",
+      modelAuthorID: "1",
+      modelName: "Stable Diffusion",
+      status: "active",
+      NFTContract: "0x530511810d56157D50E2D215aE4fC9bC9b57df02",
+      openSeaName: "stable-diffusion-4",
+      description:
+        "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
+      type: "Text-To-Image",
+      logo: SDLogo.src,
+      banner: SDBanner.src,
+      launchTime: "May 23rd",
+    },
+    {
+      id: "1",
+      action: "launched",
+      modelAuthorID: "1",
+      modelName: "OpenLM",
+      status: "active",
+      NFTContract: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8",
+      openSeaName: "openlm",
+      description:
+        "OpenLM is a latent text-to-text diffusion model capable of generating photo-realistic images given any text input.",
+      type: "Text-To-Text",
+      logo: OPLogo.src,
+      banner: OPBanner.src,
+      launchTime: "May 23rd",
+    },
+  ],
+};
+export const modelTestData: ModelDetail[] = [
   {
     id: "0",
     action: "launched",
     modelAuthorID: "1",
     modelName: "Stable Diffusion",
     status: "active",
-    NFTContract: "0x9E35A4c1894697EB93BC781c0C5581c4E97b82A2",
+    NFTContract: "0x530511810d56157D50E2D215aE4fC9bC9b57df02",
     openSeaName: "stable-diffusion-4",
     description:
       "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
@@ -31,7 +102,7 @@ export const modelData: ModelDetail[] = [
     modelAuthorID: "1",
     modelName: "OpenLM",
     status: "active",
-    NFTContract: "0x491fA4D0B6eDdE8EC8252a32367093C25a9fd14b",
+    NFTContract: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8",
     openSeaName: "openlm",
     description:
       "OpenLM is a latent text-to-text diffusion model capable of generating photo-realistic images given any text input.",

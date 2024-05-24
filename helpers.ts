@@ -2,6 +2,7 @@ import { Address, isAddress, isAddressEqual } from "viem";
 import { Model, NFT } from "./types";
 import { Contracts } from "./contracts";
 import { mainnet, sepolia } from "viem/chains";
+import { modelData } from "./constants/constants";
 
 export function isNFT(item: any): item is NFT {
   return (item as NFT).tokenID !== undefined;
@@ -20,10 +21,16 @@ export function concatAddress(
 }
 
 export function openseaUrl(
+  chainId: number,
   address: string,
   tokenId: string | number | bigint
 ): string {
-  return `https://opensea.io/assets/ethereum/${address}/${tokenId}`;
+  if (chainId === mainnet.id) {
+    return `https://opensea.io/assets/ethereum/${address}/${tokenId}`;
+  } else if (chainId === sepolia.id) {
+    return `https://opensea.io/assets/sepolia/${address}/${tokenId}`;
+  }
+  return "";
 }
 
 export function formatDaysLeft(ms: number): string {
@@ -47,6 +54,17 @@ export function getContractAddress(
   }
 
   return Contracts[chainId][contract];
+}
+export function getModelsData(chainId: number = mainnet.id) {
+  if (!chainId) {
+    return undefined;
+  }
+
+  if (Object.keys(modelData).indexOf(chainId.toString()) === -1) {
+    return undefined;
+  }
+
+  return modelData[chainId];
 }
 
 export function is7007Token(concatAddress: Address) {
