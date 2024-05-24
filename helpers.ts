@@ -28,7 +28,7 @@ export function openseaUrl(
   if (chainId === mainnet.id) {
     return `https://opensea.io/assets/ethereum/${address}/${tokenId}`;
   } else if (chainId === sepolia.id) {
-    return `https://opensea.io/assets/sepolia/${address}/${tokenId}`;
+    return `https://testnets.opensea.io/assets/sepolia/${address}/${tokenId}`;
   }
   return "";
 }

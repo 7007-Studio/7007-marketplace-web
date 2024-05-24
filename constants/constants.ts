@@ -55,7 +55,7 @@ export const modelData: IModels = {
       modelName: "Stable Diffusion",
       status: "active",
       NFTContract: "0x530511810d56157D50E2D215aE4fC9bC9b57df02",
-      openSeaName: "stable-diffusion-4",
+      openSeaName: "stable-diffusion-20",
       description:
         "Stable Diffusion is a latent text-to-image diffusion model capable of generating photo-realistic images given any text input.",
       type: "Text-To-Image",
@@ -70,7 +70,7 @@ export const modelData: IModels = {
       modelName: "OpenLM",
       status: "active",
       NFTContract: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8",
-      openSeaName: "openlm",
+      openSeaName: "openlm-6",
       description:
         "OpenLM is a latent text-to-text diffusion model capable of generating photo-realistic images given any text input.",
       type: "Text-To-Text",
