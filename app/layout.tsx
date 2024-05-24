@@ -43,7 +43,7 @@ export default function RootLayout({
                   paddingLeft: "10px",
                   border: "1px solid #B4FF78",
                   color: "#B4FF78",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   fontFamily: "Digital Numbers",
                 },
               }}

@@ -65,6 +65,7 @@ const PromptFormOP = ({
       }
     } catch (error) {
       console.error("error:", error);
+      toast.error("Too many requests, please try again later");
     } finally {
       setLoading(false);
     }

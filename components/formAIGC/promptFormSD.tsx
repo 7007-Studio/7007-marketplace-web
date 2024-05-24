@@ -59,6 +59,7 @@ const PromptFormSD = ({
       // handleFetchData();
     } catch (error) {
       console.error("error:", error);
+      toast.error("Too many requests, please try again later");
     } finally {
       setLoading(false);
     }
