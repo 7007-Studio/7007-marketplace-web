@@ -30,11 +30,17 @@ import { formatDaysLeft } from "@/helpers";
 
 import BuyButton from "@/components/buy-button";
 import Card from "@/components/ui/card";
-import { useListingModal } from "@/utils/modalProvider";
+import { useBuyModal, useListingModal } from "@/utils/modalProvider";
 import { getPublicClient } from "@/client";
 import { tr } from "@faker-js/faker";
 
-function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
+function NFTCoverAsset({
+  metadata,
+  goPage,
+}: {
+  metadata?: Metadata;
+  goPage?: any;
+}) {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -49,7 +55,10 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
 
   if (!metadata) {
     return (
-      <div className="relative border-y border-white bg-[#eee] pb-[100%]">
+      <div
+        className="relative border-y border-white bg-[#eee] pb-[100%]"
+        onClick={goPage}
+      >
         <div className="flex w-full h-[258px] justify-center items-center absolute left-0 top-0">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
@@ -61,7 +70,10 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
     // if animation url starts with https:// do the following
     if (!metadata.animation_url.startsWith("https://vod")) {
       return (
-        <div className="max-h-[258px] overflow-hidden absolute left-0 top-0">
+        <div
+          className="max-h-[258px] overflow-hidden absolute left-0 top-0"
+          onClick={goPage}
+        >
           <iframe src={metadata.animation_url} width={258} height={258} />
         </div>
       );
@@ -95,7 +107,10 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
     return (
       <>
         {!imageError ? (
-          <div className="relative border-y border-white bg-[#eee] pb-[100%]">
+          <div
+            className="relative border-y border-white bg-[#eee] pb-[100%]"
+            onClick={goPage}
+          >
             <Image
               src={metadata?.image}
               alt={metadata?.name}
@@ -107,7 +122,10 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
             />
           </div>
         ) : (
-          <div className="flex w-[258px] h-[258px] items-center justify-center border-y border-white bg-[#eee]">
+          <div
+            className="flex w-[258px] h-[258px] items-center justify-center border-y border-white bg-[#eee]"
+            onClick={goPage}
+          >
             <span className="loading loading-spinner loading-lg text-black"></span>
           </div>
         )}
@@ -115,7 +133,7 @@ function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
     );
   }
 
-  return <div className="flex w-[258px] h-[258px]"></div>;
+  return <div className="flex w-[258px] h-[258px]" onClick={goPage}></div>;
 }
 export interface NFTCardProps {
   nftContract: Address;
@@ -261,7 +279,9 @@ const NFTCard: React.FC<NFTCardProps> = ({
       parseURI();
     }
   }, [nftContract, isErc721, tokenURI, isErc1155, uri]);
+
   const { showListingModal } = useListingModal();
+  const { showBuyModal } = useBuyModal();
   return (
     <Card
       className={`w-[258px] h-full transition-all ${hover ? "drop-shadow-card" : ""}`}
@@ -275,15 +295,20 @@ const NFTCard: React.FC<NFTCardProps> = ({
         </a>
       </div>
       <div
-        className="hover:cursor-pointer flex flex-col w-full h-full relative"
-        onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
+        className="hover:cursor-pointer flex flex-col w-full h-full relative z-10"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
-        {metadata && <NFTCoverAsset metadata={metadata} />}
+        {metadata && (
+          <NFTCoverAsset
+            metadata={metadata}
+            goPage={() => router.push(`/assets/${nftContract}/${tokenId}`)}
+          />
+        )}
 
         <div
-          className={`gap-2 pt-5 px-5 flex flex-col justify-between h-[190px]`}
+          className="gap-2 pt-5 px-5 flex flex-col justify-between h-[190px]"
+          onClick={() => router.push(`/assets/${nftContract}/${tokenId}`)}
         >
           <div className="flex flex-col gap-2">
             <a className="text-lg font-bold">
@@ -377,12 +402,20 @@ const NFTCard: React.FC<NFTCardProps> = ({
         )}
 
         {listing && !isOwner && hover && (
-          <BuyButton
-            listing={listing}
-            hover={hover}
-            className={"h-12"}
-            handleReFetch={refetch}
-          />
+          <button
+            onClick={(e) => {
+              console.debug("Buy button clicked");
+              e.stopPropagation();
+              showBuyModal({
+                listing,
+                metadata,
+                handleReFetch: refetch,
+              });
+            }}
+            className={`w-full z-20 bg-white text-black font-bold transition-all flex justify-center items-center ${hover ? "h-12" : "h-0"}`}
+          >
+            Buy now
+          </button>
         )}
       </div>
     </Card>

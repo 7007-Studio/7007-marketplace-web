@@ -2,13 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useReadContract, useReadContracts } from "wagmi";
-import {
-  Address,
-  formatEther,
-  isAddressEqual,
-  parseEther,
-  zeroAddress,
-} from "viem";
+import { Address, formatEther, isAddressEqual } from "viem";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { aigcAbi } from "@/generated";
@@ -26,20 +20,16 @@ import SPIntegration from "./sp-integration";
 import { AIGCContent } from "@/components/formAIGC";
 import { getSrc } from "@livepeer/react/external";
 import * as Player from "@livepeer/react/player";
-import { useListingModal } from "@/utils/modalProvider";
+import { useBuyModal, useListingModal } from "@/utils/modalProvider";
 import Image from "next/image";
 import CancelOfferButton from "@/components/cancelOffer-button";
 import AcceptOfferButton from "@/components/acceptOffer-button";
 import CancelListingButton from "@/components/cancelListing-button";
 import useValidListings from "@/hooks/useValidListings";
 import useAllListings from "@/hooks/useAllListings";
-import useAllOffers from "@/hooks/useAllOffers";
 import useValidOffers from "@/hooks/useValidOffers";
 import { ListingType } from "@/enums/ListingType";
-import BuyButton from "@/components/buy-button";
 import Skeleton from "react-loading-skeleton";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
-import { modelData } from "@/constants/constants";
 import { mainnet } from "viem/chains";
 
 export default function Detail() {
@@ -66,6 +56,7 @@ export default function Detail() {
   //   args: [tokenId],
   // });
   // console.log("AIResult", AIResult);
+  const { showBuyModal } = useBuyModal();
   const { listings: validListings, refetch: refetchAllValidListings } =
     useValidListings({
       chainId: chain?.id,
@@ -87,10 +78,13 @@ export default function Detail() {
     tokenId: Number(tokenId),
     assetContract: nftContract as Address,
   });
-  const handleReFetch = () => {
+
+  const handleReFetchSp = () => {
+    window.location.reload();
     setReFetch(!reFetch);
     refetchValidOffers();
     refetchAllListings();
+    refetchAllValidListings();
   };
   const getETHUSDPrice = async () => {
     const url = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT";
@@ -110,7 +104,7 @@ export default function Detail() {
   }, []);
   // read contracts
   const aigcContractConfig = { address: nftContract as Address, abi: aigcAbi };
-  const { data: aigcData } = useReadContracts({
+  const { data: aigcData, refetch: refetchAigcData } = useReadContracts({
     contracts: [
       {
         ...aigcContractConfig,
@@ -126,9 +120,16 @@ export default function Detail() {
   });
   const [ownerOf, tokenUri] = aigcData || [];
 
+  const handleReFetch = () => {
+    setReFetch(!reFetch);
+    refetchValidOffers();
+    refetchAllListings();
+    refetchAllValidListings();
+    refetchAigcData();
+  };
+
   useEffect(() => {
     if (!tokenUri?.result) return;
-
     const fetchMetadata = async () => {
       const res = await axios.get(tokenUri.result);
       const metadata = res.data;
@@ -180,7 +181,22 @@ export default function Detail() {
             />
           );
         } else {
-          return <BuyButton listing={list} handleReFetch={handleReFetch} />;
+          return (
+            <button
+              onClick={(e) => {
+                console.debug("Buy button clicked");
+                e.stopPropagation();
+                showBuyModal({
+                  listing: list,
+                  metadata,
+                  handleReFetch: handleReFetch,
+                });
+              }}
+              className={`px-1 z-20 bg-white text-black font-bold transition-all flex justify-center items-center rounded-lg py-2`}
+            >
+              Buy now
+            </button>
+          );
         }
       }
     }
@@ -345,6 +361,7 @@ export default function Detail() {
                       name: metadata.name || "",
                       tokenId: BigInt(tokenId),
                       metadata,
+                      refetch: handleReFetch,
                     });
                   }}
                   className="w-full h-[45px] rounded bg-white text-black flex font-bold justify-center items-center"
@@ -354,14 +371,21 @@ export default function Detail() {
                 </button>
               </div>
             )}
-            {!isOwner && nftContract && tokenId && metadata && (
-              <Buy
-                nftContract={nftContract as Address}
-                tokenId={tokenId}
-                metadata={metadata}
-                handleReFetch={handleReFetch}
-              />
-            )}
+            {!isOwner &&
+              nftContract &&
+              tokenId &&
+              metadata &&
+              validListings &&
+              offers && (
+                <Buy
+                  nftContract={nftContract as Address}
+                  tokenId={tokenId}
+                  metadata={metadata}
+                  listings={validListings}
+                  offers={offers}
+                  handleReFetch={handleReFetch}
+                />
+              )}
             {/* <div className="relative w-full">
               <input
                 type="text"

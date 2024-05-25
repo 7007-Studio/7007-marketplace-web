@@ -62,26 +62,18 @@ const Collected = () => {
 
   return (
     <>
-      {nftContracts.length > 0 ? (
-        <div className="flex flex-wrap max-w-[85%] gap-14 justify-center">
-          {filteredTokenIds.map(({ id, contract }: any) => (
-            <NFTCard
-              key={`${contract}-${id}`}
-              nftContract={contract}
-              tokenId={id}
-              listing={listings?.find(
-                (l: Listing) => l.tokenId === id && l.assetContract === contract
-              )}
-            />
-          )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
-        </div>
-      ) : (
-        <div className="grid grid-cols-3 2xl:grid-cols-4 max-w-[85%] gap-14">
-          {emptyCardList.map((l) => (
-            <EmptyCard key={l} />
-          ))}
-        </div>
-      )}
+      <div className="flex flex-wrap max-w-[85%] gap-14 justify-center">
+        {filteredTokenIds.map(({ id, contract }: any) => (
+          <NFTCard
+            key={`${contract}-${id}`}
+            nftContract={contract}
+            tokenId={id}
+            listing={listings?.find(
+              (l: Listing) => l.tokenId === id && l.assetContract === contract
+            )}
+          />
+        )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
+      </div>
     </>
   );
 };
