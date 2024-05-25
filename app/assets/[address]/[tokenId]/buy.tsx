@@ -14,27 +14,26 @@ import OfferButton from "@/components/offer-button";
 import useValidListings from "@/hooks/useValidListings";
 import useValidOffers from "@/hooks/useValidOffers";
 import axios from "axios";
+import { useBuyModal } from "@/utils/modalProvider";
 
 export default function Buy({
   nftContract,
   tokenId,
   metadata,
   handleReFetch,
+  listings,
+  offers,
 }: {
   nftContract: Address;
   tokenId: string;
   metadata: Metadata;
   handleReFetch: () => void;
+  listings: Listing[];
+  offers: Offer[];
 }) {
   const [listing, setListing] = useState<Listing>();
   const [offer, setOffer] = useState<Offer>();
   const { chain } = useAccount();
-  const { listings } = useValidListings({
-    chainId: chain?.id,
-  });
-  const { offers } = useValidOffers({
-    chainId: chain?.id,
-  });
   const [ETHPrice, setETHPrice] = useState<string>("");
   const getUSDprice = async () => {
     const url = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT";
@@ -100,6 +99,7 @@ export default function Buy({
     ],
   });
   const [decimals, symbol] = listingData || [];
+  const { showBuyModal } = useBuyModal();
 
   if (!listing) {
     return (
@@ -147,11 +147,20 @@ export default function Buy({
           </div>
         </div>
         <div className="flex gap-5">
-          <BuyButton
-            listing={listing}
-            className="w-[47%] h-[45px] rounded"
-            handleReFetch={handleReFetch}
-          />
+          <button
+            onClick={(e) => {
+              console.debug("Buy button clicked");
+              e.stopPropagation();
+              showBuyModal({
+                listing,
+                metadata,
+                handleReFetch,
+              });
+            }}
+            className="w-[47%] h-[45px] rounded bg-white text-black"
+          >
+            Buy now
+          </button>
           <OfferButton
             nftContract={nftContract}
             tokenId={tokenId}

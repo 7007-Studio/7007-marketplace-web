@@ -15,6 +15,7 @@ import { NATIVE_TOKEN_ADDRESS } from "@/constants/constants";
 import { getContractAddress } from "@/helpers";
 import {
   useReadAigcGetApproved,
+  useReadAigcIsApprovedForAll,
   useWriteAigcSetApprovalForAll,
   useWriteMarketplaceV3CreateListing,
 } from "@/generated";
@@ -73,9 +74,6 @@ const ListingNFTModal = React.forwardRef(
       startTimestamp: BigInt(Math.round(Date.now() / 1000)),
       endTimestamp: BigInt(Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60),
       reserved: false,
-    });
-    const { data: balance } = useBalance({
-      address: address,
     });
     useEffect(() => {
       reset();
@@ -140,15 +138,28 @@ const ListingNFTModal = React.forwardRef(
     };
 
     // read contracts
-    const { data: approved } = useReadAigcGetApproved({
+    // const { data: approved } = useReadAigcGetApproved({
+    //   address: listingNFT?.nftContract,
+    //   args: listingNFT ? [BigInt(listingNFT?.tokenId)] : undefined,
+    // });
+    const { data: approved } = useReadAigcIsApprovedForAll({
       address: listingNFT?.nftContract,
-      args: listingNFT ? [BigInt(listingNFT?.tokenId)] : undefined,
+      args: [
+        address ? address : zeroAddress,
+        marketplaceV3 ? marketplaceV3 : zeroAddress,
+      ],
     });
     useEffect(() => {
-      if (approved && !isAddressEqual(approved, zeroAddress)) {
-        setApprovedListing(true);
-      }
-    }, [approved]);
+      const checkApproved = async () => {
+        if (approved === undefined) return;
+        if (!approved) {
+          setApprovedListing(false);
+        } else {
+          setApprovedListing(true);
+        }
+      };
+      checkApproved();
+    }, [approved, listingNFT, address, marketplaceV3]);
 
     // write contracts
     const { writeContract: approveListing, data: approveTx } =
@@ -265,7 +276,6 @@ const ListingNFTModal = React.forwardRef(
         });
       }
     };
-
     return (
       <dialog
         ref={ref as RefObject<HTMLDialogElement> | null}
@@ -285,20 +295,22 @@ const ListingNFTModal = React.forwardRef(
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-6"
               >
-                <div className="grid grid-cols-4 gap-4 items-center">
-                  <div>
-                    {listingNFT?.metadata?.image && (
-                      <Image
-                        src={listingNFT.metadata.image}
-                        alt={listingNFT.metadata.name || ""}
-                        width={72}
-                        height={72}
-                      />
-                    )}
-                  </div>
-                  <div className="col-span-2">
-                    <div className="text-lg">{listingNFT?.metadata?.name}</div>
-                    <div className="text-sm">{listingNFT?.name}</div>
+                <div className="flex justify-between gap-3 items-center">
+                  {listingNFT?.metadata?.image && (
+                    <Image
+                      src={listingNFT.metadata.image}
+                      alt={listingNFT.metadata.name || ""}
+                      width={72}
+                      height={72}
+                    />
+                  )}
+                  <div className="flex flex-col flex-1 w-full truncate">
+                    <div className="text-lg w-full truncate">
+                      {listingNFT?.metadata?.name}
+                    </div>
+                    <div className="text-sm w-full truncate">
+                      {listingNFT?.name}
+                    </div>
                   </div>
                   <div>
                     <div className="text-sm pt-2">Listing price</div>
@@ -375,7 +387,7 @@ const ListingNFTModal = React.forwardRef(
                       errorMessage !== "" ||
                       errorMessageDays !== ""
                     }
-                    className={`btn btn-primary w-full ${
+                    className={`btn btn-primary w-full gap-2 ${
                       !price ||
                       !duration ||
                       errorMessage !== "" ||

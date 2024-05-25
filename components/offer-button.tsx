@@ -143,7 +143,6 @@ export default function OfferButton({
     functionName: "allowance",
     args: [connectedWallet!, marketplaceV3!],
   });
-  console.log("allowance", allowance ? formatEther(allowance) : "");
   useEffect(() => {
     if (allowance && Number(allowance) <= Number(args.totalPrice)) {
       setApproved(false);
