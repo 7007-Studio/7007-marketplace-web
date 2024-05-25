@@ -315,7 +315,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
                 <a className="text-[20px]">
                   {decimals?.result && listing.pricePerToken
                     ? formatUnits(listing.pricePerToken, decimals.result)
-                    : Number(formatEther(listing.pricePerToken)).toFixed(3) || (
+                    : Number(formatEther(listing.pricePerToken)).toFixed(4) || (
                         <Skeleton />
                       )}
                   {" " || <Skeleton />}
@@ -337,7 +337,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
                 <a className="text-[20px]">
                   {decimals?.result && offer.totalPrice
                     ? formatUnits(offer.totalPrice, decimals.result)
-                    : Number(formatEther(offer.totalPrice)).toFixed(3) || (
+                    : Number(formatEther(offer.totalPrice)).toFixed(4) || (
                         <Skeleton />
                       )}
                   {" " || <Skeleton />}
