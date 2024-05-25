@@ -143,13 +143,14 @@ export default function OfferButton({
     functionName: "allowance",
     args: [connectedWallet!, marketplaceV3!],
   });
+  console.log("allowance", allowance ? formatEther(allowance) : "");
   useEffect(() => {
     if (allowance && Number(allowance) <= Number(args.totalPrice)) {
       setApproved(false);
     } else if (allowance && Number(allowance) > Number(args.totalPrice)) {
       setApproved(true);
     }
-  }, [allowance]);
+  }, [allowance, args.totalPrice]);
   const { data: balance } = useReadContract({
     address: chainId === mainnet.id ? mainnetWeth : sepoliaWeth,
     abi: erc20Abi,
@@ -296,7 +297,7 @@ export default function OfferButton({
                   <div className="text-lg">
                     {args.totalPrice === 0n
                       ? "--"
-                      : formatEther(args.totalPrice)}
+                      : formatEther(args.totalPrice)}{" "}
                     WETH
                   </div>
                 </div>
