@@ -1,7 +1,7 @@
 import React, { RefObject, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useBalance, useWaitForTransactionReceipt } from "wagmi";
 import {
   Address,
   formatEther,
@@ -21,6 +21,7 @@ import {
 import { Metadata } from "@/types";
 
 import TextInput from "@/components/form/textInput";
+import { toast } from "react-hot-toast";
 
 export interface ListingNFT {
   nftContract: Address;
@@ -28,6 +29,7 @@ export interface ListingNFT {
   tokenId: bigint;
   maxQuantity?: number;
   metadata?: Partial<Metadata>;
+  refetch?: () => void;
 }
 
 interface IFormListNFTInput {
@@ -51,7 +53,7 @@ interface Args {
 
 const ListingNFTModal = React.forwardRef(
   ({ listingNFT }: ListingNFTModalProps, ref) => {
-    const { isConnected, chainId } = useAccount();
+    const { isConnected, chainId, address } = useAccount();
     const { openConnectModal } = useConnectModal();
     const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
     const [approvedListing, setApprovedListing] = useState(false);
@@ -72,13 +74,25 @@ const ListingNFTModal = React.forwardRef(
       endTimestamp: BigInt(Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60),
       reserved: false,
     });
-
+    const { data: balance } = useBalance({
+      address: address,
+    });
     useEffect(() => {
       reset();
       setPrice("");
       setDuration("7");
       setErrorMessage("");
       setErrorMessageDays("");
+      setArgs({
+        assetContract: listingNFT ? listingNFT.nftContract : zeroAddress,
+        tokenId: listingNFT ? BigInt(listingNFT.tokenId) : 0n,
+        quantity: 1n,
+        currency: NATIVE_TOKEN_ADDRESS,
+        pricePerToken: 0n,
+        startTimestamp: BigInt(Math.round(Date.now() / 1000)),
+        endTimestamp: BigInt(Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60),
+        reserved: false,
+      });
       setApprovedListing(false);
       setListInitialized(false);
       setIsListed(false);
@@ -163,6 +177,7 @@ const ListingNFTModal = React.forwardRef(
       setIsListed(true);
       setApprovedListing(false);
       setListInitialized(false);
+      listingNFT && listingNFT.refetch && listingNFT?.refetch?.();
     }, [listingResult.isSuccess]);
 
     function handleCreateListing(data: IFormListNFTInput) {

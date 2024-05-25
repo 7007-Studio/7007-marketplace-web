@@ -122,6 +122,7 @@ export interface NFTCardProps {
   tokenId: bigint;
   listing?: Listing;
   offer?: Offer;
+  refetch?: () => void;
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({
@@ -129,6 +130,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
   tokenId,
   listing,
   offer,
+  refetch,
 }) => {
   const router = useRouter();
   const { address: connectedWallet, chainId, chain } = useAccount();
@@ -359,12 +361,12 @@ const NFTCard: React.FC<NFTCardProps> = ({
             onClick={(e) => {
               console.debug("List button clicked");
               e.stopPropagation();
-              // show list modal for this (nftContract, tokenId, metadata)
               showListingModal({
                 nftContract: nftContract,
                 name: name || "",
                 tokenId,
                 metadata,
+                refetch,
               });
             }}
             className={`w-full z-20 bg-white text-black font-bold transition-all flex justify-center items-center ${hover ? "h-12" : "h-0"}`}
@@ -375,7 +377,12 @@ const NFTCard: React.FC<NFTCardProps> = ({
         )}
 
         {listing && !isOwner && hover && (
-          <BuyButton listing={listing} hover={hover} className={"h-12"} />
+          <BuyButton
+            listing={listing}
+            hover={hover}
+            className={"h-12"}
+            handleReFetch={refetch}
+          />
         )}
       </div>
     </Card>
