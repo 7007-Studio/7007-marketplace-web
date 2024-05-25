@@ -14,12 +14,13 @@ interface TextInputProps<T extends FieldValues> {
   postfix?: string;
   required?: boolean;
   register: UseFormRegister<T>;
-  errors?: FieldErrors<T>;
+  errorMessage?: string;
   name: Path<T>;
   min?: number;
   max?: number;
   defaultValue?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange: (valueName: string, value: any) => void;
 }
 
 export default function TextInput<T extends FieldValues>({
@@ -30,9 +31,10 @@ export default function TextInput<T extends FieldValues>({
   required,
   register,
   name,
-  errors,
+  errorMessage,
   min,
   max,
+  value,
   defaultValue,
   onChange,
 }: TextInputProps<T>) {
@@ -51,9 +53,10 @@ export default function TextInput<T extends FieldValues>({
           placeholder={placeholder}
           min={min}
           max={max}
+          value={value}
           {...register(name, registerOptions)}
           defaultValue={defaultValue}
-          onChange={onChange}
+          onChange={(e) => onChange(name, e.target.value)}
         />
         {postfix && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -61,10 +64,10 @@ export default function TextInput<T extends FieldValues>({
           </div>
         )}
       </div>
-      {errors && (
-        <p className="text-red-600 text-left text-sm">
-          {errors.name?.message as ReactNode}
-        </p>
+      {errorMessage && (
+        <span className="text-downRed text-[12px] pl-3 pt-1">
+          {errorMessage}
+        </span>
       )}
     </label>
   );

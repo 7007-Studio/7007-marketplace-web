@@ -34,7 +34,7 @@ export default function Stats({
       name: "Floor Price",
       value:
         floorPrice &&
-        `${Number(formatEther(BigInt(floorPrice))).toFixed(3)} ETH`,
+        `${Number(formatEther(BigInt(floorPrice))).toFixed(4)} ETH`,
     },
     {
       name: "Total Quantity",

@@ -201,7 +201,7 @@ const PromptFormOP = ({
               </button>
             ) : (
               <button
-                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !title ? "cursor-not-allowed opacity-40" : ""}`}
+                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !title || !prompt ? "cursor-not-allowed opacity-40" : ""}`}
                 disabled={loading || !prompt || !title}
                 onClick={() => genOPImage()}
               >

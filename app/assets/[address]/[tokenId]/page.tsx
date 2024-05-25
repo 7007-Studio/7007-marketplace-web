@@ -40,6 +40,7 @@ import BuyButton from "@/components/buy-button";
 import Skeleton from "react-loading-skeleton";
 import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 import { modelData } from "@/constants/constants";
+import { mainnet } from "viem/chains";
 
 export default function Detail() {
   const params = useParams<{ address: string; tokenId: string }>();
@@ -199,7 +200,7 @@ export default function Detail() {
 
     if (!metadata) {
       return (
-        <div className="flex w-full h-[650px] justify-center items-center border border-white rounded">
+        <div className="flex w-full h-[600px] justify-center items-center border border-white rounded">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
       );
@@ -208,7 +209,7 @@ export default function Detail() {
       // if animation url starts with https:// do the following
       if (!metadata.animation_url.startsWith("https://vod")) {
         return (
-          <div className="w-1/2 max-w-[650px]">
+          <div className="w-1/2 max-w-[600px]">
             <div className="max-h-[254px] overflow-hidden">
               <iframe src={animationUrl} width={258} height={258} />
             </div>
@@ -247,7 +248,7 @@ export default function Detail() {
       return (
         <>
           {!imageError ? (
-            <div className="w-1/2 max-w-[650px] border border-white rounded">
+            <div className="w-2/5 max-w-[600px] border border-white rounded">
               <Image
                 src={metadata?.image}
                 alt={metadata?.name}
@@ -259,7 +260,7 @@ export default function Detail() {
               />
             </div>
           ) : (
-            <div className="w-1/2 max-w-[650px] border border-white flex items-center justify-center">
+            <div className="w-[40%] max-w-[600px] border border-white flex items-center justify-center">
               <span className="loading loading-spinner size-24 text-white"></span>
             </div>
           )}
@@ -267,7 +268,7 @@ export default function Detail() {
       );
     }
 
-    return <div className="w-1/2 max-w-[650px]"></div>;
+    return <div className="w-2/5 max-w-[600px]"></div>;
   }
   const modelName = metadata?.attributes?.find(
     (attr: { trait_type: string; value: string }) => attr.trait_type === "model"
@@ -285,7 +286,7 @@ export default function Detail() {
       <div className="flex items-center flex-col h-full gap-[50px] mt-[180px] relative px-10">
         <div className="flex gap-[50px] w-full justify-center">
           {metadata && <NFTCoverAsset metadata={metadata} />}
-          <div className="flex flex-col w-1/2 max-w-[650px] gap-5">
+          <div className="flex flex-col w-[48%] max-w-[800px] gap-5">
             <div
               className="flex gap-4 items-center cursor-pointer"
               onClick={() => router.push(`/collection/${modelInfo?.id}`)}
@@ -387,23 +388,9 @@ export default function Detail() {
               />
             )} */}
           </div>
-          {/* {metadata && (
-            <div>
-              <p className="pb-4">{metadata.description}</p>
-              {metadata?.attributes?.map((attr) => (
-                <div
-                  key={attr.trait_type}
-                  className="grid grid-flow-col grid-cols-2 border-b-1"
-                >
-                  <div>{attr.trait_type}:</div>
-                  <div className="break-all">{attr.value}</div>
-                </div>
-              ))}
-            </div>
-          )} */}
         </div>
         <div className="w-full flex pt-8 gap-[50px] h-full justify-center">
-          <div className="w-[650px] flex flex-col gap-[30px] h-full">
+          <div className="w-2/5 flex flex-col max-w-[600px] gap-[30px] h-full">
             <div className="border border-white w-full h-full rounded-md">
               <div className="py-5 border-b px-[30px] flex font-bold">
                 Price History
@@ -419,8 +406,12 @@ export default function Detail() {
                   <a>Contract Address</a>
                   {nftContract && (
                     <a
-                      href={`https://etherscan.io/address/${nftContract}`}
-                      className="text-primary overflow-hidden"
+                      href={
+                        chain === mainnet
+                          ? `https://etherscan.io/address/${nftContract}`
+                          : `https://sepolia.etherscan.io/address/${nftContract}`
+                      }
+                      className="text-blue cursor-pointer overflow-hidden"
                       target="_blank"
                     >
                       {concatAddress(nftContract)}
@@ -480,6 +471,18 @@ export default function Detail() {
                       >
                         View on IPFS
                       </a>
+                    ) : attr.trait_type === "author" ? (
+                      <a
+                        href={
+                          chain === mainnet
+                            ? `https://etherscan.io/address/${attr.value}`
+                            : `https://sepolia.etherscan.io/address/${attr.value}`
+                        }
+                        className="text-blue cursor-pointer overflow-hidden"
+                        target="_blank"
+                      >
+                        {concatAddress(attr.value)}
+                      </a>
                     ) : (
                       <a className="min-h-fit overflow-x-clip text-ellipsis">
                         {attr.value}
@@ -490,114 +493,132 @@ export default function Detail() {
               </div>
             </div>
           </div>
-          <div className="w-[650px] flex flex-col gap-[30px] h-full">
-            <div className="border border-white w-full h-full rounded-md">
-              <div className="py-5 border-b px-[30px] flex font-bold">
+          <div className="max-w-[800px] w-[48%] flex flex-col gap-[30px] h-full">
+            <div className="border relative border-white w-full h-full rounded-md">
+              <a className="py-5 w-full border-b px-[30px] flex font-bold">
                 listings
-              </div>
-              <div className="w-full h-full flex flex-col gap-6 px-5">
-                <div className="w-full grid grid-cols-6 gap-5 pt-7 pb-5 justify-items-center items-center content-center border-b border-grey">
-                  <a className="text-sm">price</a>
-                  <a className="text-sm">use price</a>
-                  <a className="text-sm">quantity</a>
-                  <a className="text-sm text-center">floor difference</a>
-                  <a className="text-sm">from</a>
+              </a>
+              {listings && listings.length > 0 ? (
+                <div className="w-full h-full overflow-x-auto">
+                  <div className="w-[780px] h-full flex flex-col gap-6 px-5">
+                    <div className="w-full grid grid-cols-6 gap-5 pt-7 pb-5 justify-items-center items-center content-center border-b border-grey">
+                      <a className="text-base">price</a>
+                      <a className="text-base">USD price</a>
+                      <a className="text-base">quantity</a>
+                      <a className="text-base text-center">floor difference</a>
+                      <a className="text-base">from</a>
+                    </div>
+                    {listings
+                      .slice()
+                      .reverse()
+                      .map((list: Listing, index: number) => (
+                        <div
+                          className="w-full grid grid-cols-6 gap-5 pb-4 justify-items-center text-center items-center content-center border-b border-grey"
+                          key={index}
+                        >
+                          <a className="">
+                            {formatEther(list.pricePerToken)} ETH
+                          </a>
+                          <a className="">
+                            ${" "}
+                            {(
+                              Number(formatEther(list.pricePerToken)) *
+                              Number(ETHPrice)
+                            ).toFixed(2)}
+                          </a>
+                          <a className="">{list.quantity.toString()}</a>
+                          <a className="">
+                            {calculateFloorDifference(
+                              Number(list.pricePerToken.toString()),
+                              floorPrice
+                            )}
+                            %
+                          </a>
+                          <a
+                            href={
+                              chain === mainnet
+                                ? `https://etherscan.io/address/${list.listingCreator}`
+                                : `https://sepolia.etherscan.io/address/${list.listingCreator}`
+                            }
+                            className="text-blue cursor-pointer overflow-hidden"
+                            target="_blank"
+                          >
+                            {connectedWallet &&
+                            connectedWallet === list.listingCreator
+                              ? "You"
+                              : concatAddress(list.listingCreator)}
+                          </a>
+                          {listingAction(list)}
+                        </div>
+                      ))}
+                  </div>
                 </div>
-                {listings &&
-                  listings
-                    .slice()
-                    .reverse()
-                    .map((list: Listing, index: number) => (
-                      <div
-                        className="w-full grid grid-cols-6 gap-5 pb-4 justify-items-center text-center items-center content-center border-b border-grey"
-                        key={index}
-                      >
-                        <a className="">
-                          {formatEther(list.pricePerToken)} ETH
-                        </a>
-                        <a className="">
-                          ${" "}
-                          {(
-                            Number(formatEther(list.pricePerToken)) *
-                            Number(ETHPrice)
-                          ).toFixed(2)}
-                        </a>
-                        <a className="">{list.quantity.toString()}</a>
-                        <a className="">
-                          {calculateFloorDifference(
-                            Number(list.pricePerToken.toString()),
-                            floorPrice
-                          )}
-                          %
-                        </a>
-                        <a className="text-blue">
-                          {connectedWallet &&
-                          connectedWallet === list.listingCreator
-                            ? "You"
-                            : concatAddress(list.listingCreator)}
-                        </a>
-                        {listingAction(list)}
-                      </div>
-                    ))}
-              </div>
+              ) : (
+                <div className="w-full h-20 flex justify-center items-center">
+                  No listings yet
+                </div>
+              )}
             </div>
             <div className="border border-white w-full h-full rounded-md">
-              <div className="py-5 border-b px-[30px] flex font-bold">
-                offers
-              </div>
-              <div className="w-full h-full flex flex-col gap-6 px-5">
-                {/* TODO:filter offers to find if offeror = account */}
-                <div
-                  className={`w-full gap-5 pt-7 pb-5 justify-items-center content-center border-b border-grey grid grid-cols-5`}
-                >
-                  <a className="text-sm">price</a>
-                  <a className="text-sm">quantity</a>
-                  <a className="text-sm">expiration</a>
-                  <a className="text-sm">from</a>
-                </div>
-                {offers &&
-                  offers.map((offer: Offer, index: number) => (
-                    <div
-                      className="w-full grid grid-cols-5 gap-5 pb-4 justify-items-center text-center items-center content-center border-b border-grey"
-                      key={index}
-                    >
-                      <a className="">{formatEther(offer.totalPrice)} ETH</a>
-                      <a className="">{offer.quantity.toString()}</a>
-                      <a className="">{offer.expirationTimestamp.toString()}</a>
-                      <a className="text-blue">
-                        {connectedWallet && connectedWallet === offer.offeror
-                          ? "You"
-                          : concatAddress(offer.offeror)}
-                      </a>
-                      {connectedWallet && connectedWallet === offer.offeror && (
-                        <CancelOfferButton
-                          offerId={offer.offerId.toString()}
-                          handleReFetch={handleReFetch}
-                        />
-                      )}
-                      {connectedWallet &&
-                        connectedWallet === ownerOf?.result && (
-                          <AcceptOfferButton
-                            offerId={offer.offerId.toString()}
-                            handleReFetch={handleReFetch}
-                          />
-                        )}
+              <a className="py-5 w-full border-b px-[30px] flex font-bold">
+                Offers
+              </a>
+              {offers && offers.length > 0 ? (
+                <div className="w-full h-full overflow-x-auto">
+                  <div className="w-[780px] h-full flex flex-col gap-6 px-5">
+                    <div className="w-full grid grid-cols-5 gap-5 pt-7 pb-5 justify-items-center items-center content-center border-b border-grey">
+                      <a className="text-sm">price</a>
+                      <a className="text-sm">quantity</a>
+                      <a className="text-sm">expiration</a>
+                      <a className="text-sm">from</a>
                     </div>
-                  ))}
-              </div>
+                    {offers &&
+                      offers.map((offer: Offer, index: number) => (
+                        <div
+                          className="w-full grid grid-cols-5 gap-5 pb-4 justify-items-center text-center items-center content-center border-b border-grey"
+                          key={index}
+                        >
+                          <a className="">
+                            {formatEther(offer.totalPrice)} ETH
+                          </a>
+                          <a className="">{offer.quantity.toString()}</a>
+                          <a className="">
+                            {offer.expirationTimestamp.toString()}
+                          </a>
+                          <a className="text-blue">
+                            {connectedWallet &&
+                            connectedWallet === offer.offeror
+                              ? "You"
+                              : concatAddress(offer.offeror)}
+                          </a>
+                          {connectedWallet &&
+                            connectedWallet === offer.offeror && (
+                              <CancelOfferButton
+                                offerId={offer.offerId.toString()}
+                                handleReFetch={handleReFetch}
+                              />
+                            )}
+                          {connectedWallet &&
+                            connectedWallet === ownerOf?.result && (
+                              <AcceptOfferButton
+                                offerId={offer.offerId.toString()}
+                                handleReFetch={handleReFetch}
+                              />
+                            )}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full h-20 flex justify-center items-center">
+                  No Offers yet
+                </div>
+              )}
+              {/* TODO:filter offers to find if offeror = account */}
             </div>
           </div>
         </div>
       </div>
-      {/* {original && (
-        <RemixModal
-          ref={remixModalRef}
-          modelIndex={1}
-          aigtAddress={zeroAddress}
-          nftContract={nftContract as Address}
-          original={original}
-        />
-      )} */}
     </>
   );
 }

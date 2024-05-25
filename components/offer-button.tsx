@@ -43,6 +43,8 @@ export default function OfferButton({
   metadata: Metadata;
   handleReFetch: () => void;
 }) {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessageDays, setErrorMessageDays] = useState("");
   const sepoliaWeth = "0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92";
   const mainnetWeth = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
   const modelRef = useRef<HTMLDialogElement>(null);
@@ -60,16 +62,39 @@ export default function OfferButton({
   const { data: name } = useReadAigcName({
     address: nftContract,
   });
+  const [price, setPrice] = useState("");
+  const [inputDays, setInputDays] = useState("7");
   const [args, setArgs] = useState<Args>({
     assetContract: nftContract,
     tokenId: BigInt(tokenId),
     quantity: 1n,
     currency: chainId === mainnet.id ? mainnetWeth : sepoliaWeth,
     totalPrice: 0n,
-    expirationTimestamp: 0n,
+    expirationTimestamp: BigInt(
+      Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60
+    ),
   });
   const handleOnChange = (valueName: string, value: any) => {
     if (valueName === "expirationTimestamp") {
+      setInputDays(value);
+      const numberValue = Number(value);
+      if (isNaN(numberValue)) {
+        setErrorMessageDays("Days must be a number");
+        setArgs({
+          ...args,
+          expirationTimestamp: 0n,
+        });
+        return;
+      }
+      if (numberValue <= 0) {
+        setErrorMessageDays("Days must be greater than 0");
+        setArgs({
+          ...args,
+          expirationTimestamp: 0n,
+        });
+        return;
+      }
+      setErrorMessageDays("");
       setArgs({
         ...args,
         expirationTimestamp: BigInt(
@@ -77,8 +102,34 @@ export default function OfferButton({
         ),
       });
     } else if (valueName === "totalPrice") {
+      setPrice(value);
       const numberValue = Number(value);
-      if (isNaN(numberValue)) return;
+      if (isNaN(numberValue)) {
+        setErrorMessage("Total price must be a number");
+        setArgs({
+          ...args,
+          totalPrice: 0n,
+        });
+        return;
+      }
+      if (numberValue <= 0.0001) {
+        setErrorMessage("Total price must be greater than 0.0001");
+        setArgs({
+          ...args,
+          totalPrice: 0n,
+        });
+        return;
+      }
+      if (numberValue.toString().split(".")[1]?.length > 4) {
+        setErrorMessage("Total price must have at most 4 decimals");
+        const fixed = numberValue.toFixed(4);
+        setArgs({
+          ...args,
+          totalPrice: parseEther(fixed),
+        });
+        return;
+      }
+      setErrorMessage("");
       setArgs({
         ...args,
         totalPrice: parseEther(value),
@@ -92,13 +143,14 @@ export default function OfferButton({
     functionName: "allowance",
     args: [connectedWallet!, marketplaceV3!],
   });
+  console.log("allowance", allowance ? formatEther(allowance) : "");
   useEffect(() => {
     if (allowance && Number(allowance) <= Number(args.totalPrice)) {
       setApproved(false);
     } else if (allowance && Number(allowance) > Number(args.totalPrice)) {
       setApproved(true);
     }
-  }, [allowance]);
+  }, [allowance, args.totalPrice]);
   const { data: balance } = useReadContract({
     address: chainId === mainnet.id ? mainnetWeth : sepoliaWeth,
     abi: erc20Abi,
@@ -117,9 +169,17 @@ export default function OfferButton({
       openConnectModal?.();
       return;
     }
-
-    const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
     if (!marketplaceV3) return;
+    if (errorMessage) {
+      toast.error(<span className="whitespace-pre-wrap">{errorMessage}</span>);
+      return;
+    }
+    if (!args.totalPrice || !args.expirationTimestamp) {
+      toast.error(
+        <span className="whitespace-pre-wrap">{`Please fill all fields`}</span>
+      );
+      return;
+    }
     if (Number(balance) < Number(args.totalPrice)) {
       toast.error(
         <span className="whitespace-pre-wrap">{`You don't have enough WETH`}</span>
@@ -153,6 +213,10 @@ export default function OfferButton({
     }
   };
   const resetData = () => {
+    setPrice("");
+    setInputDays("7");
+    setErrorMessage("");
+    setErrorMessageDays("");
     setArgs({
       assetContract: nftContract,
       tokenId: BigInt(tokenId),
@@ -231,7 +295,10 @@ export default function OfferButton({
                 <div>
                   <div className="text-sm pt-2">Listing price</div>
                   <div className="text-lg">
-                    {formatEther(args.totalPrice)} WETH
+                    {args.totalPrice === 0n
+                      ? "--"
+                      : formatEther(args.totalPrice)}{" "}
+                    WETH
                   </div>
                 </div>
               </div>
@@ -240,12 +307,16 @@ export default function OfferButton({
                 postfix="weth"
                 placeholder="0.00"
                 valueName="totalPrice"
+                value={price}
+                errorMessage={errorMessage}
                 onChange={handleOnChange}
               />
               <OfferInput
                 label="Duration"
                 postfix="Days"
                 valueName="expirationTimestamp"
+                value={inputDays}
+                errorMessage={errorMessageDays}
                 onChange={handleOnChange}
                 placeholder="0"
               />
@@ -258,8 +329,24 @@ export default function OfferButton({
                 {formatEther(args.totalPrice)} ETH
               </div>
               <button
-                disabled={offerInitialized || approveLoading}
-                className="btn btn-primary w-full"
+                disabled={
+                  offerInitialized ||
+                  approveLoading ||
+                  errorMessage !== "" ||
+                  errorMessageDays !== "" ||
+                  !args.totalPrice ||
+                  !args.expirationTimestamp
+                }
+                className={`btn btn-primary w-full ${
+                  offerInitialized ||
+                  approveLoading ||
+                  errorMessage !== "" ||
+                  errorMessageDays !== "" ||
+                  !args.totalPrice ||
+                  !args.expirationTimestamp
+                    ? "opacity-40 cursor-not-allowed"
+                    : ""
+                }`}
                 onClick={() => {
                   makeOffer();
                 }}

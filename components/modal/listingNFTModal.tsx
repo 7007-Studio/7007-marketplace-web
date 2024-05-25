@@ -1,8 +1,14 @@
 import React, { RefObject, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
-import { Address, isAddressEqual, parseEther, zeroAddress } from "viem";
+import { useAccount, useBalance, useWaitForTransactionReceipt } from "wagmi";
+import {
+  Address,
+  formatEther,
+  isAddressEqual,
+  parseEther,
+  zeroAddress,
+} from "viem";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 import { NATIVE_TOKEN_ADDRESS } from "@/constants/constants";
@@ -15,6 +21,7 @@ import {
 import { Metadata } from "@/types";
 
 import TextInput from "@/components/form/textInput";
+import { toast } from "react-hot-toast";
 
 export interface ListingNFT {
   nftContract: Address;
@@ -22,6 +29,7 @@ export interface ListingNFT {
   tokenId: bigint;
   maxQuantity?: number;
   metadata?: Partial<Metadata>;
+  refetch?: () => void;
 }
 
 interface IFormListNFTInput {
@@ -32,22 +40,59 @@ interface IFormListNFTInput {
 interface ListingNFTModalProps {
   listingNFT?: ListingNFT;
 }
+interface Args {
+  assetContract: Address;
+  tokenId: bigint;
+  quantity: bigint;
+  currency: Address;
+  pricePerToken: bigint;
+  startTimestamp: bigint;
+  endTimestamp: bigint;
+  reserved: boolean;
+}
 
 const ListingNFTModal = React.forwardRef(
   ({ listingNFT }: ListingNFTModalProps, ref) => {
-    const { isConnected, chainId } = useAccount();
+    const { isConnected, chainId, address } = useAccount();
     const { openConnectModal } = useConnectModal();
-
     const marketplaceV3 = getContractAddress("MarketplaceV3", chainId);
-
     const [approvedListing, setApprovedListing] = useState(false);
     const [listInitialized, setListInitialized] = useState(false);
     const [isListed, setIsListed] = useState(false);
-    const [price, setPrice] = useState<string>();
-    const [duration, setDuration] = useState<number>();
-
+    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessageDays, setErrorMessageDays] = useState("");
+    const [price, setPrice] = useState<string>("");
+    const [duration, setDuration] = useState<string>("7");
+    const [args, setArgs] = useState<Args>({
+      assetContract: listingNFT ? listingNFT.nftContract : zeroAddress,
+      tokenId: listingNFT ? BigInt(listingNFT.tokenId) : 0n,
+      // quantity: BigInt(data.quantity) || 1n,
+      quantity: 1n,
+      currency: NATIVE_TOKEN_ADDRESS,
+      pricePerToken: 0n,
+      startTimestamp: BigInt(Math.round(Date.now() / 1000)),
+      endTimestamp: BigInt(Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60),
+      reserved: false,
+    });
+    const { data: balance } = useBalance({
+      address: address,
+    });
     useEffect(() => {
       reset();
+      setPrice("");
+      setDuration("7");
+      setErrorMessage("");
+      setErrorMessageDays("");
+      setArgs({
+        assetContract: listingNFT ? listingNFT.nftContract : zeroAddress,
+        tokenId: listingNFT ? BigInt(listingNFT.tokenId) : 0n,
+        quantity: 1n,
+        currency: NATIVE_TOKEN_ADDRESS,
+        pricePerToken: 0n,
+        startTimestamp: BigInt(Math.round(Date.now() / 1000)),
+        endTimestamp: BigInt(Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60),
+        reserved: false,
+      });
       setApprovedListing(false);
       setListInitialized(false);
       setIsListed(false);
@@ -55,6 +100,7 @@ const ListingNFTModal = React.forwardRef(
 
     const { register, handleSubmit, watch, reset } =
       useForm<IFormListNFTInput>();
+
     const onSubmit: SubmitHandler<IFormListNFTInput> = async (data) => {
       console.debug("submit data", data);
 
@@ -131,6 +177,7 @@ const ListingNFTModal = React.forwardRef(
       setIsListed(true);
       setApprovedListing(false);
       setListInitialized(false);
+      listingNFT && listingNFT.refetch && listingNFT?.refetch?.();
     }, [listingResult.isSuccess]);
 
     function handleCreateListing(data: IFormListNFTInput) {
@@ -143,33 +190,10 @@ const ListingNFTModal = React.forwardRef(
 
       setListInitialized(true);
 
-      const createListingArgsTuple: {
-        assetContract: Address;
-        tokenId: bigint;
-        quantity: bigint;
-        currency: Address;
-        pricePerToken: bigint;
-        startTimestamp: bigint;
-        endTimestamp: bigint;
-        reserved: boolean;
-      } = {
-        assetContract: listingNFT.nftContract,
-        tokenId: BigInt(listingNFT.tokenId),
-        // quantity: BigInt(data.quantity) || 1n,
-        quantity: 1n,
-        currency: NATIVE_TOKEN_ADDRESS,
-        pricePerToken: parseEther(data.price),
-        startTimestamp: BigInt(Math.round(Date.now() / 1000)),
-        endTimestamp: BigInt(
-          Math.round(Date.now() / 1000) + data.duration * 24 * 60 * 60
-        ),
-        reserved: false,
-      };
-
       createListing(
         {
           address: marketplaceV3,
-          args: [createListingArgsTuple],
+          args: [args],
         },
         {
           onError(error: any) {
@@ -179,6 +203,68 @@ const ListingNFTModal = React.forwardRef(
         }
       );
     }
+    const handleOnChange = (valueName: string, value: any) => {
+      if (valueName === "duration") {
+        setDuration(value);
+        const numberValue = Number(value);
+        if (isNaN(numberValue)) {
+          setErrorMessageDays("Days must be a number");
+          setArgs({
+            ...args,
+            endTimestamp: 0n,
+          });
+          return;
+        }
+        if (numberValue <= 0) {
+          setErrorMessageDays("Days must be greater than 0");
+          setArgs({
+            ...args,
+            endTimestamp: 0n,
+          });
+          return;
+        }
+        setErrorMessageDays("");
+        setArgs({
+          ...args,
+          endTimestamp: BigInt(
+            Math.round(Date.now() / 1000) + Number(value) * 24 * 60 * 60
+          ),
+        });
+      } else if (valueName === "price") {
+        setPrice(value);
+        const numberValue = Number(value);
+        if (isNaN(numberValue)) {
+          setErrorMessage("Total price must be a number");
+          setArgs({
+            ...args,
+            pricePerToken: 0n,
+          });
+          return;
+        }
+        if (numberValue <= 0.0001) {
+          setErrorMessage("Total price must be greater than 0.0001");
+          setArgs({
+            ...args,
+            pricePerToken: 0n,
+          });
+          return;
+        }
+        if (numberValue.toString().split(".")[1]?.length > 4) {
+          setErrorMessage("Total price must have at most 4 decimals");
+          const fixed = numberValue.toFixed(4);
+          setArgs({
+            ...args,
+            pricePerToken: parseEther(fixed),
+          });
+          return;
+        }
+        setErrorMessage("");
+        setArgs({
+          ...args,
+          pricePerToken: parseEther(value),
+        });
+      }
+    };
 
     return (
       <dialog
@@ -217,43 +303,45 @@ const ListingNFTModal = React.forwardRef(
                   <div>
                     <div className="text-sm pt-2">Listing price</div>
                     <div className="text-lg">
-                      {watch("price")?.length ? watch("price") : "--"} ETH
+                      {args.pricePerToken === 0n
+                        ? "--"
+                        : formatEther(args.pricePerToken)}{" "}
+                      ETH
                     </div>
                   </div>
                 </div>
-                <div>
-                  <TextInput
-                    label="Set a price"
-                    postfix="eth"
-                    name="price"
-                    placeholder="0.00"
-                    required
-                    register={register}
-                    onChange={(e) => {
-                      setPrice(e.target.value);
-                    }}
-                  />
-                </div>
-                <div>
-                  <TextInput
-                    label="Duration"
-                    postfix="Days"
-                    name="duration"
-                    placeholder="0"
-                    min={1}
-                    max={7}
-                    required
-                    register={register}
-                    onChange={(e) => {
-                      setDuration(Number(e.target.value));
-                    }}
-                  />
-                </div>
+                <TextInput
+                  label="Set a price"
+                  postfix="eth"
+                  name="price"
+                  placeholder="0.00"
+                  required
+                  register={register}
+                  value={price}
+                  errorMessage={errorMessage}
+                  onChange={handleOnChange}
+                />
+                <TextInput
+                  label="Duration"
+                  postfix="Days"
+                  name="duration"
+                  placeholder="0"
+                  min={1}
+                  max={7}
+                  required
+                  register={register}
+                  value={duration}
+                  errorMessage={errorMessageDays}
+                  onChange={handleOnChange}
+                />
                 <div>
                   <div className="flex flex-row justify-between">
                     <div>Listing price</div>
                     <div>
-                      {watch("price")?.length ? watch("price") : "--"} ETH
+                      {args.pricePerToken === 0n
+                        ? "--"
+                        : formatEther(args.pricePerToken)}{" "}
+                      ETH
                     </div>
                   </div>
                   <div className="flex flex-row justify-between">
@@ -271,14 +359,30 @@ const ListingNFTModal = React.forwardRef(
                   <div className="flex flex-row justify-between font-bold">
                     <div>Total potential earnings</div>
                     <div>
-                      {watch("price")?.length ? watch("price") : "--"} ETH
+                      {args.pricePerToken === 0n
+                        ? "--"
+                        : formatEther(args.pricePerToken)}{" "}
+                      ETH
                     </div>
                   </div>
                 </div>
                 <div>
                   <button
-                    disabled={listInitialized || !price || !duration}
-                    className={`btn btn-primary w-full ${!price || !duration ? "opacity-50 cursor-not-allowed" : ""}`}
+                    disabled={
+                      listInitialized ||
+                      !price ||
+                      !duration ||
+                      errorMessage !== "" ||
+                      errorMessageDays !== ""
+                    }
+                    className={`btn btn-primary w-full ${
+                      !price ||
+                      !duration ||
+                      errorMessage !== "" ||
+                      errorMessageDays !== ""
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }`}
                   >
                     {listInitialized ? (
                       <>

@@ -406,7 +406,7 @@ function Ora({ windowSize }: { windowSize: number }) {
     chainId: chain?.id,
   });
   const { tokenIds } = useTotalTokenIDs({ nftContracts });
-  const { listings } = useValidListings({
+  const { listings, refetch } = useValidListings({
     chainId: chain?.id,
   });
   return (
@@ -424,6 +424,7 @@ function Ora({ windowSize }: { windowSize: number }) {
               listing={listings?.find(
                 (l: Listing) => l.tokenId === id && l.assetContract === contract
               )}
+              refetch={refetch}
             />
           )) || emptyCardList.map((l) => <EmptyCard key={l} />)}
         </div>
