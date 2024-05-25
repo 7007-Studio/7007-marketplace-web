@@ -273,7 +273,7 @@ const PromptFormSD = ({
             )}
             <div className="flex justify-between w-full gap-4 h-[45px]">
               <button
-                className={`z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ${mintInitialized ? "opacity-40 cursor-not-allowed" : ""}`}
+                className={`z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ${mintInitialized ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
                 disabled={mintInitialized}
                 onClick={() => {
                   setImage(undefined);
