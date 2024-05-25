@@ -43,6 +43,13 @@ const PromptFormOP = ({
   const result = useBalance({
     address: address,
   });
+  const initializeFn = () => {
+    setMinted(false);
+    setMintInitialized(false);
+    setPrompt("");
+    setTitle("");
+    setText(undefined);
+  };
   const genOPImage = async () => {
     setLoading(true);
     if (!prompt || !address) return;
@@ -229,7 +236,7 @@ const PromptFormOP = ({
             )}
             <div className="flex justify-between w-full gap-4 h-[45px]">
               <button
-                className="z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
+                className={`z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ${mintInitialized ? "opacity-40 cursor-not-allowed" : ""}}`}
                 disabled={mintInitialized}
                 onClick={() => dialogRef.current?.close()}
               >
@@ -273,6 +280,7 @@ const PromptFormOP = ({
                     (
                       dialogRef as RefObject<HTMLDialogElement>
                     )?.current?.close();
+                    initializeFn();
                   }}
                 >
                   Done
