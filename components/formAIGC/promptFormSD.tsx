@@ -22,7 +22,7 @@ const PromptFormSD = ({
   const [title, setTitle] = useState("");
   const [positivePrompt, setPositivePrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
-  const [seed, setSeed] = useState();
+  const [seed, setSeed] = useState("");
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { address, isConnected, chain } = useAccount();
@@ -40,6 +40,15 @@ const PromptFormSD = ({
   const result = useBalance({
     address: address,
   });
+  const initializeFn = () => {
+    setMinted(false);
+    setMintInitialized(false);
+    setTitle("");
+    setPositivePrompt("");
+    setNegativePrompt("");
+    setSeed("");
+    setImage(undefined);
+  };
   const genSDImage = async () => {
     if (!positivePrompt || !seed || !address) return;
     setLoading(true);
@@ -264,7 +273,7 @@ const PromptFormSD = ({
             )}
             <div className="flex justify-between w-full gap-4 h-[45px]">
               <button
-                className="z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
+                className={`z-20 bg-transparent cursor-pointer text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ${mintInitialized ? "opacity-40 cursor-not-allowed" : ""}}`}
                 disabled={mintInitialized}
                 onClick={() => {
                   setImage(undefined);
@@ -311,6 +320,7 @@ const PromptFormSD = ({
                     (
                       dialogRef as RefObject<HTMLDialogElement>
                     )?.current?.close();
+                    initializeFn();
                   }}
                 >
                   Done
