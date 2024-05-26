@@ -58,7 +58,7 @@ const PromptFormOP = ({
       seed: "0",
     });
     try {
-      const res = await axios.post("https://olm.7007.ai/olm", data, {
+      const res = await axios.post("https://olm2.7007.ai/olm", data, {
         headers: {
           "Content-Type": "application/json",
         },
