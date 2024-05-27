@@ -119,7 +119,7 @@ const PromptFormOP = ({
     mintAIGC(
       {
         address: modelData.NFTContract as Address,
-        args: [address, prompt, "", title, 0],
+        args: [address, prompt, "", title, BigInt(0)],
         value: totalFee,
       },
       {
