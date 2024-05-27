@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, use, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   useAccount,
@@ -9,9 +9,21 @@ import {
 import { useRouter } from "next/navigation";
 import { ModelDetail } from "@/types";
 import axios from "axios";
-import { useReadAigcEstimateTotalFee, useWriteAigcMint } from "@/generated";
+import {
+  aigcAbi,
+  useReadAigcEstimateTotalFee,
+  useReadAigcPromptSeedToTokenId,
+  useWriteAigcMint,
+} from "@/generated";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { Address, formatEther, parseUnits } from "viem";
+import {
+  Address,
+  formatEther,
+  parseUnits,
+  stringToBytes,
+  stringToHex,
+  toBytes,
+} from "viem";
 import { toast } from "react-hot-toast";
 
 const PromptFormOP = ({
@@ -36,6 +48,17 @@ const PromptFormOP = ({
   const { data: totalFee } = useReadAigcEstimateTotalFee({
     address: modelData.NFTContract as Address,
   });
+
+  // const { data: isPromptExist } = useReadContract({
+  //   address: modelData.NFTContract as Address,
+  //   abi: aigcAbi,
+  //   functionName: "promptToTokenId",
+  //   args: [stringToBytes("Write a poem about the ocean")],
+  // });
+  // const encodeToBytes = (str: string) => {
+  //   const promptBytes = stringToHex(str);
+  //   return promptBytes;
+  // };
 
   const [text, setText] = useState();
   const { openConnectModal } = useConnectModal();
@@ -82,7 +105,7 @@ const PromptFormOP = ({
       openConnectModal?.();
       return;
     }
-    if (!title || !prompt || !text || !address || !modelData || !totalFee) {
+    if (!title || !prompt || !address || !modelData || !totalFee) {
       return;
     }
     if (Number(result.data?.formatted) < Number(formatEther(totalFee))) {
@@ -91,17 +114,22 @@ const PromptFormOP = ({
     }
 
     setMintInitialized(true);
-
+    dialogRef.current?.showModal();
+    //TODO: same prompt
     mintAIGC(
       {
         address: modelData.NFTContract as Address,
-        args: [address, prompt, "", title, BigInt(0)],
+        args: [address, prompt, "", title, 0],
         value: totalFee,
       },
       {
         onError(error: any) {
-          console.error("Error minting AIGC:", error);
+          console.error("Error minting AIGC:", error.message);
+          toast.error(
+            "This prompt may have been minted already. Try with another one."
+          );
           setMintInitialized(false);
+          dialogRef.current?.close();
         },
       }
     );
@@ -203,11 +231,11 @@ const PromptFormOP = ({
               </button>
             ) : (
               <button
-                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !title || !prompt ? "cursor-not-allowed opacity-40" : ""}`}
-                disabled={loading || !prompt || !title}
-                onClick={() => genOPImage()}
+                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${mintInitialized || !title || !prompt ? "cursor-not-allowed opacity-40" : ""}`}
+                disabled={mintInitialized || !prompt || !title}
+                onClick={() => onMint()}
               >
-                {loading ? (
+                {mintInitialized ? (
                   <>
                     <span className="loading loading-spinner" />
                     loading
@@ -222,48 +250,51 @@ const PromptFormOP = ({
       </div>
       <dialog ref={dialogRef} className="modal">
         {!minted ? (
-          <div className="modal-box flex flex-col p-4 items-center gap-4">
-            {text ? (
-              <div className="bg-black w-full rounded h-full p-2">
-                <a className="text-white/90">{text}</a>
-              </div>
-            ) : (
-              // <img
-              //   src={`https://cloudflare-ipfs.com/ipfs/${image}`}
-              //   alt="Image"
-              //   className="size-[500px]"
-              // />
-              <div className="flex gap-2 size-[200px] justify-center items-center">
-                <span className="loading loading-spinner text-black" />
-                <a className="text-black">loading</a>
-              </div>
-            )}
-            <div className="flex justify-between w-full gap-4 h-[45px]">
-              <button
-                className={`z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ${mintInitialized ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
-                disabled={mintInitialized}
-                onClick={() => {
-                  dialogRef.current?.close();
-                  setText(undefined);
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
-                onClick={() => onMint()}
-                disabled={mintInitialized}
-              >
-                {mintInitialized ? (
-                  <div className="flex gap-2 items-center">
-                    <span className="loading loading-spinner cursor-pointer"></span>
-                    Minting
-                  </div>
-                ) : (
-                  "Mint"
-                )}
-              </button>
-            </div>
+          // <div className="modal-box flex flex-col p-4 items-center gap-4">
+          //   {text ? (
+          //     <div className="bg-black w-full rounded h-full p-2">
+          //       <a className="text-white/90">{text}</a>
+          //     </div>
+          //   ) : (
+          //     // <img
+          //     //   src={`https://cloudflare-ipfs.com/ipfs/${image}`}
+          //     //   alt="Image"
+          //     //   className="size-[500px]"
+          //     // />
+          //     <div className="flex gap-2 size-[200px] justify-center items-center">
+          //       <span className="loading loading-spinner text-black" />
+          //       <a className="text-black">loading</a>
+          //     </div>
+          //   )}
+          //   <div className="flex justify-between w-full gap-4 h-[45px]">
+          //     <button
+          //       className={`z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ${mintInitialized ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+          //       disabled={mintInitialized}
+          //       onClick={() => {
+          //         dialogRef.current?.close();
+          //         setText(undefined);
+          //       }}
+          //     >
+          //       Cancel
+          //     </button>
+          //     <button
+          //       className="z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full"
+          //       onClick={() => onMint()}
+          //       disabled={mintInitialized}
+          //     >
+          //       {mintInitialized ? (
+          //         <div className="flex gap-2 items-center">
+          //           <span className="loading loading-spinner cursor-pointer"></span>
+          //           Minting
+          //         </div>
+          //       ) : (
+          //         "Mint"
+          //       )}
+          //     </button>
+          //   </div>
+          // </div>
+          <div className="modal-box max-w-[424px] bg-white flex justify-center items-center gap-2">
+            <span className="loading loading-spinner text-black size-24" />
           </div>
         ) : (
           <div className="modal-box max-w-[424px] bg-white">

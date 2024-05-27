@@ -106,7 +106,10 @@ const PromptFormSD = ({
       },
       {
         onError(error: any) {
-          console.error("Error minting AIGC:", error);
+          console.error("Error minting AIGC:", error.message);
+          toast.error(
+            "This prompt and seed may have been minted already. Try with another seed."
+          );
           setMintInitialized(false);
         },
       }

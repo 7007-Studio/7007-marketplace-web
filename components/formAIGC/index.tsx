@@ -35,7 +35,7 @@ export default function FormAIGC({ modelData, modelIndex }: FormAIGCProps) {
         {modelData && modelIndex === "0" ? (
           <PromptFormSD submitText="Prompt" modelData={modelData} />
         ) : modelIndex === "1" ? (
-          <PromptFormOP submitText="Prompt" modelData={modelData} />
+          <PromptFormOP submitText="Prompt & Mint" modelData={modelData} />
         ) : null}
       </div>
     </div>
