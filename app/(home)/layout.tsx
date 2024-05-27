@@ -46,7 +46,7 @@ export default function HomeLayout({
           className="h-full w-full absolute top-0 left-0"
         /> */}
         <p className="text-[30px] font-bold z-10">
-          AI inference Asset Protocol
+          Ai Inference Asset Protocol
         </p>
         <Link
           href={`/collection/0`}
