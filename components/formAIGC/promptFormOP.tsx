@@ -118,7 +118,7 @@ const PromptFormOP = ({
   return (
     <>
       <div className="flex flex-col gap-[30px]">
-        {errorMessage && (
+        {/* {errorMessage && (
           <div role="alert" className="alert alert-error">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +135,7 @@ const PromptFormOP = ({
             </svg>
             <span>{errorMessage}</span>
           </div>
-        )}
+        )} */}
         <div className="flex flex-col w-full gap-3">
           <p className="pl-2">Title</p>
           <input
