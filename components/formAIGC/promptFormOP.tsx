@@ -25,6 +25,7 @@ import {
   toBytes,
 } from "viem";
 import { toast } from "react-hot-toast";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const PromptFormOP = ({
   submitText = "Generate",
@@ -38,6 +39,7 @@ const PromptFormOP = ({
   const [title, setTitle] = useState("");
   const [prompt, setPrompt] = useState("");
   const [minted, setMinted] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { address, isConnected, chain } = useAccount();
@@ -72,6 +74,7 @@ const PromptFormOP = ({
     setPrompt("");
     setTitle("");
     setText(undefined);
+    setRecaptchaToken(null); // Reset reCAPTCHA token
   };
   const genOPImage = async () => {
     setLoading(true);
@@ -105,7 +108,14 @@ const PromptFormOP = ({
       openConnectModal?.();
       return;
     }
-    if (!title || !prompt || !address || !modelData || !totalFee) {
+    if (
+      !title ||
+      !prompt ||
+      !address ||
+      !modelData ||
+      !totalFee ||
+      !recaptchaToken
+    ) {
       return;
     }
     if (Number(result.data?.formatted) < Number(formatEther(totalFee))) {
@@ -133,6 +143,9 @@ const PromptFormOP = ({
         },
       }
     );
+  };
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
   };
 
   useEffect(() => {
@@ -198,7 +211,13 @@ const PromptFormOP = ({
             placeholder="Model name +"
           />
         </div>
-        <div className="flex w-full items-start pt-[100px] flex-col gap-5">
+        <div className="flex w-full items-start pt-[60px] flex-col gap-5">
+          <div className="flex w-full justify-end">
+            <ReCAPTCHA
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
+              onChange={handleRecaptchaChange}
+            />
+          </div>
           <div className="flex justify-between w-full">
             <Image
               src="/7007logo.svg"
@@ -227,8 +246,10 @@ const PromptFormOP = ({
               </button>
             ) : (
               <button
-                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${mintInitialized || !title || !prompt ? "cursor-not-allowed opacity-40" : ""}`}
-                disabled={mintInitialized || !prompt || !title}
+                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${mintInitialized || !title || !prompt || !recaptchaToken ? "cursor-not-allowed opacity-40" : ""}`}
+                disabled={
+                  mintInitialized || !prompt || !title || !recaptchaToken
+                }
                 onClick={() => onMint()}
               >
                 {mintInitialized ? (

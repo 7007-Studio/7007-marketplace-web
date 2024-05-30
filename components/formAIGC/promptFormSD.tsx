@@ -8,6 +8,7 @@ import { useReadAigcEstimateTotalFee, useWriteAigcMint } from "@/generated";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Address, formatEther, parseEther } from "viem";
 import { toast } from "react-hot-toast";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const PromptFormSD = ({
   submitText = "Generate",
@@ -23,6 +24,7 @@ const PromptFormSD = ({
   const [positivePrompt, setPositivePrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
   const [seed, setSeed] = useState("0");
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { address, isConnected, chain } = useAccount();
@@ -40,6 +42,7 @@ const PromptFormSD = ({
   const result = useBalance({
     address: address,
   });
+
   const initializeFn = () => {
     setMinted(false);
     setMintInitialized(false);
@@ -48,9 +51,11 @@ const PromptFormSD = ({
     setNegativePrompt("");
     setSeed("");
     setImage(undefined);
+    setRecaptchaToken(null); // Reset reCAPTCHA token
   };
+
   const genSDImage = async () => {
-    if (!positivePrompt || !seed || !address) return;
+    if (!positivePrompt || !seed || !address || !recaptchaToken) return;
     setLoading(true);
     const prompt = positivePrompt + "---" + negativePrompt;
     const data = JSON.stringify({
@@ -123,6 +128,10 @@ const PromptFormSD = ({
       setImage(undefined);
     }
   }, [mintResult.isSuccess]);
+
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
 
   return (
     <>
@@ -207,7 +216,14 @@ const PromptFormSD = ({
             />
           </div>
         </div>
-        <div className="flex w-full items-start pt-[100px] flex-col gap-5">
+
+        <div className="flex w-full items-start pt-[60px] flex-col gap-5">
+          <div className="flex w-full justify-end">
+            <ReCAPTCHA
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as string}
+              onChange={handleRecaptchaChange}
+            />
+          </div>
           <div className="flex justify-between w-full">
             <Image
               src="/7007logo.svg"
@@ -216,16 +232,13 @@ const PromptFormSD = ({
               height={44}
               className="w-10 h-10 opacity-30"
             />
-            <div className="flex justify-end text-end flex-col">
-              {/* <div>estimate mint cost</div> */}
-              {/* <div>~ 0.05 eth</div> */}
-            </div>
           </div>
           <div className="flex justify-between w-full gap-12">
             <a className="max-w-[502px]">
               Each set of prompts relate to unique result, inferences are non
               fungible.
             </a>
+
             {!isConnected ? (
               <button
                 className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded`}
@@ -236,8 +249,18 @@ const PromptFormSD = ({
               </button>
             ) : (
               <button
-                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${loading || !positivePrompt || !seed || !title ? "cursor-not-allowed opacity-40" : ""}`}
-                disabled={loading || !positivePrompt || !title}
+                className={`w-[260px] h-[58px] bg-white/40 border flex items-center justify-center gap-2 border-white rounded ${
+                  loading ||
+                  !positivePrompt ||
+                  !seed ||
+                  !title ||
+                  !recaptchaToken
+                    ? "cursor-not-allowed opacity-40"
+                    : ""
+                }`}
+                disabled={
+                  loading || !positivePrompt || !title || !recaptchaToken
+                }
                 onClick={() => genSDImage()}
               >
                 {loading ? (
@@ -270,7 +293,11 @@ const PromptFormSD = ({
             )}
             <div className="flex justify-between w-full gap-4 h-[45px]">
               <button
-                className={`z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ${mintInitialized ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+                className={`z-20 bg-transparent text-black border border-black font-bold transition-all flex justify-center items-center p-1 rounded w-full ${
+                  mintInitialized
+                    ? "opacity-40 cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
                 disabled={mintInitialized}
                 onClick={() => {
                   setImage(undefined);
