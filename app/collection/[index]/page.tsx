@@ -18,9 +18,17 @@ import {
 import useValidListings from "@/hooks/useValidListings";
 import { Address } from "viem";
 import { aigcAbi } from "@/generated";
-import { modelData } from "@/constants/constants";
 import { getModelsData } from "@/helpers";
-import { mainnet } from "viem/chains";
+import { mainnet, sepolia } from "viem/chains";
+
+interface IContractsIndex {
+  data: StableDiffusionQueryQuery | OpmlQueryQuery;
+  isLoading: boolean;
+  error: any;
+}
+interface GraphResult {
+  [key: number]: IContractsIndex[];
+}
 
 export default function CollectionPage() {
   const { index } = useParams<{ index: string }>();
@@ -37,20 +45,45 @@ export default function CollectionPage() {
     queryKey: ["OpmlQuery"],
     queryFn: () => sdk.OpmlQuery(),
   });
-
-  const results = [
-    {
-      data: SDresult.data as StableDiffusionQueryQuery,
-      isLoading: SDresult.isLoading,
-      error: SDresult.error,
-    },
-    {
-      data: OPresult.data as OpmlQueryQuery,
-      isLoading: OPresult.isLoading,
-      error: OPresult.error,
-    },
-  ];
-  const currentResult = results[Number(index)];
+  const SDSepoliaResult = useQuery({
+    queryKey: ["StableDiffusionSepoliaQuery"],
+    queryFn: () => sdk.StableDiffusionSepoliaQuery(),
+  });
+  const OPSepoliaResult = useQuery({
+    queryKey: ["OpmlSepoliaQuery"],
+    queryFn: () => sdk.OpmlSepoliaQuery(),
+  });
+  const graphResult: GraphResult = {
+    [mainnet.id]: [
+      {
+        data: SDresult.data as StableDiffusionQueryQuery,
+        isLoading: SDresult.isLoading,
+        error: SDresult.error,
+      },
+      {
+        data: OPresult.data as OpmlQueryQuery,
+        isLoading: OPresult.isLoading,
+        error: OPresult.error,
+      },
+    ],
+    [sepolia.id]: [
+      {
+        data: SDSepoliaResult.data as StableDiffusionQueryQuery,
+        isLoading: SDSepoliaResult.isLoading,
+        error: SDSepoliaResult.error,
+      },
+      {
+        data: OPSepoliaResult.data as OpmlQueryQuery,
+        isLoading: OPSepoliaResult.isLoading,
+        error: OPSepoliaResult.error,
+      },
+    ],
+  };
+  const getCurrentResult = () => {
+    if (!chainId) return;
+    if (graphResult[chainId][Number(index)].isLoading) return;
+    return graphResult[chainId][Number(index)].data;
+  };
 
   const { listings } = useValidListings({
     chainId: chain?.id,
@@ -85,8 +118,12 @@ export default function CollectionPage() {
   //     console.error("Error:", error);
   //   }
   // };
-  const openseaTestNetURL = `https://testnets-api.opensea.io/api/v2/collections/${modelInfo ? modelInfo[Number(index)].openSeaName : ""}/stats`;
-  const openseaMainNetURL = `https://api.opensea.io/api/v2/collections/${modelInfo ? modelInfo[Number(index)].openSeaName : ""}/stats`;
+  const openseaTestNetURL = `https://testnets-api.opensea.io/api/v2/collections/${
+    modelInfo ? modelInfo[Number(index)].openSeaName : ""
+  }/stats`;
+  const openseaMainNetURL = `https://api.opensea.io/api/v2/collections/${
+    modelInfo ? modelInfo[Number(index)].openSeaName : ""
+  }/stats`;
   const fetchCollectionData = async () => {
     try {
       const response = await axios.get(
@@ -123,7 +160,7 @@ export default function CollectionPage() {
       />
       <Progress modelIndex={index} />
       <Stats
-        NFTData={currentResult.isLoading ? undefined : currentResult.data}
+        NFTData={getCurrentResult()}
         totalListings={listings && listings.length}
         totalSupply={totalSupply ? String(totalSupply) : "0"}
         floorPrice={floorPrice}

@@ -25,14 +25,9 @@ import * as Player from "@livepeer/react/player";
 import SPLicenseRegistry from "@/abis/SPLicenseRegistry.json";
 import { useReadAigcName } from "@/generated";
 import { Listing, Metadata, Offer } from "@/types";
-
 import { formatDaysLeft } from "@/helpers";
-
-import BuyButton from "@/components/buy-button";
 import Card from "@/components/ui/card";
 import { useBuyModal, useListingModal } from "@/utils/modalProvider";
-import { getPublicClient } from "@/client";
-import { tr } from "@faker-js/faker";
 
 function NFTCoverAsset({
   metadata,

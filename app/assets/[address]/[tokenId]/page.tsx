@@ -1,23 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useAccount, useReadContract, useReadContracts } from "wagmi";
+import { useEffect, useState } from "react";
+import { useAccount, useReadContracts } from "wagmi";
 import { Address, formatEther, isAddressEqual } from "viem";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { aigcAbi } from "@/generated";
 import { Listing, Metadata, ModelDetail, Offer } from "@/types";
-import {
-  concatAddress,
-  formatDate,
-  getContractAddress,
-  getModelsData,
-  openseaUrl,
-} from "@/helpers";
+import { concatAddress, getModelsData, openseaUrl } from "@/helpers";
 import Buy from "./buy";
-import SPIntegration from "./sp-integration";
-// import RemixModal from "@/components/modal/remixModal";
-import { AIGCContent } from "@/components/formAIGC";
 import { getSrc } from "@livepeer/react/external";
 import * as Player from "@livepeer/react/player";
 import { useBuyModal, useListingModal } from "@/utils/modalProvider";
@@ -37,8 +28,6 @@ export default function Detail() {
   const router = useRouter();
   const { address: nftContract, tokenId } = params || {};
   const { showListingModal } = useListingModal();
-  const remixModalRef = useRef<HTMLDialogElement>(null);
-  const [original, setOriginal] = useState<AIGCContent>();
   const { address: connectedWallet, chain, chainId } = useAccount();
   const [metadata, setMetadata] = useState<Metadata>();
   const [animationUrl, setAnimationUrl] = useState<string>();
@@ -55,7 +44,6 @@ export default function Detail() {
   //   functionName: "getAIResultFromTokenId",
   //   args: [tokenId],
   // });
-  // console.log("AIResult", AIResult);
   const { showBuyModal } = useBuyModal();
   const { listings: validListings, refetch: refetchAllValidListings } =
     useValidListings({
@@ -79,13 +67,6 @@ export default function Detail() {
     assetContract: nftContract as Address,
   });
 
-  const handleReFetchSp = () => {
-    window.location.reload();
-    setReFetch(!reFetch);
-    refetchValidOffers();
-    refetchAllListings();
-    refetchAllValidListings();
-  };
   const getETHUSDPrice = async () => {
     const url = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT";
     try {
@@ -139,15 +120,15 @@ export default function Detail() {
         setAnimationUrl(metadata.animation_url);
       }
 
-      setOriginal({
-        name: metadata?.name || "",
-        prompt:
-          metadata?.attributes?.find(
-            (a: { trait_type: string; value: string }) =>
-              a.trait_type === "prompt"
-          )?.value || "",
-        imageUrl: metadata?.image,
-      });
+      // setOriginal({
+      //   name: metadata?.name || "",
+      //   prompt:
+      //     metadata?.attributes?.find(
+      //       (a: { trait_type: string; value: string }) =>
+      //         a.trait_type === "prompt"
+      //     )?.value || "",
+      //   imageUrl: metadata?.image,
+      // });
     };
 
     fetchMetadata();

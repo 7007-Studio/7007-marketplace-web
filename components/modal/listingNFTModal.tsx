@@ -346,68 +346,38 @@ const ListingNFTModal = React.forwardRef(
                   errorMessage={errorMessageDays}
                   onChange={handleOnChange}
                 />
-                <div>
-                  <div className="flex flex-row justify-between">
-                    <div>Listing price</div>
-                    <div>
-                      {args.pricePerToken === 0n
-                        ? "--"
-                        : formatEther(args.pricePerToken)}{" "}
-                      ETH
-                    </div>
-                  </div>
-                  <div className="flex flex-row justify-between">
-                    <div>7007 fee</div>
-                    <div>0 %</div>
-                  </div>
-                  <div className="flex flex-row justify-between">
-                    <div>OAO fee</div>
-                    <div>0 %</div>
-                  </div>
-                  <div className="flex flex-row justify-between">
-                    <div>Model earning</div>
-                    <div>10 %</div>
-                  </div>
-                  <div className="flex flex-row justify-between font-bold">
-                    <div>Total potential earnings</div>
-                    <div>
-                      {args.pricePerToken === 0n
-                        ? "--"
-                        : formatEther(args.pricePerToken)}{" "}
-                      ETH
-                    </div>
-                  </div>
+                <div className="flex flex-row justify-between">
+                  <div>Model earning</div>
+                  <div>10 %</div>
                 </div>
-                <div>
-                  <button
-                    disabled={
-                      listInitialized ||
-                      !price ||
-                      !duration ||
-                      errorMessage !== "" ||
-                      errorMessageDays !== ""
-                    }
-                    className={`btn btn-primary w-full gap-2 ${
-                      !price ||
-                      !duration ||
-                      errorMessage !== "" ||
-                      errorMessageDays !== ""
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
-                    }`}
-                  >
-                    {listInitialized ? (
-                      <>
-                        <span className="loading loading-spinner"></span>
-                        loading
-                      </>
-                    ) : approvedListing ? (
-                      "List"
-                    ) : (
-                      "Approve Listing"
-                    )}
-                  </button>
-                </div>
+                <button
+                  disabled={
+                    listInitialized ||
+                    !price ||
+                    !duration ||
+                    errorMessage !== "" ||
+                    errorMessageDays !== ""
+                  }
+                  className={`btn btn-primary w-full gap-2 ${
+                    !price ||
+                    !duration ||
+                    errorMessage !== "" ||
+                    errorMessageDays !== ""
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                >
+                  {listInitialized ? (
+                    <>
+                      <span className="loading loading-spinner"></span>
+                      loading
+                    </>
+                  ) : approvedListing ? (
+                    "List"
+                  ) : (
+                    "Approve Listing"
+                  )}
+                </button>
               </form>
             </>
           ) : (

@@ -84,3 +84,89 @@ query OpmlQuery {
     offer_assetContract
   }
 }
+query StableDiffusionSepoliaQuery {
+  newListings(
+    orderBy: listing_listingId
+        where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+  ) {
+    listingId
+    listingCreator
+    listing_tokenId
+    listing_status
+    listing_quantity
+    listing_pricePerToken
+    listing_currency
+    listing_startTimestamp
+    listing_tokenType
+    listing_reserved
+    listing_endTimestamp
+    listing_assetContract
+  }
+  newSales(orderBy: listingId
+    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+  ) {
+    buyer
+    listingCreator
+    listingId
+    tokenId
+    totalPricePaid
+    assetContract
+    quantityBought
+  }
+  newOffers(orderBy: offerId where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}) {
+    offerId
+    offeror
+    offer_tokenType
+    offer_totalPrice
+    offer_tokenId
+    offer_status
+    offer_quantity
+    offer_offeror
+    offer_expirationTimestamp
+    offer_currency
+    offer_assetContract
+  }
+}
+query OpmlSepoliaQuery {
+  newListings(
+    orderBy: listing_listingId
+        where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+  ) {
+    listingId
+    listingCreator
+    listing_tokenId
+    listing_status
+    listing_quantity
+    listing_pricePerToken
+    listing_currency
+    listing_startTimestamp
+    listing_tokenType
+    listing_reserved
+    listing_endTimestamp
+    listing_assetContract
+  }
+  newSales(orderBy: listingId
+    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+  ) {
+    buyer
+    listingCreator
+    listingId
+    tokenId
+    totalPricePaid
+    assetContract
+    quantityBought
+  }
+  newOffers(orderBy: offerId where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}) {
+    offerId
+    offeror
+    offer_tokenType
+    offer_totalPrice
+    offer_tokenId
+    offer_status
+    offer_quantity
+    offer_offeror
+    offer_expirationTimestamp
+    offer_currency
+    offer_assetContract
+  }
+}

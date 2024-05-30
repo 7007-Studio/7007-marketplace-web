@@ -21,7 +21,6 @@ export default function Stats({
   const totalVolume = NFTData?.newSales.reduce((accumulator, sale) => {
     return accumulator + Number(formatEther(sale.totalPricePaid));
   }, 0);
-
   const statItems = [
     {
       name: "Total Volume",

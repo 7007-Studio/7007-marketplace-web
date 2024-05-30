@@ -1,18 +1,11 @@
 "use client";
-
-import { getPublicClient } from "@/client";
 import { formatDate, getContractAddress } from "@/helpers";
 import { Listing, Metadata, Offer } from "@/types";
 import { useEffect, useState } from "react";
 import { formatUnits, formatEther, Address, erc20Abi } from "viem";
 import { useAccount, useReadContracts } from "wagmi";
-
-import MarketplaceV3Abi from "@/abis/MarketplaceV3.json";
-import BuyButton from "@/components/buy-button";
 import { CiClock1 } from "react-icons/ci";
 import OfferButton from "@/components/offer-button";
-import useValidListings from "@/hooks/useValidListings";
-import useValidOffers from "@/hooks/useValidOffers";
 import axios from "axios";
 import { useBuyModal } from "@/utils/modalProvider";
 

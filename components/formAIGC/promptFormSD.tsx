@@ -22,7 +22,7 @@ const PromptFormSD = ({
   const [title, setTitle] = useState("");
   const [positivePrompt, setPositivePrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
-  const [seed, setSeed] = useState("");
+  const [seed, setSeed] = useState("0");
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { address, isConnected, chain } = useAccount();
@@ -160,27 +160,20 @@ const PromptFormSD = ({
         </div>
         <div className="flex flex-col w-full gap-3">
           <p className="pl-2">Positive prompt</p>
-          <input
-            type="text"
-            name="modelPositive"
-            id="modelPositive"
-            className="bg-grey h-32 pl-10"
-            value={positivePrompt} // Bind the value to the state variable
-            onChange={(e: any) => setPositivePrompt(e.target.value)} // Update the input value directly
-            required
+          <textarea
+            onChange={(e: any) => setPositivePrompt(e.target.value)}
+            className="bg-grey h-32 pl-10 pt-4 flex items-center resize-y overflow-auto placeholder:top-1/2 placeholder:absolute placeholder:-translate-y-1/2"
             placeholder="Enter your prompt"
+            value={positivePrompt}
           />
         </div>
         <div className="flex flex-col w-full gap-3">
           <p className="pl-2">Negative prompt (optional)</p>
-          <input
-            type="text"
-            name="modelPositive"
-            id="modelPositive"
-            className="bg-grey h-32 pl-10"
-            value={negativePrompt}
+          <textarea
             onChange={(e: any) => setNegativePrompt(e.target.value)}
+            className="bg-grey h-32 pl-10 pt-4 flex items-center resize-y overflow-auto placeholder:top-1/2 placeholder:absolute placeholder:-translate-y-1/2"
             placeholder="Enter your prompt"
+            value={negativePrompt}
           />
         </div>
         <div className="flex gap-[20px] justify-between">

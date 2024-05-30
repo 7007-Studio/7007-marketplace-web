@@ -179,15 +179,11 @@ const PromptFormOP = ({
         </div>
         <div className="flex flex-col w-full gap-3">
           <p className="pl-2">Prompt</p>
-          <input
-            type="text"
-            name="modelPositive"
-            id="modelPositive"
-            className="bg-grey h-32 pl-10"
-            value={prompt} // Bind the value to the state variable
-            onChange={(e: any) => setPrompt(e.target.value)} // Update the input value directly
-            required
+          <textarea
+            onChange={(e: any) => setPrompt(e.target.value)}
+            className="bg-grey h-32 pl-10 pt-4 flex items-center resize-y overflow-auto placeholder:top-1/2 placeholder:absolute placeholder:-translate-y-1/2"
             placeholder="Enter your prompt"
+            value={prompt}
           />
         </div>
         <div className="flex flex-col w-full gap-3">

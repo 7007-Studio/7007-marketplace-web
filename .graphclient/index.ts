@@ -13,7 +13,7 @@ import { fetch as fetchFn } from '@whatwg-node/fetch';
 import { MeshResolvedSource } from '@graphql-mesh/runtime';
 import { MeshTransform, MeshPlugin } from '@graphql-mesh/types';
 import GraphqlHandler from "@graphql-mesh/graphql"
-import BareMerger from "@graphql-mesh/merger-bare";
+import StitchingMerger from "@graphql-mesh/merger-stitching";
 import { printWithCache } from '@graphql-mesh/utils';
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations';
 import { createMeshHTTPHandler, MeshHTTPHandler } from '@graphql-mesh/http';
@@ -21,8 +21,10 @@ import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
-import type { New7007Types } from './sources/new7007/types';
-import * as importedModule$0 from "./sources/new7007/introspectionSchema";
+import type { Sepolia7007Types } from './sources/sepolia7007/types';
+import type { Mainnet7007Types } from './sources/mainnet7007/types';
+import * as importedModule$0 from "./sources/mainnet7007/introspectionSchema";
+import * as importedModule$1 from "./sources/sepolia7007/introspectionSchema";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -46,6 +48,1106 @@ export type Scalars = {
   Bytes: { input: any; output: any; }
   Int8: { input: any; output: any; }
   Timestamp: { input: any; output: any; }
+};
+
+export type Query = {
+  buyerApprovedForListing?: Maybe<BuyerApprovedForListing>;
+  buyerApprovedForListings: Array<BuyerApprovedForListing>;
+  cancelledListing?: Maybe<CancelledListing>;
+  cancelledListings: Array<CancelledListing>;
+  currencyApprovedForListing?: Maybe<CurrencyApprovedForListing>;
+  currencyApprovedForListings: Array<CurrencyApprovedForListing>;
+  newListing?: Maybe<NewListing>;
+  newListings: Array<NewListing>;
+  newSale?: Maybe<NewSale>;
+  newSales: Array<NewSale>;
+  updatedListing?: Maybe<UpdatedListing>;
+  updatedListings: Array<UpdatedListing>;
+  auctionClosed?: Maybe<AuctionClosed>;
+  auctionCloseds: Array<AuctionClosed>;
+  cancelledAuction?: Maybe<CancelledAuction>;
+  cancelledAuctions: Array<CancelledAuction>;
+  newAuction?: Maybe<NewAuction>;
+  newAuctions: Array<NewAuction>;
+  newBid?: Maybe<NewBid>;
+  newBids: Array<NewBid>;
+  acceptedOffer?: Maybe<AcceptedOffer>;
+  acceptedOffers: Array<AcceptedOffer>;
+  cancelledOffer?: Maybe<CancelledOffer>;
+  cancelledOffers: Array<CancelledOffer>;
+  newOffer?: Maybe<NewOffer>;
+  newOffers: Array<NewOffer>;
+  contractURIUpdated?: Maybe<ContractURIUpdated>;
+  contractURIUpdateds: Array<ContractURIUpdated>;
+  extensionAdded?: Maybe<ExtensionAdded>;
+  extensionAddeds: Array<ExtensionAdded>;
+  extensionRemoved?: Maybe<ExtensionRemoved>;
+  extensionRemoveds: Array<ExtensionRemoved>;
+  extensionReplaced?: Maybe<ExtensionReplaced>;
+  extensionReplaceds: Array<ExtensionReplaced>;
+  flatPlatformFeeUpdated?: Maybe<FlatPlatformFeeUpdated>;
+  flatPlatformFeeUpdateds: Array<FlatPlatformFeeUpdated>;
+  functionDisabled?: Maybe<FunctionDisabled>;
+  functionDisableds: Array<FunctionDisabled>;
+  functionEnabled?: Maybe<FunctionEnabled>;
+  functionEnableds: Array<FunctionEnabled>;
+  initialized?: Maybe<Initialized>;
+  initializeds: Array<Initialized>;
+  platformFeeInfoUpdated?: Maybe<PlatformFeeInfoUpdated>;
+  platformFeeInfoUpdateds: Array<PlatformFeeInfoUpdated>;
+  platformFeeTypeUpdated?: Maybe<PlatformFeeTypeUpdated>;
+  platformFeeTypeUpdateds: Array<PlatformFeeTypeUpdated>;
+  roleAdminChanged?: Maybe<RoleAdminChanged>;
+  roleAdminChangeds: Array<RoleAdminChanged>;
+  roleGranted?: Maybe<RoleGranted>;
+  roleGranteds: Array<RoleGranted>;
+  roleRevoked?: Maybe<RoleRevoked>;
+  roleRevokeds: Array<RoleRevoked>;
+  royaltyEngineUpdated?: Maybe<RoyaltyEngineUpdated>;
+  royaltyEngineUpdateds: Array<RoyaltyEngineUpdated>;
+  /** Access to subgraph metadata */
+  _meta?: Maybe<_Meta_>;
+};
+
+
+export type QuerybuyerApprovedForListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerybuyerApprovedForListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<BuyerApprovedForListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<BuyerApprovedForListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycancelledListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycancelledListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CancelledListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<CancelledListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycurrencyApprovedForListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycurrencyApprovedForListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CurrencyApprovedForListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<CurrencyApprovedForListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewSaleArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewSalesArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewSale_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewSale_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryupdatedListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryupdatedListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<UpdatedListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<UpdatedListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryauctionClosedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryauctionClosedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<AuctionClosed_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<AuctionClosed_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycancelledAuctionArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycancelledAuctionsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CancelledAuction_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<CancelledAuction_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewAuctionArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewAuctionsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewAuction_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewAuction_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewBidArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewBidsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewBid_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewBid_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryacceptedOfferArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryacceptedOffersArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<AcceptedOffer_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<AcceptedOffer_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycancelledOfferArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycancelledOffersArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CancelledOffer_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<CancelledOffer_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewOfferArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerynewOffersArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewOffer_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewOffer_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycontractURIUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QuerycontractURIUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ContractURIUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<ContractURIUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryextensionAddedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryextensionAddedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ExtensionAdded_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<ExtensionAdded_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryextensionRemovedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryextensionRemovedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ExtensionRemoved_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<ExtensionRemoved_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryextensionReplacedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryextensionReplacedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ExtensionReplaced_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<ExtensionReplaced_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryflatPlatformFeeUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryflatPlatformFeeUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<FlatPlatformFeeUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<FlatPlatformFeeUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryfunctionDisabledArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryfunctionDisabledsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<FunctionDisabled_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<FunctionDisabled_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryfunctionEnabledArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryfunctionEnabledsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<FunctionEnabled_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<FunctionEnabled_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryinitializedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryinitializedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Initialized_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<Initialized_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryplatformFeeInfoUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryplatformFeeInfoUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PlatformFeeInfoUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<PlatformFeeInfoUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryplatformFeeTypeUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryplatformFeeTypeUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PlatformFeeTypeUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<PlatformFeeTypeUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryroleAdminChangedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryroleAdminChangedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RoleAdminChanged_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<RoleAdminChanged_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryroleGrantedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryroleGrantedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RoleGranted_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<RoleGranted_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryroleRevokedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryroleRevokedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RoleRevoked_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<RoleRevoked_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryroyaltyEngineUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryroyaltyEngineUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RoyaltyEngineUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<RoyaltyEngineUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type Query_metaArgs = {
+  block?: InputMaybe<Block_height>;
+};
+
+export type Subscription = {
+  buyerApprovedForListing?: Maybe<BuyerApprovedForListing>;
+  buyerApprovedForListings: Array<BuyerApprovedForListing>;
+  cancelledListing?: Maybe<CancelledListing>;
+  cancelledListings: Array<CancelledListing>;
+  currencyApprovedForListing?: Maybe<CurrencyApprovedForListing>;
+  currencyApprovedForListings: Array<CurrencyApprovedForListing>;
+  newListing?: Maybe<NewListing>;
+  newListings: Array<NewListing>;
+  newSale?: Maybe<NewSale>;
+  newSales: Array<NewSale>;
+  updatedListing?: Maybe<UpdatedListing>;
+  updatedListings: Array<UpdatedListing>;
+  auctionClosed?: Maybe<AuctionClosed>;
+  auctionCloseds: Array<AuctionClosed>;
+  cancelledAuction?: Maybe<CancelledAuction>;
+  cancelledAuctions: Array<CancelledAuction>;
+  newAuction?: Maybe<NewAuction>;
+  newAuctions: Array<NewAuction>;
+  newBid?: Maybe<NewBid>;
+  newBids: Array<NewBid>;
+  acceptedOffer?: Maybe<AcceptedOffer>;
+  acceptedOffers: Array<AcceptedOffer>;
+  cancelledOffer?: Maybe<CancelledOffer>;
+  cancelledOffers: Array<CancelledOffer>;
+  newOffer?: Maybe<NewOffer>;
+  newOffers: Array<NewOffer>;
+  contractURIUpdated?: Maybe<ContractURIUpdated>;
+  contractURIUpdateds: Array<ContractURIUpdated>;
+  extensionAdded?: Maybe<ExtensionAdded>;
+  extensionAddeds: Array<ExtensionAdded>;
+  extensionRemoved?: Maybe<ExtensionRemoved>;
+  extensionRemoveds: Array<ExtensionRemoved>;
+  extensionReplaced?: Maybe<ExtensionReplaced>;
+  extensionReplaceds: Array<ExtensionReplaced>;
+  flatPlatformFeeUpdated?: Maybe<FlatPlatformFeeUpdated>;
+  flatPlatformFeeUpdateds: Array<FlatPlatformFeeUpdated>;
+  functionDisabled?: Maybe<FunctionDisabled>;
+  functionDisableds: Array<FunctionDisabled>;
+  functionEnabled?: Maybe<FunctionEnabled>;
+  functionEnableds: Array<FunctionEnabled>;
+  initialized?: Maybe<Initialized>;
+  initializeds: Array<Initialized>;
+  platformFeeInfoUpdated?: Maybe<PlatformFeeInfoUpdated>;
+  platformFeeInfoUpdateds: Array<PlatformFeeInfoUpdated>;
+  platformFeeTypeUpdated?: Maybe<PlatformFeeTypeUpdated>;
+  platformFeeTypeUpdateds: Array<PlatformFeeTypeUpdated>;
+  roleAdminChanged?: Maybe<RoleAdminChanged>;
+  roleAdminChangeds: Array<RoleAdminChanged>;
+  roleGranted?: Maybe<RoleGranted>;
+  roleGranteds: Array<RoleGranted>;
+  roleRevoked?: Maybe<RoleRevoked>;
+  roleRevokeds: Array<RoleRevoked>;
+  royaltyEngineUpdated?: Maybe<RoyaltyEngineUpdated>;
+  royaltyEngineUpdateds: Array<RoyaltyEngineUpdated>;
+  /** Access to subgraph metadata */
+  _meta?: Maybe<_Meta_>;
+};
+
+
+export type SubscriptionbuyerApprovedForListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionbuyerApprovedForListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<BuyerApprovedForListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<BuyerApprovedForListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncancelledListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncancelledListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CancelledListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<CancelledListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncurrencyApprovedForListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncurrencyApprovedForListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CurrencyApprovedForListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<CurrencyApprovedForListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewSaleArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewSalesArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewSale_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewSale_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionupdatedListingArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionupdatedListingsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<UpdatedListing_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<UpdatedListing_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionauctionClosedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionauctionClosedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<AuctionClosed_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<AuctionClosed_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncancelledAuctionArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncancelledAuctionsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CancelledAuction_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<CancelledAuction_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewAuctionArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewAuctionsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewAuction_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewAuction_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewBidArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewBidsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewBid_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewBid_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionacceptedOfferArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionacceptedOffersArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<AcceptedOffer_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<AcceptedOffer_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncancelledOfferArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncancelledOffersArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<CancelledOffer_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<CancelledOffer_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewOfferArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionnewOffersArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<NewOffer_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<NewOffer_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncontractURIUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioncontractURIUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ContractURIUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<ContractURIUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionextensionAddedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionextensionAddedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ExtensionAdded_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<ExtensionAdded_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionextensionRemovedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionextensionRemovedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ExtensionRemoved_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<ExtensionRemoved_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionextensionReplacedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionextensionReplacedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ExtensionReplaced_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<ExtensionReplaced_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionflatPlatformFeeUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionflatPlatformFeeUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<FlatPlatformFeeUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<FlatPlatformFeeUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionfunctionDisabledArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionfunctionDisabledsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<FunctionDisabled_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<FunctionDisabled_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionfunctionEnabledArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionfunctionEnabledsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<FunctionEnabled_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<FunctionEnabled_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioninitializedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptioninitializedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Initialized_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<Initialized_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionplatformFeeInfoUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionplatformFeeInfoUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PlatformFeeInfoUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<PlatformFeeInfoUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionplatformFeeTypeUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionplatformFeeTypeUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<PlatformFeeTypeUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<PlatformFeeTypeUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionroleAdminChangedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionroleAdminChangedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RoleAdminChanged_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<RoleAdminChanged_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionroleGrantedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionroleGrantedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RoleGranted_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<RoleGranted_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionroleRevokedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionroleRevokedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RoleRevoked_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<RoleRevoked_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionroyaltyEngineUpdatedArgs = {
+  id: Scalars['ID']['input'];
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionroyaltyEngineUpdatedsArgs = {
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<RoyaltyEngineUpdated_orderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<RoyaltyEngineUpdated_filter>;
+  block?: InputMaybe<Block_height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type Subscription_metaArgs = {
+  block?: InputMaybe<Block_height>;
 };
 
 export type AcceptedOffer = {
@@ -2915,556 +4017,6 @@ export type PlatformFeeTypeUpdated_orderBy =
   | 'blockTimestamp'
   | 'transactionHash';
 
-export type Query = {
-  buyerApprovedForListing?: Maybe<BuyerApprovedForListing>;
-  buyerApprovedForListings: Array<BuyerApprovedForListing>;
-  cancelledListing?: Maybe<CancelledListing>;
-  cancelledListings: Array<CancelledListing>;
-  currencyApprovedForListing?: Maybe<CurrencyApprovedForListing>;
-  currencyApprovedForListings: Array<CurrencyApprovedForListing>;
-  newListing?: Maybe<NewListing>;
-  newListings: Array<NewListing>;
-  newSale?: Maybe<NewSale>;
-  newSales: Array<NewSale>;
-  updatedListing?: Maybe<UpdatedListing>;
-  updatedListings: Array<UpdatedListing>;
-  auctionClosed?: Maybe<AuctionClosed>;
-  auctionCloseds: Array<AuctionClosed>;
-  cancelledAuction?: Maybe<CancelledAuction>;
-  cancelledAuctions: Array<CancelledAuction>;
-  newAuction?: Maybe<NewAuction>;
-  newAuctions: Array<NewAuction>;
-  newBid?: Maybe<NewBid>;
-  newBids: Array<NewBid>;
-  acceptedOffer?: Maybe<AcceptedOffer>;
-  acceptedOffers: Array<AcceptedOffer>;
-  cancelledOffer?: Maybe<CancelledOffer>;
-  cancelledOffers: Array<CancelledOffer>;
-  newOffer?: Maybe<NewOffer>;
-  newOffers: Array<NewOffer>;
-  contractURIUpdated?: Maybe<ContractURIUpdated>;
-  contractURIUpdateds: Array<ContractURIUpdated>;
-  extensionAdded?: Maybe<ExtensionAdded>;
-  extensionAddeds: Array<ExtensionAdded>;
-  extensionRemoved?: Maybe<ExtensionRemoved>;
-  extensionRemoveds: Array<ExtensionRemoved>;
-  extensionReplaced?: Maybe<ExtensionReplaced>;
-  extensionReplaceds: Array<ExtensionReplaced>;
-  flatPlatformFeeUpdated?: Maybe<FlatPlatformFeeUpdated>;
-  flatPlatformFeeUpdateds: Array<FlatPlatformFeeUpdated>;
-  functionDisabled?: Maybe<FunctionDisabled>;
-  functionDisableds: Array<FunctionDisabled>;
-  functionEnabled?: Maybe<FunctionEnabled>;
-  functionEnableds: Array<FunctionEnabled>;
-  initialized?: Maybe<Initialized>;
-  initializeds: Array<Initialized>;
-  platformFeeInfoUpdated?: Maybe<PlatformFeeInfoUpdated>;
-  platformFeeInfoUpdateds: Array<PlatformFeeInfoUpdated>;
-  platformFeeTypeUpdated?: Maybe<PlatformFeeTypeUpdated>;
-  platformFeeTypeUpdateds: Array<PlatformFeeTypeUpdated>;
-  roleAdminChanged?: Maybe<RoleAdminChanged>;
-  roleAdminChangeds: Array<RoleAdminChanged>;
-  roleGranted?: Maybe<RoleGranted>;
-  roleGranteds: Array<RoleGranted>;
-  roleRevoked?: Maybe<RoleRevoked>;
-  roleRevokeds: Array<RoleRevoked>;
-  royaltyEngineUpdated?: Maybe<RoyaltyEngineUpdated>;
-  royaltyEngineUpdateds: Array<RoyaltyEngineUpdated>;
-  /** Access to subgraph metadata */
-  _meta?: Maybe<_Meta_>;
-};
-
-
-export type QuerybuyerApprovedForListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerybuyerApprovedForListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<BuyerApprovedForListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<BuyerApprovedForListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycancelledListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycancelledListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CancelledListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CancelledListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycurrencyApprovedForListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycurrencyApprovedForListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CurrencyApprovedForListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CurrencyApprovedForListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewSaleArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewSalesArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewSale_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewSale_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryupdatedListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryupdatedListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<UpdatedListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<UpdatedListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryauctionClosedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryauctionClosedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<AuctionClosed_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<AuctionClosed_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycancelledAuctionArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycancelledAuctionsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CancelledAuction_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CancelledAuction_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewAuctionArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewAuctionsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewAuction_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewAuction_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewBidArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewBidsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewBid_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewBid_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryacceptedOfferArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryacceptedOffersArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<AcceptedOffer_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<AcceptedOffer_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycancelledOfferArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycancelledOffersArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CancelledOffer_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CancelledOffer_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewOfferArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerynewOffersArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewOffer_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewOffer_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycontractURIUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QuerycontractURIUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ContractURIUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ContractURIUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryextensionAddedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryextensionAddedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ExtensionAdded_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ExtensionAdded_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryextensionRemovedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryextensionRemovedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ExtensionRemoved_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ExtensionRemoved_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryextensionReplacedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryextensionReplacedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ExtensionReplaced_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ExtensionReplaced_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryflatPlatformFeeUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryflatPlatformFeeUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<FlatPlatformFeeUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<FlatPlatformFeeUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryfunctionDisabledArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryfunctionDisabledsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<FunctionDisabled_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<FunctionDisabled_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryfunctionEnabledArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryfunctionEnabledsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<FunctionEnabled_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<FunctionEnabled_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryinitializedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryinitializedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Initialized_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<Initialized_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryplatformFeeInfoUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryplatformFeeInfoUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PlatformFeeInfoUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<PlatformFeeInfoUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryplatformFeeTypeUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryplatformFeeTypeUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PlatformFeeTypeUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<PlatformFeeTypeUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryroleAdminChangedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryroleAdminChangedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RoleAdminChanged_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<RoleAdminChanged_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryroleGrantedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryroleGrantedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RoleGranted_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<RoleGranted_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryroleRevokedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryroleRevokedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RoleRevoked_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<RoleRevoked_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryroyaltyEngineUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryroyaltyEngineUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RoyaltyEngineUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<RoyaltyEngineUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type Query_metaArgs = {
-  block?: InputMaybe<Block_height>;
-};
-
 export type RoleAdminChanged = {
   id: Scalars['Bytes']['output'];
   role: Scalars['Bytes']['output'];
@@ -3821,556 +4373,6 @@ export type RoyaltyEngineUpdated_orderBy =
   | 'blockTimestamp'
   | 'transactionHash';
 
-export type Subscription = {
-  buyerApprovedForListing?: Maybe<BuyerApprovedForListing>;
-  buyerApprovedForListings: Array<BuyerApprovedForListing>;
-  cancelledListing?: Maybe<CancelledListing>;
-  cancelledListings: Array<CancelledListing>;
-  currencyApprovedForListing?: Maybe<CurrencyApprovedForListing>;
-  currencyApprovedForListings: Array<CurrencyApprovedForListing>;
-  newListing?: Maybe<NewListing>;
-  newListings: Array<NewListing>;
-  newSale?: Maybe<NewSale>;
-  newSales: Array<NewSale>;
-  updatedListing?: Maybe<UpdatedListing>;
-  updatedListings: Array<UpdatedListing>;
-  auctionClosed?: Maybe<AuctionClosed>;
-  auctionCloseds: Array<AuctionClosed>;
-  cancelledAuction?: Maybe<CancelledAuction>;
-  cancelledAuctions: Array<CancelledAuction>;
-  newAuction?: Maybe<NewAuction>;
-  newAuctions: Array<NewAuction>;
-  newBid?: Maybe<NewBid>;
-  newBids: Array<NewBid>;
-  acceptedOffer?: Maybe<AcceptedOffer>;
-  acceptedOffers: Array<AcceptedOffer>;
-  cancelledOffer?: Maybe<CancelledOffer>;
-  cancelledOffers: Array<CancelledOffer>;
-  newOffer?: Maybe<NewOffer>;
-  newOffers: Array<NewOffer>;
-  contractURIUpdated?: Maybe<ContractURIUpdated>;
-  contractURIUpdateds: Array<ContractURIUpdated>;
-  extensionAdded?: Maybe<ExtensionAdded>;
-  extensionAddeds: Array<ExtensionAdded>;
-  extensionRemoved?: Maybe<ExtensionRemoved>;
-  extensionRemoveds: Array<ExtensionRemoved>;
-  extensionReplaced?: Maybe<ExtensionReplaced>;
-  extensionReplaceds: Array<ExtensionReplaced>;
-  flatPlatformFeeUpdated?: Maybe<FlatPlatformFeeUpdated>;
-  flatPlatformFeeUpdateds: Array<FlatPlatformFeeUpdated>;
-  functionDisabled?: Maybe<FunctionDisabled>;
-  functionDisableds: Array<FunctionDisabled>;
-  functionEnabled?: Maybe<FunctionEnabled>;
-  functionEnableds: Array<FunctionEnabled>;
-  initialized?: Maybe<Initialized>;
-  initializeds: Array<Initialized>;
-  platformFeeInfoUpdated?: Maybe<PlatformFeeInfoUpdated>;
-  platformFeeInfoUpdateds: Array<PlatformFeeInfoUpdated>;
-  platformFeeTypeUpdated?: Maybe<PlatformFeeTypeUpdated>;
-  platformFeeTypeUpdateds: Array<PlatformFeeTypeUpdated>;
-  roleAdminChanged?: Maybe<RoleAdminChanged>;
-  roleAdminChangeds: Array<RoleAdminChanged>;
-  roleGranted?: Maybe<RoleGranted>;
-  roleGranteds: Array<RoleGranted>;
-  roleRevoked?: Maybe<RoleRevoked>;
-  roleRevokeds: Array<RoleRevoked>;
-  royaltyEngineUpdated?: Maybe<RoyaltyEngineUpdated>;
-  royaltyEngineUpdateds: Array<RoyaltyEngineUpdated>;
-  /** Access to subgraph metadata */
-  _meta?: Maybe<_Meta_>;
-};
-
-
-export type SubscriptionbuyerApprovedForListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionbuyerApprovedForListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<BuyerApprovedForListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<BuyerApprovedForListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncancelledListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncancelledListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CancelledListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CancelledListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncurrencyApprovedForListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncurrencyApprovedForListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CurrencyApprovedForListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CurrencyApprovedForListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewSaleArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewSalesArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewSale_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewSale_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionupdatedListingArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionupdatedListingsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<UpdatedListing_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<UpdatedListing_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionauctionClosedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionauctionClosedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<AuctionClosed_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<AuctionClosed_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncancelledAuctionArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncancelledAuctionsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CancelledAuction_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CancelledAuction_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewAuctionArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewAuctionsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewAuction_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewAuction_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewBidArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewBidsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewBid_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewBid_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionacceptedOfferArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionacceptedOffersArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<AcceptedOffer_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<AcceptedOffer_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncancelledOfferArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncancelledOffersArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<CancelledOffer_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<CancelledOffer_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewOfferArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionnewOffersArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<NewOffer_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<NewOffer_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncontractURIUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioncontractURIUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ContractURIUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ContractURIUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionextensionAddedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionextensionAddedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ExtensionAdded_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ExtensionAdded_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionextensionRemovedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionextensionRemovedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ExtensionRemoved_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ExtensionRemoved_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionextensionReplacedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionextensionReplacedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ExtensionReplaced_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<ExtensionReplaced_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionflatPlatformFeeUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionflatPlatformFeeUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<FlatPlatformFeeUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<FlatPlatformFeeUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionfunctionDisabledArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionfunctionDisabledsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<FunctionDisabled_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<FunctionDisabled_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionfunctionEnabledArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionfunctionEnabledsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<FunctionEnabled_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<FunctionEnabled_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioninitializedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptioninitializedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Initialized_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<Initialized_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionplatformFeeInfoUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionplatformFeeInfoUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PlatformFeeInfoUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<PlatformFeeInfoUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionplatformFeeTypeUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionplatformFeeTypeUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PlatformFeeTypeUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<PlatformFeeTypeUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionroleAdminChangedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionroleAdminChangedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RoleAdminChanged_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<RoleAdminChanged_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionroleGrantedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionroleGrantedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RoleGranted_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<RoleGranted_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionroleRevokedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionroleRevokedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RoleRevoked_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<RoleRevoked_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionroyaltyEngineUpdatedArgs = {
-  id: Scalars['ID']['input'];
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionroyaltyEngineUpdatedsArgs = {
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RoyaltyEngineUpdated_orderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  where?: InputMaybe<RoyaltyEngineUpdated_filter>;
-  block?: InputMaybe<Block_height>;
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type Subscription_metaArgs = {
-  block?: InputMaybe<Block_height>;
-};
-
 export type UpdatedListing = {
   id: Scalars['Bytes']['output'];
   listingCreator: Scalars['Bytes']['output'];
@@ -4702,6 +4704,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  Query: ResolverTypeWrapper<{}>;
+  Subscription: ResolverTypeWrapper<{}>;
   AcceptedOffer: ResolverTypeWrapper<AcceptedOffer>;
   AcceptedOffer_filter: AcceptedOffer_filter;
   AcceptedOffer_orderBy: AcceptedOffer_orderBy;
@@ -4780,7 +4784,6 @@ export type ResolversTypes = ResolversObject<{
   PlatformFeeTypeUpdated: ResolverTypeWrapper<PlatformFeeTypeUpdated>;
   PlatformFeeTypeUpdated_filter: PlatformFeeTypeUpdated_filter;
   PlatformFeeTypeUpdated_orderBy: PlatformFeeTypeUpdated_orderBy;
-  Query: ResolverTypeWrapper<{}>;
   RoleAdminChanged: ResolverTypeWrapper<RoleAdminChanged>;
   RoleAdminChanged_filter: RoleAdminChanged_filter;
   RoleAdminChanged_orderBy: RoleAdminChanged_orderBy;
@@ -4794,7 +4797,6 @@ export type ResolversTypes = ResolversObject<{
   RoyaltyEngineUpdated_filter: RoyaltyEngineUpdated_filter;
   RoyaltyEngineUpdated_orderBy: RoyaltyEngineUpdated_orderBy;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Subscription: ResolverTypeWrapper<{}>;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']['output']>;
   UpdatedListing: ResolverTypeWrapper<UpdatedListing>;
   UpdatedListing_filter: UpdatedListing_filter;
@@ -4806,6 +4808,8 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  Query: {};
+  Subscription: {};
   AcceptedOffer: AcceptedOffer;
   AcceptedOffer_filter: AcceptedOffer_filter;
   AuctionClosed: AuctionClosed;
@@ -4860,7 +4864,6 @@ export type ResolversParentTypes = ResolversObject<{
   PlatformFeeInfoUpdated_filter: PlatformFeeInfoUpdated_filter;
   PlatformFeeTypeUpdated: PlatformFeeTypeUpdated;
   PlatformFeeTypeUpdated_filter: PlatformFeeTypeUpdated_filter;
-  Query: {};
   RoleAdminChanged: RoleAdminChanged;
   RoleAdminChanged_filter: RoleAdminChanged_filter;
   RoleGranted: RoleGranted;
@@ -4870,7 +4873,6 @@ export type ResolversParentTypes = ResolversObject<{
   RoyaltyEngineUpdated: RoyaltyEngineUpdated;
   RoyaltyEngineUpdated_filter: RoyaltyEngineUpdated_filter;
   String: Scalars['String']['output'];
-  Subscription: {};
   Timestamp: Scalars['Timestamp']['output'];
   UpdatedListing: UpdatedListing;
   UpdatedListing_filter: UpdatedListing_filter;
@@ -4893,6 +4895,122 @@ export type derivedFromDirectiveArgs = {
 };
 
 export type derivedFromDirectiveResolver<Result, Parent, ContextType = MeshContext, Args = derivedFromDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type QueryResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  buyerApprovedForListing?: Resolver<Maybe<ResolversTypes['BuyerApprovedForListing']>, ParentType, ContextType, RequireFields<QuerybuyerApprovedForListingArgs, 'id' | 'subgraphError'>>;
+  buyerApprovedForListings?: Resolver<Array<ResolversTypes['BuyerApprovedForListing']>, ParentType, ContextType, RequireFields<QuerybuyerApprovedForListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  cancelledListing?: Resolver<Maybe<ResolversTypes['CancelledListing']>, ParentType, ContextType, RequireFields<QuerycancelledListingArgs, 'id' | 'subgraphError'>>;
+  cancelledListings?: Resolver<Array<ResolversTypes['CancelledListing']>, ParentType, ContextType, RequireFields<QuerycancelledListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  currencyApprovedForListing?: Resolver<Maybe<ResolversTypes['CurrencyApprovedForListing']>, ParentType, ContextType, RequireFields<QuerycurrencyApprovedForListingArgs, 'id' | 'subgraphError'>>;
+  currencyApprovedForListings?: Resolver<Array<ResolversTypes['CurrencyApprovedForListing']>, ParentType, ContextType, RequireFields<QuerycurrencyApprovedForListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newListing?: Resolver<Maybe<ResolversTypes['NewListing']>, ParentType, ContextType, RequireFields<QuerynewListingArgs, 'id' | 'subgraphError'>>;
+  newListings?: Resolver<Array<ResolversTypes['NewListing']>, ParentType, ContextType, RequireFields<QuerynewListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newSale?: Resolver<Maybe<ResolversTypes['NewSale']>, ParentType, ContextType, RequireFields<QuerynewSaleArgs, 'id' | 'subgraphError'>>;
+  newSales?: Resolver<Array<ResolversTypes['NewSale']>, ParentType, ContextType, RequireFields<QuerynewSalesArgs, 'skip' | 'first' | 'subgraphError'>>;
+  updatedListing?: Resolver<Maybe<ResolversTypes['UpdatedListing']>, ParentType, ContextType, RequireFields<QueryupdatedListingArgs, 'id' | 'subgraphError'>>;
+  updatedListings?: Resolver<Array<ResolversTypes['UpdatedListing']>, ParentType, ContextType, RequireFields<QueryupdatedListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  auctionClosed?: Resolver<Maybe<ResolversTypes['AuctionClosed']>, ParentType, ContextType, RequireFields<QueryauctionClosedArgs, 'id' | 'subgraphError'>>;
+  auctionCloseds?: Resolver<Array<ResolversTypes['AuctionClosed']>, ParentType, ContextType, RequireFields<QueryauctionClosedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  cancelledAuction?: Resolver<Maybe<ResolversTypes['CancelledAuction']>, ParentType, ContextType, RequireFields<QuerycancelledAuctionArgs, 'id' | 'subgraphError'>>;
+  cancelledAuctions?: Resolver<Array<ResolversTypes['CancelledAuction']>, ParentType, ContextType, RequireFields<QuerycancelledAuctionsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newAuction?: Resolver<Maybe<ResolversTypes['NewAuction']>, ParentType, ContextType, RequireFields<QuerynewAuctionArgs, 'id' | 'subgraphError'>>;
+  newAuctions?: Resolver<Array<ResolversTypes['NewAuction']>, ParentType, ContextType, RequireFields<QuerynewAuctionsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newBid?: Resolver<Maybe<ResolversTypes['NewBid']>, ParentType, ContextType, RequireFields<QuerynewBidArgs, 'id' | 'subgraphError'>>;
+  newBids?: Resolver<Array<ResolversTypes['NewBid']>, ParentType, ContextType, RequireFields<QuerynewBidsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  acceptedOffer?: Resolver<Maybe<ResolversTypes['AcceptedOffer']>, ParentType, ContextType, RequireFields<QueryacceptedOfferArgs, 'id' | 'subgraphError'>>;
+  acceptedOffers?: Resolver<Array<ResolversTypes['AcceptedOffer']>, ParentType, ContextType, RequireFields<QueryacceptedOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
+  cancelledOffer?: Resolver<Maybe<ResolversTypes['CancelledOffer']>, ParentType, ContextType, RequireFields<QuerycancelledOfferArgs, 'id' | 'subgraphError'>>;
+  cancelledOffers?: Resolver<Array<ResolversTypes['CancelledOffer']>, ParentType, ContextType, RequireFields<QuerycancelledOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newOffer?: Resolver<Maybe<ResolversTypes['NewOffer']>, ParentType, ContextType, RequireFields<QuerynewOfferArgs, 'id' | 'subgraphError'>>;
+  newOffers?: Resolver<Array<ResolversTypes['NewOffer']>, ParentType, ContextType, RequireFields<QuerynewOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
+  contractURIUpdated?: Resolver<Maybe<ResolversTypes['ContractURIUpdated']>, ParentType, ContextType, RequireFields<QuerycontractURIUpdatedArgs, 'id' | 'subgraphError'>>;
+  contractURIUpdateds?: Resolver<Array<ResolversTypes['ContractURIUpdated']>, ParentType, ContextType, RequireFields<QuerycontractURIUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  extensionAdded?: Resolver<Maybe<ResolversTypes['ExtensionAdded']>, ParentType, ContextType, RequireFields<QueryextensionAddedArgs, 'id' | 'subgraphError'>>;
+  extensionAddeds?: Resolver<Array<ResolversTypes['ExtensionAdded']>, ParentType, ContextType, RequireFields<QueryextensionAddedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  extensionRemoved?: Resolver<Maybe<ResolversTypes['ExtensionRemoved']>, ParentType, ContextType, RequireFields<QueryextensionRemovedArgs, 'id' | 'subgraphError'>>;
+  extensionRemoveds?: Resolver<Array<ResolversTypes['ExtensionRemoved']>, ParentType, ContextType, RequireFields<QueryextensionRemovedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  extensionReplaced?: Resolver<Maybe<ResolversTypes['ExtensionReplaced']>, ParentType, ContextType, RequireFields<QueryextensionReplacedArgs, 'id' | 'subgraphError'>>;
+  extensionReplaceds?: Resolver<Array<ResolversTypes['ExtensionReplaced']>, ParentType, ContextType, RequireFields<QueryextensionReplacedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  flatPlatformFeeUpdated?: Resolver<Maybe<ResolversTypes['FlatPlatformFeeUpdated']>, ParentType, ContextType, RequireFields<QueryflatPlatformFeeUpdatedArgs, 'id' | 'subgraphError'>>;
+  flatPlatformFeeUpdateds?: Resolver<Array<ResolversTypes['FlatPlatformFeeUpdated']>, ParentType, ContextType, RequireFields<QueryflatPlatformFeeUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  functionDisabled?: Resolver<Maybe<ResolversTypes['FunctionDisabled']>, ParentType, ContextType, RequireFields<QueryfunctionDisabledArgs, 'id' | 'subgraphError'>>;
+  functionDisableds?: Resolver<Array<ResolversTypes['FunctionDisabled']>, ParentType, ContextType, RequireFields<QueryfunctionDisabledsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  functionEnabled?: Resolver<Maybe<ResolversTypes['FunctionEnabled']>, ParentType, ContextType, RequireFields<QueryfunctionEnabledArgs, 'id' | 'subgraphError'>>;
+  functionEnableds?: Resolver<Array<ResolversTypes['FunctionEnabled']>, ParentType, ContextType, RequireFields<QueryfunctionEnabledsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  initialized?: Resolver<Maybe<ResolversTypes['Initialized']>, ParentType, ContextType, RequireFields<QueryinitializedArgs, 'id' | 'subgraphError'>>;
+  initializeds?: Resolver<Array<ResolversTypes['Initialized']>, ParentType, ContextType, RequireFields<QueryinitializedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  platformFeeInfoUpdated?: Resolver<Maybe<ResolversTypes['PlatformFeeInfoUpdated']>, ParentType, ContextType, RequireFields<QueryplatformFeeInfoUpdatedArgs, 'id' | 'subgraphError'>>;
+  platformFeeInfoUpdateds?: Resolver<Array<ResolversTypes['PlatformFeeInfoUpdated']>, ParentType, ContextType, RequireFields<QueryplatformFeeInfoUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  platformFeeTypeUpdated?: Resolver<Maybe<ResolversTypes['PlatformFeeTypeUpdated']>, ParentType, ContextType, RequireFields<QueryplatformFeeTypeUpdatedArgs, 'id' | 'subgraphError'>>;
+  platformFeeTypeUpdateds?: Resolver<Array<ResolversTypes['PlatformFeeTypeUpdated']>, ParentType, ContextType, RequireFields<QueryplatformFeeTypeUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  roleAdminChanged?: Resolver<Maybe<ResolversTypes['RoleAdminChanged']>, ParentType, ContextType, RequireFields<QueryroleAdminChangedArgs, 'id' | 'subgraphError'>>;
+  roleAdminChangeds?: Resolver<Array<ResolversTypes['RoleAdminChanged']>, ParentType, ContextType, RequireFields<QueryroleAdminChangedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  roleGranted?: Resolver<Maybe<ResolversTypes['RoleGranted']>, ParentType, ContextType, RequireFields<QueryroleGrantedArgs, 'id' | 'subgraphError'>>;
+  roleGranteds?: Resolver<Array<ResolversTypes['RoleGranted']>, ParentType, ContextType, RequireFields<QueryroleGrantedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  roleRevoked?: Resolver<Maybe<ResolversTypes['RoleRevoked']>, ParentType, ContextType, RequireFields<QueryroleRevokedArgs, 'id' | 'subgraphError'>>;
+  roleRevokeds?: Resolver<Array<ResolversTypes['RoleRevoked']>, ParentType, ContextType, RequireFields<QueryroleRevokedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  royaltyEngineUpdated?: Resolver<Maybe<ResolversTypes['RoyaltyEngineUpdated']>, ParentType, ContextType, RequireFields<QueryroyaltyEngineUpdatedArgs, 'id' | 'subgraphError'>>;
+  royaltyEngineUpdateds?: Resolver<Array<ResolversTypes['RoyaltyEngineUpdated']>, ParentType, ContextType, RequireFields<QueryroyaltyEngineUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  _meta?: Resolver<Maybe<ResolversTypes['_Meta_']>, ParentType, ContextType, Partial<Query_metaArgs>>;
+}>;
+
+export type SubscriptionResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  buyerApprovedForListing?: SubscriptionResolver<Maybe<ResolversTypes['BuyerApprovedForListing']>, "buyerApprovedForListing", ParentType, ContextType, RequireFields<SubscriptionbuyerApprovedForListingArgs, 'id' | 'subgraphError'>>;
+  buyerApprovedForListings?: SubscriptionResolver<Array<ResolversTypes['BuyerApprovedForListing']>, "buyerApprovedForListings", ParentType, ContextType, RequireFields<SubscriptionbuyerApprovedForListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  cancelledListing?: SubscriptionResolver<Maybe<ResolversTypes['CancelledListing']>, "cancelledListing", ParentType, ContextType, RequireFields<SubscriptioncancelledListingArgs, 'id' | 'subgraphError'>>;
+  cancelledListings?: SubscriptionResolver<Array<ResolversTypes['CancelledListing']>, "cancelledListings", ParentType, ContextType, RequireFields<SubscriptioncancelledListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  currencyApprovedForListing?: SubscriptionResolver<Maybe<ResolversTypes['CurrencyApprovedForListing']>, "currencyApprovedForListing", ParentType, ContextType, RequireFields<SubscriptioncurrencyApprovedForListingArgs, 'id' | 'subgraphError'>>;
+  currencyApprovedForListings?: SubscriptionResolver<Array<ResolversTypes['CurrencyApprovedForListing']>, "currencyApprovedForListings", ParentType, ContextType, RequireFields<SubscriptioncurrencyApprovedForListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newListing?: SubscriptionResolver<Maybe<ResolversTypes['NewListing']>, "newListing", ParentType, ContextType, RequireFields<SubscriptionnewListingArgs, 'id' | 'subgraphError'>>;
+  newListings?: SubscriptionResolver<Array<ResolversTypes['NewListing']>, "newListings", ParentType, ContextType, RequireFields<SubscriptionnewListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newSale?: SubscriptionResolver<Maybe<ResolversTypes['NewSale']>, "newSale", ParentType, ContextType, RequireFields<SubscriptionnewSaleArgs, 'id' | 'subgraphError'>>;
+  newSales?: SubscriptionResolver<Array<ResolversTypes['NewSale']>, "newSales", ParentType, ContextType, RequireFields<SubscriptionnewSalesArgs, 'skip' | 'first' | 'subgraphError'>>;
+  updatedListing?: SubscriptionResolver<Maybe<ResolversTypes['UpdatedListing']>, "updatedListing", ParentType, ContextType, RequireFields<SubscriptionupdatedListingArgs, 'id' | 'subgraphError'>>;
+  updatedListings?: SubscriptionResolver<Array<ResolversTypes['UpdatedListing']>, "updatedListings", ParentType, ContextType, RequireFields<SubscriptionupdatedListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  auctionClosed?: SubscriptionResolver<Maybe<ResolversTypes['AuctionClosed']>, "auctionClosed", ParentType, ContextType, RequireFields<SubscriptionauctionClosedArgs, 'id' | 'subgraphError'>>;
+  auctionCloseds?: SubscriptionResolver<Array<ResolversTypes['AuctionClosed']>, "auctionCloseds", ParentType, ContextType, RequireFields<SubscriptionauctionClosedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  cancelledAuction?: SubscriptionResolver<Maybe<ResolversTypes['CancelledAuction']>, "cancelledAuction", ParentType, ContextType, RequireFields<SubscriptioncancelledAuctionArgs, 'id' | 'subgraphError'>>;
+  cancelledAuctions?: SubscriptionResolver<Array<ResolversTypes['CancelledAuction']>, "cancelledAuctions", ParentType, ContextType, RequireFields<SubscriptioncancelledAuctionsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newAuction?: SubscriptionResolver<Maybe<ResolversTypes['NewAuction']>, "newAuction", ParentType, ContextType, RequireFields<SubscriptionnewAuctionArgs, 'id' | 'subgraphError'>>;
+  newAuctions?: SubscriptionResolver<Array<ResolversTypes['NewAuction']>, "newAuctions", ParentType, ContextType, RequireFields<SubscriptionnewAuctionsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newBid?: SubscriptionResolver<Maybe<ResolversTypes['NewBid']>, "newBid", ParentType, ContextType, RequireFields<SubscriptionnewBidArgs, 'id' | 'subgraphError'>>;
+  newBids?: SubscriptionResolver<Array<ResolversTypes['NewBid']>, "newBids", ParentType, ContextType, RequireFields<SubscriptionnewBidsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  acceptedOffer?: SubscriptionResolver<Maybe<ResolversTypes['AcceptedOffer']>, "acceptedOffer", ParentType, ContextType, RequireFields<SubscriptionacceptedOfferArgs, 'id' | 'subgraphError'>>;
+  acceptedOffers?: SubscriptionResolver<Array<ResolversTypes['AcceptedOffer']>, "acceptedOffers", ParentType, ContextType, RequireFields<SubscriptionacceptedOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
+  cancelledOffer?: SubscriptionResolver<Maybe<ResolversTypes['CancelledOffer']>, "cancelledOffer", ParentType, ContextType, RequireFields<SubscriptioncancelledOfferArgs, 'id' | 'subgraphError'>>;
+  cancelledOffers?: SubscriptionResolver<Array<ResolversTypes['CancelledOffer']>, "cancelledOffers", ParentType, ContextType, RequireFields<SubscriptioncancelledOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
+  newOffer?: SubscriptionResolver<Maybe<ResolversTypes['NewOffer']>, "newOffer", ParentType, ContextType, RequireFields<SubscriptionnewOfferArgs, 'id' | 'subgraphError'>>;
+  newOffers?: SubscriptionResolver<Array<ResolversTypes['NewOffer']>, "newOffers", ParentType, ContextType, RequireFields<SubscriptionnewOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
+  contractURIUpdated?: SubscriptionResolver<Maybe<ResolversTypes['ContractURIUpdated']>, "contractURIUpdated", ParentType, ContextType, RequireFields<SubscriptioncontractURIUpdatedArgs, 'id' | 'subgraphError'>>;
+  contractURIUpdateds?: SubscriptionResolver<Array<ResolversTypes['ContractURIUpdated']>, "contractURIUpdateds", ParentType, ContextType, RequireFields<SubscriptioncontractURIUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  extensionAdded?: SubscriptionResolver<Maybe<ResolversTypes['ExtensionAdded']>, "extensionAdded", ParentType, ContextType, RequireFields<SubscriptionextensionAddedArgs, 'id' | 'subgraphError'>>;
+  extensionAddeds?: SubscriptionResolver<Array<ResolversTypes['ExtensionAdded']>, "extensionAddeds", ParentType, ContextType, RequireFields<SubscriptionextensionAddedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  extensionRemoved?: SubscriptionResolver<Maybe<ResolversTypes['ExtensionRemoved']>, "extensionRemoved", ParentType, ContextType, RequireFields<SubscriptionextensionRemovedArgs, 'id' | 'subgraphError'>>;
+  extensionRemoveds?: SubscriptionResolver<Array<ResolversTypes['ExtensionRemoved']>, "extensionRemoveds", ParentType, ContextType, RequireFields<SubscriptionextensionRemovedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  extensionReplaced?: SubscriptionResolver<Maybe<ResolversTypes['ExtensionReplaced']>, "extensionReplaced", ParentType, ContextType, RequireFields<SubscriptionextensionReplacedArgs, 'id' | 'subgraphError'>>;
+  extensionReplaceds?: SubscriptionResolver<Array<ResolversTypes['ExtensionReplaced']>, "extensionReplaceds", ParentType, ContextType, RequireFields<SubscriptionextensionReplacedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  flatPlatformFeeUpdated?: SubscriptionResolver<Maybe<ResolversTypes['FlatPlatformFeeUpdated']>, "flatPlatformFeeUpdated", ParentType, ContextType, RequireFields<SubscriptionflatPlatformFeeUpdatedArgs, 'id' | 'subgraphError'>>;
+  flatPlatformFeeUpdateds?: SubscriptionResolver<Array<ResolversTypes['FlatPlatformFeeUpdated']>, "flatPlatformFeeUpdateds", ParentType, ContextType, RequireFields<SubscriptionflatPlatformFeeUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  functionDisabled?: SubscriptionResolver<Maybe<ResolversTypes['FunctionDisabled']>, "functionDisabled", ParentType, ContextType, RequireFields<SubscriptionfunctionDisabledArgs, 'id' | 'subgraphError'>>;
+  functionDisableds?: SubscriptionResolver<Array<ResolversTypes['FunctionDisabled']>, "functionDisableds", ParentType, ContextType, RequireFields<SubscriptionfunctionDisabledsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  functionEnabled?: SubscriptionResolver<Maybe<ResolversTypes['FunctionEnabled']>, "functionEnabled", ParentType, ContextType, RequireFields<SubscriptionfunctionEnabledArgs, 'id' | 'subgraphError'>>;
+  functionEnableds?: SubscriptionResolver<Array<ResolversTypes['FunctionEnabled']>, "functionEnableds", ParentType, ContextType, RequireFields<SubscriptionfunctionEnabledsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  initialized?: SubscriptionResolver<Maybe<ResolversTypes['Initialized']>, "initialized", ParentType, ContextType, RequireFields<SubscriptioninitializedArgs, 'id' | 'subgraphError'>>;
+  initializeds?: SubscriptionResolver<Array<ResolversTypes['Initialized']>, "initializeds", ParentType, ContextType, RequireFields<SubscriptioninitializedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  platformFeeInfoUpdated?: SubscriptionResolver<Maybe<ResolversTypes['PlatformFeeInfoUpdated']>, "platformFeeInfoUpdated", ParentType, ContextType, RequireFields<SubscriptionplatformFeeInfoUpdatedArgs, 'id' | 'subgraphError'>>;
+  platformFeeInfoUpdateds?: SubscriptionResolver<Array<ResolversTypes['PlatformFeeInfoUpdated']>, "platformFeeInfoUpdateds", ParentType, ContextType, RequireFields<SubscriptionplatformFeeInfoUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  platformFeeTypeUpdated?: SubscriptionResolver<Maybe<ResolversTypes['PlatformFeeTypeUpdated']>, "platformFeeTypeUpdated", ParentType, ContextType, RequireFields<SubscriptionplatformFeeTypeUpdatedArgs, 'id' | 'subgraphError'>>;
+  platformFeeTypeUpdateds?: SubscriptionResolver<Array<ResolversTypes['PlatformFeeTypeUpdated']>, "platformFeeTypeUpdateds", ParentType, ContextType, RequireFields<SubscriptionplatformFeeTypeUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  roleAdminChanged?: SubscriptionResolver<Maybe<ResolversTypes['RoleAdminChanged']>, "roleAdminChanged", ParentType, ContextType, RequireFields<SubscriptionroleAdminChangedArgs, 'id' | 'subgraphError'>>;
+  roleAdminChangeds?: SubscriptionResolver<Array<ResolversTypes['RoleAdminChanged']>, "roleAdminChangeds", ParentType, ContextType, RequireFields<SubscriptionroleAdminChangedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  roleGranted?: SubscriptionResolver<Maybe<ResolversTypes['RoleGranted']>, "roleGranted", ParentType, ContextType, RequireFields<SubscriptionroleGrantedArgs, 'id' | 'subgraphError'>>;
+  roleGranteds?: SubscriptionResolver<Array<ResolversTypes['RoleGranted']>, "roleGranteds", ParentType, ContextType, RequireFields<SubscriptionroleGrantedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  roleRevoked?: SubscriptionResolver<Maybe<ResolversTypes['RoleRevoked']>, "roleRevoked", ParentType, ContextType, RequireFields<SubscriptionroleRevokedArgs, 'id' | 'subgraphError'>>;
+  roleRevokeds?: SubscriptionResolver<Array<ResolversTypes['RoleRevoked']>, "roleRevokeds", ParentType, ContextType, RequireFields<SubscriptionroleRevokedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  royaltyEngineUpdated?: SubscriptionResolver<Maybe<ResolversTypes['RoyaltyEngineUpdated']>, "royaltyEngineUpdated", ParentType, ContextType, RequireFields<SubscriptionroyaltyEngineUpdatedArgs, 'id' | 'subgraphError'>>;
+  royaltyEngineUpdateds?: SubscriptionResolver<Array<ResolversTypes['RoyaltyEngineUpdated']>, "royaltyEngineUpdateds", ParentType, ContextType, RequireFields<SubscriptionroyaltyEngineUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
+  _meta?: SubscriptionResolver<Maybe<ResolversTypes['_Meta_']>, "_meta", ParentType, ContextType, Partial<Subscription_metaArgs>>;
+}>;
 
 export type AcceptedOfferResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['AcceptedOffer'] = ResolversParentTypes['AcceptedOffer']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
@@ -5218,64 +5336,6 @@ export type PlatformFeeTypeUpdatedResolvers<ContextType = MeshContext, ParentTyp
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type QueryResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  buyerApprovedForListing?: Resolver<Maybe<ResolversTypes['BuyerApprovedForListing']>, ParentType, ContextType, RequireFields<QuerybuyerApprovedForListingArgs, 'id' | 'subgraphError'>>;
-  buyerApprovedForListings?: Resolver<Array<ResolversTypes['BuyerApprovedForListing']>, ParentType, ContextType, RequireFields<QuerybuyerApprovedForListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  cancelledListing?: Resolver<Maybe<ResolversTypes['CancelledListing']>, ParentType, ContextType, RequireFields<QuerycancelledListingArgs, 'id' | 'subgraphError'>>;
-  cancelledListings?: Resolver<Array<ResolversTypes['CancelledListing']>, ParentType, ContextType, RequireFields<QuerycancelledListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  currencyApprovedForListing?: Resolver<Maybe<ResolversTypes['CurrencyApprovedForListing']>, ParentType, ContextType, RequireFields<QuerycurrencyApprovedForListingArgs, 'id' | 'subgraphError'>>;
-  currencyApprovedForListings?: Resolver<Array<ResolversTypes['CurrencyApprovedForListing']>, ParentType, ContextType, RequireFields<QuerycurrencyApprovedForListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newListing?: Resolver<Maybe<ResolversTypes['NewListing']>, ParentType, ContextType, RequireFields<QuerynewListingArgs, 'id' | 'subgraphError'>>;
-  newListings?: Resolver<Array<ResolversTypes['NewListing']>, ParentType, ContextType, RequireFields<QuerynewListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newSale?: Resolver<Maybe<ResolversTypes['NewSale']>, ParentType, ContextType, RequireFields<QuerynewSaleArgs, 'id' | 'subgraphError'>>;
-  newSales?: Resolver<Array<ResolversTypes['NewSale']>, ParentType, ContextType, RequireFields<QuerynewSalesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  updatedListing?: Resolver<Maybe<ResolversTypes['UpdatedListing']>, ParentType, ContextType, RequireFields<QueryupdatedListingArgs, 'id' | 'subgraphError'>>;
-  updatedListings?: Resolver<Array<ResolversTypes['UpdatedListing']>, ParentType, ContextType, RequireFields<QueryupdatedListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  auctionClosed?: Resolver<Maybe<ResolversTypes['AuctionClosed']>, ParentType, ContextType, RequireFields<QueryauctionClosedArgs, 'id' | 'subgraphError'>>;
-  auctionCloseds?: Resolver<Array<ResolversTypes['AuctionClosed']>, ParentType, ContextType, RequireFields<QueryauctionClosedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  cancelledAuction?: Resolver<Maybe<ResolversTypes['CancelledAuction']>, ParentType, ContextType, RequireFields<QuerycancelledAuctionArgs, 'id' | 'subgraphError'>>;
-  cancelledAuctions?: Resolver<Array<ResolversTypes['CancelledAuction']>, ParentType, ContextType, RequireFields<QuerycancelledAuctionsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newAuction?: Resolver<Maybe<ResolversTypes['NewAuction']>, ParentType, ContextType, RequireFields<QuerynewAuctionArgs, 'id' | 'subgraphError'>>;
-  newAuctions?: Resolver<Array<ResolversTypes['NewAuction']>, ParentType, ContextType, RequireFields<QuerynewAuctionsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newBid?: Resolver<Maybe<ResolversTypes['NewBid']>, ParentType, ContextType, RequireFields<QuerynewBidArgs, 'id' | 'subgraphError'>>;
-  newBids?: Resolver<Array<ResolversTypes['NewBid']>, ParentType, ContextType, RequireFields<QuerynewBidsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  acceptedOffer?: Resolver<Maybe<ResolversTypes['AcceptedOffer']>, ParentType, ContextType, RequireFields<QueryacceptedOfferArgs, 'id' | 'subgraphError'>>;
-  acceptedOffers?: Resolver<Array<ResolversTypes['AcceptedOffer']>, ParentType, ContextType, RequireFields<QueryacceptedOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
-  cancelledOffer?: Resolver<Maybe<ResolversTypes['CancelledOffer']>, ParentType, ContextType, RequireFields<QuerycancelledOfferArgs, 'id' | 'subgraphError'>>;
-  cancelledOffers?: Resolver<Array<ResolversTypes['CancelledOffer']>, ParentType, ContextType, RequireFields<QuerycancelledOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newOffer?: Resolver<Maybe<ResolversTypes['NewOffer']>, ParentType, ContextType, RequireFields<QuerynewOfferArgs, 'id' | 'subgraphError'>>;
-  newOffers?: Resolver<Array<ResolversTypes['NewOffer']>, ParentType, ContextType, RequireFields<QuerynewOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
-  contractURIUpdated?: Resolver<Maybe<ResolversTypes['ContractURIUpdated']>, ParentType, ContextType, RequireFields<QuerycontractURIUpdatedArgs, 'id' | 'subgraphError'>>;
-  contractURIUpdateds?: Resolver<Array<ResolversTypes['ContractURIUpdated']>, ParentType, ContextType, RequireFields<QuerycontractURIUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  extensionAdded?: Resolver<Maybe<ResolversTypes['ExtensionAdded']>, ParentType, ContextType, RequireFields<QueryextensionAddedArgs, 'id' | 'subgraphError'>>;
-  extensionAddeds?: Resolver<Array<ResolversTypes['ExtensionAdded']>, ParentType, ContextType, RequireFields<QueryextensionAddedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  extensionRemoved?: Resolver<Maybe<ResolversTypes['ExtensionRemoved']>, ParentType, ContextType, RequireFields<QueryextensionRemovedArgs, 'id' | 'subgraphError'>>;
-  extensionRemoveds?: Resolver<Array<ResolversTypes['ExtensionRemoved']>, ParentType, ContextType, RequireFields<QueryextensionRemovedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  extensionReplaced?: Resolver<Maybe<ResolversTypes['ExtensionReplaced']>, ParentType, ContextType, RequireFields<QueryextensionReplacedArgs, 'id' | 'subgraphError'>>;
-  extensionReplaceds?: Resolver<Array<ResolversTypes['ExtensionReplaced']>, ParentType, ContextType, RequireFields<QueryextensionReplacedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  flatPlatformFeeUpdated?: Resolver<Maybe<ResolversTypes['FlatPlatformFeeUpdated']>, ParentType, ContextType, RequireFields<QueryflatPlatformFeeUpdatedArgs, 'id' | 'subgraphError'>>;
-  flatPlatformFeeUpdateds?: Resolver<Array<ResolversTypes['FlatPlatformFeeUpdated']>, ParentType, ContextType, RequireFields<QueryflatPlatformFeeUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  functionDisabled?: Resolver<Maybe<ResolversTypes['FunctionDisabled']>, ParentType, ContextType, RequireFields<QueryfunctionDisabledArgs, 'id' | 'subgraphError'>>;
-  functionDisableds?: Resolver<Array<ResolversTypes['FunctionDisabled']>, ParentType, ContextType, RequireFields<QueryfunctionDisabledsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  functionEnabled?: Resolver<Maybe<ResolversTypes['FunctionEnabled']>, ParentType, ContextType, RequireFields<QueryfunctionEnabledArgs, 'id' | 'subgraphError'>>;
-  functionEnableds?: Resolver<Array<ResolversTypes['FunctionEnabled']>, ParentType, ContextType, RequireFields<QueryfunctionEnabledsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  initialized?: Resolver<Maybe<ResolversTypes['Initialized']>, ParentType, ContextType, RequireFields<QueryinitializedArgs, 'id' | 'subgraphError'>>;
-  initializeds?: Resolver<Array<ResolversTypes['Initialized']>, ParentType, ContextType, RequireFields<QueryinitializedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  platformFeeInfoUpdated?: Resolver<Maybe<ResolversTypes['PlatformFeeInfoUpdated']>, ParentType, ContextType, RequireFields<QueryplatformFeeInfoUpdatedArgs, 'id' | 'subgraphError'>>;
-  platformFeeInfoUpdateds?: Resolver<Array<ResolversTypes['PlatformFeeInfoUpdated']>, ParentType, ContextType, RequireFields<QueryplatformFeeInfoUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  platformFeeTypeUpdated?: Resolver<Maybe<ResolversTypes['PlatformFeeTypeUpdated']>, ParentType, ContextType, RequireFields<QueryplatformFeeTypeUpdatedArgs, 'id' | 'subgraphError'>>;
-  platformFeeTypeUpdateds?: Resolver<Array<ResolversTypes['PlatformFeeTypeUpdated']>, ParentType, ContextType, RequireFields<QueryplatformFeeTypeUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  roleAdminChanged?: Resolver<Maybe<ResolversTypes['RoleAdminChanged']>, ParentType, ContextType, RequireFields<QueryroleAdminChangedArgs, 'id' | 'subgraphError'>>;
-  roleAdminChangeds?: Resolver<Array<ResolversTypes['RoleAdminChanged']>, ParentType, ContextType, RequireFields<QueryroleAdminChangedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  roleGranted?: Resolver<Maybe<ResolversTypes['RoleGranted']>, ParentType, ContextType, RequireFields<QueryroleGrantedArgs, 'id' | 'subgraphError'>>;
-  roleGranteds?: Resolver<Array<ResolversTypes['RoleGranted']>, ParentType, ContextType, RequireFields<QueryroleGrantedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  roleRevoked?: Resolver<Maybe<ResolversTypes['RoleRevoked']>, ParentType, ContextType, RequireFields<QueryroleRevokedArgs, 'id' | 'subgraphError'>>;
-  roleRevokeds?: Resolver<Array<ResolversTypes['RoleRevoked']>, ParentType, ContextType, RequireFields<QueryroleRevokedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  royaltyEngineUpdated?: Resolver<Maybe<ResolversTypes['RoyaltyEngineUpdated']>, ParentType, ContextType, RequireFields<QueryroyaltyEngineUpdatedArgs, 'id' | 'subgraphError'>>;
-  royaltyEngineUpdateds?: Resolver<Array<ResolversTypes['RoyaltyEngineUpdated']>, ParentType, ContextType, RequireFields<QueryroyaltyEngineUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  _meta?: Resolver<Maybe<ResolversTypes['_Meta_']>, ParentType, ContextType, Partial<Query_metaArgs>>;
-}>;
-
 export type RoleAdminChangedResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['RoleAdminChanged'] = ResolversParentTypes['RoleAdminChanged']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   role?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
@@ -5317,64 +5377,6 @@ export type RoyaltyEngineUpdatedResolvers<ContextType = MeshContext, ParentType 
   blockTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   transactionHash?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type SubscriptionResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
-  buyerApprovedForListing?: SubscriptionResolver<Maybe<ResolversTypes['BuyerApprovedForListing']>, "buyerApprovedForListing", ParentType, ContextType, RequireFields<SubscriptionbuyerApprovedForListingArgs, 'id' | 'subgraphError'>>;
-  buyerApprovedForListings?: SubscriptionResolver<Array<ResolversTypes['BuyerApprovedForListing']>, "buyerApprovedForListings", ParentType, ContextType, RequireFields<SubscriptionbuyerApprovedForListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  cancelledListing?: SubscriptionResolver<Maybe<ResolversTypes['CancelledListing']>, "cancelledListing", ParentType, ContextType, RequireFields<SubscriptioncancelledListingArgs, 'id' | 'subgraphError'>>;
-  cancelledListings?: SubscriptionResolver<Array<ResolversTypes['CancelledListing']>, "cancelledListings", ParentType, ContextType, RequireFields<SubscriptioncancelledListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  currencyApprovedForListing?: SubscriptionResolver<Maybe<ResolversTypes['CurrencyApprovedForListing']>, "currencyApprovedForListing", ParentType, ContextType, RequireFields<SubscriptioncurrencyApprovedForListingArgs, 'id' | 'subgraphError'>>;
-  currencyApprovedForListings?: SubscriptionResolver<Array<ResolversTypes['CurrencyApprovedForListing']>, "currencyApprovedForListings", ParentType, ContextType, RequireFields<SubscriptioncurrencyApprovedForListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newListing?: SubscriptionResolver<Maybe<ResolversTypes['NewListing']>, "newListing", ParentType, ContextType, RequireFields<SubscriptionnewListingArgs, 'id' | 'subgraphError'>>;
-  newListings?: SubscriptionResolver<Array<ResolversTypes['NewListing']>, "newListings", ParentType, ContextType, RequireFields<SubscriptionnewListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newSale?: SubscriptionResolver<Maybe<ResolversTypes['NewSale']>, "newSale", ParentType, ContextType, RequireFields<SubscriptionnewSaleArgs, 'id' | 'subgraphError'>>;
-  newSales?: SubscriptionResolver<Array<ResolversTypes['NewSale']>, "newSales", ParentType, ContextType, RequireFields<SubscriptionnewSalesArgs, 'skip' | 'first' | 'subgraphError'>>;
-  updatedListing?: SubscriptionResolver<Maybe<ResolversTypes['UpdatedListing']>, "updatedListing", ParentType, ContextType, RequireFields<SubscriptionupdatedListingArgs, 'id' | 'subgraphError'>>;
-  updatedListings?: SubscriptionResolver<Array<ResolversTypes['UpdatedListing']>, "updatedListings", ParentType, ContextType, RequireFields<SubscriptionupdatedListingsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  auctionClosed?: SubscriptionResolver<Maybe<ResolversTypes['AuctionClosed']>, "auctionClosed", ParentType, ContextType, RequireFields<SubscriptionauctionClosedArgs, 'id' | 'subgraphError'>>;
-  auctionCloseds?: SubscriptionResolver<Array<ResolversTypes['AuctionClosed']>, "auctionCloseds", ParentType, ContextType, RequireFields<SubscriptionauctionClosedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  cancelledAuction?: SubscriptionResolver<Maybe<ResolversTypes['CancelledAuction']>, "cancelledAuction", ParentType, ContextType, RequireFields<SubscriptioncancelledAuctionArgs, 'id' | 'subgraphError'>>;
-  cancelledAuctions?: SubscriptionResolver<Array<ResolversTypes['CancelledAuction']>, "cancelledAuctions", ParentType, ContextType, RequireFields<SubscriptioncancelledAuctionsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newAuction?: SubscriptionResolver<Maybe<ResolversTypes['NewAuction']>, "newAuction", ParentType, ContextType, RequireFields<SubscriptionnewAuctionArgs, 'id' | 'subgraphError'>>;
-  newAuctions?: SubscriptionResolver<Array<ResolversTypes['NewAuction']>, "newAuctions", ParentType, ContextType, RequireFields<SubscriptionnewAuctionsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newBid?: SubscriptionResolver<Maybe<ResolversTypes['NewBid']>, "newBid", ParentType, ContextType, RequireFields<SubscriptionnewBidArgs, 'id' | 'subgraphError'>>;
-  newBids?: SubscriptionResolver<Array<ResolversTypes['NewBid']>, "newBids", ParentType, ContextType, RequireFields<SubscriptionnewBidsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  acceptedOffer?: SubscriptionResolver<Maybe<ResolversTypes['AcceptedOffer']>, "acceptedOffer", ParentType, ContextType, RequireFields<SubscriptionacceptedOfferArgs, 'id' | 'subgraphError'>>;
-  acceptedOffers?: SubscriptionResolver<Array<ResolversTypes['AcceptedOffer']>, "acceptedOffers", ParentType, ContextType, RequireFields<SubscriptionacceptedOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
-  cancelledOffer?: SubscriptionResolver<Maybe<ResolversTypes['CancelledOffer']>, "cancelledOffer", ParentType, ContextType, RequireFields<SubscriptioncancelledOfferArgs, 'id' | 'subgraphError'>>;
-  cancelledOffers?: SubscriptionResolver<Array<ResolversTypes['CancelledOffer']>, "cancelledOffers", ParentType, ContextType, RequireFields<SubscriptioncancelledOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
-  newOffer?: SubscriptionResolver<Maybe<ResolversTypes['NewOffer']>, "newOffer", ParentType, ContextType, RequireFields<SubscriptionnewOfferArgs, 'id' | 'subgraphError'>>;
-  newOffers?: SubscriptionResolver<Array<ResolversTypes['NewOffer']>, "newOffers", ParentType, ContextType, RequireFields<SubscriptionnewOffersArgs, 'skip' | 'first' | 'subgraphError'>>;
-  contractURIUpdated?: SubscriptionResolver<Maybe<ResolversTypes['ContractURIUpdated']>, "contractURIUpdated", ParentType, ContextType, RequireFields<SubscriptioncontractURIUpdatedArgs, 'id' | 'subgraphError'>>;
-  contractURIUpdateds?: SubscriptionResolver<Array<ResolversTypes['ContractURIUpdated']>, "contractURIUpdateds", ParentType, ContextType, RequireFields<SubscriptioncontractURIUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  extensionAdded?: SubscriptionResolver<Maybe<ResolversTypes['ExtensionAdded']>, "extensionAdded", ParentType, ContextType, RequireFields<SubscriptionextensionAddedArgs, 'id' | 'subgraphError'>>;
-  extensionAddeds?: SubscriptionResolver<Array<ResolversTypes['ExtensionAdded']>, "extensionAddeds", ParentType, ContextType, RequireFields<SubscriptionextensionAddedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  extensionRemoved?: SubscriptionResolver<Maybe<ResolversTypes['ExtensionRemoved']>, "extensionRemoved", ParentType, ContextType, RequireFields<SubscriptionextensionRemovedArgs, 'id' | 'subgraphError'>>;
-  extensionRemoveds?: SubscriptionResolver<Array<ResolversTypes['ExtensionRemoved']>, "extensionRemoveds", ParentType, ContextType, RequireFields<SubscriptionextensionRemovedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  extensionReplaced?: SubscriptionResolver<Maybe<ResolversTypes['ExtensionReplaced']>, "extensionReplaced", ParentType, ContextType, RequireFields<SubscriptionextensionReplacedArgs, 'id' | 'subgraphError'>>;
-  extensionReplaceds?: SubscriptionResolver<Array<ResolversTypes['ExtensionReplaced']>, "extensionReplaceds", ParentType, ContextType, RequireFields<SubscriptionextensionReplacedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  flatPlatformFeeUpdated?: SubscriptionResolver<Maybe<ResolversTypes['FlatPlatformFeeUpdated']>, "flatPlatformFeeUpdated", ParentType, ContextType, RequireFields<SubscriptionflatPlatformFeeUpdatedArgs, 'id' | 'subgraphError'>>;
-  flatPlatformFeeUpdateds?: SubscriptionResolver<Array<ResolversTypes['FlatPlatformFeeUpdated']>, "flatPlatformFeeUpdateds", ParentType, ContextType, RequireFields<SubscriptionflatPlatformFeeUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  functionDisabled?: SubscriptionResolver<Maybe<ResolversTypes['FunctionDisabled']>, "functionDisabled", ParentType, ContextType, RequireFields<SubscriptionfunctionDisabledArgs, 'id' | 'subgraphError'>>;
-  functionDisableds?: SubscriptionResolver<Array<ResolversTypes['FunctionDisabled']>, "functionDisableds", ParentType, ContextType, RequireFields<SubscriptionfunctionDisabledsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  functionEnabled?: SubscriptionResolver<Maybe<ResolversTypes['FunctionEnabled']>, "functionEnabled", ParentType, ContextType, RequireFields<SubscriptionfunctionEnabledArgs, 'id' | 'subgraphError'>>;
-  functionEnableds?: SubscriptionResolver<Array<ResolversTypes['FunctionEnabled']>, "functionEnableds", ParentType, ContextType, RequireFields<SubscriptionfunctionEnabledsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  initialized?: SubscriptionResolver<Maybe<ResolversTypes['Initialized']>, "initialized", ParentType, ContextType, RequireFields<SubscriptioninitializedArgs, 'id' | 'subgraphError'>>;
-  initializeds?: SubscriptionResolver<Array<ResolversTypes['Initialized']>, "initializeds", ParentType, ContextType, RequireFields<SubscriptioninitializedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  platformFeeInfoUpdated?: SubscriptionResolver<Maybe<ResolversTypes['PlatformFeeInfoUpdated']>, "platformFeeInfoUpdated", ParentType, ContextType, RequireFields<SubscriptionplatformFeeInfoUpdatedArgs, 'id' | 'subgraphError'>>;
-  platformFeeInfoUpdateds?: SubscriptionResolver<Array<ResolversTypes['PlatformFeeInfoUpdated']>, "platformFeeInfoUpdateds", ParentType, ContextType, RequireFields<SubscriptionplatformFeeInfoUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  platformFeeTypeUpdated?: SubscriptionResolver<Maybe<ResolversTypes['PlatformFeeTypeUpdated']>, "platformFeeTypeUpdated", ParentType, ContextType, RequireFields<SubscriptionplatformFeeTypeUpdatedArgs, 'id' | 'subgraphError'>>;
-  platformFeeTypeUpdateds?: SubscriptionResolver<Array<ResolversTypes['PlatformFeeTypeUpdated']>, "platformFeeTypeUpdateds", ParentType, ContextType, RequireFields<SubscriptionplatformFeeTypeUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  roleAdminChanged?: SubscriptionResolver<Maybe<ResolversTypes['RoleAdminChanged']>, "roleAdminChanged", ParentType, ContextType, RequireFields<SubscriptionroleAdminChangedArgs, 'id' | 'subgraphError'>>;
-  roleAdminChangeds?: SubscriptionResolver<Array<ResolversTypes['RoleAdminChanged']>, "roleAdminChangeds", ParentType, ContextType, RequireFields<SubscriptionroleAdminChangedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  roleGranted?: SubscriptionResolver<Maybe<ResolversTypes['RoleGranted']>, "roleGranted", ParentType, ContextType, RequireFields<SubscriptionroleGrantedArgs, 'id' | 'subgraphError'>>;
-  roleGranteds?: SubscriptionResolver<Array<ResolversTypes['RoleGranted']>, "roleGranteds", ParentType, ContextType, RequireFields<SubscriptionroleGrantedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  roleRevoked?: SubscriptionResolver<Maybe<ResolversTypes['RoleRevoked']>, "roleRevoked", ParentType, ContextType, RequireFields<SubscriptionroleRevokedArgs, 'id' | 'subgraphError'>>;
-  roleRevokeds?: SubscriptionResolver<Array<ResolversTypes['RoleRevoked']>, "roleRevokeds", ParentType, ContextType, RequireFields<SubscriptionroleRevokedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  royaltyEngineUpdated?: SubscriptionResolver<Maybe<ResolversTypes['RoyaltyEngineUpdated']>, "royaltyEngineUpdated", ParentType, ContextType, RequireFields<SubscriptionroyaltyEngineUpdatedArgs, 'id' | 'subgraphError'>>;
-  royaltyEngineUpdateds?: SubscriptionResolver<Array<ResolversTypes['RoyaltyEngineUpdated']>, "royaltyEngineUpdateds", ParentType, ContextType, RequireFields<SubscriptionroyaltyEngineUpdatedsArgs, 'skip' | 'first' | 'subgraphError'>>;
-  _meta?: SubscriptionResolver<Maybe<ResolversTypes['_Meta_']>, "_meta", ParentType, ContextType, Partial<Subscription_metaArgs>>;
 }>;
 
 export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Timestamp'], any> {
@@ -5420,6 +5422,8 @@ export type _Meta_Resolvers<ContextType = MeshContext, ParentType extends Resolv
 }>;
 
 export type Resolvers<ContextType = MeshContext> = ResolversObject<{
+  Query?: QueryResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   AcceptedOffer?: AcceptedOfferResolvers<ContextType>;
   AuctionClosed?: AuctionClosedResolvers<ContextType>;
   BigDecimal?: GraphQLScalarType;
@@ -5446,12 +5450,10 @@ export type Resolvers<ContextType = MeshContext> = ResolversObject<{
   NewSale?: NewSaleResolvers<ContextType>;
   PlatformFeeInfoUpdated?: PlatformFeeInfoUpdatedResolvers<ContextType>;
   PlatformFeeTypeUpdated?: PlatformFeeTypeUpdatedResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
   RoleAdminChanged?: RoleAdminChangedResolvers<ContextType>;
   RoleGranted?: RoleGrantedResolvers<ContextType>;
   RoleRevoked?: RoleRevokedResolvers<ContextType>;
   RoyaltyEngineUpdated?: RoyaltyEngineUpdatedResolvers<ContextType>;
-  Subscription?: SubscriptionResolvers<ContextType>;
   Timestamp?: GraphQLScalarType;
   UpdatedListing?: UpdatedListingResolvers<ContextType>;
   _Block_?: _Block_Resolvers<ContextType>;
@@ -5464,7 +5466,7 @@ export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
   derivedFrom?: derivedFromDirectiveResolver<any, any, ContextType>;
 }>;
 
-export type MeshContext = New7007Types.Context & BaseMeshContext;
+export type MeshContext = Mainnet7007Types.Context & Sepolia7007Types.Context & BaseMeshContext;
 
 
 import { fileURLToPath } from '@graphql-mesh/utils';
@@ -5473,8 +5475,11 @@ const baseDir = pathModule.join(pathModule.dirname(fileURLToPath(import.meta.url
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/new7007/introspectionSchema":
+    case ".graphclient/sources/mainnet7007/introspectionSchema":
       return Promise.resolve(importedModule$0) as T;
+    
+    case ".graphclient/sources/sepolia7007/introspectionSchema":
+      return Promise.resolve(importedModule$1) as T;
     
     default:
       return Promise.reject(new Error(`Cannot find module '${relativeModuleId}'.`));
@@ -5506,33 +5511,51 @@ const cache = new (MeshCache as any)({
 const sources: MeshResolvedSource[] = [];
 const transforms: MeshTransform[] = [];
 const additionalEnvelopPlugins: MeshPlugin<any>[] = [];
-const new7007Transforms = [];
+const mainnet7007Transforms = [];
+const sepolia7007Transforms = [];
 const additionalTypeDefs = [] as any[];
-const new7007Handler = new GraphqlHandler({
-              name: "new7007",
-              config: {"endpoint":"https://api.studio.thegraph.com/query/72917/7007new/v0.0.2"},
+const mainnet7007Handler = new GraphqlHandler({
+              name: "mainnet7007",
+              config: {"endpoint":"https://api.studio.thegraph.com/query/72917/7007graph/v0.0.3_mainnet"},
               baseDir,
               cache,
               pubsub,
-              store: sourcesStore.child("new7007"),
-              logger: logger.child("new7007"),
+              store: sourcesStore.child("mainnet7007"),
+              logger: logger.child("mainnet7007"),
+              importFn,
+            });
+const sepolia7007Handler = new GraphqlHandler({
+              name: "sepolia7007",
+              config: {"endpoint":"https://api.studio.thegraph.com/query/72917/7007graph/v0.0.2"},
+              baseDir,
+              cache,
+              pubsub,
+              store: sourcesStore.child("sepolia7007"),
+              logger: logger.child("sepolia7007"),
               importFn,
             });
 sources[0] = {
-          name: 'new7007',
-          handler: new7007Handler,
-          transforms: new7007Transforms
+          name: 'mainnet7007',
+          handler: mainnet7007Handler,
+          transforms: mainnet7007Transforms
+        }
+sources[1] = {
+          name: 'sepolia7007',
+          handler: sepolia7007Handler,
+          transforms: sepolia7007Transforms
         }
 const additionalResolvers = [] as any[]
-const merger = new(BareMerger as any)({
+const merger = new(StitchingMerger as any)({
         cache,
         pubsub,
-        logger: logger.child('bareMerger'),
-        store: rootStore.child('bareMerger')
+        logger: logger.child('stitchingMerger'),
+        store: rootStore.child('stitchingMerger')
       })
 const documentHashMap = {
-        "90e4622826996dac3fc60b10368302abb6ddd4a83812c9054a7041c13b9cd221": StableDiffusionQueryDocument,
-"90e4622826996dac3fc60b10368302abb6ddd4a83812c9054a7041c13b9cd221": OpmlQueryDocument
+        "4bc86f9f7759d8ea074bb428f8e9d79101f68cd0e866d591d93f2c41c3ecc0f4": StableDiffusionQueryDocument,
+"4bc86f9f7759d8ea074bb428f8e9d79101f68cd0e866d591d93f2c41c3ecc0f4": OpmlQueryDocument,
+"4bc86f9f7759d8ea074bb428f8e9d79101f68cd0e866d591d93f2c41c3ecc0f4": StableDiffusionSepoliaQueryDocument,
+"4bc86f9f7759d8ea074bb428f8e9d79101f68cd0e866d591d93f2c41c3ecc0f4": OpmlSepoliaQueryDocument
       }
 additionalEnvelopPlugins.push(usePersistedOperations({
         getPersistedOperation(key) {
@@ -5559,14 +5582,28 @@ additionalEnvelopPlugins.push(usePersistedOperations({
           return printWithCache(StableDiffusionQueryDocument);
         },
         location: 'StableDiffusionQueryDocument.graphql',
-        sha256Hash: '90e4622826996dac3fc60b10368302abb6ddd4a83812c9054a7041c13b9cd221'
+        sha256Hash: '4bc86f9f7759d8ea074bb428f8e9d79101f68cd0e866d591d93f2c41c3ecc0f4'
       },{
         document: OpmlQueryDocument,
         get rawSDL() {
           return printWithCache(OpmlQueryDocument);
         },
         location: 'OpmlQueryDocument.graphql',
-        sha256Hash: '90e4622826996dac3fc60b10368302abb6ddd4a83812c9054a7041c13b9cd221'
+        sha256Hash: '4bc86f9f7759d8ea074bb428f8e9d79101f68cd0e866d591d93f2c41c3ecc0f4'
+      },{
+        document: StableDiffusionSepoliaQueryDocument,
+        get rawSDL() {
+          return printWithCache(StableDiffusionSepoliaQueryDocument);
+        },
+        location: 'StableDiffusionSepoliaQueryDocument.graphql',
+        sha256Hash: '4bc86f9f7759d8ea074bb428f8e9d79101f68cd0e866d591d93f2c41c3ecc0f4'
+      },{
+        document: OpmlSepoliaQueryDocument,
+        get rawSDL() {
+          return printWithCache(OpmlSepoliaQueryDocument);
+        },
+        location: 'OpmlSepoliaQueryDocument.graphql',
+        sha256Hash: '4bc86f9f7759d8ea074bb428f8e9d79101f68cd0e866d591d93f2c41c3ecc0f4'
       }
     ];
     },
@@ -5630,6 +5667,16 @@ export type OpmlQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type OpmlQueryQuery = { newListings: Array<Pick<NewListing, 'listingId' | 'listingCreator' | 'listing_tokenId' | 'listing_status' | 'listing_quantity' | 'listing_pricePerToken' | 'listing_currency' | 'listing_startTimestamp' | 'listing_tokenType' | 'listing_reserved' | 'listing_endTimestamp' | 'listing_assetContract'>>, newSales: Array<Pick<NewSale, 'buyer' | 'listingCreator' | 'listingId' | 'tokenId' | 'totalPricePaid' | 'assetContract' | 'quantityBought'>>, newOffers: Array<Pick<NewOffer, 'offerId' | 'offeror' | 'offer_tokenType' | 'offer_totalPrice' | 'offer_tokenId' | 'offer_status' | 'offer_quantity' | 'offer_offeror' | 'offer_expirationTimestamp' | 'offer_currency' | 'offer_assetContract'>> };
+
+export type StableDiffusionSepoliaQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StableDiffusionSepoliaQueryQuery = { newListings: Array<Pick<NewListing, 'listingId' | 'listingCreator' | 'listing_tokenId' | 'listing_status' | 'listing_quantity' | 'listing_pricePerToken' | 'listing_currency' | 'listing_startTimestamp' | 'listing_tokenType' | 'listing_reserved' | 'listing_endTimestamp' | 'listing_assetContract'>>, newSales: Array<Pick<NewSale, 'buyer' | 'listingCreator' | 'listingId' | 'tokenId' | 'totalPricePaid' | 'assetContract' | 'quantityBought'>>, newOffers: Array<Pick<NewOffer, 'offerId' | 'offeror' | 'offer_tokenType' | 'offer_totalPrice' | 'offer_tokenId' | 'offer_status' | 'offer_quantity' | 'offer_offeror' | 'offer_expirationTimestamp' | 'offer_currency' | 'offer_assetContract'>> };
+
+export type OpmlSepoliaQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OpmlSepoliaQueryQuery = { newListings: Array<Pick<NewListing, 'listingId' | 'listingCreator' | 'listing_tokenId' | 'listing_status' | 'listing_quantity' | 'listing_pricePerToken' | 'listing_currency' | 'listing_startTimestamp' | 'listing_tokenType' | 'listing_reserved' | 'listing_endTimestamp' | 'listing_assetContract'>>, newSales: Array<Pick<NewSale, 'buyer' | 'listingCreator' | 'listingId' | 'tokenId' | 'totalPricePaid' | 'assetContract' | 'quantityBought'>>, newOffers: Array<Pick<NewOffer, 'offerId' | 'offeror' | 'offer_tokenType' | 'offer_totalPrice' | 'offer_tokenId' | 'offer_status' | 'offer_quantity' | 'offer_offeror' | 'offer_expirationTimestamp' | 'offer_currency' | 'offer_assetContract'>> };
 
 
 export const StableDiffusionQueryDocument = gql`
@@ -5730,6 +5777,106 @@ export const OpmlQueryDocument = gql`
   }
 }
     ` as unknown as DocumentNode<OpmlQueryQuery, OpmlQueryQueryVariables>;
+export const StableDiffusionSepoliaQueryDocument = gql`
+    query StableDiffusionSepoliaQuery {
+  newListings(
+    orderBy: listing_listingId
+    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+  ) {
+    listingId
+    listingCreator
+    listing_tokenId
+    listing_status
+    listing_quantity
+    listing_pricePerToken
+    listing_currency
+    listing_startTimestamp
+    listing_tokenType
+    listing_reserved
+    listing_endTimestamp
+    listing_assetContract
+  }
+  newSales(
+    orderBy: listingId
+    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+  ) {
+    buyer
+    listingCreator
+    listingId
+    tokenId
+    totalPricePaid
+    assetContract
+    quantityBought
+  }
+  newOffers(
+    orderBy: offerId
+    where: {assetContract_contains: "0x530511810d56157D50E2D215aE4fC9bC9b57df02"}
+  ) {
+    offerId
+    offeror
+    offer_tokenType
+    offer_totalPrice
+    offer_tokenId
+    offer_status
+    offer_quantity
+    offer_offeror
+    offer_expirationTimestamp
+    offer_currency
+    offer_assetContract
+  }
+}
+    ` as unknown as DocumentNode<StableDiffusionSepoliaQueryQuery, StableDiffusionSepoliaQueryQueryVariables>;
+export const OpmlSepoliaQueryDocument = gql`
+    query OpmlSepoliaQuery {
+  newListings(
+    orderBy: listing_listingId
+    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+  ) {
+    listingId
+    listingCreator
+    listing_tokenId
+    listing_status
+    listing_quantity
+    listing_pricePerToken
+    listing_currency
+    listing_startTimestamp
+    listing_tokenType
+    listing_reserved
+    listing_endTimestamp
+    listing_assetContract
+  }
+  newSales(
+    orderBy: listingId
+    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+  ) {
+    buyer
+    listingCreator
+    listingId
+    tokenId
+    totalPricePaid
+    assetContract
+    quantityBought
+  }
+  newOffers(
+    orderBy: offerId
+    where: {assetContract_contains: "0x0882203E8E4Df9119231897cfA386f7b8965a5f8"}
+  ) {
+    offerId
+    offeror
+    offer_tokenType
+    offer_totalPrice
+    offer_tokenId
+    offer_status
+    offer_quantity
+    offer_offeror
+    offer_expirationTimestamp
+    offer_currency
+    offer_assetContract
+  }
+}
+    ` as unknown as DocumentNode<OpmlSepoliaQueryQuery, OpmlSepoliaQueryQueryVariables>;
+
+
 
 
 
@@ -5741,6 +5888,12 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     OpmlQuery(variables?: OpmlQueryQueryVariables, options?: C): Promise<OpmlQueryQuery> {
       return requester<OpmlQueryQuery, OpmlQueryQueryVariables>(OpmlQueryDocument, variables, options) as Promise<OpmlQueryQuery>;
+    },
+    StableDiffusionSepoliaQuery(variables?: StableDiffusionSepoliaQueryQueryVariables, options?: C): Promise<StableDiffusionSepoliaQueryQuery> {
+      return requester<StableDiffusionSepoliaQueryQuery, StableDiffusionSepoliaQueryQueryVariables>(StableDiffusionSepoliaQueryDocument, variables, options) as Promise<StableDiffusionSepoliaQueryQuery>;
+    },
+    OpmlSepoliaQuery(variables?: OpmlSepoliaQueryQueryVariables, options?: C): Promise<OpmlSepoliaQueryQuery> {
+      return requester<OpmlSepoliaQueryQuery, OpmlSepoliaQueryQueryVariables>(OpmlSepoliaQueryDocument, variables, options) as Promise<OpmlSepoliaQueryQuery>;
     }
   };
 }

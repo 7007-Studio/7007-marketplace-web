@@ -397,10 +397,7 @@ function Ora({ windowSize }: { windowSize: number }) {
       })
     );
   };
-  const swiperRef = useRef<any>(null);
   const { chain } = useAccount();
-  const [swiperIndex, setSwiperIndex] = useState(0);
-  const [isEnd, setIsEnd] = useState(false);
   const emptyCardList = [...Array(4).keys()];
   const { nftContracts } = useNftContracts({
     chainId: chain?.id,
