@@ -19,15 +19,19 @@ import {
 } from "@rainbow-me/rainbowkit";
 
 const mainnetHttp = http(
-  `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
+  `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`,
   {
-    batch: true,
+    batch: {
+      batchSize: 1000,
+    },
   }
 );
 const sepoliaHttp = http(
-  `https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`,
+  `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_API_KEY}`,
   {
-    batch: true,
+    batch: {
+      batchSize: 1000,
+    },
   }
 );
 const devVersion = process.env.NEXT_PUBLIC_ENV === "development" ? true : false;

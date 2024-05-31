@@ -376,7 +376,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
             </div>
           )}
         </div>
-        {isOwner && hover && (
+        {isOwner && hover && ownerOf !== undefined && (
           <button
             onClick={(e) => {
               console.debug("List button clicked");
@@ -396,7 +396,7 @@ const NFTCard: React.FC<NFTCardProps> = ({
           </button>
         )}
 
-        {listing && !isOwner && hover && (
+        {listing && !isOwner && hover && ownerOf !== undefined && (
           <button
             onClick={(e) => {
               console.debug("Buy button clicked");

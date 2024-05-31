@@ -182,16 +182,13 @@ export default function Detail() {
       }
     }
   };
+  console.log("metadata", metadata);
   function NFTCoverAsset({ metadata }: { metadata?: Metadata }) {
     const [imageError, setImageError] = useState(false);
     const [imageLoading, setImageLoading] = useState(true);
 
     const handleError = () => {
       setImageError(true);
-      setImageLoading(false);
-    };
-
-    const handleLoad = () => {
       setImageLoading(false);
     };
 
@@ -253,7 +250,6 @@ export default function Detail() {
                 height={258}
                 className="w-full object-cover aspect-square rounded"
                 onError={handleError}
-                onLoad={handleLoad}
               />
             </div>
           ) : (
@@ -447,10 +443,10 @@ export default function Detail() {
                   <a>Chain</a>
                   <a>{chain?.name}</a>
                 </div>
-                <div className="w-full flex justify-between gap-10">
+                {/* <div className="w-full flex justify-between gap-10">
                   <a>Last Updated</a>
                   <a>1 month age</a>
-                </div>
+                </div> */}
                 <div className="w-full flex justify-between gap-10">
                   <a>Creator Earnings</a>
                   <a>10%</a>
