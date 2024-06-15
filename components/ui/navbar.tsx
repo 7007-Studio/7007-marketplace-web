@@ -48,14 +48,14 @@ export default function Navbar() {
           >
             STATS
           </Link>
-          <div className="h-[30px] w-[1.5px] bg-grey" />
+          <div className="h-[30px] w-[1.5px] bg-grey" /> */}
           <Link
             href="/create/collection"
             className="cursor-pointer font-bold text-base text-white/60 hover:text-white/30"
           >
             Create
           </Link>
-          <div className="h-[30px] w-[1.5px] bg-grey" /> */}
+          <div className="h-[30px] w-[1.5px] bg-grey" />
           <Link
             href="/account"
             className="hover:text-primary cursor-pointer font-bold text-base text-white/60 hover:text-white/30"

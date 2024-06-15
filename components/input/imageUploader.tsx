@@ -1,6 +1,5 @@
+import { useGetImageStore } from "@/app/create/collection/store";
 import React, { useState } from "react";
-
-import { useGetImageStore } from "./store";
 
 const UploadImages = () => {
   const { setUploadImages } = useGetImageStore();

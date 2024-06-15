@@ -21,7 +21,7 @@ export default function AccountLayout({
     { pathnames: ["/account/models"], label: "Models" },
     { pathnames: ["/account/offers"], label: "Offers received" },
     { pathnames: ["/account/offeror"], label: "Offers made" },
-    // { pathnames: ["/account/inferencing"], label: "inferencing" },
+    { pathnames: ["/account/inferencing"], label: "inferencing" },
   ];
 
   return (

@@ -7,11 +7,13 @@ import Menu, { MenuList } from "@/components/ui/menu";
 import { CiSearch } from "react-icons/ci";
 import CreateInput from "@/components/input/createInput";
 import Image from "next/image";
-import ImageUploader from "./imageUploader";
+import ImageUploader from "../../../components/input/imageUploader";
 import Link from "next/link";
 import JSZip from "jszip";
 import { useGetImageStore } from "./store";
 import { useRouter } from "next/navigation";
+import DragInput from "@/components/input/dragInput";
+import { toast } from "react-hot-toast";
 
 const CreateCollection = () => {
   const menuOption = [
@@ -43,17 +45,17 @@ const CreateCollection = () => {
     },
   ];
   const [modelName, setModelName] = useState<string>();
-  // const [userId, setUserId] = useState('jasonTest');
-  // const [baseModel, setBaseModel] = useState('')
   const { uploadImages } = useGetImageStore();
   const { address } = useAccount();
   const [selectModel, setSelectModel] = useState<MenuList>(menuModelOption[0]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [select, setSelect] = useState<MenuList>(menuOption[0]);
+  const [loadingToast, setLoadingToast] = useState<any>();
+
   const handleSelect = (option: MenuList) => {
     setSelect(option);
   };
   const router = useRouter();
-  console.log("selectModel", selectModel.value);
 
   const handleSelectModel = (option: MenuList) => {
     setSelectModel(option);
@@ -84,18 +86,18 @@ const CreateCollection = () => {
 
   const zipAndUploadFiles = async () => {
     console.log(modelName, address, uploadImages, selectModel);
-    if (!modelName || !address || uploadImages.length == 0 || !selectModel)
+    if (
+      !modelName ||
+      !address ||
+      !uploadImages ||
+      uploadImages.length === 0 ||
+      !selectModel
+    )
       return;
-
-    console.log("Starting to zip files...");
+    setLoading(true);
+    const toastZip = toast.loading("Starting to zip files...");
     const zip = new JSZip();
     let count = 0;
-
-    if (uploadImages.length === 0) {
-      console.error("No files selected to zip.");
-      alert("Please select files to zip.");
-      return;
-    }
 
     uploadImages.forEach((image: any) => {
       const reader = new FileReader();
@@ -107,7 +109,9 @@ const CreateCollection = () => {
             .generateAsync({ type: "blob" })
             .then(async (content) => {
               const { preSignedUrl, modelID } = await getPreSignedUrl();
-
+              toast.success("Finished zipping files", {
+                id: toastZip,
+              });
               uploadFileToS3UsingUrl(content, preSignedUrl, modelID);
             })
             .catch((error) => {
@@ -117,7 +121,6 @@ const CreateCollection = () => {
       };
       reader.readAsArrayBuffer(image);
     });
-    alert("Successful upload of the files");
   };
 
   const uploadFileToS3UsingUrl = async (
@@ -125,8 +128,9 @@ const CreateCollection = () => {
     presignedUrl: string,
     modelID: string
   ) => {
-    console.log("Preparing to upload using presigned URL...");
     try {
+      const toastUpload = toast.loading("Preparing to upload...");
+
       const response = await fetch(presignedUrl, {
         method: "PUT",
         headers: {
@@ -135,9 +139,10 @@ const CreateCollection = () => {
         body: fileContent,
       });
       if (response.ok) {
-        console.log("Successfully uploaded zip file.");
+        toast.success("Successfully uploaded zip file.", {
+          id: toastUpload,
+        });
         postModelName(modelID);
-        router.push("/account/models");
       } else {
         throw new Error(
           `Error during upload: ${response.status} ${response.statusText}`
@@ -145,19 +150,22 @@ const CreateCollection = () => {
       }
     } catch (error) {
       console.error("XHR request error:", error);
+      setLoading(false);
     }
   };
 
   const postModelName = async (modelID: string) => {
-    if (!modelName || !address || !modelID) {
+    if (!modelName || !address || !modelID || !selectModel) {
       console.error("Model name and User ID are required.");
-      alert("Please enter a model name and User ID.");
+      toast.error("Please enter a model name and User ID.");
       return;
     }
 
     let baseModel = selectModel.value;
 
     try {
+      const toastCreate = toast.loading("Preparing to create model..");
+
       const response = await fetch(
         "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_train_task",
         {
@@ -170,7 +178,10 @@ const CreateCollection = () => {
         }
       );
       if (response.ok) {
-        console.log("Model name successfully posted:", modelName);
+        toast.success("Successfully create model.", {
+          id: toastCreate,
+        });
+        router.push("/account/models");
       } else {
         throw new Error(
           `Error during model name post: ${response.status} ${response.statusText}`
@@ -178,6 +189,8 @@ const CreateCollection = () => {
       }
     } catch (error) {
       console.error("XHR request error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -193,8 +206,8 @@ const CreateCollection = () => {
         <div className="flex flex-col w-[48%] gap-[45px]">
           <div className="space-y-2">
             <a className="pl-2">data upload</a>
-            <div className="w-full h-20 bg-grey flex items-center">
-              <ImageUploader />
+            <div className="w-full h-[120px] bg-grey flex items-center">
+              <DragInput />
             </div>
           </div>
           <div className="flex flex-col gap-2 h-full">
@@ -219,7 +232,7 @@ const CreateCollection = () => {
                 <div className="w-[16%] flex justify-center">10,000</div>
               </div>
             </div>
-            <div className="w-full flex flex-col h-full border border-white rounded-lg mt-4">
+            {/* <div className="w-full flex flex-col h-full border border-white rounded-lg mt-4">
               <div className="py-4 w-full flex items-center justify-between border-b border-white pr-6">
                 <div className="flex items-center pl-9">
                   <a>Trending</a>
@@ -258,7 +271,7 @@ const CreateCollection = () => {
                   <div className="w-[17%] flex justify-center">1,000</div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex flex-col w-[48%] gap-[30px]">
@@ -277,9 +290,8 @@ const CreateCollection = () => {
               }}
               placeholder="name..."
             />
-            {/* <CreateInput placeholder="name .." /> */}
           </div>
-          <div className="gap-2 flex flex-col">
+          {/* <div className="gap-2 flex flex-col">
             <a className="pl-2">collection description</a>
             <CreateInput
               placeholder="description .."
@@ -327,7 +339,7 @@ const CreateCollection = () => {
           <div className="gap-2 flex flex-col">
             <a className="pl-2">Banner image</a>
             <div className="w-full h-20 bg-grey p-10"></div>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex w-[85%] items-start pt-[75px] flex-col gap-5">
@@ -357,10 +369,32 @@ const CreateCollection = () => {
             </Link>
           </button> */}
           <button
-            className="w-[260px] h-[58px] bg-white/40 border border-white rounded font-bold"
-            onClick={zipAndUploadFiles}
+            className={`w-[260px] h-[58px] bg-white/40 border border-white rounded font-bold flex items-center justify-center gap-2 ${
+              !modelName ||
+              !address ||
+              !uploadImages ||
+              uploadImages.length === 0 ||
+              !selectModel
+                ? "opacity-40"
+                : ""
+            }`}
+            disabled={
+              !modelName ||
+              !address ||
+              !uploadImages ||
+              uploadImages.length === 0 ||
+              !selectModel
+            }
+            onClick={() => zipAndUploadFiles()}
           >
-            Prompt and Mint
+            {loading ? (
+              <>
+                <span className="loading loading-spinner" />
+                loading
+              </>
+            ) : (
+              "Create"
+            )}
           </button>
         </div>
       </div>
