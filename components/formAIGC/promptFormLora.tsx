@@ -57,7 +57,7 @@ const PromptFormLora = ({
 
     try {
       const res = await axios.post(
-        "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task",
+        "https://v3ni1o3vi8.execute-api.ap-northeast-1.amazonaws.com/dev/model_inference_task",
         data,
         {
           headers: {

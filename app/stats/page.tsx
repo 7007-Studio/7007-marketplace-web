@@ -35,7 +35,7 @@ export default function HomeModel() {
   ]);
 
   const handleFetchData = () => {
-    const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
+    const apiUrl = `https://v3ni1o3vi8.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?status=Done&action=train`;
 
     fetch(apiUrl, {
       method: "GET",

@@ -64,7 +64,7 @@ const CreateCollection = () => {
   const getPreSignedUrl = async () => {
     try {
       const response = await fetch(
-        "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/preSignedURL",
+        "https://v3ni1o3vi8.execute-api.ap-northeast-1.amazonaws.com/dev/preSignedURL",
         {
           method: "GET",
           headers: {
@@ -167,7 +167,7 @@ const CreateCollection = () => {
       const toastCreate = toast.loading("Preparing to create model..");
 
       const response = await fetch(
-        "https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/model_train_task",
+        "https://v3ni1o3vi8.execute-api.ap-northeast-1.amazonaws.com/dev/model_train_task",
         {
           method: "POST",
           headers: {

@@ -36,7 +36,7 @@ const Marketplace = () => {
     }
 
     fetch(
-      `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/genImages?requestID=${requestId}`,
+      `https://v3ni1o3vi8.execute-api.ap-northeast-1.amazonaws.com/dev/genImages?requestID=${requestId}`,
       {
         method: "GET",
         headers: {
@@ -62,7 +62,7 @@ const Marketplace = () => {
     if (!address) return;
 
     try {
-      const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?action=inference`;
+      const apiUrl = `https://v3ni1o3vi8.execute-api.ap-northeast-1.amazonaws.com/dev/tasks_status?action=inference`;
       const response = await axios.get(apiUrl, {
         headers: {
           "Content-Type": "application/json",

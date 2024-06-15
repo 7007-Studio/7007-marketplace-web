@@ -41,7 +41,7 @@
 //   const fetchModelDetails = async () => {
 //     const [modelID, modelAuthorID] = index.split("%26");
 
-//     const apiUrl = `https://f3593qhe00.execute-api.ap-northeast-1.amazonaws.com/dev/users/${modelAuthorID}/models/${modelID}`;
+//     const apiUrl = `https://v3ni1o3vi8.execute-api.ap-northeast-1.amazonaws.com/dev/users/${modelAuthorID}/models/${modelID}`;
 
 //     try {
 //       const response = await axios.get(apiUrl);
