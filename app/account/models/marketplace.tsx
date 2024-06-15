@@ -9,8 +9,7 @@ import Card from "@/components/ui/card";
 import { ModelList } from "@/types";
 
 const Marketplace = () => {
-  //TODO: mutliple models
-  const [taskStatus, setTaskStatus] = useState([]);
+  const [models, setModels] = useState([]);
   const { address, isConnected } = useAccount();
   const emptyCardList = [...Array(1).keys()];
 
@@ -25,7 +24,8 @@ const Marketplace = () => {
         },
       });
       const data = response.data;
-      setTaskStatus(data);
+      console.log("Data:", data);
+      setModels(data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -35,12 +35,14 @@ const Marketplace = () => {
     handleFetchData();
   }, [address]);
   const modelList = () => {
-    if (!taskStatus) {
+    if (!models) {
       return emptyCardList.map((item) => <EmptyCard key={item} />);
-    } else if (taskStatus && taskStatus.length > 0) {
-      return taskStatus.map((item: ModelList) => (
+    } else if (models && models.length > 0) {
+      return models.map((item: ModelList) => (
         <Card className="w-[300px] max-h-[390px] h-[390px]" key={item.id}>
-          <div className="flex flex-col relative justify-between h-full">
+          <div className="flex flex-col relative justify-between h-full"
+          router.push(`/collection/${modelInfo.id}&${modelInfo.modelAuthorID}`)
+          >
             <div className="absolute bg-white/30 top-4 z-10 right-4 px-2 py-1 flex justify-center items-center">
               TEXT-TO-TEXT
             </div>
@@ -76,16 +78,18 @@ const Marketplace = () => {
   };
 
   return (
-    <div className="flex flex-wrap max-w-[85%] gap-14 relative justify-center">
-      {taskStatus && taskStatus.length > 0 && (
+    <div className="w-full relative flex justify-center">
+      {models && models.length > 0 && (
         <button
-          className="text-white right-8 -top-16 absolute"
+          className="text-white right-[10%] translate-x-[10%] -top-16 absolute"
           onClick={handleFetchData}
         >
           <MdOutlineRefresh size={32} />
         </button>
       )}
-      {modelList()}
+      <div className="flex flex-wrap max-w-[85%] gap-14 relative justify-center">
+        {modelList()}
+      </div>
     </div>
   );
 };
